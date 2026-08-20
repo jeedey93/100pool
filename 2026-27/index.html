@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>Poolers Guide 2026-27 — 100% Pool</title>
+<meta name='description' content='NHL fantasy pool player projections for 2026-27. Sort and filter by points, goals, assists, tier and more.'>
+<link rel='icon' type='image/png' href='../parieur_discipline_icon_1024.png'>
+<link rel='apple-touch-icon' href='../parieur_discipline_icon_1024.png?v=2'>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
+
+/* ── NAV ── */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: linear-gradient(135deg, #2c5aa0 0%, #1e3a8a 100%); box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+.nav-inner { max-width: 1600px; margin: 0 auto; padding: 10px 15px; display: flex; align-items: center; }
+.nav-logo { display: flex; align-items: center; gap: 10px; }
+.nav-logo img { width: 32px; height: 32px; border-radius: 50%; }
+.nav-logo span { color: white; font-weight: 700; font-size: 1em; }
+.nav-back { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.83em; margin-left: auto; padding: 7px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3); font-weight: 600; transition: all 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+.nav-back:hover { background: rgba(255,255,255,0.12); color: white; }
+
+/* ── LAYOUT ── */
+.page-wrap { max-width: 1500px; margin: 0 auto; padding: 80px 16px 60px; }
+.page-header { text-align: center; margin-bottom: 24px; background: linear-gradient(135deg, #1e3a8a 0%, #2c5aa0 50%, #1d4ed8 100%); border-radius: 12px; padding: 40px 24px; }
+.page-header h1 { font-size: 2em; font-weight: 800; color: white; margin-bottom: 6px; }
+.page-header p { color: rgba(255,255,255,0.8); font-size: 0.95em; }
+.badge { display: inline-block; background: rgba(255,255,255,0.2); color: white; font-size: 0.75em; font-weight: 700; padding: 3px 10px; border-radius: 99px; margin-left: 8px; vertical-align: middle; border: 1px solid rgba(255,255,255,0.3); }
+
+/* ── TABS ── */
+.tabs { background: #f1f5f9; border-radius: 10px; padding: 4px; border: none; display: inline-flex; gap: 2px; margin-bottom: 20px; }
+.tab-btn { background: none; border: none; color: #64748b; font-size: 0.88em; font-weight: 600; padding: 8px 20px; cursor: pointer; border-radius: 7px; transition: color 0.2s, background 0.2s, box-shadow 0.2s; }
+.tab-btn:hover { color: #1e293b; }
+.tab-btn.active { background: white; color: #1e293b; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* ── CONTROLS ── */
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; background: white; border-radius: 12px; padding: 12px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.search-box { flex: 1; min-width: 160px; max-width: 220px; position: relative; }
+.search-box input { width: 100%; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; color: #1e293b; padding: 7px 10px 7px 30px; font-size: 0.85em; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+.search-box input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); background: white; }
+.search-box::before { content: '🔍'; position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-size: 0.8em; pointer-events: none; }
+.results-count { color: #94a3b8; font-size: 0.78em; white-space: nowrap; }
+.ctrl-btn { background: white; border: 1px solid #e2e8f0; border-radius: 8px; color: #64748b; padding: 7px 12px; font-size: 0.82em; font-weight: 600; cursor: pointer; white-space: nowrap; transition: color 0.2s, border-color 0.2s; }
+.ctrl-btn:hover { color: #1e293b; border-color: #cbd5e1; }
+.ctrl-btn.btn-primary { background: #2563eb; color: white; border-color: #2563eb; }
+.ctrl-btn.btn-primary:hover { background: #1d4ed8; }
+
+/* ── FILTER PILLS ── */
+.filter-group { display: flex; gap: 4px; flex-wrap: nowrap; align-items: center; }
+.filter-label { font-size: 0.65em; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #94a3b8; margin-right: 2px; white-space: nowrap; }
+.pill { background: #f1f5f9; border: 1.5px solid #e2e8f0; border-radius: 99px; color: #64748b; font-size: 0.78em; font-weight: 600; padding: 4px 11px; cursor: pointer; transition: all 0.15s; white-space: nowrap; user-select: none; }
+.pill:hover { border-color: #cbd5e1; color: #1e293b; background: #e8edf5; }
+.pill.active { background: #2563eb; border-color: #2563eb; color: white; box-shadow: 0 2px 6px rgba(37,99,235,0.25); }
+.pill.active-up   { background: #15803d; border-color: #15803d; color: white; }
+.pill.active-down { background: #dc2626; border-color: #dc2626; color: white; }
+.pill.active-low  { background: #15803d; border-color: #15803d; color: white; }
+.pill.active-medium { background: #a16207; border-color: #a16207; color: white; }
+.pill.active-high { background: #dc2626; border-color: #dc2626; color: white; }
+.pill.team-active { background: #0f172a; border-color: #0f172a; color: white; }
+/* Team popover */
+.team-popover-wrap { position: relative; }
+.team-popover { display: none; position: absolute; top: calc(100% + 6px); left: 0; background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px; z-index: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.12); width: 300px; }
+.team-popover.open { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+.team-popover .t-pill { font-size: 0.72em; font-weight: 700; padding: 5px 4px; border-radius: 6px; cursor: pointer; background: #f1f5f9; border: 1px solid #e2e8f0; color: #475569; text-align: center; transition: all 0.12s; }
+.team-popover .t-pill:hover { background: #e2e8f0; color: #1e293b; }
+.team-popover .t-pill.active { background: #0f172a; border-color: #0f172a; color: white; }
+/* Column toggle */
+.col-toggle-wrap { position: relative; }
+.col-toggle-menu { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; min-width: 200px; z-index: 500; box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+.col-toggle-menu.open { display: block; }
+.col-toggle-menu label { display: flex; align-items: center; gap: 8px; padding: 6px 8px; font-size: 0.85em; color: #1e293b; cursor: pointer; border-radius: 6px; transition: background 0.15s; }
+.col-toggle-menu label:hover { background: #f1f5f9; }
+.col-toggle-menu input[type=checkbox] { accent-color: #2563eb; width: 14px; height: 14px; cursor: pointer; }
+.col-toggle-menu .menu-title { font-size: 0.72em; font-weight: 700; color: #64748b; letter-spacing: 0.8px; text-transform: uppercase; padding: 4px 8px 8px; border-bottom: 1px solid #e2e8f0; margin-bottom: 4px; }
+
+/* ── TABLE ── */
+.table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+table { width: 100%; border-collapse: collapse; font-size: 0.87em; background: white; }
+thead th { background: #f1f5f9; color: #475569; font-weight: 700; font-size: 0.78em; letter-spacing: 0.5px; text-transform: uppercase; padding: 11px 14px; text-align: left; cursor: pointer; user-select: none; white-space: nowrap; border-bottom: 2px solid #e2e8f0; position: sticky; top: 0; z-index: 2; box-shadow: 0 2px 4px rgba(0,0,0,0.06); }
+thead th:hover { color: #1e293b; }
+thead th .sort-icon { margin-left: 3px; color: #94a3b8; }
+thead th.sorted-asc .sort-icon::after { content: ' ↑'; color: #2563eb; }
+thead th.sorted-desc .sort-icon::after { content: ' ↓'; color: #2563eb; }
+thead th:not(.sorted-asc):not(.sorted-desc) .sort-icon::after { content: ' ↕'; }
+tbody tr { border-bottom: 1px solid #e2e8f0; transition: background 0.15s; }
+tbody tr:nth-child(even) td { background-color: #f8fafc; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { filter: brightness(0.97); }
+tbody td { padding: 11px 14px; color: #1e293b; vertical-align: middle; }
+tbody td:first-child { color: #94a3b8; font-size: 0.82em; font-weight: 600; }
+
+/* Tier row tints — top 3 tiers get accent, rest neutral */
+tbody tr.tier-row-1 { background: rgba(245,158,11,0.08); border-left: 3px solid #f59e0b; }
+tbody tr.tier-row-2 { background: rgba(59,130,246,0.06); border-left: 3px solid #3b82f6; }
+tbody tr.tier-row-3 { background: rgba(139,92,246,0.06); border-left: 3px solid #8b5cf6; }
+tbody tr.tier-row-4 { background: rgba(52,211,153,0.06); border-left: 3px solid #34d399; }
+tbody tr.tier-row-5 { border-left: 3px solid #38bdf8; }
+tbody tr.tier-row-6 { border-left: 3px solid #f472b6; }
+tbody tr.tier-row-7 { border-left: 3px solid #fb923c; }
+tbody tr.tier-row-8 { border-left: 3px solid #94a3b8; }
+tbody tr.tier-row-9 { border-left: 3px solid #cbd5e1; }
+tbody tr.tier-row-10 { border-left: 3px solid #d4d4d8; }
+tbody tr.tier-row-11 { border-left: 3px solid #fda4af; }
+
+/* Player name cell */
+.player-name { font-weight: 700; color: #1e293b; font-size: 1em; cursor: pointer; transition: color 0.15s; }
+.player-name:hover { color: #2563eb; text-decoration: underline; }
+
+/* Risk badge */
+.risk { display: inline-flex; align-items: center; gap: 4px; font-size: 0.75em; font-weight: 700; padding: 3px 8px; border-radius: 99px; white-space: nowrap; }
+.risk-Low    { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+.risk-Medium { background: #fef9c3; color: #a16207; border: 1px solid #fde047; }
+.risk-High   { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
+
+/* Bust alert badge */
+.bust { display: inline-flex; align-items: center; gap: 3px; font-size: 0.72em; font-weight: 800; padding: 3px 8px; border-radius: 99px; background: #fff1f2; color: #be123c; border: 1px solid #fda4af; white-space: nowrap; }
+
+/* ── SCOUTING MODAL ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.5); z-index: 8000; display: flex; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(4px); }
+.modal-overlay.hidden { display: none; }
+.modal-box { background: white; border-radius: 20px; width: 100%; max-width: 560px; box-shadow: 0 24px 60px rgba(0,0,0,0.2); overflow: hidden; animation: modalIn 0.2s ease; }
+@keyframes modalIn { from { opacity:0; transform: scale(0.95) translateY(8px); } to { opacity:1; transform: none; } }
+.modal-header { padding: 20px 24px 16px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: flex-start; gap: 12px; }
+.modal-header-info { flex: 1; }
+.modal-player-name { font-size: 1.3em; font-weight: 800; color: #1e293b; margin-bottom: 6px; }
+.modal-badges { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.modal-close { background: #f1f5f9; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 1em; color: #64748b; flex-shrink: 0; transition: background 0.15s; display: flex; align-items: center; justify-content: center; }
+.modal-close:hover { background: #e2e8f0; color: #1e293b; }
+.modal-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 16px 24px; border-bottom: 1px solid #f1f5f9; }
+.modal-stat-group { background: #f8fafc; border-radius: 10px; padding: 10px 14px; }
+.modal-stat-label { font-size: 0.65em; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.modal-stat-label.last { color: #1d4ed8; }
+.modal-stat-label.proj { color: #15803d; }
+.modal-stat-row { display: flex; gap: 16px; }
+.modal-stat-item .v { font-size: 1.1em; font-weight: 800; }
+.modal-stat-item .l { font-size: 0.65em; color: #94a3b8; text-transform: uppercase; }
+.modal-body { padding: 16px 24px 20px; display: flex; flex-direction: column; gap: 14px; }
+.modal-section-title { font-size: 0.72em; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; }
+.modal-scouting { font-size: 0.88em; color: #374151; line-height: 1.65; }
+.modal-comp { display: flex; align-items: center; gap: 8px; background: #eff6ff; border-radius: 8px; padding: 8px 12px; font-size: 0.85em; color: #1d4ed8; font-weight: 600; }
+.modal-risks { display: flex; flex-direction: column; gap: 5px; }
+.modal-risk-item { display: flex; align-items: center; gap: 7px; font-size: 0.83em; color: #475569; }
+.modal-risk-item::before { content: '⚠️'; font-size: 0.85em; }
+
+/* Team / pos badges */
+.team-tag { display: inline-block; background: #dbeafe; color: #1e40af; font-size: 0.78em; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
+.pos-tag { display: inline-block; font-size: 0.78em; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
+.pos-C  { background: #dbeafe; color: #1e40af; }
+.pos-LW { background: #d1fae5; color: #065f46; }
+.pos-RW { background: #fce7f3; color: #9d174d; }
+.pos-D  { background: #fef3c7; color: #92400e; }
+.pos-G  { background: #ede9fe; color: #5b21b6; }
+
+/* Tier badges — 11-tier scale */
+.tier { display: inline-block; font-size: 0.75em; font-weight: 700; padding: 4px 10px; border-radius: 99px; white-space: nowrap; letter-spacing: 0.3px; }
+.tier-1 { background: #fef3c7; color: #78350f; border: 1px solid #f59e0b; }
+.tier-2 { background: #dbeafe; color: #1e3a8a; border: 1px solid #3b82f6; }
+.tier-3 { background: #ede9fe; color: #4c1d95; border: 1px solid #8b5cf6; }
+.tier-4 { background: #d1fae5; color: #065f46; border: 1px solid #34d399; }
+.tier-5 { background: #e0f2fe; color: #0c4a6e; border: 1px solid #38bdf8; }
+.tier-6 { background: #fce7f3; color: #9d174d; border: 1px solid #f472b6; }
+.tier-7 { background: #fff7ed; color: #9a3412; border: 1px solid #fb923c; }
+.tier-8 { background: #f1f5f9; color: #475569; border: 1px solid #94a3b8; }
+.tier-9 { background: #f8fafc; color: #64748b; border: 1px solid #cbd5e1; }
+.tier-10 { background: #fafafa; color: #71717a; border: 1px solid #d4d4d8; }
+.tier-11 { background: #fff1f2; color: #9f1239; border: 1px solid #fda4af; }
+
+/* Salary */
+.salary { color: #b45309; font-weight: 600; font-size: 0.88em; }
+
+/* Age tints */
+.age-young { color: #15803d; font-weight: 700; }
+.age-old   { color: #dc2626; font-weight: 600; }
+
+/* Band-aid icon */
+.bandaid { font-size: 0.78em; margin-left: 4px; vertical-align: middle; }
+
+/* Upside inline */
+.upside-inline { font-size: 0.75em; color: #7c3aed; font-weight: 700; margin-left: 4px; opacity: 0.9; cursor: default; }
+
+/* PPG */
+.ppg-last { color: #2563eb; font-weight: 600; }
+.ppg-proj { color: #15803d; font-weight: 700; }
+
+/* PP% */
+.pp-pct { color: #7c3aed; font-weight: 600; font-size: 0.88em; }
+
+/* Last year vs projection group headers */
+.col-group-last { background: #eff6ff !important; color: #1d4ed8 !important; border-top: 3px solid #93c5fd !important; }
+.col-group-proj { background: #f0fdf4 !important; color: #15803d !important; border-top: 3px solid #86efac !important; }
+thead tr.group-row th { font-size: 0.8em; text-align: center; padding: 8px 12px; letter-spacing: 1.5px; font-weight: 800; border-bottom: none; cursor: default; }
+thead tr.group-row th:hover { color: inherit; }
+thead tr.col-row th { border-top: none; }
+
+/* Last year cell tint */
+td.col-last { background: #f0f7ff; }
+td.col-last-first { border-left: 2px solid #bfdbfe !important; }
+td.col-last-last  { border-right: 2px solid #bfdbfe !important; }
+.last-stat { color: #2563eb; }
+.last-pts  { color: #1d4ed8; font-weight: 700; }
+
+/* Projection cell tint */
+td.col-proj { background: #f0fdf4; }
+td.col-proj-first { border-left: 2px solid #bbf7d0 !important; }
+td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
+.proj-stat { color: #15803d; }
+.proj-pts  { color: #065f46; font-weight: 800; font-size: 1.05em; }
+
+/* Trend badge */
+.trend { display: inline-flex; align-items: center; gap: 4px; font-size: 0.82em; font-weight: 700; padding: 4px 10px; border-radius: 99px; white-space: nowrap; }
+.trend-up   { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+.trend-down { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
+.trend-flat { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
+
+/* Notes display */
+.notes-display { color: #94a3b8; font-size: 0.75em; font-style: italic; margin-top: 3px; line-height: 1.4; max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: default; }
+
+/* Tooltip */
+.tooltip { position: fixed; z-index: 9000; background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px; font-size: 0.82em; font-style: italic; color: #1e293b; max-width: 260px; pointer-events: none; box-shadow: 0 4px 16px rgba(0,0,0,0.12); line-height: 1.4; }
+
+/* Efficiency score */
+.pv-bar { display: flex; align-items: center; gap: 6px; min-width: 80px; }
+.pv-num { font-weight: 800; font-size: 0.92em; min-width: 28px; text-align: right; padding: 2px 6px; border-radius: 4px; }
+.pv-track { flex: 1; height: 6px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+.pv-fill  { height: 100%; border-radius: 99px; }
+.pv-90 { color: #b45309; } .pv-90 .pv-fill { background: linear-gradient(90deg,#f59e0b,#fbbf24); } .pv-90 .pv-num { background: #fef3c7; color: #b45309; }
+.pv-70 { color: #2563eb; } .pv-70 .pv-fill { background: linear-gradient(90deg,#2563eb,#60a5fa); } .pv-70 .pv-num { background: #dbeafe; color: #1d4ed8; }
+.pv-50 { color: #64748b; } .pv-50 .pv-fill { background: #94a3b8; } .pv-50 .pv-num { background: #f1f5f9; color: #475569; }
+.pv-lo { color: #94a3b8; } .pv-lo .pv-fill { background: #cbd5e1; } .pv-lo .pv-num { background: #f1f5f9; color: #94a3b8; }
+
+/* ── BY TEAM ── */
+.team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.team-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: box-shadow 0.2s; }
+.team-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.team-card-header { background: linear-gradient(135deg, #2c5aa0, #1e3a8a); padding: 12px 16px; display: flex; align-items: center; gap: 10px; }
+.team-card-header .team-abbr { font-size: 1.1em; font-weight: 800; color: white; }
+.team-card-header .team-count { font-size: 0.8em; color: rgba(255,255,255,0.7); margin-left: auto; }
+.team-card table { width: 100%; font-size: 0.83em; }
+.team-card thead th { background: #f1f5f9; padding: 7px 10px; font-size: 0.75em; }
+.team-card tbody td { padding: 7px 10px; }
+
+/* ── SLEEPERS ── */
+.sleepers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.sleeper-card { background: white; border: 2px solid #34d399; border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: box-shadow 0.2s; }
+.sleeper-card:hover { box-shadow: 0 4px 12px rgba(52,211,153,0.2); }
+.sleeper-rank { font-size: 0.75em; color: #065f46; font-weight: 700; margin-bottom: 6px; }
+.sleeper-name { font-size: 1.05em; font-weight: 800; color: #1e293b; margin-bottom: 4px; }
+.sleeper-meta { font-size: 0.82em; color: #64748b; margin-bottom: 10px; }
+.sleeper-stats { display: flex; gap: 14px; margin-bottom: 10px; }
+.sleeper-stat .val { font-size: 1.2em; font-weight: 800; color: #1e293b; text-align: center; }
+.sleeper-stat .lbl { font-size: 0.7em; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; }
+.sleeper-note { font-size: 0.82em; color: #065f46; font-style: italic; }
+
+/* ── DISCLAIMER ── */
+.disclaimer { margin-top: 28px; padding: 12px 16px; background: #eff6ff; border-left: 4px solid #2563eb; border-radius: 0 10px 10px 0; font-size: 0.78em; color: #1d4ed8; }
+
+/* ── EMPTY STATE ── */
+.empty-state { text-align: center; padding: 60px 20px; color: #64748b; }
+.empty-state .icon { font-size: 2.5em; margin-bottom: 12px; }
+
+/* ── MOBILE CARDS (replaces table on small screens) ── */
+.card-list { display: none; flex-direction: column; gap: 10px; }
+.player-card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden; }
+  .player-card.tier-1 { border-left: 4px solid #f59e0b; }
+  .player-card.tier-2 { border-left: 4px solid #3b82f6; }
+  .player-card.tier-3 { border-left: 4px solid #8b5cf6; }
+  .player-card.tier-4 { border-left: 4px solid #34d399; }
+  .player-card.tier-5 { border-left: 4px solid #38bdf8; }
+  .player-card.tier-6 { border-left: 4px solid #f472b6; }
+  .player-card.tier-7 { border-left: 4px solid #fb923c; }
+  .player-card.tier-8 { border-left: 4px solid #94a3b8; }
+  .player-card.tier-9 { border-left: 4px solid #cbd5e1; }
+  .player-card.tier-10 { border-left: 4px solid #d4d4d8; }
+  .player-card.tier-11 { border-left: 4px solid #fda4af; }
+.card-header { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid #f1f5f9; }
+.card-rank   { color: #94a3b8; font-size: 0.8em; font-weight: 700; min-width: 22px; }
+.card-name   { font-weight: 800; color: #1e293b; font-size: 0.95em; flex: 1; }
+.card-badges { display: flex; gap: 5px; align-items: center; margin-left: auto; flex-shrink: 0; }
+.card-body   { padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; }
+.card-note   { color: #94a3b8; font-size: 0.75em; font-style: italic; }
+.card-stats  { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.card-stat-group { background: #f8fafc; border-radius: 8px; padding: 8px 10px; }
+.card-stat-label { font-size: 0.65em; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
+.card-stat-label.last { color: #1d4ed8; }
+.card-stat-label.proj { color: #15803d; }
+.card-stat-row { display: flex; gap: 12px; }
+.card-stat-item { text-align: center; }
+.card-stat-item .v { font-size: 1.05em; font-weight: 800; }
+.card-stat-item .l { font-size: 0.62em; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+.card-footer { display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: #fafafa; border-top: 1px solid #f1f5f9; flex-wrap: wrap; }
+
+@media (max-width: 768px) {
+  .table-wrap { display: none; }
+  .card-list  { display: flex; }
+  .page-wrap { padding: 70px 10px 40px; }
+  /* hero */
+  .page-header { padding: 20px 16px; border-radius: 10px; }
+  .page-header h1 { font-size: 1.15em; }
+  /* controls */
+  .controls { gap: 6px; }
+  .search-box { width: 100%; min-width: unset; flex: unset; }
+  .search-box input { font-size: 0.95em; }
+  .filter-select { font-size: 0.85em; padding: 7px 8px; }
+  .ctrl-btn { font-size: 0.82em; padding: 7px 10px; }
+  /* tabs */
+  .tabs { display: flex; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; padding-bottom: 2px; }
+  .tab-btn { white-space: nowrap; flex-shrink: 0; padding: 8px 14px; }
+  /* table */
+  table { min-width: 900px; }
+  tbody td { padding: 8px 10px; }
+  /* team grid */
+  .team-grid { grid-template-columns: minmax(280px, 1fr); }
+  /* sleepers */
+  .sleepers-grid { grid-template-columns: 1fr; }
+  /* column toggle menu */
+  .col-toggle-menu { max-width: calc(100vw - 32px); }
+}
+
+@media (max-width: 480px) {
+  .page-header h1 { font-size: 1em; }
+  .results-count { display: none; }
+  .nav-back { max-width: 120px; font-size: 0.75em; padding: 6px 10px; }
+}
+
+/* ── SCARCITY CHART ── */
+.scarcity-wrap { display: flex; flex-direction: column; gap: 24px; }
+.scarcity-intro { background: white; border-radius: 12px; padding: 20px 24px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.scarcity-intro h2 { font-size: 1.1em; font-weight: 800; color: #1e293b; margin-bottom: 6px; }
+.scarcity-intro p  { font-size: 0.88em; color: #64748b; line-height: 1.6; }
+.scarcity-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.scarcity-card { background: white; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden; }
+.scarcity-card-header { padding: 14px 18px 10px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f1f5f9; }
+.scarcity-pos { font-size: 1em; font-weight: 900; padding: 4px 12px; border-radius: 8px; }
+.scarcity-pos-C  { background: #dbeafe; color: #1e40af; }
+.scarcity-pos-LW { background: #d1fae5; color: #065f46; }
+.scarcity-pos-RW { background: #fce7f3; color: #9d174d; }
+.scarcity-pos-D  { background: #fef3c7; color: #92400e; }
+.scarcity-pos-G  { background: #ede9fe; color: #5b21b6; }
+.scarcity-total { font-size: 0.82em; color: #64748b; margin-left: auto; }
+.scarcity-alert { font-size: 0.75em; font-weight: 700; padding: 3px 9px; border-radius: 99px; }
+.alert-critical { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
+.alert-low      { background: #fef9c3; color: #a16207; border: 1px solid #fde047; }
+.alert-ok       { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+.scarcity-bars  { padding: 14px 18px; display: flex; flex-direction: column; gap: 8px; }
+.scarcity-bar-row { display: flex; align-items: center; gap: 10px; }
+.scarcity-bar-label { font-size: 0.75em; font-weight: 700; width: 54px; flex-shrink: 0; }
+.scarcity-bar-track { flex: 1; height: 20px; background: #f1f5f9; border-radius: 6px; overflow: hidden; position: relative; }
+.scarcity-bar-fill  { height: 100%; border-radius: 6px; transition: width 0.4s ease; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; }
+.scarcity-bar-count { font-size: 0.72em; font-weight: 800; color: white; }
+.fill-elite   { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.fill-top     { background: linear-gradient(90deg, #2563eb, #60a5fa); }
+.fill-mid     { background: #94a3b8; }
+.fill-sleeper { background: linear-gradient(90deg, #10b981, #34d399); }
+.scarcity-cliff { padding: 10px 18px 14px; font-size: 0.8em; color: #64748b; font-style: italic; border-top: 1px solid #f1f5f9; line-height: 1.5; }
+.scarcity-cliff strong { color: #1e293b; font-style: normal; }
+
+/* ── PRINT ── */
+@media print {
+  @page { size: landscape; margin: 12mm 8mm; }
+
+  /* Hide UI chrome */
+  nav, .controls, .tabs, .disclaimer, .tooltip, .col-toggle-menu,
+  .card-list { display: none !important; }
+
+  /* Force table visible (hidden on mobile) */
+  .table-wrap { display: block !important; overflow: visible !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; }
+
+  body { background: white !important; color: #000 !important; font-size: 8pt; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page-wrap { padding: 0 !important; max-width: 100% !important; }
+
+  /* Header */
+  .page-header { background: #1e3a8a !important; border-radius: 6px !important; padding: 10px 14px !important; margin-bottom: 10px !important; display: flex !important; align-items: center !important; gap: 12px !important; }
+  .page-header h1 { font-size: 11pt !important; color: white !important; }
+  .page-header p  { font-size: 7pt !important; color: rgba(255,255,255,0.8) !important; }
+  .badge { background: rgba(255,255,255,0.2) !important; color: white !important; border: 1px solid rgba(255,255,255,0.3) !important; }
+
+  /* Show only the main tab */
+  .tab-pane { display: none !important; }
+  #tab-all  { display: block !important; }
+
+  /* Table */
+  table { font-size: 6.8pt !important; width: 100% !important; border-collapse: collapse !important; }
+  thead th { background: #f1f5f9 !important; color: #333 !important; padding: 4px 5px !important; border-bottom: 1.5px solid #ccc !important; white-space: nowrap; position: static !important; box-shadow: none !important; }
+  thead tr.group-row th { padding: 3px 5px !important; font-size: 6.5pt !important; }
+  .col-group-last { background: #dbeafe !important; color: #1d4ed8 !important; }
+  .col-group-proj { background: #dcfce7 !important; color: #166534 !important; }
+  td.col-last { background: #eff6ff !important; }
+  td.col-proj { background: #f0fdf4 !important; }
+
+  tbody td { padding: 3px 5px !important; color: #111 !important; border-bottom: 1px solid #e8e8e8 !important; }
+  tbody tr:nth-child(even) td { background: #f9fafb !important; }
+
+  /* Tier row tints */
+  tbody tr.tier-row-1 { background: rgba(245,158,11,0.08) !important; border-left: 3px solid #f59e0b !important; }
+  tbody tr.tier-row-2 { background: rgba(59,130,246,0.06) !important; border-left: 3px solid #3b82f6 !important; }
+  tbody tr.tier-row-3 { background: rgba(139,92,246,0.06) !important; border-left: 3px solid #8b5cf6 !important; }
+
+  /* Text colors */
+  .player-name  { color: #000 !important; font-size: 7.5pt !important; }
+  .notes-display { color: #777 !important; font-size: 6pt !important; }
+  .last-stat, .last-pts { color: #1d4ed8 !important; }
+  .proj-stat, .proj-pts { color: #15803d !important; }
+  .ppg-last { color: #1d4ed8 !important; }
+  .ppg-proj { color: #15803d !important; }
+  .salary   { color: #b45309 !important; }
+
+  /* Badges */
+  .team-tag { background: #e8edf5 !important; color: #1e3a8a !important; }
+  .pos-tag  { background: #e8edf5 !important; color: #333 !important; }
+  .tier { background: #eee !important; color: #333 !important; border: 1px solid #ccc !important; font-size: 6pt !important; padding: 2px 5px !important; }
+  .tier-1 { background: #fef3c7 !important; color: #92400e !important; }
+  .tier-2 { background: #dbeafe !important; color: #1e40af !important; }
+  .tier-3 { background: #ede9fe !important; color: #4c1d95 !important; }
+  .trend  { background: none !important; border: none !important; color: #333 !important; font-size: 6.5pt !important; padding: 1px 4px !important; }
+  .trend-up   { color: #15803d !important; }
+  .trend-down { color: #dc2626 !important; }
+
+  /* Pool value — just the number */
+  .pv-bar   { gap: 3px !important; min-width: unset !important; }
+  .pv-num   { font-size: 7pt !important; padding: 1px 3px !important; }
+  .pv-track { display: none !important; }
+  .sort-icon { display: none !important; }
+
+  /* Page break */
+  tbody tr { page-break-inside: avoid; }
+
+  /* Goalie section separation */
+  #goalieTableWrap {
+    page-break-before: always;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  #goalieTableWrap > .section-label {
+    display: block !important;
+    font-size: 13pt !important;
+    font-weight: 800 !important;
+    color: #1e3a8a !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
+    border-top: 3px solid #1e3a8a !important;
+    padding-top: 10px !important;
+    margin-bottom: 8px !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class='nav-inner'>
+    <div class='nav-logo'>
+      <img src='../parieur_discipline_icon_1024.png' alt='Logo'>
+      <span>100% Pool</span>
+    </div>
+    <a href='../' class='nav-back' onmouseover='this.style.background="rgba(255,255,255,0.12)";this.style.color="white"' onmouseout='this.style.background="";this.style.color="rgba(255,255,255,0.7)"'>← About this Guide</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class='page-wrap'>
+  <div class='page-header'>
+    <h1>📋 Poolers Guide <span class='badge'>2026-27</span></h1>
+    <p>NHL player projections · Sort any column · Filter by team, position, tier or trend</p>
+  </div>
+
+  <!-- TABS -->
+  <div class='tabs'>
+    <button class='tab-btn active' onclick='switchTab("all", this)'>All Players</button>
+    <button class='tab-btn' onclick='switchTab("sleepers", this)'>🌟 Sleepers</button>
+    <button class='tab-btn' onclick='switchTab("busts", this)'>💣 Bust Alerts</button>
+    <button class='tab-btn' onclick='switchTab("improvers", this)'>📈 Top Improvers</button>
+    <button class='tab-btn' onclick='switchTab("regression", this)'>📉 Top Regression</button>
+    <button class='tab-btn' onclick='switchTab("scarcity", this)'>📊 Scarcity</button>
+  </div>
+
+  <!-- TAB: ALL PLAYERS -->
+  <div id='tab-all' class='tab-pane active'>
+    <div class='controls'>
+      <!-- Search -->
+      <div class='search-box'>
+        <input type='text' id='searchInput' placeholder='Search player…' oninput='applyFilters()'>
+      </div>
+      <span class='results-count' id='resultsCount'></span>
+
+      <!-- Position -->
+      <div class='filter-group'>
+        <span class='filter-label'>Pos</span>
+        <button class='pill active' data-filter='pos' data-value='' onclick='setPill(this,"pos")'>All</button>
+        <button class='pill' data-filter='pos' data-value='F' onclick='setPill(this,"pos")'>F</button>
+        <button class='pill' data-filter='pos' data-value='D' onclick='setPill(this,"pos")'>D</button>
+        <button class='pill' data-filter='pos' data-value='G' onclick='setPill(this,"pos")'>G</button>
+      </div>
+
+      <!-- Tier -->
+      <div class='filter-group' id='tierPills'>
+        <span class='filter-label'>Tier</span>
+        <button class='pill active' data-filter='tier' data-value='' onclick='setPill(this,"tier")'>All</button>
+      </div>
+
+      <!-- Team popover -->
+      <div class='team-popover-wrap' id='teamPopoverWrap'>
+        <button class='pill' id='teamBtn' onclick='toggleTeamPopover(event)'>Team ▾</button>
+        <div class='team-popover' id='teamPopover'></div>
+      </div>
+
+      <!-- Risk -->
+      <div class='filter-group'>
+        <span class='filter-label'>Risk</span>
+        <button class='pill active' data-filter='risk' data-value='' onclick='setPill(this,"risk")'>All</button>
+        <button class='pill' data-filter='risk' data-value='Low' onclick='setPill(this,"risk")'>🟢 Low</button>
+        <button class='pill' data-filter='risk' data-value='Medium' onclick='setPill(this,"risk")'>🟡 Med</button>
+        <button class='pill' data-filter='risk' data-value='High' onclick='setPill(this,"risk")'>🔴 High</button>
+      </div>
+
+      <!-- Actions -->
+      <div style='margin-left:auto;display:flex;gap:6px;align-items:center;'>
+        <div class='col-toggle-wrap'>
+          <button class='ctrl-btn' onclick='toggleColMenu(event)'>⚙ Columns</button>
+          <div class='col-toggle-menu' id='colMenu'>
+            <div class='menu-title'>Show / Hide</div>
+            <label><input type='checkbox' id='col-last' onchange='applyColVis()'> 📅 Last year stats</label>
+            <label><input type='checkbox' id='col-ppg' checked onchange='applyColVis()'> PPG (pts/game)</label>
+            <label><input type='checkbox' id='col-salary' checked onchange='applyColVis()'> 💰 Salary (AAV)</label>
+            <label><input type='checkbox' id='col-pp' onchange='applyColVis()'> PP% (powerplay points)</label>
+            <label><input type='checkbox' id='col-tier' checked onchange='applyColVis()'> Tier</label>
+            <label><input type='checkbox' id='col-trend' checked onchange='applyColVis()'> Trend</label>
+            <label><input type='checkbox' id='col-value' checked onchange='applyColVis()'> Efficiency (PTS÷√AAV)</label>
+            <label><input type='checkbox' id='col-risk' checked onchange='applyColVis()'> 🔴 Risk Rating</label>
+          </div>
+        </div>
+        <button class='ctrl-btn btn-primary' onclick='window.print()'>🖨 Print</button>
+      </div>
+    </div>
+    <div class='table-wrap'>
+      <table id='playerTable'>
+        <thead id='playerThead'></thead>
+        <tbody id='playerTbody'></tbody>
+      </table>
+    </div>
+    <div class='table-wrap' id='goalieTableWrap' style='display:none;margin-top:28px;'>
+      <div class='section-label' style='font-size:0.85em;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#64748b;padding:0 0 8px 4px;'>🥅 Goalies</div>
+      <table id='goalieTable'>
+        <thead id='goalieThead'></thead>
+        <tbody id='goalieTbody'></tbody>
+      </table>
+    </div>
+    <div class='card-list' id='playerCards'></div>
+  </div>
+
+
+  <!-- TAB: SLEEPERS -->
+  <div id='tab-sleepers' class='tab-pane'>
+    <div style='background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.83em;color:#15803d;line-height:1.6'>
+      <strong>🌟 What is a Sleeper?</strong> An under-the-radar player who combines strong points-per-dollar efficiency (proj PTS ÷ √AAV ≥ 25) with a ceiling at least 20 points above their base projection — and not already ranked in the top 30. These are players with a real breakout scenario: a new line, a contract year, a return from injury, or simply a conservative projection. High reward potential, low draft cost. Best targeted in the middle and later rounds.
+    </div>
+    <h3 style='font-size:0.95em;font-weight:800;color:#065f46;margin-bottom:10px;margin-top:4px'>💰 Established Players (AAV &gt; $1.5M)</h3>
+    <div id='sleepersGrid' class='sleepers-grid'></div>
+    <h3 style='font-size:0.95em;font-weight:800;color:#1d4ed8;margin-bottom:10px;margin-top:24px'>🧢 Rookies &amp; Entry-Level (AAV ≤ $1.5M)</h3>
+    <div id='sleepersRookieGrid' class='sleepers-grid'></div>
+  </div>
+
+  <div id='tab-busts' class='tab-pane'>
+    <div style='background:#fff1f2;border:1px solid #fda4af;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.83em;color:#be123c;line-height:1.6'>
+      <strong>💣 What is a Bust Alert?</strong> An overpaid player ranked in the top 150 who combines High risk — injury history or volatile performance — with poor points-per-dollar efficiency (proj PTS ÷ √AAV &lt; 25) and a tight ceiling of 20 points or less above their base projection. You're spending a premium draft pick on someone unlikely to overdeliver. Proceed with caution.
+    </div>
+    <div id='bustsGrid' class='sleepers-grid'></div>
+  </div>
+
+  <!-- TAB: IMPROVERS -->
+  <div id='tab-improvers' class='tab-pane'>
+    <div style='background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.83em;color:#15803d;line-height:1.6'>
+      <strong>📈 Top Improvers:</strong> Players projected to score significantly more points than last season — ranked by the largest positive delta (2026-27 projection minus 2025-26 actuals). Requires last season stats to be populated.
+    </div>
+    <div id='improversGrid' class='sleepers-grid'></div>
+  </div>
+
+  <!-- TAB: REGRESSION -->
+  <div id='tab-regression' class='tab-pane'>
+    <div style='background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.83em;color:#c2410c;line-height:1.6'>
+      <strong>📉 Regression Candidates:</strong> Players projected to score significantly fewer points than last season — ranked by the largest negative delta (2025-26 actuals minus 2026-27 projection). Age, injury history, or weaker team context driving the drop.
+    </div>
+    <div id='regressionGrid' class='sleepers-grid'></div>
+  </div>
+
+  <!-- TAB: SCARCITY -->
+  <div id='tab-scarcity' class='tab-pane'>    <div id='scarcityChart'></div>
+  </div>
+
+  <div class='disclaimer'>
+    ⚠️ Projections are estimates based on prior seasons, line combos, and team context. Updated manually — last refreshed <span id='lastUpdated'></span>.
+    Not financial or gambling advice.
+  </div>
+</div>
+
+<!-- SCOUTING MODAL -->
+<div class='modal-overlay hidden' id='scoutingModal' onclick='closeModal(event)'>
+  <div class='modal-box'>
+    <div class='modal-header'>
+      <div class='modal-header-info'>
+        <div class='modal-player-name' id='modalName'></div>
+        <div class='modal-badges' id='modalBadges'></div>
+      </div>
+      <button class='modal-close' onclick='closeModalDirect()'>✕</button>
+    </div>
+    <div class='modal-stats' id='modalStats'></div>
+    <div class='modal-body' id='modalBody'></div>
+  </div>
+</div>
+
+<!-- TOOLTIP -->
+<div class='tooltip' id='tooltip' style='display:none'></div>
+
+<script>
+let allPlayers = [];
+let sortCol = 'rank';
+let sortDir = 'asc';
+let goalieSortCol = 'proj_g';
+let goalieSortDir = 'desc';
+
+const SUPABASE_URL = 'https://fifurqlitkywtmhgtzeu.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpZnVycWxpdGt5d3RtaGd0emV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDIyMjQsImV4cCI6MjA5MjI3ODIyNH0.KPVPj1qwbSJJMyLR_-AhDcRs0vi2sUU6qbFQ-kH53C0';
+const SB_HEADERS = { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` };
+
+// ── TIER HELPERS ──────────────────────────────────────────
+// Extract the tier number from "Tier 3 - All-Star" → "3"
+function tierNum(tier) {
+  if (!tier) return null;
+  const m = tier.match(/Tier\s*(\d+)/i);
+  return m ? m[1] : null;
+}
+function tierClass(tier) {
+  const n = tierNum(tier);
+  return n ? 'tier-' + n : 'tier-9';
+}
+function tierRowClass(tier) {
+  const n = tierNum(tier);
+  return n ? 'tier-row-' + n : '';
+}
+
+// ── INIT ─────────────────────────────────────────────────
+async function init() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/poolers_players?order=rank.asc&select=*`, { headers: SB_HEADERS });
+  allPlayers = await res.json();
+  document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString('en-CA');
+  // Build team popover
+  const teams = [...new Set(allPlayers.map(p => p.team).filter(Boolean))].sort();
+  const teamPopover = document.getElementById('teamPopover');
+  teams.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 't-pill';
+    btn.dataset.team = t;
+    btn.textContent = t;
+    btn.onclick = () => setTeamFilter(activeFilters.team === t ? '' : t);
+    teamPopover.appendChild(btn);
+  });
+  normalizePVs(allPlayers);
+
+  // Build tier pills Tier 1 … Tier 11 with full-label tooltip
+  const tierLabelMap = {};
+  allPlayers.forEach(p => { if (p.tier) { const n = tierNum(p.tier); if (n && !tierLabelMap[n]) tierLabelMap[n] = p.tier; } });
+  const tierNumsSeen = Object.keys(tierLabelMap).sort((a, b) => parseInt(a) - parseInt(b));
+  const tierPills = document.getElementById('tierPills');
+  tierNumsSeen.forEach(n => {
+    const btn = document.createElement('button');
+    btn.className = 'pill';
+    btn.dataset.filter = 'tier';
+    btn.dataset.value = n;
+    btn.textContent = 'Tier ' + n;
+    btn.title = tierLabelMap[n] || ('Tier ' + n);
+    btn.onclick = function() { setPill(this, 'tier'); };
+    tierPills.appendChild(btn);
+  });
+
+  renderAll();
+  renderSleepers();
+  renderBusts();
+  renderImprovers();
+  renderRegression();
+  renderScarcity();
+  applyColVis();
+}
+
+// ── POOL VALUE SCORE ──────────────────────────────────────
+// ── EFFICIENCY SCORE: (Proj PTS ÷ √AAV) scaled to 0–10 ───
+// Higher = more points per cap dollar. Players with no AAV get null.
+let _effMax = 1; // used to scale the bar width
+
+function calcEff(p) {
+  if (!p.aav || p.aav <= 0 || !p.proj_pts) return null;
+  return p.proj_pts / Math.sqrt(p.aav);
+}
+
+function normalizePVs(players) {
+  const vals = players.map(calcEff).filter(v => v !== null);
+  _effMax = Math.max(...vals, 1);
+}
+
+function getPV(p) {
+  const v = calcEff(p);
+  if (v === null) return null;
+  const SCALE_MAX = 40;
+  return Math.round((v / SCALE_MAX) * 100) / 10;
+}
+
+function pvClass(score) {
+  if (score === null) return 'pv-lo';
+  if (score >= 8.5) return 'pv-90';
+  if (score >= 6.0) return 'pv-70';
+  if (score >= 4.0) return 'pv-50';
+  return 'pv-lo';
+}
+
+// ── TREND ─────────────────────────────────────────────────
+function getTrend(p) {
+  if (!p.last_pts) return 'flat';
+  const d = p.proj_pts - p.last_pts;
+  return d >= 5 ? 'up' : d <= -5 ? 'down' : 'flat';
+}
+
+// ── PPG ───────────────────────────────────────────────────
+function ppg(pts, gp) { return gp > 0 ? (pts / gp).toFixed(2) : '—'; }
+
+// ── TOOLTIP ───────────────────────────────────────────────
+const _tt = document.getElementById('tooltip');
+function showTooltip(el, text) {
+  if (!text) return;
+  _tt.textContent = text; _tt.style.display = 'block';
+  const r = el.getBoundingClientRect();
+  const tw = _tt.offsetWidth;
+  let left = r.left + r.width / 2 - tw / 2;
+  left = Math.max(8, Math.min(left, window.innerWidth - tw - 8));
+  _tt.style.left = left + 'px';
+  _tt.style.top = (r.top - _tt.offsetHeight - 6 + window.scrollY) + 'px';
+}
+function hideTooltip() { _tt.style.display = 'none'; }
+
+// ── COLUMN VISIBILITY ─────────────────────────────────────
+const COL_GROUPS = {
+  'col-last':    ['cg-last', 'cg-ppg-last'],
+  'col-ppg':     ['cg-ppg-proj'],
+  'col-salary':  ['cg-salary'],
+  'col-pp':      ['cg-pp'],
+  'col-tier':    ['cg-tier'],
+  'col-trend':   ['cg-trend'],
+  'col-value':   ['cg-value'],
+  'col-risk':    ['cg-risk'],
+};
+
+function applyColVis() {
+  Object.entries(COL_GROUPS).forEach(([chkId, colClasses]) => {
+    const show = document.getElementById(chkId).checked;
+    colClasses.forEach(cls => {
+      document.querySelectorAll('.' + cls).forEach(el => {
+        el.style.display = show ? '' : 'none';
+      });
+    });
+  });
+  // Update group-row colspan for last year block
+  updateGroupColspan();
+}
+
+function updateGroupColspan() {
+  // Update each table's group-row colspans independently
+  document.querySelectorAll('table').forEach(tbl => {
+    const ths = [...tbl.querySelectorAll('thead tr.col-row th')];
+    let lastCount = 0, projCount = 0;
+    ths.forEach(th => {
+      if (th.style.display === 'none') return;
+      if (th.classList.contains('col-group-last')) lastCount++;
+      if (th.classList.contains('col-group-proj')) projCount++;
+    });
+    const lastGh = tbl.querySelector('#gh-last, [id="gh-last"]');
+    const projGh = tbl.querySelector('#gh-proj, [id="gh-proj"]');
+    if (lastGh) lastGh.colSpan = Math.max(1, lastCount);
+    if (projGh) projGh.colSpan = Math.max(1, projCount);
+  });
+}
+
+function toggleColMenu(e) {
+  e.stopPropagation();
+  document.getElementById('colMenu').classList.toggle('open');
+}
+document.addEventListener('click', () => {
+  document.getElementById('colMenu').classList.remove('open');
+  document.getElementById('teamPopover').classList.remove('open');
+});
+
+// ── SORTING ───────────────────────────────────────────────
+function sortBy(col) {
+  sortDir = sortCol === col ? (sortDir === 'asc' ? 'desc' : 'asc') : (col === 'rank' ? 'asc' : 'desc');
+  sortCol = col;
+  document.querySelectorAll('thead th[data-col]').forEach(th => {
+    th.classList.remove('sorted-asc', 'sorted-desc');
+    if (th.dataset.col === col) th.classList.add(sortDir === 'asc' ? 'sorted-asc' : 'sorted-desc');
+  });
+  renderAll();
+}
+
+function getGoalieStats(p) {
+  try { return JSON.parse(p.scouting || '{}'); } catch(e) { return {}; }
+}
+
+function sorted(players) {
+  const getVal = p => {
+    if (sortCol === '_trend') return p.last_pts ? p.proj_pts - p.last_pts : 0;
+    if (sortCol === '_pv')    return getPV(p);
+    if (sortCol === '_ppg_last') return p.last_gp > 0 ? p.last_pts / p.last_gp : 0;
+    if (sortCol === '_ppg_proj') return p.proj_gp > 0 ? p.proj_pts / p.proj_gp : 0;
+    if (sortCol === '_goalie_l')   return getGoalieStats(p).l ?? 0;
+    if (sortCol === '_goalie_otl') return getGoalieStats(p).otl ?? 0;
+    if (sortCol === '_goalie_gaa') return getGoalieStats(p).gaa ?? 99;
+    if (sortCol === '_goalie_svp') return getGoalieStats(p).svp ?? 0;
+    if (sortCol === 'tier') return parseInt(tierNum(p.tier)) || 99;
+    return p[sortCol];
+  };
+  return [...players].sort((a, b) => {
+    let av = getVal(a), bv = getVal(b);
+    if (typeof av === 'string') av = av.toLowerCase();
+    if (typeof bv === 'string') bv = bv.toLowerCase();
+    if (av < bv) return sortDir === 'asc' ? -1 : 1;
+    if (av > bv) return sortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+}
+
+function sortedGoalies(players) {
+  const getVal = p => {
+    if (goalieSortCol === '_goalie_l')   return getGoalieStats(p).l ?? 0;
+    if (goalieSortCol === '_goalie_otl') return getGoalieStats(p).otl ?? 0;
+    if (goalieSortCol === '_goalie_gaa') return getGoalieStats(p).gaa ?? 99;
+    if (goalieSortCol === '_goalie_svp') return getGoalieStats(p).svp ?? 0;
+    return p[goalieSortCol];
+  };
+  return [...players].sort((a, b) => {
+    let av = getVal(a), bv = getVal(b);
+    if (typeof av === 'string') av = av.toLowerCase();
+    if (typeof bv === 'string') bv = bv.toLowerCase();
+    if (av < bv) return goalieSortDir === 'asc' ? -1 : 1;
+    if (av > bv) return goalieSortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+}
+
+function sortGoalieBy(col) {
+  goalieSortDir = goalieSortCol === col ? (goalieSortDir === 'asc' ? 'desc' : 'asc') : (col === 'rank' ? 'asc' : 'desc');
+  goalieSortCol = col;
+  renderAll();
+}
+
+// ── FILTERS ───────────────────────────────────────────────
+const activeFilters = { pos: '', tier: '', team: '', risk: '' };
+
+function setPill(btn, filterKey) {
+  // Deactivate siblings
+  document.querySelectorAll(`.pill[data-filter="${filterKey}"]`).forEach(b => {
+    b.classList.remove('active', 'active-elite', 'active-top', 'active-sleeper',
+      'active-up', 'active-down', 'active-low', 'active-medium', 'active-high');
+  });
+  // Activate clicked
+  const val = btn.dataset.value;
+  activeFilters[filterKey] = val;
+  if (!val) {
+    btn.classList.add('active');
+  } else {
+    const colorMap = {
+      up: 'active-up', down: 'active-down',
+      Low: 'active-low', Medium: 'active-medium', High: 'active-high',
+    };
+    btn.classList.add(colorMap[val] || 'active');
+  }
+  renderAll();
+}
+
+function toggleTeamPopover(e) {
+  e.stopPropagation();
+  document.getElementById('teamPopover').classList.toggle('open');
+}
+function setTeamFilter(val) {
+  activeFilters.team = val;
+  const btn = document.getElementById('teamBtn');
+  btn.textContent = val ? val + ' ✕' : 'Team ▾';
+  btn.classList.toggle('team-active', !!val);
+  document.querySelectorAll('#teamPopover .t-pill').forEach(p => p.classList.toggle('active', p.dataset.team === val));
+  document.getElementById('teamPopover').classList.remove('open');
+  renderAll();
+}
+
+function getFiltered() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  return allPlayers.filter(p => {
+    if (q && !p.name.toLowerCase().includes(q) && !p.team.toLowerCase().includes(q)) return false;
+    if (activeFilters.pos) {
+      if (activeFilters.pos === 'F' && !['C','LW','RW'].includes(p.pos)) return false;
+      if (activeFilters.pos !== 'F' && p.pos !== activeFilters.pos) return false;
+    }
+    if (activeFilters.tier && tierNum(p.tier) !== activeFilters.tier) return false;
+    if (activeFilters.team && p.team !== activeFilters.team)          return false;
+    if (activeFilters.risk && p.risk !== activeFilters.risk)          return false;
+    return true;
+  });
+}
+function applyFilters() { renderAll(); }
+
+// ── RENDER HEADER ─────────────────────────────────────────
+function goalieHeaderHTML() {
+  return `
+  <tr class='group-row'>
+    <th colspan='5' style='background:#f1f5f9;'></th>
+    <th colspan='7' class='col-group-proj'>🥅 2026-27 PROJECTION</th>
+    <th colspan='3' style='background:#f1f5f9;'></th>
+  </tr>
+  <tr class='col-row'>
+    <th onclick='sortGoalieBy("rank")'        data-col='rank'>#<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("name")'        data-col='name'>Player<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("team")'        data-col='team'>Team<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("pos")'         data-col='pos'>Pos<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("age")'         data-col='age'>Age<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("proj_gp")'     data-col='proj_gp' class='col-group-proj' style='border-left:2px solid #bbf7d0;color:#15803d;'>GP<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("proj_g")'      data-col='proj_g'  class='col-group-proj' style='color:#15803d;'>W<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("_goalie_l")'   data-col='_goalie_l'   class='col-group-proj' style='color:#15803d;'>L<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("_goalie_otl")' data-col='_goalie_otl' class='col-group-proj' style='color:#15803d;'>OT<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("_goalie_gaa")' data-col='_goalie_gaa' class='col-group-proj' style='color:#15803d;'>GAA<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("_goalie_svp")' data-col='_goalie_svp' class='col-group-proj' style='color:#15803d;'>SV%<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("proj_a")'      data-col='proj_a'  class='col-group-proj' style='border-right:2px solid #bbf7d0;color:#15803d;'>SO<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("aav")'         data-col='aav'  class='cg-salary'>💰 AAV<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("tier")'        data-col='tier' class='cg-tier'>Tier<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("risk")'        data-col='risk' class='cg-risk'>Risk<span class='sort-icon'></span></th>
+  </tr>`;
+}
+
+function skaterHeaderHTML() {
+  return `
+  <tr class='group-row'>
+    <th colspan='5' style='background:#f1f5f9;'></th>
+    <th id='gh-last' colspan='5' class='col-group-last cg-last'>📅 2025-26 ACTUAL</th>
+    <th colspan='4' class='col-group-proj'>🎯 2026-27 PROJECTION</th>
+    <th colspan='7' style='background:#f1f5f9;'></th>
+  </tr>
+  <tr class='col-row'>
+    <th onclick='sortBy("rank")'    data-col='rank'>#<span class='sort-icon'></span></th>
+    <th onclick='sortBy("name")'    data-col='name'>Player<span class='sort-icon'></span></th>
+    <th onclick='sortBy("team")'    data-col='team'>Team<span class='sort-icon'></span></th>
+    <th onclick='sortBy("pos")'     data-col='pos'>Pos<span class='sort-icon'></span></th>
+    <th onclick='sortBy("age")'     data-col='age'>Age<span class='sort-icon'></span></th>
+    <th onclick='sortBy("last_gp")' data-col='last_gp' class='col-group-last cg-last' style='border-left:2px solid #bfdbfe;color:#1d4ed8;'>GP<span class='sort-icon'></span></th>
+    <th onclick='sortBy("last_g")'  data-col='last_g'  class='col-group-last cg-last' style='color:#1d4ed8;'>G<span class='sort-icon'></span></th>
+    <th onclick='sortBy("last_a")'  data-col='last_a'  class='col-group-last cg-last' style='color:#1d4ed8;'>A<span class='sort-icon'></span></th>
+    <th onclick='sortBy("last_pts")' data-col='last_pts' class='col-group-last cg-last' style='color:#1d4ed8;font-weight:800;'>PTS<span class='sort-icon'></span></th>
+    <th onclick='sortBy("_ppg_last")' data-col='_ppg_last' class='col-group-last cg-last cg-ppg-last' style='border-right:2px solid #bfdbfe;color:#1d4ed8;'>PPG<span class='sort-icon'></span></th>
+    <th onclick='sortBy("proj_gp")' data-col='proj_gp' class='col-group-proj' style='border-left:2px solid #bbf7d0;color:#15803d;'>GP<span class='sort-icon'></span></th>
+    <th onclick='sortBy("proj_g")'  data-col='proj_g'  class='col-group-proj' style='color:#15803d;'>G<span class='sort-icon'></span></th>
+    <th onclick='sortBy("proj_a")'  data-col='proj_a'  class='col-group-proj' style='color:#15803d;'>A<span class='sort-icon'></span></th>
+    <th onclick='sortBy("proj_pts")' data-col='proj_pts' class='col-group-proj' style='color:#15803d;font-weight:800;'>PTS<span class='sort-icon'></span></th>
+    <th onclick='sortBy("_ppg_proj")' data-col='_ppg_proj' class='col-group-proj cg-ppg-proj' style='border-right:2px solid #bbf7d0;color:#15803d;'>PPG<span class='sort-icon'></span></th>
+    <th onclick='sortBy("aav")'     data-col='aav'     class='cg-salary'>💰 AAV<span class='sort-icon'></span></th>
+    <th onclick='sortBy("pp_pct")' data-col='pp_pct' class='cg-pp' onmouseenter='showTooltip(this,"PP% = powerplay points ÷ total points × 100")' onmouseleave='hideTooltip()'>PP%<span class='sort-icon'></span></th>
+    <th onclick='sortBy("tier")'    data-col='tier'     class='cg-tier'>Tier<span class='sort-icon'></span></th>
+    <th onclick='sortBy("_trend")'  data-col='_trend'   class='cg-trend'>Trend<span class='sort-icon'></span></th>
+    <th onclick='sortBy("_pv")'     data-col='_pv'      class='cg-value'>Efficiency<span class='sort-icon'></span></th>
+    <th onclick='sortBy("risk")'    data-col='risk'     class='cg-risk'>Risk<span class='sort-icon'></span></th>
+  </tr>`;
+}
+
+// ── RENDER TABLE ──────────────────────────────────────────
+function buildRowHTML(p, displayRank) {
+    const trend    = getTrend(p);
+    const diff     = p.proj_pts - (p.last_pts || p.proj_pts);
+    const diffStr  = diff > 0 ? '+' + diff : '' + diff;
+    const trendLbl = trend === 'up' ? `↑ ${diffStr}` : trend === 'down' ? `↓ ${diffStr}` : `→ ${diffStr}`;
+    const pv       = getPV(p);
+    const pc       = pvClass(pv);
+    const noteEsc  = (p.notes || '').replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+    const noteFull = (p.notes || '').replace(/"/g, '&quot;');
+    const aav      = p.aav ? `$${parseFloat(p.aav).toFixed(2)}M` : '—';
+    const ppPct    = p.pp_pct != null ? p.pp_pct + '%' : '—';
+    const riskHtml = p.risk ? `<span class='risk risk-${p.risk}'>${p.risk === 'Low' ? '🟢' : p.risk === 'Medium' ? '🟡' : '🔴'} ${p.risk}</span>` : '—';
+    const bustHtml = p.bust_alert ? `<span class='bust'>💣 Bust</span>` : '';
+    const bandaid  = p.risk === 'Medium' || p.risk === 'High' ? `<span class='bandaid' title='${p.risk === "High" ? "High risk / injury prone" : "Injury prone"}'>🩹</span>` : '';
+    const ageClass = p.age <= 22 ? 'age-young' : p.age >= 32 ? 'age-old' : '';
+    const isGoalie  = p.pos === 'G';
+    const gs        = isGoalie ? getGoalieStats(p) : {};
+    const upsideHtml = !isGoalie && p.upside != null && p.proj_pts != null
+      ? `<span class='upside-inline' onmouseenter='showTooltip(this,\`Upside: ${p.upside} pts ceiling\`)' onmouseleave='hideTooltip()'>↑${p.upside}</span>`
+      : '';
+    const ppgLastHtml = ppg(p.last_pts, p.last_gp);
+    const ppgProjHtml = ppg(p.proj_pts, p.proj_gp);
+    const projPtsDisplay = p.proj_pts ?? '—';
+
+    return `<tr class='${tierRowClass(p.tier)}'>
+      <td>${displayRank ?? p.rank}</td>
+      <td>
+        <div class='player-name' onclick='openModal(${p.id})'>${p.name}${bandaid}</div>
+        ${noteEsc ? `<div class='notes-display' title="${noteFull}">${noteEsc}</div>` : ''}
+        ${bustHtml}
+      </td>
+      <td><span class='team-tag'>${p.team}</span></td>
+      <td><span class='pos-tag pos-${p.pos}'>${p.pos}</span></td>
+      <td class='${ageClass}'>${p.age ?? 'N/A'}</td>
+
+      ${!isGoalie ? `
+      <td class='col-last col-last-first last-stat cg-last'>${p.last_gp ?? '—'}</td>
+      <td class='col-last last-stat cg-last'>${p.last_g ?? '—'}</td>
+      <td class='col-last last-stat cg-last'>${p.last_a ?? '—'}</td>
+      <td class='col-last last-pts cg-last'>${p.last_pts ?? '—'}</td>
+      <td class='col-last col-last-last cg-last cg-ppg-last'><span class='ppg-last'>${ppgLastHtml}</span></td>
+      ` : ''}
+
+      <td class='col-proj col-proj-first proj-stat'>${p.proj_gp ?? '—'}</td>
+      <td class='col-proj proj-stat'>${p.proj_g ?? '—'}</td>
+      ${isGoalie ? `
+      <td class='col-proj proj-stat'>${gs.l ?? '—'}</td>
+      <td class='col-proj proj-stat'>${gs.otl ?? '—'}</td>
+      <td class='col-proj proj-stat'>${gs.gaa ?? '—'}</td>
+      <td class='col-proj proj-stat'>${gs.svp != null ? gs.svp.toFixed(3) : '—'}</td>
+      <td class='col-proj col-proj-last proj-stat'>${p.proj_a ?? '—'}</td>
+      ` : `
+      <td class='col-proj proj-stat'>${p.proj_a ?? '—'}</td>
+      <td class='col-proj proj-pts'>${projPtsDisplay}${upsideHtml}</td>
+      <td class='col-proj col-proj-last cg-ppg-proj'><span class='ppg-proj'>${ppgProjHtml}</span></td>
+      `}
+
+      <td class='cg-salary'><span class='salary'>${aav}</span></td>
+      ${!isGoalie ? `<td class='cg-pp'><span class='pp-pct'>${ppPct}</span></td>` : ''}
+      <td class='cg-tier'><span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span></td>
+      ${!isGoalie ? `<td class='cg-trend'><span class='trend trend-${trend}'>${trendLbl}</span></td>` : ''}
+      <td class='cg-value'><div class='pv-bar ${pc}' onmouseenter='showTooltip(this,"Efficiency = Proj Score ÷ √AAV($M)${pv !== null ? ` = ${pv}` : ` — no AAV data`}")' onmouseleave='hideTooltip()'>
+        <span class='pv-num'>${pv !== null ? pv : '—'}</span>
+        ${pv !== null ? `<div class='pv-track'><div class='pv-fill' style='width:${Math.min(100, Math.round((pv/_effMax)*100))}%'></div></div>` : ''}
+      </div></td>
+      <td class='cg-risk'>${riskHtml}</td>
+    </tr>`;
+}
+
+function renderAll() {
+  const filtered = sorted(getFiltered());
+  const posFilter = activeFilters.pos;
+  const goalieWrap = document.getElementById('goalieTableWrap');
+
+  // Decide which tables to show
+  const showGoalieTable = !posFilter || posFilter === 'G';
+  const showSkaterTable = posFilter !== 'G';
+
+  const skaters = filtered.filter(p => p.pos !== 'G');
+  const goalies  = filtered.filter(p => p.pos === 'G');
+
+  // Use position rank (1-based within the filtered list) when a pos filter is active; global rank otherwise
+  const useLocalRank = !!posFilter;
+
+  document.getElementById('resultsCount').textContent = filtered.length + ' players';
+
+  // ── Skater table ──
+  if (showSkaterTable) {
+    document.getElementById('playerThead').innerHTML = skaterHeaderHTML();
+    document.querySelector('#playerTable thead th[data-col="rank"]').classList.add('sorted-asc');
+    const tbody = document.getElementById('playerTbody');
+    if (!skaters.length) {
+      tbody.innerHTML = '<tr><td colspan="21"><div class="empty-state"><div class="icon">🔍</div>No players match your filters.</div></td></tr>';
+    } else {
+      tbody.innerHTML = skaters.map((p, i) => buildRowHTML(p, useLocalRank ? i + 1 : null)).join('');
+    }
+  }
+
+  // ── Goalie table (All/F/D view: shown below skater table) ──
+  if (showGoalieTable && posFilter !== 'G') {
+    goalieWrap.style.display = '';
+    document.getElementById('goalieThead').innerHTML = goalieHeaderHTML();
+    const sortedG = sortedGoalies(goalies);
+    document.querySelectorAll('#goalieTable thead th[data-col]').forEach(th => {
+      th.classList.remove('sorted-asc', 'sorted-desc');
+      if (th.dataset.col === goalieSortCol) th.classList.add(goalieSortDir === 'asc' ? 'sorted-asc' : 'sorted-desc');
+    });
+    const gtbody = document.getElementById('goalieTbody');
+    if (!sortedG.length) {
+      gtbody.innerHTML = '<tr><td colspan="15"><div class="empty-state"><div class="icon">🔍</div>No goalies match your filters.</div></td></tr>';
+    } else {
+      gtbody.innerHTML = sortedG.map((p, i) => buildRowHTML(p, i + 1)).join('');
+    }
+  } else if (posFilter === 'G') {
+    // G-only filter: put goalie table in the main slot, hide the separate goalie wrap
+    goalieWrap.style.display = 'none';
+    const sortedG = sortedGoalies(goalies);
+    document.getElementById('playerThead').innerHTML = goalieHeaderHTML();
+    document.querySelectorAll('#playerTable thead th[data-col]').forEach(th => {
+      th.classList.remove('sorted-asc', 'sorted-desc');
+      if (th.dataset.col === goalieSortCol) th.classList.add(goalieSortDir === 'asc' ? 'sorted-asc' : 'sorted-desc');
+    });
+    const tbody = document.getElementById('playerTbody');
+    if (!sortedG.length) {
+      tbody.innerHTML = '<tr><td colspan="15"><div class="empty-state"><div class="icon">🔍</div>No goalies match your filters.</div></td></tr>';
+    } else {
+      tbody.innerHTML = sortedG.map((p, i) => buildRowHTML(p, i + 1)).join('');
+    }
+  } else {
+    goalieWrap.style.display = 'none';
+  }
+
+  renderCards(filtered);
+  applyColVis();
+}
+
+// ── RENDER MOBILE CARDS ───────────────────────────────────
+function renderCards(filtered) {
+  const container = document.getElementById('playerCards');
+  if (!container) return;
+  if (!filtered.length) {
+    container.innerHTML = '<div class="empty-state"><div class="icon">🔍</div>No players match your filters.</div>';
+    return;
+  }
+  container.innerHTML = filtered.map(p => {
+    const trend    = getTrend(p);
+    const diff     = p.proj_pts - (p.last_pts || p.proj_pts);
+    const diffStr  = diff > 0 ? '+' + diff : '' + diff;
+    const trendLbl = trend === 'up' ? `↑ ${diffStr}` : trend === 'down' ? `↓ ${diffStr}` : `→ ${diffStr}`;
+    const pv       = getPV(p);
+    const pc       = pvClass(pv);
+    const aav      = p.aav ? `$${parseFloat(p.aav).toFixed(2)}M` : '—';
+    const isGoalie = p.pos === 'G';
+    const gs       = isGoalie ? getGoalieStats(p) : {};
+    const statBlock = isGoalie ? `
+      <div class='card-stat-group'>
+        <div class='card-stat-label proj'>🥅 2026-27</div>
+        <div class='card-stat-row'>
+          <div class='card-stat-item'><div class='v proj-stat'>${p.proj_g ?? '—'}</div><div class='l'>W</div></div>
+          <div class='card-stat-item'><div class='v proj-stat'>${gs.l ?? '—'}</div><div class='l'>L</div></div>
+          <div class='card-stat-item'><div class='v proj-stat'>${gs.gaa ?? '—'}</div><div class='l'>GAA</div></div>
+          <div class='card-stat-item'><div class='v proj-stat'>${gs.svp != null ? gs.svp.toFixed(3) : '—'}</div><div class='l'>SV%</div></div>
+        </div>
+      </div>` : `
+      <div class='card-stat-group'>
+        <div class='card-stat-label last'>📅 2025-26</div>
+        <div class='card-stat-row'>
+          <div class='card-stat-item'><div class='v last-stat'>${p.last_g ?? '—'}</div><div class='l'>G</div></div>
+          <div class='card-stat-item'><div class='v last-stat'>${p.last_a ?? '—'}</div><div class='l'>A</div></div>
+          <div class='card-stat-item'><div class='v last-pts'>${p.last_pts ?? '—'}</div><div class='l'>PTS</div></div>
+          <div class='card-stat-item'><div class='v ppg-last'>${ppg(p.last_pts, p.last_gp)}</div><div class='l'>PPG</div></div>
+        </div>
+      </div>
+      <div class='card-stat-group'>
+        <div class='card-stat-label proj'>🎯 2026-27</div>
+        <div class='card-stat-row'>
+          <div class='card-stat-item'><div class='v proj-stat'>${p.proj_g ?? '—'}</div><div class='l'>G</div></div>
+          <div class='card-stat-item'><div class='v proj-stat'>${p.proj_a ?? '—'}</div><div class='l'>A</div></div>
+          <div class='card-stat-item'><div class='v proj-pts'>${p.proj_pts ?? '—'}</div><div class='l'>PTS</div></div>
+          <div class='card-stat-item'><div class='v ppg-proj'>${ppg(p.proj_pts, p.proj_gp)}</div><div class='l'>PPG</div></div>
+        </div>
+      </div>`;
+    return `<div class='player-card ${tierClass(p.tier)}'>
+      <div class='card-header'>
+        <span class='card-rank'>${p.rank}</span>
+        <div>
+          <div class='card-name'>${p.name}</div>
+          ${p.notes ? `<div class='card-note'>${p.notes}</div>` : ''}
+        </div>
+        <div class='card-badges'>
+          <span class='team-tag'>${p.team}</span>
+          <span class='pos-tag pos-${p.pos}'>${p.pos}</span>
+        </div>
+      </div>
+      <div class='card-body'><div class='card-stats'>${statBlock}</div></div>
+      <div class='card-footer'>
+        <span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span>
+        <span class='trend trend-${trend}'>${trendLbl}</span>
+        <div class='pv-bar ${pc}' style='flex:1;min-width:60px' onmouseenter='showTooltip(this,"Efficiency: ${pv !== null ? pv : `—`}")' onmouseleave='hideTooltip()'>
+          <span class='pv-num'>${pv !== null ? pv : '—'}</span>
+          <div class='pv-track'><div class='pv-fill' style='width:${pv !== null ? Math.min(100, Math.round((pv/_effMax)*100)) : 0}%'></div></div>
+        </div>
+        <span class='salary'>${aav}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+
+// ── RENDER SLEEPERS ───────────────────────────────────────
+function renderSleepers() {
+  const all = allPlayers.filter(p => parseInt(tierNum(p.tier)) >= 8 && p.pos !== 'G')
+    .sort((a, b) => (b.proj_pts || 0) - (a.proj_pts || 0));
+  const established = all.filter(p => p.aav != null && p.aav > 1.5);
+  const rookies     = all.filter(p => p.aav == null || p.aav <= 1.5);
+
+  function cardHtml(p, i, color) {
+    return `<div class='sleeper-card' style='border-color:${color};cursor:pointer' onclick='openModal(${p.id})'>
+    <div class='sleeper-rank'><span style='color:${color}'>●</span> Sleeper Pick #${i + 1}</div>
+    <div class='sleeper-name'>${p.name}</div>
+    <div class='sleeper-meta'>${p.team} · ${p.pos} · Age ${p.age ?? 'N/A'} · ${p.proj_gp} GP${p.aav ? ' · $' + p.aav + 'M' : ' · ELC'}${p.last_gp ? ' · ' + p.last_gp + ' GP last yr' : ''}</div>
+    <div class='sleeper-stats'>
+      <div class='sleeper-stat'><div class='val proj-pts'>${p.proj_pts}</div><div class='lbl'>PTS</div></div>
+      <div class='sleeper-stat'><div class='val ppg-proj'>${ppg(p.proj_pts, p.proj_gp)}</div><div class='lbl'>PPG</div></div>
+      <div class='sleeper-stat'><div class='val last-pts'>${p.last_pts ?? '—'}</div><div class='lbl'>Last PTS</div></div>
+    </div>
+    <div class='sleeper-note'>"${p.notes}"</div>
+  </div>`;
+  }
+
+  const grid = document.getElementById('sleepersGrid');
+  grid.innerHTML = established.length
+    ? established.map((p, i) => cardHtml(p, i, '#34d399')).join('')
+    : '<div class="empty-state"><div class="icon">🌟</div>No established sleepers yet.</div>';
+
+  const rookieGrid = document.getElementById('sleepersRookieGrid');
+  rookieGrid.innerHTML = rookies.length
+    ? rookies.map((p, i) => cardHtml(p, i, '#60a5fa')).join('')
+    : '<div class="empty-state"><div class="icon">🧢</div>No rookie sleepers yet.</div>';
+}
+
+// ── RENDER BUSTS ─────────────────────────────────────────
+function renderBusts() {
+  const busts = allPlayers.filter(p => p.bust_alert).sort((a, b) => a.rank - b.rank);
+  const grid = document.getElementById('bustsGrid');
+  if (!busts.length) {
+    grid.innerHTML = '<div class="empty-state"><div class="icon">💣</div>No bust alerts set yet.</div>';
+    return;
+  }
+  grid.innerHTML = busts.map(p => {
+    const trend = getTrend(p);
+    const diff  = p.proj_pts - (p.last_pts || p.proj_pts);
+    const diffStr = diff > 0 ? '+' + diff : '' + diff;
+    const trendLbl = trend === 'up' ? `↑ ${diffStr}` : trend === 'down' ? `↓ ${diffStr}` : `→ ${diffStr}`;
+    return `<div class='sleeper-card' style='border-color:#fda4af;background:#fff1f2' onclick='openModal(${p.id})'>
+      <div class='sleeper-rank' style='color:#be123c'>💣 Bust Alert — Rank #${p.rank}</div>
+      <div class='sleeper-name'>${p.name}</div>
+      <div class='sleeper-meta'>${p.team} · ${p.pos} · Age ${p.age ?? 'N/A'}${p.aav ? ' · $' + p.aav + 'M' : ''}</div>
+      <div class='sleeper-stats'>
+        <div class='sleeper-stat'><div class='val last-pts'>${p.last_pts ?? '—'}</div><div class='lbl'>Last PTS</div></div>
+        <div class='sleeper-stat'><div class='val proj-pts'>${p.proj_pts}</div><div class='lbl'>Proj PTS</div></div>
+        <div class='sleeper-stat'><div class='val' style='color:#be123c'>${trendLbl}</div><div class='lbl'>Trend</div></div>
+      </div>
+      ${p.notes ? `<div class='sleeper-note' style='color:#be123c'>"${p.notes}"</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ── RENDER IMPROVERS ─────────────────────────────────────
+function renderImprovers() {
+  const grid = document.getElementById('improversGrid');
+  const eligible = allPlayers.filter(p => p.last_pts != null && p.proj_pts != null && (p.last_gp ?? 0) >= 40)
+    .map(p => ({ ...p, delta: p.proj_pts - p.last_pts }))
+    .filter(p => p.delta > 0)
+    .sort((a, b) => b.delta - a.delta)
+    .slice(0, 20);
+
+  if (!eligible.length) {
+    grid.innerHTML = `<div class='empty-state'><div class='icon'>📈</div>No last-season data yet — this tab will populate once 2025-26 stats are entered.</div>`;
+    return;
+  }
+  grid.innerHTML = eligible.map((p, i) => `<div class='sleeper-card' style='border-color:#86efac;cursor:pointer' onclick='openModal(${p.id})'>
+    <div class='sleeper-rank' style='color:#15803d'>📈 Improver #${i + 1}</div>
+    <div class='sleeper-name'>${p.name}</div>
+    <div class='sleeper-meta'>${p.team} · ${p.pos} · Age ${p.age ?? 'N/A'}${p.aav ? ' · $' + p.aav + 'M' : ''} · ${p.last_gp} GP last yr</div>
+    <div class='sleeper-stats'>
+      <div class='sleeper-stat'><div class='val last-pts'>${p.last_pts}</div><div class='lbl'>Last PTS</div></div>
+      <div class='sleeper-stat'><div class='val proj-pts'>${p.proj_pts}</div><div class='lbl'>Proj PTS</div></div>
+      <div class='sleeper-stat'><div class='val' style='color:#15803d;font-size:1.3em'>+${p.delta}</div><div class='lbl'>Delta</div></div>
+    </div>
+    ${p.notes ? `<div class='sleeper-note' style='color:#15803d'>"${p.notes}"</div>` : ''}
+  </div>`).join('');
+}
+
+// ── RENDER REGRESSION ────────────────────────────────────
+function renderRegression() {
+  const grid = document.getElementById('regressionGrid');
+  const eligible = allPlayers.filter(p => p.last_pts != null && p.proj_pts != null)
+    .map(p => ({ ...p, delta: p.proj_pts - p.last_pts }))
+    .filter(p => p.delta < 0)
+    .sort((a, b) => a.delta - b.delta)
+    .slice(0, 20);
+
+  if (!eligible.length) {
+    grid.innerHTML = `<div class='empty-state'><div class='icon'>📉</div>No last-season data yet — this tab will populate once 2025-26 stats are entered.</div>`;
+    return;
+  }
+  grid.innerHTML = eligible.map((p, i) => `<div class='sleeper-card' style='border-color:#fca5a5;background:#fff8f8;cursor:pointer' onclick='openModal(${p.id})'>
+    <div class='sleeper-rank' style='color:#dc2626'>📉 Regression #${i + 1}</div>
+    <div class='sleeper-name'>${p.name}</div>
+    <div class='sleeper-meta'>${p.team} · ${p.pos} · Age ${p.age ?? 'N/A'}${p.aav ? ' · $' + p.aav + 'M' : ''} · ${p.last_gp} GP last yr</div>
+    <div class='sleeper-stats'>
+      <div class='sleeper-stat'><div class='val last-pts'>${p.last_pts}</div><div class='lbl'>Last PTS</div></div>
+      <div class='sleeper-stat'><div class='val proj-pts'>${p.proj_pts}</div><div class='lbl'>Proj PTS</div></div>
+      <div class='sleeper-stat'><div class='val' style='color:#dc2626;font-size:1.3em'>${p.delta}</div><div class='lbl'>Delta</div></div>
+    </div>
+    ${p.notes ? `<div class='sleeper-note' style='color:#dc2626'>"${p.notes}"</div>` : ''}
+  </div>`).join('');
+}
+
+
+function renderScarcity() {
+  const POSITIONS = ['C', 'LW', 'RW', 'D', 'G'];
+  const POS_LABEL = { C: 'Centre', LW: 'Left Wing', RW: 'Right Wing', D: 'Defence', G: 'Goalie' };
+
+  // Group by position, then by tier number
+  const counts = {};
+  POSITIONS.forEach(pos => { counts[pos] = { total: 0 }; });
+  allPlayers.forEach(p => {
+    if (!p.pos || !counts[p.pos]) return;
+    counts[p.pos].total++;
+    const n = tierNum(p.tier);
+    if (n) counts[p.pos][n] = (counts[p.pos][n] || 0) + 1;
+  });
+
+  // Tiers 1-3 = premium, 4-6 = good, 7+ = depth
+  function premiumCount(pos) {
+    const c = counts[pos];
+    return (c['1'] || 0) + (c['2'] || 0) + (c['3'] || 0);
+  }
+  function t1Count(pos) { return counts[pos]['1'] || 0; }
+
+  function cliffMsg(pos) {
+    const t1 = t1Count(pos), prem = premiumCount(pos);
+    if (pos === 'D') {
+      if (t1 <= 3) return `<strong>⚠️ Critical:</strong> Only ${t1} Tier 1 D in the entire guide. Don't wait past round 3.`;
+      if (prem <= 8) return `<strong>Take note:</strong> Only ${prem} Tier 1–3 Ds. Depth drops off fast.`;
+      return `<strong>Decent depth:</strong> ${prem} Tier 1–3 Ds available.`;
+    }
+    if (pos === 'G') return `<strong>Goalies:</strong> ${prem} Tier 1–3 options — most pools take 2. Target your starter in rounds 4-6.`;
+    if (t1 === 0) return `<strong>No Tier 1</strong> at this position — Tier 2–3 players are your ceiling.`;
+    if (t1 <= 4) return `<strong>⚠️ Scarce:</strong> Only ${t1} Tier 1 ${POS_LABEL[pos]}s. Premium spots go fast.`;
+    return `${t1} Tier 1 + ${counts[pos]['2']||0} Tier 2 = <strong>${prem} premium options</strong>.`;
+  }
+
+  function alertBadge(pos) {
+    const prem = premiumCount(pos);
+    if (pos === 'D' && t1Count(pos) <= 3) return `<span class='scarcity-alert alert-critical'>🔴 Scarce</span>`;
+    if (prem <= 5) return `<span class='scarcity-alert alert-low'>🟡 Limited</span>`;
+    return `<span class='scarcity-alert alert-ok'>🟢 Available</span>`;
+  }
+
+  // Collect all tier numbers seen across all players
+  const allTierNums = [...new Set(allPlayers.map(p => tierNum(p.tier)).filter(Boolean))]
+    .sort((a, b) => parseInt(a) - parseInt(b));
+  const maxByTierNum = {};
+  allTierNums.forEach(n => {
+    maxByTierNum[n] = Math.max(...POSITIONS.map(pos => counts[pos][n] || 0), 1);
+  });
+
+  // Bar fill color by tier number
+  const TIER_COLORS = ['#f59e0b','#3b82f6','#8b5cf6','#34d399','#38bdf8','#f472b6','#fb923c','#94a3b8','#cbd5e1','#d4d4d8','#fda4af'];
+  function fillColor(n) { return TIER_COLORS[(parseInt(n) - 1) % TIER_COLORS.length]; }
+
+  const container = document.getElementById('scarcityChart');
+  container.innerHTML = `
+    <div class='scarcity-wrap'>
+      <div class='scarcity-intro'>
+        <h2>📊 Position Scarcity Guide</h2>
+        <p>How many Tier 1–3 players exist at each position. Use this to plan when to draft — positions with few premium options require earlier picks.</p>
+      </div>
+      <div class='scarcity-grid'>
+        ${POSITIONS.map(pos => {
+          const c = counts[pos];
+          return `<div class='scarcity-card'>
+            <div class='scarcity-card-header'>
+              <span class='scarcity-pos scarcity-pos-${pos}'>${pos}</span>
+              <span style='font-size:0.85em;font-weight:600;color:#1e293b'>${POS_LABEL[pos]}</span>
+              ${alertBadge(pos)}
+              <span class='scarcity-total'>${c.total} players</span>
+            </div>
+            <div class='scarcity-bars'>
+              ${allTierNums.map(n => {
+                const count = c[n] || 0;
+                const pct = Math.max(count > 0 ? Math.round((count / maxByTierNum[n]) * 100) : 0, count > 0 ? 8 : 0);
+                return `<div class='scarcity-bar-row'>
+                  <span class='scarcity-bar-label' style='font-size:0.7em;font-weight:700;color:#475569'>T${n}</span>
+                  <div class='scarcity-bar-track'>
+                    <div class='scarcity-bar-fill' style='width:${pct}%;background:${fillColor(n)}'>
+                      ${count > 0 ? `<span class='scarcity-bar-count'>${count}</span>` : ''}
+                    </div>
+                  </div>
+                  ${count === 0 ? `<span style='font-size:0.72em;color:#cbd5e1;margin-left:4px'>0</span>` : ''}
+                </div>`;
+              }).join('')}
+            </div>
+            <div class='scarcity-cliff'>${cliffMsg(pos)}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
+// ── SCOUTING MODAL ───────────────────────────────────────
+function openModal(id) {
+  const p = allPlayers.find(p => p.id === id);
+  if (!p) return;
+  document.getElementById('modalName').textContent = p.name;
+
+  // Badges
+  const badges = [
+    `<span class='team-tag'>${p.team}</span>`,
+    `<span class='pos-tag pos-${p.pos}'>${p.pos}</span>`,
+    `<span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span>`,
+    p.risk ? `<span class='risk risk-${p.risk}'>${p.risk === 'Low' ? '🟢' : p.risk === 'Medium' ? '🟡' : '🔴'} ${p.risk} Risk</span>` : '',
+    p.bust_alert ? `<span class='bust'>💣 Bust Alert</span>` : '',
+  ].filter(Boolean).join('');
+  document.getElementById('modalBadges').innerHTML = badges;
+
+  // Stats
+  const isG = p.pos === 'G';
+  const gs  = getGoalieStats(p);
+  document.getElementById('modalStats').innerHTML = `
+    ${!isG ? `<div class='modal-stat-group'>
+      <div class='modal-stat-label last'>📅 2025-26 Actual</div>
+      <div class='modal-stat-row'>
+        <div class='modal-stat-item'><div class='v last-stat'>${p.last_g ?? '—'}</div><div class='l'>G</div></div>
+        <div class='modal-stat-item'><div class='v last-stat'>${p.last_a ?? '—'}</div><div class='l'>A</div></div>
+        <div class='modal-stat-item'><div class='v last-pts'>${p.last_pts ?? '—'}</div><div class='l'>PTS</div></div>
+        <div class='modal-stat-item'><div class='v ppg-last'>${ppg(p.last_pts, p.last_gp)}</div><div class='l'>PPG</div></div>
+      </div>
+    </div>` : ''}
+    <div class='modal-stat-group'>
+      <div class='modal-stat-label proj'>${isG ? '🥅' : '🎯'} 2026-27 Projection</div>
+      <div class='modal-stat-row'>
+        ${isG ? `
+        <div class='modal-stat-item'><div class='v proj-stat'>${p.proj_g ?? '—'}</div><div class='l'>W</div></div>
+        <div class='modal-stat-item'><div class='v proj-stat'>${gs.l ?? '—'}</div><div class='l'>L</div></div>
+        <div class='modal-stat-item'><div class='v proj-stat'>${gs.otl ?? '—'}</div><div class='l'>OT</div></div>
+        <div class='modal-stat-item'><div class='v proj-stat'>${gs.gaa ?? '—'}</div><div class='l'>GAA</div></div>
+        <div class='modal-stat-item'><div class='v proj-stat'>${gs.svp != null ? gs.svp.toFixed(3) : '—'}</div><div class='l'>SV%</div></div>
+        <div class='modal-stat-item'><div class='v proj-stat'>${p.proj_a ?? '—'}</div><div class='l'>SO</div></div>
+        ` : `
+        <div class='modal-stat-item'><div class='v proj-stat'>${p.proj_g}</div><div class='l'>G</div></div>
+        <div class='modal-stat-item'><div class='v proj-stat'>${p.proj_a}</div><div class='l'>A</div></div>
+        <div class='modal-stat-item'><div class='v proj-pts'>${p.proj_pts}</div><div class='l'>PTS</div></div>
+        <div class='modal-stat-item'><div class='v ppg-proj'>${ppg(p.proj_pts, p.proj_gp)}</div><div class='l'>PPG</div></div>
+        `}
+      </div>
+    </div>`;
+
+  // Body
+  let body = '';
+  if (p.notes) body += `<div><div class='modal-section-title'>Notes</div><div class='modal-scouting'>${p.notes}</div></div>`;
+  if (p.comp_player) body += `<div><div class='modal-section-title'>Comparable Player</div><div class='modal-comp'>🏒 ${p.comp_player}</div></div>`;
+  if (p.key_risks) {
+    const risks = p.key_risks.split(',').map(r => r.trim()).filter(Boolean);
+    body += `<div><div class='modal-section-title'>Key Risks</div><div class='modal-risks'>${risks.map(r => `<div class='modal-risk-item'>${r}</div>`).join('')}</div></div>`;
+  }
+  if (!body) body = `<div class='modal-scouting' style='color:#94a3b8;font-style:italic'>No scouting report available yet.</div>`;
+  document.getElementById('modalBody').innerHTML = body;
+
+  document.getElementById('scoutingModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('scoutingModal')) closeModalDirect();
+}
+function closeModalDirect() {
+  document.getElementById('scoutingModal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+
+// ── TABS ─────────────────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── CSV EXPORT ────────────────────────────────────────────
+function downloadCSV() {
+  const headers = ['Rank','Player','Team','Pos','Age','Last GP','Last G','Last A','Last PTS','Last PPG','Proj GP','Proj G','Proj A','Proj PTS','Proj PPG','Upside','AAV','PP%','Tier','Trend','Efficiency','Notes'];
+  const rows = sorted(getFiltered()).map(p => {
+    const trend = getTrend(p);
+    const diff  = p.proj_pts - (p.last_pts || p.proj_pts);
+    return [p.rank, p.name, p.team, p.pos, p.age,
+      p.last_gp??'', p.last_g??'', p.last_a??'', p.last_pts??'', ppg(p.last_pts, p.last_gp),
+      p.proj_gp, p.proj_g, p.proj_a, p.proj_pts, ppg(p.proj_pts, p.proj_gp),
+      p.upside ?? '',
+      p.aav ? '$'+p.aav+'M' : '', p.pp_pct != null ? p.pp_pct+'%' : '',
+      p.tier, (trend==='up'?'+':'')+diff, getPV(p), p.notes||''];
+  });
+  const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'poolers-guide-2026-27.csv';
+  a.click();
+}
+
+init();
+</script>
+</body>
+</html>
