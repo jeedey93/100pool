@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang='en'>
+<html lang='fr'>
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>Poolers Guide 2026-27 — 100% Pool</title>
-<meta name='description' content='NHL fantasy pool player projections for 2026-27. Sort and filter by points, goals, assists, tier and more.'>
+<title>Guide des poolers 2026-27 — 100% Pool</title>
+<meta name='description' content='Projections de joueurs NHL pour 2026-27. Triez et filtrez par points, buts, passes, palier et plus.'>
 <link rel='icon' type='image/png' href='../100pool.jpg'>
 <link rel='apple-touch-icon' href='../100pool.jpg?v=2'>
 <style>
@@ -456,25 +456,25 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
       <img src='../100pool.jpg' alt='Logo'>
       <span>100% Pool</span>
     </div>
-    <a href='../' class='nav-back' onmouseover='this.style.background="rgba(255,255,255,0.12)";this.style.color="white"' onmouseout='this.style.background="";this.style.color="rgba(255,255,255,0.7)"'>← Back to Home</a>
+    <a href='../' class='nav-back' onmouseover='this.style.background="rgba(255,255,255,0.12)";this.style.color="white"' onmouseout='this.style.background="";this.style.color="rgba(255,255,255,0.7)"'>← Retour à l'accueil</a>
   </div>
 </nav>
 
 <!-- MAIN -->
 <div class='page-wrap'>
   <div class='page-header'>
-    <h1>📋 Poolers Guide <span class='badge'>2026-27</span></h1>
-    <p>NHL player projections · Sort any column · Filter by team, position, tier or trend</p>
+    <h1>📋 Guide des poolers <span class='badge'>2026-27</span></h1>
+    <p>Projections de joueurs NHL · Triez n'importe quelle colonne · Filtrez par équipe, position, palier ou tendance</p>
   </div>
 
   <!-- TABS -->
   <div class='tabs'>
-    <button class='tab-btn active' onclick='switchTab("all", this)'>All Players</button>
-    <button class='tab-btn' onclick='switchTab("sleepers", this)'>🌟 Sleepers</button>
-    <button class='tab-btn' onclick='switchTab("busts", this)'>💣 Bust Alerts</button>
-    <button class='tab-btn' onclick='switchTab("improvers", this)'>📈 Top Improvers</button>
-    <button class='tab-btn' onclick='switchTab("regression", this)'>📉 Top Regression</button>
-    <button class='tab-btn' onclick='switchTab("scarcity", this)'>📊 Scarcity</button>
+    <button class='tab-btn active' onclick='switchTab("all", this)'>Tous les joueurs</button>
+    <button class='tab-btn' onclick='switchTab("sleepers", this)'>🌟 Révélations</button>
+    <button class='tab-btn' onclick='switchTab("busts", this)'>💣 Alertes déception</button>
+    <button class='tab-btn' onclick='switchTab("improvers", this)'>📈 Top progressions</button>
+    <button class='tab-btn' onclick='switchTab("regression", this)'>📉 Top régressions</button>
+    <button class='tab-btn' onclick='switchTab("scarcity", this)'>📊 Rareté</button>
   </div>
 
   <!-- TAB: ALL PLAYERS -->
@@ -482,14 +482,14 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
     <div class='controls'>
       <!-- Search -->
       <div class='search-box'>
-        <input type='text' id='searchInput' placeholder='Search player…' oninput='applyFilters()'>
+        <input type='text' id='searchInput' placeholder='Rechercher un joueur…' oninput='applyFilters()'>
       </div>
       <span class='results-count' id='resultsCount'></span>
 
       <!-- Position -->
       <div class='filter-group'>
         <span class='filter-label'>Pos</span>
-        <button class='pill active' data-filter='pos' data-value='' onclick='setPill(this,"pos")'>All</button>
+        <button class='pill active' data-filter='pos' data-value='' onclick='setPill(this,"pos")'>Tous</button>
         <button class='pill' data-filter='pos' data-value='F' onclick='setPill(this,"pos")'>F</button>
         <button class='pill' data-filter='pos' data-value='D' onclick='setPill(this,"pos")'>D</button>
         <button class='pill' data-filter='pos' data-value='G' onclick='setPill(this,"pos")'>G</button>
@@ -497,42 +497,42 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 
       <!-- Tier -->
       <div class='filter-group' id='tierPills'>
-        <span class='filter-label'>Tier</span>
-        <button class='pill active' data-filter='tier' data-value='' onclick='setPill(this,"tier")'>All</button>
+        <span class='filter-label'>Palier</span>
+        <button class='pill active' data-filter='tier' data-value='' onclick='setPill(this,"tier")'>Tous</button>
       </div>
 
       <!-- Team popover -->
       <div class='team-popover-wrap' id='teamPopoverWrap'>
-        <button class='pill' id='teamBtn' onclick='toggleTeamPopover(event)'>Team ▾</button>
+        <button class='pill' id='teamBtn' onclick='toggleTeamPopover(event)'>Équipe ▾</button>
         <div class='team-popover' id='teamPopover'></div>
       </div>
 
       <!-- Risk -->
       <div class='filter-group'>
-        <span class='filter-label'>Risk</span>
-        <button class='pill active' data-filter='risk' data-value='' onclick='setPill(this,"risk")'>All</button>
-        <button class='pill' data-filter='risk' data-value='Low' onclick='setPill(this,"risk")'>🟢 Low</button>
-        <button class='pill' data-filter='risk' data-value='Medium' onclick='setPill(this,"risk")'>🟡 Med</button>
-        <button class='pill' data-filter='risk' data-value='High' onclick='setPill(this,"risk")'>🔴 High</button>
+        <span class='filter-label'>Risque</span>
+        <button class='pill active' data-filter='risk' data-value='' onclick='setPill(this,"risk")'>Tous</button>
+        <button class='pill' data-filter='risk' data-value='Low' onclick='setPill(this,"risk")'>🟢 Faible</button>
+        <button class='pill' data-filter='risk' data-value='Medium' onclick='setPill(this,"risk")'>🟡 Moy.</button>
+        <button class='pill' data-filter='risk' data-value='High' onclick='setPill(this,"risk")'>🔴 Élevé</button>
       </div>
 
       <!-- Actions -->
       <div style='margin-left:auto;display:flex;gap:6px;align-items:center;'>
         <div class='col-toggle-wrap'>
-          <button class='ctrl-btn' onclick='toggleColMenu(event)'>⚙ Columns</button>
+          <button class='ctrl-btn' onclick='toggleColMenu(event)'>⚙ Colonnes</button>
           <div class='col-toggle-menu' id='colMenu'>
-            <div class='menu-title'>Show / Hide</div>
-            <label><input type='checkbox' id='col-last' onchange='applyColVis()'> 📅 Last year stats</label>
-            <label><input type='checkbox' id='col-ppg' checked onchange='applyColVis()'> PPG (pts/game)</label>
-            <label><input type='checkbox' id='col-salary' checked onchange='applyColVis()'> 💰 Salary (AAV)</label>
-            <label><input type='checkbox' id='col-pp' onchange='applyColVis()'> PP% (powerplay points)</label>
-            <label><input type='checkbox' id='col-tier' checked onchange='applyColVis()'> Tier</label>
-            <label><input type='checkbox' id='col-trend' checked onchange='applyColVis()'> Trend</label>
-            <label><input type='checkbox' id='col-value' checked onchange='applyColVis()'> Efficiency (PTS÷√AAV)</label>
-            <label><input type='checkbox' id='col-risk' checked onchange='applyColVis()'> 🔴 Risk Rating</label>
+            <div class='menu-title'>Afficher / Masquer</div>
+            <label><input type='checkbox' id='col-last' onchange='applyColVis()'> 📅 Stats saison dernière</label>
+            <label><input type='checkbox' id='col-ppg' checked onchange='applyColVis()'> PPG (pts/partie)</label>
+            <label><input type='checkbox' id='col-salary' checked onchange='applyColVis()'> 💰 Salaire (AAV)</label>
+            <label><input type='checkbox' id='col-pp' onchange='applyColVis()'> PP% (points avantage numérique)</label>
+            <label><input type='checkbox' id='col-tier' checked onchange='applyColVis()'> Palier</label>
+            <label><input type='checkbox' id='col-trend' checked onchange='applyColVis()'> Tendance</label>
+            <label><input type='checkbox' id='col-value' checked onchange='applyColVis()'> Efficacité (PTS÷√AAV)</label>
+            <label><input type='checkbox' id='col-risk' checked onchange='applyColVis()'> 🔴 Niveau de risque</label>
           </div>
         </div>
-        <button class='ctrl-btn btn-primary' onclick='window.print()'>🖨 Print</button>
+        <button class='ctrl-btn btn-primary' onclick='window.print()'>🖨 Imprimer</button>
       </div>
     </div>
     <div class='table-wrap'>
@@ -542,7 +542,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
       </table>
     </div>
     <div class='table-wrap' id='goalieTableWrap' style='display:none;margin-top:28px;'>
-      <div class='section-label' style='font-size:0.85em;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#64748b;padding:0 0 8px 4px;'>🥅 Goalies</div>
+      <div class='section-label' style='font-size:0.85em;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#64748b;padding:0 0 8px 4px;'>🥅 Gardiens</div>
       <table id='goalieTable'>
         <thead id='goalieThead'></thead>
         <tbody id='goalieTbody'></tbody>
@@ -555,17 +555,17 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   <!-- TAB: SLEEPERS -->
   <div id='tab-sleepers' class='tab-pane'>
     <div style='background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.83em;color:#15803d;line-height:1.6'>
-      <strong>🌟 What is a Sleeper?</strong> An under-the-radar player who combines strong points-per-dollar efficiency (proj PTS ÷ √AAV ≥ 25) with a ceiling at least 20 points above their base projection — and not already ranked in the top 30. These are players with a real breakout scenario: a new line, a contract year, a return from injury, or simply a conservative projection. High reward potential, low draft cost. Best targeted in the middle and later rounds.
+      <strong>🌟 Qu'est-ce qu'une Révélation?</strong> Un joueur sous-estimé qui combine une forte efficacité points-par-dollar (PTS proj ÷ √AAV ≥ 25) avec un plafond d'au moins 20 points au-dessus de sa projection de base — et qui n'est pas déjà dans le top 30. Ce sont des joueurs avec un vrai scénario de percée : un nouveau trio, une année de contrat, un retour de blessure, ou simplement une projection conservatrice. Fort potentiel de rendement, faible coût au repêchage. À cibler dans les rondes du milieu et de la fin.
     </div>
-    <h3 style='font-size:0.95em;font-weight:800;color:#065f46;margin-bottom:10px;margin-top:4px'>💰 Established Players (AAV &gt; $1.5M)</h3>
+    <h3 style='font-size:0.95em;font-weight:800;color:#065f46;margin-bottom:10px;margin-top:4px'>💰 Joueurs établis (AAV &gt; 1,5 M$)</h3>
     <div id='sleepersGrid' class='sleepers-grid'></div>
-    <h3 style='font-size:0.95em;font-weight:800;color:#1d4ed8;margin-bottom:10px;margin-top:24px'>🧢 Rookies &amp; Entry-Level (AAV ≤ $1.5M)</h3>
+    <h3 style='font-size:0.95em;font-weight:800;color:#1d4ed8;margin-bottom:10px;margin-top:24px'>🧢 Recrues &amp; contrats d'entrée (AAV ≤ 1,5 M$)</h3>
     <div id='sleepersRookieGrid' class='sleepers-grid'></div>
   </div>
 
   <div id='tab-busts' class='tab-pane'>
     <div style='background:#fff1f2;border:1px solid #fda4af;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.83em;color:#be123c;line-height:1.6'>
-      <strong>💣 What is a Bust Alert?</strong> An overpaid player ranked in the top 150 who combines High risk — injury history or volatile performance — with poor points-per-dollar efficiency (proj PTS ÷ √AAV &lt; 25) and a tight ceiling of 20 points or less above their base projection. You're spending a premium draft pick on someone unlikely to overdeliver. Proceed with caution.
+      <strong>💣 Qu'est-ce qu'une Alerte déception?</strong> Un joueur surpayé classé dans le top 150 qui combine un risque Élevé — historique de blessures ou performance volatile — avec une faible efficacité points-par-dollar (PTS proj ÷ √AAV &lt; 25) et un plafond serré de 20 points ou moins au-dessus de sa projection de base. Vous dépensez un choix de premier plan sur quelqu'un qui a peu de chances de surperformer. Procédez avec prudence.
     </div>
     <div id='bustsGrid' class='sleepers-grid'></div>
   </div>
@@ -573,7 +573,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   <!-- TAB: IMPROVERS -->
   <div id='tab-improvers' class='tab-pane'>
     <div style='background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.83em;color:#15803d;line-height:1.6'>
-      <strong>📈 Top Improvers:</strong> Players projected to score significantly more points than last season — ranked by the largest positive delta (2026-27 projection minus 2025-26 actuals). Requires last season stats to be populated.
+      <strong>📈 Top progressions :</strong> Joueurs projetés pour marquer significativement plus de points que la saison dernière — classés par le plus grand delta positif (projection 2026-27 moins les réels 2025-26). Nécessite que les stats de la saison dernière soient renseignées.
     </div>
     <div id='improversGrid' class='sleepers-grid'></div>
   </div>
@@ -581,7 +581,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   <!-- TAB: REGRESSION -->
   <div id='tab-regression' class='tab-pane'>
     <div style='background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.83em;color:#c2410c;line-height:1.6'>
-      <strong>📉 Regression Candidates:</strong> Players projected to score significantly fewer points than last season — ranked by the largest negative delta (2025-26 actuals minus 2026-27 projection). Age, injury history, or weaker team context driving the drop.
+      <strong>📉 Candidats à la régression :</strong> Joueurs projetés pour marquer significativement moins de points que la saison dernière — classés par le plus grand delta négatif (réels 2025-26 moins projection 2026-27). L'âge, les blessures ou un contexte d'équipe plus faible expliquent la baisse.
     </div>
     <div id='regressionGrid' class='sleepers-grid'></div>
   </div>
@@ -591,8 +591,8 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   </div>
 
   <div class='disclaimer'>
-    ⚠️ Projections are estimates based on prior seasons, line combos, and team context. Updated manually — last refreshed <span id='lastUpdated'></span>.
-    Not financial or gambling advice.
+    ⚠️ Les projections sont des estimations basées sur les saisons précédentes, les trios et le contexte d'équipe. Mis à jour manuellement — dernière mise à jour le <span id='lastUpdated'></span>.
+    Pas un conseil financier ou de jeu.
   </div>
 </div>
 
@@ -645,7 +645,7 @@ function tierRowClass(tier) {
 async function init() {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/poolers_players?order=rank.asc&select=*`, { headers: SB_HEADERS });
   allPlayers = await res.json();
-  document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString('en-CA');
+  document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString('fr-CA');
   // Build team popover
   const teams = [...new Set(allPlayers.map(p => p.team).filter(Boolean))].sort();
   const teamPopover = document.getElementById('teamPopover');
@@ -882,7 +882,7 @@ function toggleTeamPopover(e) {
 function setTeamFilter(val) {
   activeFilters.team = val;
   const btn = document.getElementById('teamBtn');
-  btn.textContent = val ? val + ' ✕' : 'Team ▾';
+  btn.textContent = val ? val + ' ✕' : 'Équipe ▾';
   btn.classList.toggle('team-active', !!val);
   document.querySelectorAll('#teamPopover .t-pill').forEach(p => p.classList.toggle('active', p.dataset.team === val));
   document.getElementById('teamPopover').classList.remove('open');
@@ -910,15 +910,15 @@ function goalieHeaderHTML() {
   return `
   <tr class='group-row'>
     <th colspan='5' style='background:#f1f5f9;'></th>
-    <th colspan='7' class='col-group-proj'>🥅 2026-27 PROJECTION</th>
+    <th colspan='7' class='col-group-proj'>🥅 PROJECTION 2026-27</th>
     <th colspan='3' style='background:#f1f5f9;'></th>
   </tr>
   <tr class='col-row'>
     <th onclick='sortGoalieBy("rank")'        data-col='rank'>#<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("name")'        data-col='name'>Player<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("team")'        data-col='team'>Team<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("name")'        data-col='name'>Joueur<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("team")'        data-col='team'>Équipe<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("pos")'         data-col='pos'>Pos<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("age")'         data-col='age'>Age<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("age")'         data-col='age'>Âge<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("proj_gp")'     data-col='proj_gp' class='col-group-proj' style='border-left:2px solid #bbf7d0;color:#15803d;'>GP<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("proj_g")'      data-col='proj_g'  class='col-group-proj' style='color:#15803d;'>W<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("_goalie_l")'   data-col='_goalie_l'   class='col-group-proj' style='color:#15803d;'>L<span class='sort-icon'></span></th>
@@ -927,8 +927,8 @@ function goalieHeaderHTML() {
     <th onclick='sortGoalieBy("_goalie_svp")' data-col='_goalie_svp' class='col-group-proj' style='color:#15803d;'>SV%<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("proj_a")'      data-col='proj_a'  class='col-group-proj' style='border-right:2px solid #bbf7d0;color:#15803d;'>SO<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("aav")'         data-col='aav'  class='cg-salary'>💰 AAV<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("tier")'        data-col='tier' class='cg-tier'>Tier<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("risk")'        data-col='risk' class='cg-risk'>Risk<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("tier")'        data-col='tier' class='cg-tier'>Palier<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("risk")'        data-col='risk' class='cg-risk'>Risque<span class='sort-icon'></span></th>
   </tr>`;
 }
 
@@ -936,16 +936,16 @@ function skaterHeaderHTML() {
   return `
   <tr class='group-row'>
     <th colspan='5' style='background:#f1f5f9;'></th>
-    <th id='gh-last' colspan='5' class='col-group-last cg-last'>📅 2025-26 ACTUAL</th>
-    <th colspan='4' class='col-group-proj'>🎯 2026-27 PROJECTION</th>
+    <th id='gh-last' colspan='5' class='col-group-last cg-last'>📅 2025-26 RÉEL</th>
+    <th colspan='4' class='col-group-proj'>🎯 PROJECTION 2026-27</th>
     <th colspan='7' style='background:#f1f5f9;'></th>
   </tr>
   <tr class='col-row'>
     <th onclick='sortBy("rank")'    data-col='rank'>#<span class='sort-icon'></span></th>
-    <th onclick='sortBy("name")'    data-col='name'>Player<span class='sort-icon'></span></th>
-    <th onclick='sortBy("team")'    data-col='team'>Team<span class='sort-icon'></span></th>
+    <th onclick='sortBy("name")'    data-col='name'>Joueur<span class='sort-icon'></span></th>
+    <th onclick='sortBy("team")'    data-col='team'>Équipe<span class='sort-icon'></span></th>
     <th onclick='sortBy("pos")'     data-col='pos'>Pos<span class='sort-icon'></span></th>
-    <th onclick='sortBy("age")'     data-col='age'>Age<span class='sort-icon'></span></th>
+    <th onclick='sortBy("age")'     data-col='age'>Âge<span class='sort-icon'></span></th>
     <th onclick='sortBy("last_gp")' data-col='last_gp' class='col-group-last cg-last' style='border-left:2px solid #bfdbfe;color:#1d4ed8;'>GP<span class='sort-icon'></span></th>
     <th onclick='sortBy("last_g")'  data-col='last_g'  class='col-group-last cg-last' style='color:#1d4ed8;'>G<span class='sort-icon'></span></th>
     <th onclick='sortBy("last_a")'  data-col='last_a'  class='col-group-last cg-last' style='color:#1d4ed8;'>A<span class='sort-icon'></span></th>
@@ -957,11 +957,11 @@ function skaterHeaderHTML() {
     <th onclick='sortBy("proj_pts")' data-col='proj_pts' class='col-group-proj' style='color:#15803d;font-weight:800;'>PTS<span class='sort-icon'></span></th>
     <th onclick='sortBy("_ppg_proj")' data-col='_ppg_proj' class='col-group-proj cg-ppg-proj' style='border-right:2px solid #bbf7d0;color:#15803d;'>PPG<span class='sort-icon'></span></th>
     <th onclick='sortBy("aav")'     data-col='aav'     class='cg-salary'>💰 AAV<span class='sort-icon'></span></th>
-    <th onclick='sortBy("pp_pct")' data-col='pp_pct' class='cg-pp' onmouseenter='showTooltip(this,"PP% = powerplay points ÷ total points × 100")' onmouseleave='hideTooltip()'>PP%<span class='sort-icon'></span></th>
-    <th onclick='sortBy("tier")'    data-col='tier'     class='cg-tier'>Tier<span class='sort-icon'></span></th>
-    <th onclick='sortBy("_trend")'  data-col='_trend'   class='cg-trend'>Trend<span class='sort-icon'></span></th>
-    <th onclick='sortBy("_pv")'     data-col='_pv'      class='cg-value'>Efficiency<span class='sort-icon'></span></th>
-    <th onclick='sortBy("risk")'    data-col='risk'     class='cg-risk'>Risk<span class='sort-icon'></span></th>
+    <th onclick='sortBy("pp_pct")' data-col='pp_pct' class='cg-pp' onmouseenter='showTooltip(this,"PP% = points en avantage numérique ÷ points totaux × 100")' onmouseleave='hideTooltip()'>PP%<span class='sort-icon'></span></th>
+    <th onclick='sortBy("tier")'    data-col='tier'     class='cg-tier'>Palier<span class='sort-icon'></span></th>
+    <th onclick='sortBy("_trend")'  data-col='_trend'   class='cg-trend'>Tendance<span class='sort-icon'></span></th>
+    <th onclick='sortBy("_pv")'     data-col='_pv'      class='cg-value'>Efficacité<span class='sort-icon'></span></th>
+    <th onclick='sortBy("risk")'    data-col='risk'     class='cg-risk'>Risque<span class='sort-icon'></span></th>
   </tr>`;
 }
 
@@ -977,14 +977,14 @@ function buildRowHTML(p, displayRank) {
     const noteFull = (p.notes || '').replace(/"/g, '&quot;');
     const aav      = p.aav ? `$${parseFloat(p.aav).toFixed(2)}M` : '—';
     const ppPct    = p.pp_pct != null ? p.pp_pct + '%' : '—';
-    const riskHtml = p.risk ? `<span class='risk risk-${p.risk}'>${p.risk === 'Low' ? '🟢' : p.risk === 'Medium' ? '🟡' : '🔴'} ${p.risk}</span>` : '—';
-    const bustHtml = p.bust_alert ? `<span class='bust'>💣 Bust</span>` : '';
-    const bandaid  = p.risk === 'Medium' || p.risk === 'High' ? `<span class='bandaid' title='${p.risk === "High" ? "High risk / injury prone" : "Injury prone"}'>🩹</span>` : '';
+    const riskHtml = p.risk ? `<span class='risk risk-${p.risk}'>${p.risk === 'Low' ? '🟢' : p.risk === 'Medium' ? '🟡' : '🔴'} ${p.risk === 'Low' ? 'Faible' : p.risk === 'Medium' ? 'Moyen' : 'Élevé'}</span>` : '—';
+    const bustHtml = p.bust_alert ? `<span class='bust'>💣 Déception</span>` : '';
+    const bandaid  = p.risk === 'Medium' || p.risk === 'High' ? `<span class='bandaid' title='${p.risk === "High" ? "Risque élevé / sujet aux blessures" : "Sujet aux blessures"}'>🩹</span>` : '';
     const ageClass = p.age <= 22 ? 'age-young' : p.age >= 32 ? 'age-old' : '';
     const isGoalie  = p.pos === 'G';
     const gs        = isGoalie ? getGoalieStats(p) : {};
     const upsideHtml = !isGoalie && p.upside != null && p.proj_pts != null
-      ? `<span class='upside-inline' onmouseenter='showTooltip(this,\`Upside: ${p.upside} pts ceiling\`)' onmouseleave='hideTooltip()'>↑${p.upside}</span>`
+      ? `<span class='upside-inline' onmouseenter='showTooltip(this,\`Plafond : ${p.upside} pts\`)' onmouseleave='hideTooltip()'>↑${p.upside}</span>`
       : '';
     const ppgLastHtml = ppg(p.last_pts, p.last_gp);
     const ppgProjHtml = ppg(p.proj_pts, p.proj_gp);
@@ -1027,7 +1027,7 @@ function buildRowHTML(p, displayRank) {
       ${!isGoalie ? `<td class='cg-pp'><span class='pp-pct'>${ppPct}</span></td>` : ''}
       <td class='cg-tier'><span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span></td>
       ${!isGoalie ? `<td class='cg-trend'><span class='trend trend-${trend}'>${trendLbl}</span></td>` : ''}
-      <td class='cg-value'><div class='pv-bar ${pc}' onmouseenter='showTooltip(this,"Efficiency = Proj Score ÷ √AAV($M)${pv !== null ? ` = ${pv}` : ` — no AAV data`}")' onmouseleave='hideTooltip()'>
+      <td class='cg-value'><div class='pv-bar ${pc}' onmouseenter='showTooltip(this,"Efficacité = Score proj ÷ √AAV(M$)${pv !== null ? ` = ${pv}` : ` — AAV indisponible`}")' onmouseleave='hideTooltip()'>
         <span class='pv-num'>${pv !== null ? pv : '—'}</span>
         ${pv !== null ? `<div class='pv-track'><div class='pv-fill' style='width:${Math.min(100, Math.round((pv/_effMax)*100))}%'></div></div>` : ''}
       </div></td>
@@ -1050,7 +1050,7 @@ function renderAll() {
   // Use position rank (1-based within the filtered list) when a pos filter is active; global rank otherwise
   const useLocalRank = !!posFilter;
 
-  document.getElementById('resultsCount').textContent = filtered.length + ' players';
+  document.getElementById('resultsCount').textContent = filtered.length + ' joueurs';
 
   // ── Skater table ──
   if (showSkaterTable) {
@@ -1058,7 +1058,7 @@ function renderAll() {
     document.querySelector('#playerTable thead th[data-col="rank"]').classList.add('sorted-asc');
     const tbody = document.getElementById('playerTbody');
     if (!skaters.length) {
-      tbody.innerHTML = '<tr><td colspan="21"><div class="empty-state"><div class="icon">🔍</div>No players match your filters.</div></td></tr>';
+      tbody.innerHTML = '<tr><td colspan="21"><div class="empty-state"><div class="icon">🔍</div>Aucun joueur ne correspond à vos filtres.</div></td></tr>';
     } else {
       tbody.innerHTML = skaters.map((p, i) => buildRowHTML(p, useLocalRank ? i + 1 : null)).join('');
     }
@@ -1075,7 +1075,7 @@ function renderAll() {
     });
     const gtbody = document.getElementById('goalieTbody');
     if (!sortedG.length) {
-      gtbody.innerHTML = '<tr><td colspan="15"><div class="empty-state"><div class="icon">🔍</div>No goalies match your filters.</div></td></tr>';
+      gtbody.innerHTML = '<tr><td colspan="15"><div class="empty-state"><div class="icon">🔍</div>Aucun gardien ne correspond à vos filtres.</div></td></tr>';
     } else {
       gtbody.innerHTML = sortedG.map((p, i) => buildRowHTML(p, i + 1)).join('');
     }
@@ -1090,7 +1090,7 @@ function renderAll() {
     });
     const tbody = document.getElementById('playerTbody');
     if (!sortedG.length) {
-      tbody.innerHTML = '<tr><td colspan="15"><div class="empty-state"><div class="icon">🔍</div>No goalies match your filters.</div></td></tr>';
+      tbody.innerHTML = '<tr><td colspan="15"><div class="empty-state"><div class="icon">🔍</div>Aucun gardien ne correspond à vos filtres.</div></td></tr>';
     } else {
       tbody.innerHTML = sortedG.map((p, i) => buildRowHTML(p, i + 1)).join('');
     }
@@ -1107,7 +1107,7 @@ function renderCards(filtered) {
   const container = document.getElementById('playerCards');
   if (!container) return;
   if (!filtered.length) {
-    container.innerHTML = '<div class="empty-state"><div class="icon">🔍</div>No players match your filters.</div>';
+    container.innerHTML = '<div class="empty-state"><div class="icon">🔍</div>Aucun joueur ne correspond à vos filtres.</div>';
     return;
   }
   container.innerHTML = filtered.map(p => {
@@ -1164,7 +1164,7 @@ function renderCards(filtered) {
       <div class='card-footer'>
         <span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span>
         <span class='trend trend-${trend}'>${trendLbl}</span>
-        <div class='pv-bar ${pc}' style='flex:1;min-width:60px' onmouseenter='showTooltip(this,"Efficiency: ${pv !== null ? pv : `—`}")' onmouseleave='hideTooltip()'>
+        <div class='pv-bar ${pc}' style='flex:1;min-width:60px' onmouseenter='showTooltip(this,"Efficacité : ${pv !== null ? pv : `—`}")' onmouseleave='hideTooltip()'>
           <span class='pv-num'>${pv !== null ? pv : '—'}</span>
           <div class='pv-track'><div class='pv-fill' style='width:${pv !== null ? Math.min(100, Math.round((pv/_effMax)*100)) : 0}%'></div></div>
         </div>
@@ -1184,13 +1184,13 @@ function renderSleepers() {
 
   function cardHtml(p, i, color) {
     return `<div class='sleeper-card' style='border-color:${color};cursor:pointer' onclick='openModal(${p.id})'>
-    <div class='sleeper-rank'><span style='color:${color}'>●</span> Sleeper Pick #${i + 1}</div>
+    <div class='sleeper-rank'><span style='color:${color}'>●</span> Révélation #${i + 1}</div>
     <div class='sleeper-name'>${p.name}</div>
-    <div class='sleeper-meta'>${p.team} · ${p.pos} · Age ${p.age ?? 'N/A'} · ${p.proj_gp} GP${p.aav ? ' · $' + p.aav + 'M' : ' · ELC'}${p.last_gp ? ' · ' + p.last_gp + ' GP last yr' : ''}</div>
+    <div class='sleeper-meta'>${p.team} · ${p.pos} · Âge ${p.age ?? 'N/A'} · ${p.proj_gp} PJ${p.aav ? ' · ' + p.aav + 'M$' : ' · CEN'}${p.last_gp ? ' · ' + p.last_gp + ' PJ der. sais.' : ''}</div>
     <div class='sleeper-stats'>
       <div class='sleeper-stat'><div class='val proj-pts'>${p.proj_pts}</div><div class='lbl'>PTS</div></div>
       <div class='sleeper-stat'><div class='val ppg-proj'>${ppg(p.proj_pts, p.proj_gp)}</div><div class='lbl'>PPG</div></div>
-      <div class='sleeper-stat'><div class='val last-pts'>${p.last_pts ?? '—'}</div><div class='lbl'>Last PTS</div></div>
+      <div class='sleeper-stat'><div class='val last-pts'>${p.last_pts ?? '—'}</div><div class='lbl'>PTS dern.</div></div>
     </div>
     <div class='sleeper-note'>"${p.notes}"</div>
   </div>`;
@@ -1199,12 +1199,12 @@ function renderSleepers() {
   const grid = document.getElementById('sleepersGrid');
   grid.innerHTML = established.length
     ? established.map((p, i) => cardHtml(p, i, '#34d399')).join('')
-    : '<div class="empty-state"><div class="icon">🌟</div>No established sleepers yet.</div>';
+    : '<div class="empty-state"><div class="icon">🌟</div>Aucune révélation établie pour l\'instant.</div>';
 
   const rookieGrid = document.getElementById('sleepersRookieGrid');
   rookieGrid.innerHTML = rookies.length
     ? rookies.map((p, i) => cardHtml(p, i, '#60a5fa')).join('')
-    : '<div class="empty-state"><div class="icon">🧢</div>No rookie sleepers yet.</div>';
+    : '<div class="empty-state"><div class="icon">🧢</div>Aucune révélation recrue pour l\'instant.</div>';
 }
 
 // ── RENDER BUSTS ─────────────────────────────────────────
@@ -1212,7 +1212,7 @@ function renderBusts() {
   const busts = allPlayers.filter(p => p.bust_alert).sort((a, b) => a.rank - b.rank);
   const grid = document.getElementById('bustsGrid');
   if (!busts.length) {
-    grid.innerHTML = '<div class="empty-state"><div class="icon">💣</div>No bust alerts set yet.</div>';
+    grid.innerHTML = '<div class="empty-state"><div class="icon">💣</div>Aucune alerte déception pour l\'instant.</div>';
     return;
   }
   grid.innerHTML = busts.map(p => {
@@ -1221,13 +1221,13 @@ function renderBusts() {
     const diffStr = diff > 0 ? '+' + diff : '' + diff;
     const trendLbl = trend === 'up' ? `↑ ${diffStr}` : trend === 'down' ? `↓ ${diffStr}` : `→ ${diffStr}`;
     return `<div class='sleeper-card' style='border-color:#fda4af;background:#fff1f2' onclick='openModal(${p.id})'>
-      <div class='sleeper-rank' style='color:#be123c'>💣 Bust Alert — Rank #${p.rank}</div>
+      <div class='sleeper-rank' style='color:#be123c'>💣 Alerte déception — Rang #${p.rank}</div>
       <div class='sleeper-name'>${p.name}</div>
-      <div class='sleeper-meta'>${p.team} · ${p.pos} · Age ${p.age ?? 'N/A'}${p.aav ? ' · $' + p.aav + 'M' : ''}</div>
+      <div class='sleeper-meta'>${p.team} · ${p.pos} · Âge ${p.age ?? 'N/A'}${p.aav ? ' · ' + p.aav + 'M$' : ''}</div>
       <div class='sleeper-stats'>
-        <div class='sleeper-stat'><div class='val last-pts'>${p.last_pts ?? '—'}</div><div class='lbl'>Last PTS</div></div>
-        <div class='sleeper-stat'><div class='val proj-pts'>${p.proj_pts}</div><div class='lbl'>Proj PTS</div></div>
-        <div class='sleeper-stat'><div class='val' style='color:#be123c'>${trendLbl}</div><div class='lbl'>Trend</div></div>
+        <div class='sleeper-stat'><div class='val last-pts'>${p.last_pts ?? '—'}</div><div class='lbl'>PTS dern.</div></div>
+        <div class='sleeper-stat'><div class='val proj-pts'>${p.proj_pts}</div><div class='lbl'>PTS proj</div></div>
+        <div class='sleeper-stat'><div class='val' style='color:#be123c'>${trendLbl}</div><div class='lbl'>Tendance</div></div>
       </div>
       ${p.notes ? `<div class='sleeper-note' style='color:#be123c'>"${p.notes}"</div>` : ''}
     </div>`;
@@ -1244,16 +1244,16 @@ function renderImprovers() {
     .slice(0, 20);
 
   if (!eligible.length) {
-    grid.innerHTML = `<div class='empty-state'><div class='icon'>📈</div>No last-season data yet — this tab will populate once 2025-26 stats are entered.</div>`;
+    grid.innerHTML = `<div class='empty-state'><div class='icon'>📈</div>Aucune donnée de la saison dernière — cet onglet se remplira une fois les stats 2025-26 entrées.</div>`;
     return;
   }
   grid.innerHTML = eligible.map((p, i) => `<div class='sleeper-card' style='border-color:#86efac;cursor:pointer' onclick='openModal(${p.id})'>
-    <div class='sleeper-rank' style='color:#15803d'>📈 Improver #${i + 1}</div>
+    <div class='sleeper-rank' style='color:#15803d'>📈 Progression #${i + 1}</div>
     <div class='sleeper-name'>${p.name}</div>
-    <div class='sleeper-meta'>${p.team} · ${p.pos} · Age ${p.age ?? 'N/A'}${p.aav ? ' · $' + p.aav + 'M' : ''} · ${p.last_gp} GP last yr</div>
+    <div class='sleeper-meta'>${p.team} · ${p.pos} · Âge ${p.age ?? 'N/A'}${p.aav ? ' · ' + p.aav + 'M$' : ''} · ${p.last_gp} PJ dern. sais.</div>
     <div class='sleeper-stats'>
-      <div class='sleeper-stat'><div class='val last-pts'>${p.last_pts}</div><div class='lbl'>Last PTS</div></div>
-      <div class='sleeper-stat'><div class='val proj-pts'>${p.proj_pts}</div><div class='lbl'>Proj PTS</div></div>
+      <div class='sleeper-stat'><div class='val last-pts'>${p.last_pts}</div><div class='lbl'>PTS dernière</div></div>
+      <div class='sleeper-stat'><div class='val proj-pts'>${p.proj_pts}</div><div class='lbl'>PTS proj</div></div>
       <div class='sleeper-stat'><div class='val' style='color:#15803d;font-size:1.3em'>+${p.delta}</div><div class='lbl'>Delta</div></div>
     </div>
     ${p.notes ? `<div class='sleeper-note' style='color:#15803d'>"${p.notes}"</div>` : ''}
@@ -1270,16 +1270,16 @@ function renderRegression() {
     .slice(0, 20);
 
   if (!eligible.length) {
-    grid.innerHTML = `<div class='empty-state'><div class='icon'>📉</div>No last-season data yet — this tab will populate once 2025-26 stats are entered.</div>`;
+    grid.innerHTML = `<div class='empty-state'><div class='icon'>📉</div>Aucune donnée de la saison dernière — cet onglet se remplira une fois les stats 2025-26 entrées.</div>`;
     return;
   }
   grid.innerHTML = eligible.map((p, i) => `<div class='sleeper-card' style='border-color:#fca5a5;background:#fff8f8;cursor:pointer' onclick='openModal(${p.id})'>
-    <div class='sleeper-rank' style='color:#dc2626'>📉 Regression #${i + 1}</div>
+    <div class='sleeper-rank' style='color:#dc2626'>📉 Régression #${i + 1}</div>
     <div class='sleeper-name'>${p.name}</div>
-    <div class='sleeper-meta'>${p.team} · ${p.pos} · Age ${p.age ?? 'N/A'}${p.aav ? ' · $' + p.aav + 'M' : ''} · ${p.last_gp} GP last yr</div>
+    <div class='sleeper-meta'>${p.team} · ${p.pos} · Âge ${p.age ?? 'N/A'}${p.aav ? ' · ' + p.aav + 'M$' : ''} · ${p.last_gp} PJ dern. sais.</div>
     <div class='sleeper-stats'>
-      <div class='sleeper-stat'><div class='val last-pts'>${p.last_pts}</div><div class='lbl'>Last PTS</div></div>
-      <div class='sleeper-stat'><div class='val proj-pts'>${p.proj_pts}</div><div class='lbl'>Proj PTS</div></div>
+      <div class='sleeper-stat'><div class='val last-pts'>${p.last_pts}</div><div class='lbl'>PTS dernière</div></div>
+      <div class='sleeper-stat'><div class='val proj-pts'>${p.proj_pts}</div><div class='lbl'>PTS proj</div></div>
       <div class='sleeper-stat'><div class='val' style='color:#dc2626;font-size:1.3em'>${p.delta}</div><div class='lbl'>Delta</div></div>
     </div>
     ${p.notes ? `<div class='sleeper-note' style='color:#dc2626'>"${p.notes}"</div>` : ''}
@@ -1289,7 +1289,7 @@ function renderRegression() {
 
 function renderScarcity() {
   const POSITIONS = ['C', 'LW', 'RW', 'D', 'G'];
-  const POS_LABEL = { C: 'Centre', LW: 'Left Wing', RW: 'Right Wing', D: 'Defence', G: 'Goalie' };
+  const POS_LABEL = { C: 'Centre', LW: 'Ailier gauche', RW: 'Ailier droit', D: 'Défenseur', G: 'Gardien' };
 
   // Group by position, then by tier number
   const counts = {};
@@ -1311,21 +1311,21 @@ function renderScarcity() {
   function cliffMsg(pos) {
     const t1 = t1Count(pos), prem = premiumCount(pos);
     if (pos === 'D') {
-      if (t1 <= 3) return `<strong>⚠️ Critical:</strong> Only ${t1} Tier 1 D in the entire guide. Don't wait past round 3.`;
-      if (prem <= 8) return `<strong>Take note:</strong> Only ${prem} Tier 1–3 Ds. Depth drops off fast.`;
-      return `<strong>Decent depth:</strong> ${prem} Tier 1–3 Ds available.`;
+      if (t1 <= 3) return `<strong>⚠️ Critique :</strong> Seulement ${t1} défenseur Tier 1 dans tout le guide. Ne pas attendre après la ronde 3.`;
+      if (prem <= 8) return `<strong>À noter :</strong> Seulement ${prem} défenseurs Tier 1–3. La profondeur chute rapidement.`;
+      return `<strong>Bonne profondeur :</strong> ${prem} défenseurs Tier 1–3 disponibles.`;
     }
-    if (pos === 'G') return `<strong>Goalies:</strong> ${prem} Tier 1–3 options — most pools take 2. Target your starter in rounds 4-6.`;
-    if (t1 === 0) return `<strong>No Tier 1</strong> at this position — Tier 2–3 players are your ceiling.`;
-    if (t1 <= 4) return `<strong>⚠️ Scarce:</strong> Only ${t1} Tier 1 ${POS_LABEL[pos]}s. Premium spots go fast.`;
-    return `${t1} Tier 1 + ${counts[pos]['2']||0} Tier 2 = <strong>${prem} premium options</strong>.`;
+    if (pos === 'G') return `<strong>Gardiens :</strong> ${prem} options Tier 1–3 — la plupart des pools prennent 2. Ciblez votre partant aux rondes 4-6.`;
+    if (t1 === 0) return `<strong>Aucun Tier 1</strong> à cette position — les joueurs Tier 2–3 sont votre plafond.`;
+    if (t1 <= 4) return `<strong>⚠️ Rare :</strong> Seulement ${t1} ${POS_LABEL[pos]} Tier 1. Les spots premium partent vite.`;
+    return `${t1} Tier 1 + ${counts[pos]['2']||0} Tier 2 = <strong>${prem} options premium</strong>.`;
   }
 
   function alertBadge(pos) {
     const prem = premiumCount(pos);
-    if (pos === 'D' && t1Count(pos) <= 3) return `<span class='scarcity-alert alert-critical'>🔴 Scarce</span>`;
-    if (prem <= 5) return `<span class='scarcity-alert alert-low'>🟡 Limited</span>`;
-    return `<span class='scarcity-alert alert-ok'>🟢 Available</span>`;
+    if (pos === 'D' && t1Count(pos) <= 3) return `<span class='scarcity-alert alert-critical'>🔴 Rare</span>`;
+    if (prem <= 5) return `<span class='scarcity-alert alert-low'>🟡 Limité</span>`;
+    return `<span class='scarcity-alert alert-ok'>🟢 Disponible</span>`;
   }
 
   // Collect all tier numbers seen across all players
@@ -1344,8 +1344,8 @@ function renderScarcity() {
   container.innerHTML = `
     <div class='scarcity-wrap'>
       <div class='scarcity-intro'>
-        <h2>📊 Position Scarcity Guide</h2>
-        <p>How many Tier 1–3 players exist at each position. Use this to plan when to draft — positions with few premium options require earlier picks.</p>
+        <h2>📊 Guide de rareté par position</h2>
+        <p>Combien de joueurs Tier 1–3 existent à chaque position. Utilisez ceci pour planifier quand repêcher — les positions avec peu d'options premium nécessitent des choix plus tôt.</p>
       </div>
       <div class='scarcity-grid'>
         ${POSITIONS.map(pos => {
@@ -1355,7 +1355,7 @@ function renderScarcity() {
               <span class='scarcity-pos scarcity-pos-${pos}'>${pos}</span>
               <span style='font-size:0.85em;font-weight:600;color:#1e293b'>${POS_LABEL[pos]}</span>
               ${alertBadge(pos)}
-              <span class='scarcity-total'>${c.total} players</span>
+              <span class='scarcity-total'>${c.total} joueurs</span>
             </div>
             <div class='scarcity-bars'>
               ${allTierNums.map(n => {
@@ -1390,8 +1390,8 @@ function openModal(id) {
     `<span class='team-tag'>${p.team}</span>`,
     `<span class='pos-tag pos-${p.pos}'>${p.pos}</span>`,
     `<span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span>`,
-    p.risk ? `<span class='risk risk-${p.risk}'>${p.risk === 'Low' ? '🟢' : p.risk === 'Medium' ? '🟡' : '🔴'} ${p.risk} Risk</span>` : '',
-    p.bust_alert ? `<span class='bust'>💣 Bust Alert</span>` : '',
+    p.risk ? `<span class='risk risk-${p.risk}'>${p.risk === 'Low' ? '🟢' : p.risk === 'Medium' ? '🟡' : '🔴'} ${p.risk === 'Low' ? 'Faible' : p.risk === 'Medium' ? 'Moyen' : 'Élevé'} Risque</span>` : '',
+    p.bust_alert ? `<span class='bust'>💣 Alerte déception</span>` : '',
   ].filter(Boolean).join('');
   document.getElementById('modalBadges').innerHTML = badges;
 
@@ -1400,7 +1400,7 @@ function openModal(id) {
   const gs  = getGoalieStats(p);
   document.getElementById('modalStats').innerHTML = `
     ${!isG ? `<div class='modal-stat-group'>
-      <div class='modal-stat-label last'>📅 2025-26 Actual</div>
+      <div class='modal-stat-label last'>📅 2025-26 Réel</div>
       <div class='modal-stat-row'>
         <div class='modal-stat-item'><div class='v last-stat'>${p.last_g ?? '—'}</div><div class='l'>G</div></div>
         <div class='modal-stat-item'><div class='v last-stat'>${p.last_a ?? '—'}</div><div class='l'>A</div></div>
@@ -1409,7 +1409,7 @@ function openModal(id) {
       </div>
     </div>` : ''}
     <div class='modal-stat-group'>
-      <div class='modal-stat-label proj'>${isG ? '🥅' : '🎯'} 2026-27 Projection</div>
+      <div class='modal-stat-label proj'>${isG ? '🥅' : '🎯'} Projection 2026-27</div>
       <div class='modal-stat-row'>
         ${isG ? `
         <div class='modal-stat-item'><div class='v proj-stat'>${p.proj_g ?? '—'}</div><div class='l'>W</div></div>
@@ -1430,12 +1430,12 @@ function openModal(id) {
   // Body
   let body = '';
   if (p.notes) body += `<div><div class='modal-section-title'>Notes</div><div class='modal-scouting'>${p.notes}</div></div>`;
-  if (p.comp_player) body += `<div><div class='modal-section-title'>Comparable Player</div><div class='modal-comp'>🏒 ${p.comp_player}</div></div>`;
+  if (p.comp_player) body += `<div><div class='modal-section-title'>Joueur comparable</div><div class='modal-comp'>🏒 ${p.comp_player}</div></div>`;
   if (p.key_risks) {
     const risks = p.key_risks.split(',').map(r => r.trim()).filter(Boolean);
-    body += `<div><div class='modal-section-title'>Key Risks</div><div class='modal-risks'>${risks.map(r => `<div class='modal-risk-item'>${r}</div>`).join('')}</div></div>`;
+    body += `<div><div class='modal-section-title'>Risques principaux</div><div class='modal-risks'>${risks.map(r => `<div class='modal-risk-item'>${r}</div>`).join('')}</div></div>`;
   }
-  if (!body) body = `<div class='modal-scouting' style='color:#94a3b8;font-style:italic'>No scouting report available yet.</div>`;
+  if (!body) body = `<div class='modal-scouting' style='color:#94a3b8;font-style:italic'>Aucun rapport de dépistage disponible pour l'instant.</div>`;
   document.getElementById('modalBody').innerHTML = body;
 
   document.getElementById('scoutingModal').classList.remove('hidden');
@@ -1461,7 +1461,7 @@ function switchTab(name, btn) {
 
 // ── CSV EXPORT ────────────────────────────────────────────
 function downloadCSV() {
-  const headers = ['Rank','Player','Team','Pos','Age','Last GP','Last G','Last A','Last PTS','Last PPG','Proj GP','Proj G','Proj A','Proj PTS','Proj PPG','Upside','AAV','PP%','Tier','Trend','Efficiency','Notes'];
+  const headers = ['Rang','Joueur','Équipe','Pos','Âge','MJ Dern.','B Dern.','A Dern.','PTS Dern.','PPM Dern.','MJ Proj.','B Proj.','A Proj.','PTS Proj.','PPM Proj.','Plafond','AAV','PP%','Palier','Tendance','Efficacité','Notes'];
   const rows = sorted(getFiltered()).map(p => {
     const trend = getTrend(p);
     const diff  = p.proj_pts - (p.last_pts || p.proj_pts);
