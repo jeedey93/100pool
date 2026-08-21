@@ -343,7 +343,7 @@ function goalieRowHTML(p) {
   </tr>`;
 }
 
- return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
 // ── SAVE ALL ─────────────────────────────────────────────
 async function saveAll() {
