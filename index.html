@@ -81,6 +81,10 @@ nav a:hover { background: rgba(245,166,35,0.15); color: #f5a623; }
 .tier-chip { display: flex; align-items: center; gap: 8px; background: white; border: 1px solid #e8edf2; border-radius: 99px; padding: 6px 14px; font-size: 0.82em; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
 .tier-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
+/* ── ACCESS BANNER ── */
+.access-banner { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 14px 20px; display: flex; align-items: center; gap: 12px; margin-bottom: 28px; font-size: 0.9em; color: #9a3412; font-weight: 600; }
+.access-banner span { flex: 1; }
+
 /* ── PRICING ── */
 .pricing-wrap { background: white; border-radius: 20px; border: 1px solid #e8edf2; box-shadow: 0 4px 24px rgba(0,0,0,0.07); overflow: hidden; margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; }
 @media (max-width: 640px) { .pricing-wrap { grid-template-columns: 1fr; } }
@@ -93,6 +97,8 @@ nav a:hover { background: rgba(245,166,35,0.15); color: #f5a623; }
 .pricing-plan { font-size: 1.2em; font-weight: 800; margin-bottom: 6px; }
 .pricing-free .pricing-plan { color: #1e293b; }
 .pricing-pro  .pricing-plan { color: white; }
+.pricing-price { font-size: 2.4em; font-weight: 900; color: white; line-height: 1; margin-bottom: 4px; }
+.pricing-price span { font-size: 0.42em; font-weight: 600; color: rgba(255,255,255,0.65); vertical-align: super; }
 .pricing-desc { font-size: 0.85em; line-height: 1.6; margin-bottom: 20px; }
 .pricing-free .pricing-desc { color: #64748b; }
 .pricing-pro  .pricing-desc { color: rgba(255,255,255,0.65); }
@@ -103,21 +109,12 @@ nav a:hover { background: rgba(245,166,35,0.15); color: #f5a623; }
 .pricing-list li::before { content: '✓'; font-weight: 800; flex-shrink: 0; }
 .pricing-free .pricing-list li::before { color: #22c55e; }
 .pricing-pro  .pricing-list li::before { color: #f5a623; }
-.pricing-list li.locked::before { content: '🔒'; font-size: 0.8em; }
 .pricing-cta { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.88em; padding: 11px 22px; border-radius: 10px; text-decoration: none; transition: all 0.2s; cursor: pointer; border: none; }
 .pricing-cta:hover { transform: translateY(-1px); }
 .cta-free { background: #f1f5f9; color: #1e293b; }
 .cta-free:hover { background: #e2e8f0; }
-.cta-pro  { background: #f5a623; color: #1a3d0f; box-shadow: 0 4px 16px rgba(245,166,35,0.35); }
-
-/* Email capture */
-.email-capture { display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
-.email-capture input { flex: 1; min-width: 180px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 8px; padding: 10px 14px; font-size: 0.88em; font-family: inherit; outline: none; transition: border-color 0.2s; }
-.email-capture input::placeholder { color: rgba(255,255,255,0.3); }
-.email-capture input:focus { border-color: rgba(245,166,35,0.6); }
-.email-capture button { background: #f5a623; color: #1a3d0f; border: none; border-radius: 8px; padding: 10px 20px; font-size: 0.88em; font-weight: 700; cursor: pointer; transition: opacity 0.2s; white-space: nowrap; }
-.email-capture button:hover { opacity: 0.9; }
-.email-success { font-size: 0.82em; color: #f5a623; font-weight: 600; margin-top: 10px; display: none; }
+.cta-pro  { background: #f5a623; color: #1a3d0f; box-shadow: 0 4px 16px rgba(245,166,35,0.35); font-size: 1em; padding: 14px 28px; }
+.cta-pro:hover { box-shadow: 0 8px 28px rgba(245,166,35,0.5); }
 
 /* ── FOOTER CTA ── */
 .footer-cta { background: linear-gradient(150deg, #1a5c28, #2d8a3e); padding: 72px 24px; text-align: center; }
@@ -143,7 +140,7 @@ nav a:hover { background: rgba(245,166,35,0.15); color: #f5a623; }
 <nav>
   <img src='100pool.jpg' alt='100% Pool'>
   <span>100% Pool</span>
-  <a href='2026-27/'>Ouvrir le guide →</a>
+  <a href='#section-acces'>Obtenir le guide →</a>
 </nav>
 
 <!-- HERO -->
@@ -151,8 +148,8 @@ nav a:hover { background: rgba(245,166,35,0.15); color: #f5a623; }
   <div class='hero-eyebrow'>🏒 Pool NHL · Saison 2026-27</div>
   <h1>Dominez votre pool.<br><span>Commencez avec de meilleures données.</span></h1>
   <p class='hero-sub'>Le guide des poolers vous offre des projections de joueurs, les stats de la dernière saison, une analyse des tendances et des classements par palier — tout ce qu'il vous faut pour arriver à votre repêchage en pleine confiance.</p>
-  <a href='2026-27/' class='hero-cta'>
-    Ouvrir le guide <span class='hero-cta-arrow'>→</span>
+  <a href='#section-acces' class='hero-cta'>
+    Obtenir le guide — 4,99 $ <span class='hero-cta-arrow'>→</span>
   </a>
   <div class='hero-presented'>
     <img src='100pool.jpg' alt='100% Pool' style='width:120px;height:120px;border-radius:28px;box-shadow:0 12px 40px rgba(0,0,0,0.35);object-fit:cover;'>
@@ -286,45 +283,42 @@ nav a:hover { background: rgba(245,166,35,0.15); color: #f5a623; }
 <div class='divider'></div>
 
 <!-- PRICING -->
-<div class='section'>
+<div class='section' id='section-acces'>
+  <div id='access-banner' class='access-banner' style='display:none'>
+    <span>🔒 Ce contenu est réservé aux acheteurs. Achetez le guide ci-dessous pour y accéder.</span>
+  </div>
   <div class='section-eyebrow'>Accès</div>
-  <div class='section-title'>Libre d'accès, plus à venir</div>
-  <div class='section-body'>Le guide de base est disponible maintenant. Un niveau premium avec des stats plus détaillées et des filtres avancés arrive avant le début de la saison 2026-27.</div>
+  <div class='section-title'>Obtenez le guide complet</div>
+  <div class='section-body'>Un accès complet à toutes les projections, paliers, scores de valeur et filtres avancés — pour toute la saison 2026-27.</div>
 
   <div class='pricing-wrap'>
     <div class='pricing-free'>
-      <span class='pricing-badge badge-free'>Actuel</span>
-      <div class='pricing-plan'>Accès gratuit</div>
-      <div class='pricing-desc'>Tout ce qu'il vous faut pour un solide repêchage. Table complète des joueurs, toutes les projections de base, triable et filtrable.</div>
+      <span class='pricing-badge badge-free'>Aperçu gratuit</span>
+      <div class='pricing-plan'>Ce qui vous attend</div>
+      <div class='pricing-desc'>Voici ce que contient le guide des poolers 100% Pool 2026-27.</div>
       <ul class='pricing-list'>
-        <li>Tous les joueurs NHL (700+)</li>
+        <li>447 joueurs NHL avec projections</li>
         <li>Stats de la dernière saison + projections 2026-27</li>
         <li>Système de paliers &amp; badges de tendance</li>
         <li>Score de valeur de pool</li>
         <li>Trier, filtrer, imprimer &amp; exporter en CSV</li>
-        <li class='locked' style='opacity:0.45'>Stats avancées (bientôt)</li>
-        <li class='locked' style='opacity:0.45'>Simulateur de repêchage (bientôt)</li>
+        <li>Fiches détaillées par joueur</li>
+        <li>Mis à jour tout au long de la hors-saison</li>
       </ul>
-      <a href='2026-27/' class='pricing-cta cta-free'>Ouvrir le guide →</a>
     </div>
     <div class='pricing-pro'>
-      <span class='pricing-badge badge-pro'>Bientôt disponible</span>
-      <div class='pricing-plan'>Accès premium</div>
-      <div class='pricing-desc'>Pour le pooler sérieux. Analyses avancées, filtres plus fins et outils exclusifs pour prendre l'avantage sur votre ligue.</div>
+      <span class='pricing-badge badge-pro'>Disponible maintenant</span>
+      <div class='pricing-plan'>Guide complet 2026-27</div>
+      <div class='pricing-price'><span>$</span>4,99 <span style='font-size:0.6em;vertical-align:baseline;'>CAD</span></div>
+      <div class='pricing-desc' style='margin-top:10px;'>Paiement unique — accès pour toute la saison. Votre lien personnel vous sera envoyé par courriel en quelques secondes.</div>
       <ul class='pricing-list'>
-        <li>Tout ce qui est inclus dans le gratuit</li>
-        <li>Stats avancées par joueur</li>
-        <li>Simulateur de repêchage — éliminez les choix en direct</li>
-        <li>Indicateurs de rareté par position</li>
-        <li>Outil de comparaison de joueurs</li>
-        <li>Accès anticipé aux projections mises à jour</li>
+        <li>Accès instantané après paiement</li>
+        <li>Lien personnel valide 1 an</li>
+        <li>Toutes les mises à jour incluses</li>
+        <li>Aucun abonnement, aucun renouvellement</li>
       </ul>
-      <div style='font-size:0.8em;color:rgba(255,255,255,0.45);margin-bottom:10px;font-weight:600;letter-spacing:0.3px'>Laissez votre courriel — on vous avisera quand ce sera prêt.</div>
-      <div class='email-capture'>
-        <input type='email' id='early-access-email' placeholder='vous@exemple.com'>
-        <button onclick='submitEarlyAccess()'>M'avertir →</button>
-      </div>
-      <div class='email-success' id='email-success'>✓ Vous êtes sur la liste!</div>
+      <a href='STRIPE_PAYMENT_LINK_URL' class='pricing-cta cta-pro'>Acheter — 4,99 $ →</a>
+      <div style='font-size:0.75em;color:rgba(255,255,255,0.4);margin-top:12px;'>Paiement sécurisé par Stripe. Vous recevrez un lien d'accès par courriel.</div>
     </div>
   </div>
 </div>
@@ -332,31 +326,14 @@ nav a:hover { background: rgba(245,166,35,0.15); color: #f5a623; }
 <!-- FOOTER CTA -->
 <div class='footer-cta'>
   <h2>Prêt pour votre meilleur repêchage?</h2>
-  <p>Ouvrez le guide, triez par Valeur de pool et arrivez préparé.</p>
-  <a href='2026-27/' class='hero-cta'>Ouvrir le guide des poolers →</a>
+  <p>4,99 $ — accès complet pour toute la saison 2026-27, livré par courriel.</p>
+  <a href='#section-acces' class='hero-cta'>Obtenir le guide des poolers →</a>
 </div>
 
 <script>
-async function submitEarlyAccess() {
-  const input = document.getElementById('early-access-email');
-  const email = input.value.trim();
-  if (!email || !email.includes('@')) { input.style.borderColor = 'rgba(248,113,113,0.6)'; return; }
-  input.style.borderColor = '';
-
-  const SUPABASE_URL = 'https://fifurqlitkywtmhgtzeu.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpZnVycWxpdGt5d3RtaGd0emV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDIyMjQsImV4cCI6MjA5MjI3ODIyNH0.KPVPj1qwbSJJMyLR_-AhDcRs0vi2sUU6qbFQ-kH53C0';
-
-  try {
-    await fetch(`${SUPABASE_URL}/rest/v1/poolers_waitlist`, {
-      method: 'POST',
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-      body: JSON.stringify({ email })
-    });
-  } catch(_) {}
-
-  input.style.display = 'none';
-  document.querySelector('.email-capture button').style.display = 'none';
-  document.getElementById('email-success').style.display = 'block';
+if (new URLSearchParams(location.search).get('acces') === 'requis') {
+  document.getElementById('access-banner').style.display = 'flex';
+  document.getElementById('section-acces').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 </script>
 </body>

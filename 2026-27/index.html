@@ -641,6 +641,37 @@ function tierRowClass(tier) {
   return n ? 'tier-row-' + n : '';
 }
 
+// ── ACCESS GATE ──────────────────────────────────────────
+async function validateToken(token) {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/validate_access_token`, {
+      method: 'POST',
+      headers: { ...SB_HEADERS, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_token: token })
+    });
+    return await res.json() === true;
+  } catch (_) { return false; }
+}
+
+async function checkAccess() {
+  const urlToken = new URLSearchParams(location.search).get('token');
+  if (urlToken) {
+    const valid = await validateToken(urlToken);
+    if (valid) {
+      localStorage.setItem('pool_token', urlToken);
+      history.replaceState({}, '', location.pathname);
+      return;
+    }
+  }
+  const stored = localStorage.getItem('pool_token');
+  if (stored) {
+    const valid = await validateToken(stored);
+    if (valid) return;
+    localStorage.removeItem('pool_token');
+  }
+  location.href = '/?acces=requis';
+}
+
 // ── INIT ─────────────────────────────────────────────────
 async function init() {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/poolers_players?order=rank.asc&select=*`, { headers: SB_HEADERS });
@@ -1479,7 +1510,7 @@ function downloadCSV() {
   a.click();
 }
 
-init();
+checkAccess().then(init);
 </script>
 </body>
 </html>
