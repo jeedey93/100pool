@@ -1,34 +1,47 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import Stripe from 'https://esm.sh/stripe@14.21.0?target=deno';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2?target=deno';
 
-const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { apiVersion: '2023-10-16' });
-const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET')!;
-const supabase = createClient(
-  Deno.env.get('SUPABASE_URL')!,
-  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-);
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
+const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')!;
+const WEBHOOK_SECRET = Deno.env.get('STRIPE_WEBHOOK_SECRET')!;
+
+async function verifyStripeSignature(body: string, header: string, secret: string): Promise<boolean> {
+  const parts = Object.fromEntries(header.split(',').map(p => p.split('=')));
+  const timestamp = parts['t'];
+  const signature = parts['v1'];
+  if (!timestamp || !signature) return false;
+
+  const payload = `${timestamp}.${body}`;
+  const key = await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(payload));
+  const computed = Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2, '0')).join('');
+  return computed === signature;
+}
 
 serve(async (req) => {
   if (req.method !== 'POST') return new Response('Method not allowed', { status: 405 });
 
   const body = await req.text();
-  const sig = req.headers.get('stripe-signature');
+  const sig = req.headers.get('stripe-signature') || '';
 
-  let event: Stripe.Event;
-  try {
-    event = stripe.webhooks.constructEvent(body, sig!, webhookSecret);
-  } catch (err) {
-    console.error('Webhook signature verification failed:', err.message);
-    return new Response(`Webhook Error: ${err.message}`, { status: 400 });
+  const valid = await verifyStripeSignature(body, sig, WEBHOOK_SECRET);
+  if (!valid) {
+    console.error('Invalid Stripe signature');
+    return new Response('Invalid signature', { status: 400 });
   }
 
+  const event = JSON.parse(body);
   if (event.type !== 'checkout.session.completed') {
     return new Response('OK', { status: 200 });
   }
 
-  const session = event.data.object as Stripe.Checkout.Session;
+  const session = event.data.object;
   const email = session.customer_details?.email || session.customer_email;
 
   if (!email) {
@@ -36,19 +49,26 @@ serve(async (req) => {
     return new Response('No email', { status: 400 });
   }
 
-  // Insert access token
-  const { data: access, error } = await supabase
-    .from('poolers_access')
-    .insert({ email, product: 'guide_2026_27' })
-    .select('token')
-    .single();
+  // Insert access token via REST API
+  const dbRes = await fetch(`${SUPABASE_URL}/rest/v1/poolers_access`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_SERVICE_KEY,
+      'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation',
+    },
+    body: JSON.stringify({ email, product: 'guide_2026_27' }),
+  });
 
-  if (error) {
-    console.error('Failed to insert access token:', error.message);
+  if (!dbRes.ok) {
+    const err = await dbRes.text();
+    console.error('Failed to insert access token:', err);
     return new Response('DB error', { status: 500 });
   }
 
-  const token = access.token;
+  const [row] = await dbRes.json();
+  const token = row.token;
   const magicLink = `https://100pool.ca/2026-27/?token=${token}`;
 
   // Send magic link email via Resend
@@ -87,7 +107,6 @@ serve(async (req) => {
   if (!emailRes.ok) {
     const err = await emailRes.text();
     console.error('Failed to send email:', err);
-    // Don't fail the webhook — access was created, user can contact support
   }
 
   console.log(`Access granted to ${email}, token: ${token}`);

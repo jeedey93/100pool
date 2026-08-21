@@ -86,34 +86,27 @@ nav a:hover { background: rgba(245,166,35,0.15); color: #f5a623; }
 .access-banner span { flex: 1; }
 
 /* ── PRICING ── */
-.pricing-wrap { background: white; border-radius: 20px; border: 1px solid #e8edf2; box-shadow: 0 4px 24px rgba(0,0,0,0.07); overflow: hidden; margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; }
-@media (max-width: 640px) { .pricing-wrap { grid-template-columns: 1fr; } }
-.pricing-free { padding: 36px 32px; border-right: 1px solid #f1f5f9; }
-.pricing-pro  { padding: 36px 32px; background: linear-gradient(135deg, #1a5c28, #2d8a3e); position: relative; overflow: hidden; }
+.pricing-wrap { background: white; border-radius: 20px; border: 1px solid #e8edf2; box-shadow: 0 4px 24px rgba(0,0,0,0.07); overflow: hidden; margin-top: 40px; }
+.pricing-pro  { padding: 40px 40px; background: linear-gradient(135deg, #1a5c28, #2d8a3e); position: relative; overflow: hidden; }
 .pricing-pro::before { content: ''; position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; background: rgba(245,166,35,0.1); border-radius: 50%; }
 .pricing-badge { display: inline-block; font-size: 0.7em; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border-radius: 99px; margin-bottom: 14px; }
-.badge-free { background: #f1f5f9; color: #475569; }
 .badge-pro  { background: rgba(245,166,35,0.18); color: #f5a623; border: 1px solid rgba(245,166,35,0.4); }
 .pricing-plan { font-size: 1.2em; font-weight: 800; margin-bottom: 6px; }
-.pricing-free .pricing-plan { color: #1e293b; }
 .pricing-pro  .pricing-plan { color: white; }
-.pricing-price { font-size: 2.4em; font-weight: 900; color: white; line-height: 1; margin-bottom: 4px; }
-.pricing-price span { font-size: 0.42em; font-weight: 600; color: rgba(255,255,255,0.65); vertical-align: super; }
-.pricing-desc { font-size: 0.85em; line-height: 1.6; margin-bottom: 20px; }
-.pricing-free .pricing-desc { color: #64748b; }
-.pricing-pro  .pricing-desc { color: rgba(255,255,255,0.65); }
-.pricing-list { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 28px; }
-.pricing-list li { display: flex; align-items: center; gap: 10px; font-size: 0.85em; }
-.pricing-free .pricing-list li { color: #475569; }
-.pricing-pro  .pricing-list li { color: rgba(255,255,255,0.85); }
-.pricing-list li::before { content: '✓'; font-weight: 800; flex-shrink: 0; }
-.pricing-free .pricing-list li::before { color: #22c55e; }
-.pricing-pro  .pricing-list li::before { color: #f5a623; }
-.pricing-cta { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.88em; padding: 11px 22px; border-radius: 10px; text-decoration: none; transition: all 0.2s; cursor: pointer; border: none; }
+.pricing-price { font-size: 2.8em; font-weight: 900; color: white; line-height: 1; margin-bottom: 4px; }
+.pricing-price sup { font-size: 0.38em; font-weight: 600; color: rgba(255,255,255,0.7); vertical-align: super; }
+.pricing-price sub { font-size: 0.32em; font-weight: 500; color: rgba(255,255,255,0.55); vertical-align: baseline; margin-left: 4px; }
+.pricing-desc { font-size: 0.88em; line-height: 1.6; margin-bottom: 24px; }
+.pricing-pro  .pricing-desc { color: rgba(255,255,255,0.7); }
+.pricing-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: 32px; }
+@media (max-width: 600px) { .pricing-cols { grid-template-columns: 1fr; } }
+.pricing-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.pricing-list li { display: flex; align-items: center; gap: 10px; font-size: 0.87em; }
+.pricing-pro  .pricing-list li { color: rgba(255,255,255,0.9); }
+.pricing-list li::before { content: '✓'; font-weight: 800; flex-shrink: 0; color: #f5a623; }
+.pricing-cta { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.05em; padding: 15px 32px; border-radius: 12px; text-decoration: none; transition: all 0.2s; cursor: pointer; border: none; }
 .pricing-cta:hover { transform: translateY(-1px); }
-.cta-free { background: #f1f5f9; color: #1e293b; }
-.cta-free:hover { background: #e2e8f0; }
-.cta-pro  { background: #f5a623; color: #1a3d0f; box-shadow: 0 4px 16px rgba(245,166,35,0.35); font-size: 1em; padding: 14px 28px; }
+.cta-pro  { background: #f5a623; color: #1a3d0f; box-shadow: 0 4px 16px rgba(245,166,35,0.35); }
 .cta-pro:hover { box-shadow: 0 8px 28px rgba(245,166,35,0.5); }
 
 /* ── FOOTER CTA ── */
@@ -159,6 +152,41 @@ nav a:hover { background: rgba(245,166,35,0.15); color: #f5a623; }
     <div class='hero-stat'><div class='val'>4</div><div class='lbl'>Niveaux de palier</div></div>
     <div class='hero-stat'><div class='val'>32</div><div class='lbl'>Équipes couvertes</div></div>
     <div class='hero-stat'><div class='val'>10+</div><div class='lbl'>Stats par joueur</div></div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<div class='section' id='section-acces'>
+  <div id='access-banner' class='access-banner' style='display:none'>
+    <span>🔒 Ce contenu est réservé aux acheteurs. Achetez le guide ci-dessous pour y accéder.</span>
+  </div>
+  <div class='section-eyebrow'>Accès</div>
+  <div class='section-title'>Obtenez le guide complet</div>
+  <div class='section-body'>Un accès complet à toutes les projections, paliers, scores de valeur et outils de tri — pour toute la saison 2026-27. Paiement unique, aucun abonnement.</div>
+
+  <div class='pricing-wrap'>
+    <div class='pricing-pro'>
+      <span class='pricing-badge badge-pro'>Disponible maintenant</span>
+      <div class='pricing-plan'>Guide des poolers 2026-27</div>
+      <div class='pricing-price'><sup>$</sup>4,99 <sub>CAD</sub></div>
+      <div class='pricing-desc' style='margin-top:12px;'>Accès instantané après paiement. Votre lien personnel vous est envoyé par courriel — valide pour toute la saison.</div>
+      <div class='pricing-cols'>
+        <ul class='pricing-list'>
+          <li>447 joueurs NHL avec projections 2026-27</li>
+          <li>Stats complètes de la saison 2025-26</li>
+          <li>Système de paliers (Élite, Top, Intermédiaire, Dormeur)</li>
+          <li>Indicateur de tendance ↑ → ↓ par joueur</li>
+        </ul>
+        <ul class='pricing-list'>
+          <li>Score de valeur de pool composite</li>
+          <li>Trier, filtrer par équipe, position, palier</li>
+          <li>Imprimer en feuille de triche &amp; exporter CSV</li>
+          <li>Mis à jour tout au long de la hors-saison</li>
+        </ul>
+      </div>
+      <a href='https://buy.stripe.com/test_eVq8wP1b49Hx44e9bPb7y00' class='pricing-cta cta-pro'>Acheter — 4,99 $ →</a>
+      <div style='font-size:0.75em;color:rgba(255,255,255,0.4);margin-top:14px;'>Paiement sécurisé par Stripe. Lien d'accès envoyé par courriel en quelques secondes.</div>
+    </div>
   </div>
 </div>
 
@@ -276,49 +304,6 @@ nav a:hover { background: rgba(245,166,35,0.15); color: #f5a623; }
       <div class='method-label' style='color:#7c3aed'>Hors-saison</div>
       <div class='method-title'>Échanges, signatures et blessures</div>
       <div class='method-body'>Le guide est mis à jour au fil de la hors-saison — les échanges, les signatures en agence libre et les situations de blessures connues sont reflétés tout au long de l'été.</div>
-    </div>
-  </div>
-</div>
-
-<div class='divider'></div>
-
-<!-- PRICING -->
-<div class='section' id='section-acces'>
-  <div id='access-banner' class='access-banner' style='display:none'>
-    <span>🔒 Ce contenu est réservé aux acheteurs. Achetez le guide ci-dessous pour y accéder.</span>
-  </div>
-  <div class='section-eyebrow'>Accès</div>
-  <div class='section-title'>Obtenez le guide complet</div>
-  <div class='section-body'>Un accès complet à toutes les projections, paliers, scores de valeur et filtres avancés — pour toute la saison 2026-27.</div>
-
-  <div class='pricing-wrap'>
-    <div class='pricing-free'>
-      <span class='pricing-badge badge-free'>Aperçu gratuit</span>
-      <div class='pricing-plan'>Ce qui vous attend</div>
-      <div class='pricing-desc'>Voici ce que contient le guide des poolers 100% Pool 2026-27.</div>
-      <ul class='pricing-list'>
-        <li>447 joueurs NHL avec projections</li>
-        <li>Stats de la dernière saison + projections 2026-27</li>
-        <li>Système de paliers &amp; badges de tendance</li>
-        <li>Score de valeur de pool</li>
-        <li>Trier, filtrer, imprimer &amp; exporter en CSV</li>
-        <li>Fiches détaillées par joueur</li>
-        <li>Mis à jour tout au long de la hors-saison</li>
-      </ul>
-    </div>
-    <div class='pricing-pro'>
-      <span class='pricing-badge badge-pro'>Disponible maintenant</span>
-      <div class='pricing-plan'>Guide complet 2026-27</div>
-      <div class='pricing-price'><span>$</span>4,99 <span style='font-size:0.6em;vertical-align:baseline;'>CAD</span></div>
-      <div class='pricing-desc' style='margin-top:10px;'>Paiement unique — accès pour toute la saison. Votre lien personnel vous sera envoyé par courriel en quelques secondes.</div>
-      <ul class='pricing-list'>
-        <li>Accès instantané après paiement</li>
-        <li>Lien personnel valide 1 an</li>
-        <li>Toutes les mises à jour incluses</li>
-        <li>Aucun abonnement, aucun renouvellement</li>
-      </ul>
-      <a href='https://buy.stripe.com/test_eVq8wP1b49Hx44e9bPb7y00' class='pricing-cta cta-pro'>Acheter — 4,99 $ →</a>
-      <div style='font-size:0.75em;color:rgba(255,255,255,0.4);margin-top:12px;'>Paiement sécurisé par Stripe. Vous recevrez un lien d'accès par courriel.</div>
     </div>
   </div>
 </div>
