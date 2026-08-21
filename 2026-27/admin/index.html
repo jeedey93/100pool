@@ -159,7 +159,6 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
           <th>Risque</th>
           <th>💣 Bust</th>
           <th>Notes</th>
-          <th>Rapport de dépistage</th>
           <th>Joueur comparable</th>
           <th>Risques principaux</th>
         </tr>
@@ -267,7 +266,6 @@ function rowHTML(p) {
     </select></td>
     <td style='text-align:center'><input type='checkbox' id='${id}-bust_alert' ${p.bust_alert?'checked':''} onchange='markDirty(${id})' style='width:16px;height:16px;accent-color:#be123c;cursor:pointer'></td>
     <td><input class='ci w' id='${id}-notes' type='text' value='${esc(p.notes||'')}' style='width:180px;color:#64748b;font-style:italic' oninput='markDirty(${id})'></td>
-    <td><textarea class='ci' id='${id}-scouting' rows='2' style='width:260px;resize:vertical;font-size:0.82em' oninput='markDirty(${id})'>${esc(p.scouting||'')}</textarea></td>
     <td><input class='ci' id='${id}-comp_player' type='text' value='${esc(p.comp_player||'')}' style='width:140px' placeholder='ex. Jeune Backstrom' oninput='markDirty(${id})'></td>
     <td><input class='ci' id='${id}-key_risks' type='text' value='${esc(p.key_risks||'')}' style='width:200px' placeholder='ex. Historique de blessures, âge' oninput='markDirty(${id})'></td>
   </tr>`;
@@ -302,7 +300,6 @@ async function saveAll() {
       risk:        document.getElementById(`${id}-risk`)?.value || null,
       bust_alert:  document.getElementById(`${id}-bust_alert`)?.checked ?? false,
       notes:       document.getElementById(`${id}-notes`)?.value?.trim(),
-      scouting:    document.getElementById(`${id}-scouting`)?.value?.trim() || null,
       comp_player: document.getElementById(`${id}-comp_player`)?.value?.trim() || null,
       key_risks:   document.getElementById(`${id}-key_risks`)?.value?.trim() || null,
     };
