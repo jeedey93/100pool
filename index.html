@@ -3,8 +3,8 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>Guide des poolers 2026-27 — 100% Pool</title>
-<meta name='description' content='Le guide ultime de préparation pour votre pool NHL. Projections de joueurs, stats de la saison passée, classements par palier, analyse des tendances et plus. Présenté par 100% Pool.'>
+<title>100% Pool — Hockey pool, faite comme du monde</title>
+<meta name='description' content='100% Pool est une communauté dédiée aux amateurs de pools de hockey NHL. Guide des poolers, podcast, analyses et outils pour dominer votre ligue.'>
 <link rel='icon' type='image/png' href='100pool.jpg'>
 <link rel='apple-touch-icon' href='100pool.jpg'>
 <style>
@@ -12,118 +12,73 @@
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f4f8; color: #1e293b; min-height: 100vh; }
 
 /* ── NAV ── */
-nav { background: linear-gradient(135deg, #1e6b2e, #2d8a3e); padding: 12px 24px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); position: sticky; top: 0; z-index: 100; }
-nav img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
-nav span { color: white; font-weight: 700; font-size: 1em; }
-nav a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.83em; margin-left: auto; padding: 7px 16px; border-radius: 20px; border: 1px solid rgba(245,166,35,0.5); color: #f5a623; transition: all 0.2s; font-weight: 600; }
-nav a:hover { background: rgba(245,166,35,0.15); color: #f5a623; }
+nav { background: linear-gradient(135deg, #1e6b2e, #2d8a3e); padding: 14px 32px; display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); position: sticky; top: 0; z-index: 100; }
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.nav-logo span { color: white; font-weight: 800; font-size: 1.05em; }
+.nav-links { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.nav-link { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.85em; font-weight: 600; padding: 7px 14px; border-radius: 8px; transition: all 0.2s; }
+.nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
+.nav-link.active { background: rgba(255,255,255,0.15); color: white; }
 
 /* ── HERO ── */
-.hero { background: linear-gradient(150deg, #1a5c28 0%, #2d8a3e 45%, #1e6b2e 100%); padding: 90px 24px 100px; text-align: center; position: relative; overflow: hidden; }
+.hero { background: linear-gradient(150deg, #1a5c28 0%, #2d8a3e 45%, #1e6b2e 100%); padding: 100px 24px 110px; text-align: center; position: relative; overflow: hidden; }
 .hero::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); pointer-events: none; }
-.hero-eyebrow { display: inline-block; background: rgba(245,166,35,0.15); border: 1px solid rgba(245,166,35,0.5); color: #f5a623; font-size: 0.75em; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 16px; border-radius: 99px; margin-bottom: 24px; }
-.hero h1 { font-size: clamp(2em, 5vw, 3.2em); font-weight: 900; color: white; line-height: 1.1; margin-bottom: 16px; letter-spacing: -0.5px; }
+.hero-logo { width: 96px; height: 96px; border-radius: 24px; box-shadow: 0 16px 48px rgba(0,0,0,0.35); object-fit: cover; margin-bottom: 28px; position: relative; z-index: 1; }
+.hero-eyebrow { display: inline-block; background: rgba(245,166,35,0.15); border: 1px solid rgba(245,166,35,0.5); color: #f5a623; font-size: 0.72em; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 14px; border-radius: 99px; margin-bottom: 20px; position: relative; z-index: 1; }
+.hero h1 { font-size: clamp(2.2em, 5vw, 3.4em); font-weight: 900; color: white; line-height: 1.1; margin-bottom: 16px; letter-spacing: -0.5px; position: relative; z-index: 1; }
 .hero h1 span { color: #f5a623; }
-.hero-sub { color: rgba(255,255,255,0.82); font-size: clamp(0.95em, 2vw, 1.15em); max-width: 560px; margin: 0 auto 36px; line-height: 1.6; }
-.hero-cta { display: inline-flex; align-items: center; gap: 10px; background: #f5a623; color: #1a3d0f; font-weight: 800; font-size: 1em; padding: 15px 32px; border-radius: 12px; text-decoration: none; box-shadow: 0 8px 32px rgba(245,166,35,0.4); transition: all 0.2s; position: relative; z-index: 1; }
-.hero-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(245,166,35,0.55); color: #1a3d0f; }
-.hero-cta-arrow { font-size: 1.1em; }
+.hero-sub { color: rgba(255,255,255,0.78); font-size: clamp(0.95em, 2vw, 1.12em); max-width: 540px; margin: 0 auto; line-height: 1.65; position: relative; z-index: 1; }
 
-/* ── PRESENTED BY ── */
-.hero-presented { margin-top: 56px; }
-.hero-presented-label { display: block; font-size: 0.68em; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 20px; }
-.hero-presented-logos { display: inline-flex; align-items: center; gap: 0; background: rgba(245,166,35,0.12); border: 1px solid rgba(245,166,35,0.4); border-radius: 24px; overflow: hidden; backdrop-filter: blur(12px); }
-.hero-presenter { display: flex; align-items: center; gap: 14px; padding: 18px 32px; transition: background 0.2s; }
-.hero-presenter:hover { background: rgba(245,166,35,0.12); }
-.hero-logo { width: 56px; height: 56px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.35); flex-shrink: 0; object-fit: cover; }
-.hero-presenter-text { text-align: left; }
-.hero-presenter-text strong { display: block; color: #f5a623; font-size: 1em; font-weight: 800; letter-spacing: -0.2px; }
-.hero-presenter-text span { display: block; color: rgba(245,166,35,0.6); font-size: 0.72em; font-weight: 500; margin-top: 1px; }
+/* ── PRODUCTS ── */
+.products { max-width: 900px; margin: -48px auto 0; padding: 0 24px 80px; position: relative; z-index: 10; }
+.products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 640px) { .products-grid { grid-template-columns: 1fr; } }
 
-/* ── STATS ── */
-.hero-stats { display: flex; gap: 40px; justify-content: center; margin-top: 56px; flex-wrap: wrap; }
-.hero-stat { text-align: center; }
-.hero-stat .val { font-size: 2em; font-weight: 900; color: #f5a623; line-height: 1; }
-.hero-stat .lbl { font-size: 0.75em; color: rgba(255,255,255,0.6); letter-spacing: 0.5px; margin-top: 4px; text-transform: uppercase; }
+.product-card { background: white; border-radius: 20px; border: 1px solid #e8edf2; box-shadow: 0 8px 32px rgba(0,0,0,0.1); overflow: hidden; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; }
+.product-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.14); }
+.product-card-header { padding: 28px 28px 20px; }
+.product-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5em; margin-bottom: 16px; }
+.product-badge { display: inline-block; font-size: 0.68em; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; margin-bottom: 10px; }
+.badge-live { background: #dcfce7; color: #15803d; }
+.badge-podcast { background: #fce7f3; color: #9d174d; }
+.product-title { font-size: 1.15em; font-weight: 800; color: #1e293b; margin-bottom: 8px; }
+.product-desc { font-size: 0.85em; color: #64748b; line-height: 1.6; }
+.product-card-footer { margin-top: auto; padding: 20px 28px; border-top: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; }
+.product-cta { font-size: 0.85em; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.product-card.guide .product-cta { color: #2d8a3e; }
+.product-card.podcast .product-cta { color: #9d174d; }
+.product-meta { font-size: 0.75em; color: #94a3b8; font-weight: 600; }
 
-/* ── SECTIONS ── */
-.section { max-width: 1100px; margin: 0 auto; padding: 72px 24px; }
-.section-eyebrow { font-size: 0.75em; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #2d8a3e; margin-bottom: 10px; }
-.section-title { font-size: clamp(1.5em, 3vw, 2em); font-weight: 800; color: #0f172a; margin-bottom: 14px; line-height: 1.2; }
-.section-body { color: #475569; font-size: 0.95em; line-height: 1.7; max-width: 640px; }
+/* Guide card accent */
+.product-card.guide .product-card-header { background: linear-gradient(135deg, #f0fdf4, #ffffff); }
+.product-card.guide .product-icon { background: #dcfce7; }
+/* Podcast card accent */
+.product-card.podcast .product-card-header { background: linear-gradient(135deg, #fdf4ff, #ffffff); }
+.product-card.podcast .product-icon { background: #fce7f3; }
 
-/* ── FEATURES GRID ── */
-.features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 40px; }
-.feature-card { background: white; border-radius: 14px; padding: 24px; border: 1px solid #e8edf2; box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: box-shadow 0.2s, transform 0.2s; }
-.feature-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.09); transform: translateY(-2px); }
-.feature-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3em; margin-bottom: 14px; }
-.feature-title { font-size: 0.95em; font-weight: 700; color: #1e293b; margin-bottom: 6px; }
-.feature-body  { font-size: 0.83em; color: #64748b; line-height: 1.6; }
+/* ── ABOUT ── */
+.about { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+.about-inner { background: white; border-radius: 20px; border: 1px solid #e8edf2; box-shadow: 0 2px 12px rgba(0,0,0,0.05); padding: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+@media (max-width: 640px) { .about-inner { grid-template-columns: 1fr; padding: 32px 24px; gap: 24px; } }
+.about-eyebrow { font-size: 0.72em; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #2d8a3e; margin-bottom: 10px; }
+.about-title { font-size: 1.5em; font-weight: 800; color: #0f172a; margin-bottom: 14px; line-height: 1.25; }
+.about-body { font-size: 0.9em; color: #475569; line-height: 1.75; }
+.about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.about-stat { background: #f8fafc; border-radius: 12px; padding: 18px; text-align: center; }
+.about-stat .val { font-size: 1.8em; font-weight: 900; color: #2d8a3e; line-height: 1; }
+.about-stat .lbl { font-size: 0.72em; color: #64748b; margin-top: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
-/* ── HOW TO USE ── */
-.how-wrap { background: white; border-radius: 16px; border: 1px solid #e8edf2; box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden; margin-top: 40px; }
-.how-step { display: flex; gap: 20px; padding: 24px 28px; align-items: flex-start; border-bottom: 1px solid #f1f5f9; }
-.how-step:last-child { border-bottom: none; }
-.how-num { width: 36px; height: 36px; min-width: 36px; border-radius: 10px; background: linear-gradient(135deg, #2d8a3e, #1e6b2e); color: #f5a623; font-weight: 800; font-size: 0.9em; display: flex; align-items: center; justify-content: center; }
-.how-title { font-size: 0.93em; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
-.how-body  { font-size: 0.83em; color: #64748b; line-height: 1.6; }
+/* ── FOOTER ── */
+footer { background: linear-gradient(135deg, #1e6b2e, #2d8a3e); padding: 40px 24px; text-align: center; }
+footer .logo { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 12px; }
+footer .logo img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+footer .logo span { color: white; font-weight: 800; font-size: 0.95em; }
+footer p { color: rgba(255,255,255,0.5); font-size: 0.78em; }
 
-/* ── METHODOLOGY ── */
-.method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; }
-@media (max-width: 640px) { .method-grid { grid-template-columns: 1fr; } }
-.method-card { background: white; border-radius: 12px; padding: 22px; border: 1px solid #e8edf2; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
-.method-label { font-size: 0.7em; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
-.method-title { font-size: 0.93em; font-weight: 700; color: #1e293b; margin-bottom: 6px; }
-.method-body  { font-size: 0.82em; color: #64748b; line-height: 1.6; }
-
-/* ── TIER LEGEND ── */
-.tier-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
-.tier-chip { display: flex; align-items: center; gap: 8px; background: white; border: 1px solid #e8edf2; border-radius: 99px; padding: 6px 14px; font-size: 0.82em; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-.tier-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-
-/* ── ACCESS BANNER ── */
-.access-banner { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 14px 20px; display: flex; align-items: center; gap: 12px; margin-bottom: 28px; font-size: 0.9em; color: #9a3412; font-weight: 600; }
-.access-banner span { flex: 1; }
-
-/* ── PRICING ── */
-.pricing-wrap { background: white; border-radius: 20px; border: 1px solid #e8edf2; box-shadow: 0 4px 24px rgba(0,0,0,0.07); overflow: hidden; margin-top: 40px; }
-.pricing-pro  { padding: 40px 40px; background: linear-gradient(135deg, #1a5c28, #2d8a3e); position: relative; overflow: hidden; }
-.pricing-pro::before { content: ''; position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; background: rgba(245,166,35,0.1); border-radius: 50%; }
-.pricing-badge { display: inline-block; font-size: 0.7em; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border-radius: 99px; margin-bottom: 14px; }
-.badge-pro  { background: rgba(245,166,35,0.18); color: #f5a623; border: 1px solid rgba(245,166,35,0.4); }
-.pricing-plan { font-size: 1.2em; font-weight: 800; margin-bottom: 6px; }
-.pricing-pro  .pricing-plan { color: white; }
-.pricing-price { font-size: 2.8em; font-weight: 900; color: white; line-height: 1; margin-bottom: 4px; }
-.pricing-price sup { font-size: 0.38em; font-weight: 600; color: rgba(255,255,255,0.7); vertical-align: super; }
-.pricing-price sub { font-size: 0.32em; font-weight: 500; color: rgba(255,255,255,0.55); vertical-align: baseline; margin-left: 4px; }
-.pricing-desc { font-size: 0.88em; line-height: 1.6; margin-bottom: 24px; }
-.pricing-pro  .pricing-desc { color: rgba(255,255,255,0.7); }
-.pricing-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: 32px; }
-@media (max-width: 600px) { .pricing-cols { grid-template-columns: 1fr; } }
-.pricing-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
-.pricing-list li { display: flex; align-items: center; gap: 10px; font-size: 0.87em; }
-.pricing-pro  .pricing-list li { color: rgba(255,255,255,0.9); }
-.pricing-list li::before { content: '✓'; font-weight: 800; flex-shrink: 0; color: #f5a623; }
-.pricing-cta { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.05em; padding: 15px 32px; border-radius: 12px; text-decoration: none; transition: all 0.2s; cursor: pointer; border: none; }
-.pricing-cta:hover { transform: translateY(-1px); }
-.cta-pro  { background: #f5a623; color: #1a3d0f; box-shadow: 0 4px 16px rgba(245,166,35,0.35); }
-.cta-pro:hover { box-shadow: 0 8px 28px rgba(245,166,35,0.5); }
-
-/* ── FOOTER CTA ── */
-.footer-cta { background: linear-gradient(150deg, #1a5c28, #2d8a3e); padding: 72px 24px; text-align: center; }
-.footer-cta h2 { font-size: clamp(1.4em, 3vw, 2em); font-weight: 800; color: white; margin-bottom: 12px; }
-.footer-cta p { color: rgba(255,255,255,0.75); font-size: 0.95em; margin-bottom: 32px; }
-
-/* ── DIVIDER ── */
-.divider { background: #e8edf2; height: 1px; max-width: 1100px; margin: 0 auto; }
-
-/* ── RESPONSIVE ── */
 @media (max-width: 640px) {
-  .hero { padding: 56px 16px 72px; }
-  .hero-presenter { padding: 14px 18px; gap: 10px; }
-  .hero-logo { width: 40px; height: 40px; }
-  .hero-stats { gap: 24px; }
-  .pricing-free { border-right: none; border-bottom: 1px solid #f1f5f9; }
+  nav { padding: 12px 16px; }
+  .hero { padding: 72px 16px 80px; }
 }
 </style>
 </head>
@@ -131,195 +86,82 @@ nav a:hover { background: rgba(245,166,35,0.15); color: #f5a623; }
 
 <!-- NAV -->
 <nav>
-  <img src='100pool.jpg' alt='100% Pool'>
-  <span>100% Pool</span>
-  <a href='#section-acces'>Obtenir le guide →</a>
+  <a class='nav-logo' href='/'>
+    <img src='100pool.jpg' alt='100% Pool'>
+    <span>100% Pool</span>
+  </a>
+  <div class='nav-links'>
+    <a href='/guide-poolers/' class='nav-link'>Guide des poolers</a>
+    <a href='/podcast/' class='nav-link'>Podcast</a>
+  </div>
 </nav>
 
 <!-- HERO -->
 <div class='hero'>
-  <div class='hero-eyebrow'>🏒 Pool NHL · Saison 2026-27</div>
-  <h1>Dominez votre pool.<br><span>Commencez avec de meilleures données.</span></h1>
-  <p class='hero-sub'>Le guide des poolers vous offre des projections de joueurs, les stats de la dernière saison, une analyse des tendances et des classements par palier — tout ce qu'il vous faut pour arriver à votre repêchage en pleine confiance.</p>
-  <a href='#section-acces' class='hero-cta'>
-    Obtenir le guide — 5,00 $ <span class='hero-cta-arrow'>→</span>
-  </a>
-  <div class='hero-presented'>
-    <img src='100pool.jpg' alt='100% Pool' style='width:120px;height:120px;border-radius:28px;box-shadow:0 12px 40px rgba(0,0,0,0.35);object-fit:cover;'>
-  </div>
-  <div class='hero-stats'>
-    <div class='hero-stat'><div class='val'>447</div><div class='lbl'>Joueurs NHL</div></div>
-    <div class='hero-stat'><div class='val'>4</div><div class='lbl'>Niveaux de palier</div></div>
-    <div class='hero-stat'><div class='val'>32</div><div class='lbl'>Équipes couvertes</div></div>
-    <div class='hero-stat'><div class='val'>10+</div><div class='lbl'>Stats par joueur</div></div>
+  <img src='100pool.jpg' alt='100% Pool' class='hero-logo'>
+  <div class='hero-eyebrow'>🏒 Hockey Pool · NHL</div>
+  <h1>Le pool de hockey,<br><span>faite comme du monde.</span></h1>
+  <p class='hero-sub'>100% Pool est une communauté dédiée aux amateurs de pools de hockey NHL — outils, analyses et contenu pour dominer votre ligue.</p>
+</div>
+
+<!-- PRODUCTS -->
+<div class='products'>
+  <div class='products-grid'>
+
+    <a href='/guide-poolers/' class='product-card guide'>
+      <div class='product-card-header'>
+        <div class='product-icon'>📊</div>
+        <span class='product-badge badge-live'>Disponible — 5,00 $</span>
+        <div class='product-title'>Guide des poolers 2026-27</div>
+        <div class='product-desc'>447 joueurs NHL avec projections, paliers, score de valeur, stats complètes et outils de tri. Tout ce qu'il vous faut pour arriver préparé à votre repêchage.</div>
+      </div>
+      <div class='product-card-footer'>
+        <span class='product-cta'>Voir le guide →</span>
+        <span class='product-meta'>Saison 2026-27</span>
+      </div>
+    </a>
+
+    <a href='/podcast/' class='product-card podcast'>
+      <div class='product-card-header'>
+        <div class='product-icon'>🎙️</div>
+        <span class='product-badge badge-podcast'>Podcast</span>
+        <div class='product-title'>100% Pool Podcast</div>
+        <div class='product-desc'>Analyses de joueurs, stratégies de repêchage, buy/sell en saison et évaluations des gardiens. Avec Guillaume Corbeau et Olivier Fiset.</div>
+      </div>
+      <div class='product-card-footer'>
+        <span class='product-cta'>Écouter →</span>
+        <span class='product-meta'>Spotify · YouTube</span>
+      </div>
+    </a>
+
   </div>
 </div>
 
-<!-- PRICING -->
-<div class='section' id='section-acces'>
-  <div id='access-banner' class='access-banner' style='display:none'>
-    <span>🔒 Ce contenu est réservé aux acheteurs. Achetez le guide ci-dessous pour y accéder.</span>
-  </div>
-  <div class='section-eyebrow'>Accès</div>
-  <div class='section-title'>Obtenez le guide complet</div>
-  <div class='section-body'>Un accès complet à toutes les projections, paliers, scores de valeur et outils de tri — pour toute la saison 2026-27. Paiement unique, aucun abonnement.</div>
-
-  <div class='pricing-wrap'>
-    <div class='pricing-pro'>
-      <span class='pricing-badge badge-pro'>Disponible maintenant</span>
-      <div class='pricing-plan'>Guide des poolers 2026-27</div>
-      <div class='pricing-price'><sup>$</sup>5,00 <sub>CAD</sub></div>
-      <div class='pricing-desc' style='margin-top:12px;'>Accès instantané après paiement. Votre lien personnel vous est envoyé par courriel — valide pour toute la saison.</div>
-      <div class='pricing-cols'>
-        <ul class='pricing-list'>
-          <li>447 joueurs NHL avec projections 2026-27</li>
-          <li>Stats complètes de la saison 2025-26</li>
-          <li>Système de paliers (Élite, Top, Intermédiaire, Dormeur)</li>
-          <li>Indicateur de tendance ↑ → ↓ par joueur</li>
-        </ul>
-        <ul class='pricing-list'>
-          <li>Score de valeur de pool composite</li>
-          <li>Trier, filtrer par équipe, position, palier</li>
-          <li>Imprimer en feuille de triche &amp; exporter CSV</li>
-          <li>Mis à jour tout au long de la hors-saison</li>
-        </ul>
-      </div>
-      <a href='https://buy.stripe.com/test_00wbJ1dXQ6vl58iew9b7y01' class='pricing-cta cta-pro'>Acheter — 5,00 $ →</a>
-      <div style='font-size:0.75em;color:rgba(255,255,255,0.4);margin-top:14px;'>Paiement sécurisé par Stripe. Lien d'accès envoyé par courriel en quelques secondes.</div>
+<!-- ABOUT -->
+<div class='about'>
+  <div class='about-inner'>
+    <div>
+      <div class='about-eyebrow'>À propos</div>
+      <div class='about-title'>Tout pour gagner votre pool</div>
+      <p class='about-body'>100% Pool regroupe des outils et du contenu conçus spécifiquement pour les poolers NHL sérieux. Que ce soit pour préparer votre repêchage ou suivre la saison, on vous couvre avec des données à jour et des analyses de qualité.</p>
     </div>
-  </div>
-</div>
-
-<!-- WHAT'S INCLUDED -->
-<div class='section'>
-  <div class='section-eyebrow'>Ce qui est inclus</div>
-  <div class='section-title'>Tout ce dont votre pool a besoin, au même endroit</div>
-  <div class='section-body'>Chaque fiche de joueur est riche en contexte — pas seulement des chiffres bruts, mais des paliers classés, des tendances projetées et un score de valeur de pool qui tient compte à la fois du taux et de la durabilité.</div>
-
-  <div class='features-grid'>
-    <div class='feature-card'>
-      <div class='feature-icon' style='background:#eff6ff'>📅</div>
-      <div class='feature-title'>Stats de la saison passée</div>
-      <div class='feature-body'>Résultats complets 2025-26 : MJ, B, A, PTS, PPM et pourcentage de points en avantage numérique — la base de chaque projection.</div>
-    </div>
-    <div class='feature-card'>
-      <div class='feature-icon' style='background:#f0fdf4'>🎯</div>
-      <div class='feature-title'>Projections 2026-27</div>
-      <div class='feature-body'>Projections élaborées à la main tenant compte des combinaisons de trios, du contexte d'équipe, des courbes d'âge, des mouvements hors-saison et des situations contractuelles.</div>
-    </div>
-    <div class='feature-card'>
-      <div class='feature-icon' style='background:#fefce8'>📈</div>
-      <div class='feature-title'>Indicateur de tendance</div>
-      <div class='feature-body'>En un coup d'œil — ↑ Progression, → Stable, ↓ Régression — avec le delta exact de points affiché sur chaque ligne.</div>
-    </div>
-    <div class='feature-card'>
-      <div class='feature-icon' style='background:#fdf4ff'>🏅</div>
-      <div class='feature-title'>Système de paliers</div>
-      <div class='feature-body'>Les joueurs sont répartis en quatre paliers — Élite, Top, Intermédiaire et Dormeur — avec un code de couleur sur toute la table pour un survol instantané.</div>
-      <div class='tier-legend'>
-        <span class='tier-chip'><span class='tier-dot' style='background:#f59e0b'></span>Élite</span>
-        <span class='tier-chip'><span class='tier-dot' style='background:#3b82f6'></span>Top</span>
-        <span class='tier-chip'><span class='tier-dot' style='background:#94a3b8'></span>Intermédiaire</span>
-        <span class='tier-chip'><span class='tier-dot' style='background:#34d399'></span>Dormeur</span>
-      </div>
-    </div>
-    <div class='feature-card'>
-      <div class='feature-icon' style='background:#fff7ed'>💎</div>
-      <div class='feature-title'>Score de valeur de pool</div>
-      <div class='feature-body'>Un score composite combinant le taux PTS/MJ, la durabilité (matchs joués) et un bonus de palier. Triez par ce score pour trouver les meilleurs choix à chaque position de repêchage.</div>
-    </div>
-    <div class='feature-card'>
-      <div class='feature-icon' style='background:#f0fdf4'>💰</div>
-      <div class='feature-title'>Salaire (AAV)</div>
-      <div class='feature-body'>La valeur annuelle moyenne du contrat en M$ pour croiser la valeur avec la charge salariale — contexte utile pour évaluer le statut d'un joueur et l'engagement de son équipe.</div>
+    <div class='about-stats'>
+      <div class='about-stat'><div class='val'>447</div><div class='lbl'>Joueurs couverts</div></div>
+      <div class='about-stat'><div class='val'>32</div><div class='lbl'>Équipes NHL</div></div>
+      <div class='about-stat'><div class='val'>2</div><div class='lbl'>Saisons publiées</div></div>
+      <div class='about-stat'><div class='val'>100%</div><div class='lbl'>Pool NHL</div></div>
     </div>
   </div>
 </div>
 
-<div class='divider'></div>
-
-<!-- HOW TO USE -->
-<div class='section'>
-  <div class='section-eyebrow'>Comment l'utiliser</div>
-  <div class='section-title'>Conçu pour la soirée de repêchage, pas seulement pour les analystes</div>
-  <div class='section-body'>Le guide est conçu pour être rapide à utiliser. Imprimez-le avant votre repêchage ou ouvrez-le sur votre téléphone à la table.</div>
-
-  <div class='how-wrap'>
-    <div class='how-step'>
-      <div class='how-num'>1</div>
-      <div>
-        <div class='how-title'>Triez selon ce qui compte pour vous</div>
-        <div class='how-body'>Cliquez sur l'en-tête de n'importe quelle colonne pour trier — PTS projetés, PPM, Valeur de pool ou totaux de la dernière saison. Triez en ordre décroissant pour voir les meilleurs en haut.</div>
-      </div>
-    </div>
-    <div class='how-step'>
-      <div class='how-num'>2</div>
-      <div>
-        <div class='how-title'>Filtrez par position, palier, équipe ou tendance</div>
-        <div class='how-body'>Utilisez les menus déroulants pour cibler votre choix de repêchage. Besoin d'un centre de palier Top dans une bonne équipe? Réglez Pos → C, Palier → Top et vous y êtes en deux clics.</div>
-      </div>
-    </div>
-    <div class='how-step'>
-      <div class='how-num'>3</div>
-      <div>
-        <div class='how-title'>Personnalisez votre vue avec le bouton Colonnes</div>
-        <div class='how-body'>Cliquez sur ⚙ Colonnes pour masquer ou afficher n'importe quel groupe de stats. Simplifiez pour un aperçu rapide ou affichez tout pour une analyse approfondie.</div>
-      </div>
-    </div>
-    <div class='how-step'>
-      <div class='how-num'>4</div>
-      <div>
-        <div class='how-title'>Imprimez ou exportez avant votre repêchage</div>
-        <div class='how-body'>Le bouton 🖨 Imprimer génère une feuille de triche propre en mode paysage. L'export ⬇ CSV s'ouvre directement dans Excel.</div>
-      </div>
-    </div>
+<!-- FOOTER -->
+<footer>
+  <div class='logo'>
+    <img src='100pool.jpg' alt='100% Pool'>
+    <span>100% Pool</span>
   </div>
-</div>
+  <p>© 2026 100% Pool · toutsurlehockey.com</p>
+</footer>
 
-<div class='divider'></div>
-
-<!-- METHODOLOGY -->
-<div class='section'>
-  <div class='section-eyebrow'>Méthodologie</div>
-  <div class='section-title'>Comment les projections sont calculées</div>
-  <div class='section-body'>Les projections sont élaborées manuellement — pas par un algorithme. Chaque joueur est évalué individuellement à partir d'une combinaison d'historique récent et de contexte prospectif.</div>
-
-  <div class='method-grid'>
-    <div class='method-card'>
-      <div class='method-label' style='color:#f59e0b'>Base</div>
-      <div class='method-title'>Performance de la saison précédente</div>
-      <div class='method-body'>Les MJ, B, A, PTS et PPM de la dernière saison constituent la base. On pondère le taux par match plutôt que les totaux — un joueur à 1,2 PPM en 60 matchs est évalué différemment qu'un joueur à 0,9 PPM en 80 matchs.</div>
-    </div>
-    <div class='method-card'>
-      <div class='method-label' style='color:#15803d'>Contexte</div>
-      <div class='method-title'>Situation d'équipe et de trio</div>
-      <div class='method-body'>Les combinaisons de trios, le déploiement en avantage numérique et le potentiel offensif de l'équipe influencent le plafond. Un joueur qui rejoint une meilleure équipe ou un premier trio en AN obtient une hausse.</div>
-    </div>
-    <div class='method-card'>
-      <div class='method-label' style='color:#b45309'>Ajustements</div>
-      <div class='method-title'>Courbe d'âge et année de contrat</div>
-      <div class='method-body'>On applique des ajustements modestes pour les joueurs entrant dans leurs meilleures années (24-28) ou montrant un déclin lié à l'âge. Les années de contrat produisent parfois des performances exceptionnelles.</div>
-    </div>
-    <div class='method-card'>
-      <div class='method-label' style='color:#7c3aed'>Hors-saison</div>
-      <div class='method-title'>Échanges, signatures et blessures</div>
-      <div class='method-body'>Le guide est mis à jour au fil de la hors-saison — les échanges, les signatures en agence libre et les situations de blessures connues sont reflétés tout au long de l'été.</div>
-    </div>
-  </div>
-</div>
-
-<!-- FOOTER CTA -->
-<div class='footer-cta'>
-  <h2>Prêt pour votre meilleur repêchage?</h2>
-  <p>5,00 $ — accès complet pour toute la saison 2026-27, livré par courriel.</p>
-  <a href='#section-acces' class='hero-cta'>Obtenir le guide des poolers →</a>
-</div>
-
-<script>
-if (new URLSearchParams(location.search).get('acces') === 'requis') {
-  document.getElementById('access-banner').style.display = 'flex';
-  document.getElementById('section-acces').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-</script>
 </body>
 </html>
