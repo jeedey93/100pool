@@ -69,7 +69,7 @@ serve(async (req) => {
 
   const [row] = await dbRes.json();
   const token = row.token;
-  const magicLink = `https://100pool.ca/2026-27/?token=${token}`;
+  const magicLink = `https://100pool.ca/guide-poolers/2026-2027/?token=${token}`;
 
   // Send magic link email via Resend
   const emailRes = await fetch('https://api.resend.com/emails', {
