@@ -135,6 +135,28 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
 .sticky-cta-label span { color: #2d8a3e; }
 .sticky-cta a { flex-shrink: 0; background: #f5c842; color: #1a3d10; font-weight: 800; font-size: 0.88em; padding: 11px 20px; border-radius: 10px; text-decoration: none; white-space: nowrap; }
 @media (max-width: 640px) { .sticky-cta { display: flex; } body { padding-bottom: 70px; } }
+/* ── PREVIEW ── */
+.preview-section { background: linear-gradient(160deg, #163d1c, #1e6b2e); padding: 64px 24px; }
+.preview-inner { max-width: 860px; margin: 0 auto; }
+.preview-header { text-align: center; margin-bottom: 40px; }
+.preview-header .section-eyebrow { color: #f5c842; }
+.preview-header .section-title { color: white; }
+.preview-header .section-sub { color: rgba(255,255,255,0.65); margin: 0 auto; }
+.preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 36px; }
+@media (max-width: 640px) { .preview-grid { grid-template-columns: 1fr; } }
+.preview-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 20px; }
+.preview-card-label { font-size: 0.7em; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #f5c842; margin-bottom: 10px; }
+.preview-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 0.83em; }
+.preview-row:last-child { border-bottom: none; }
+.preview-row .name { color: white; font-weight: 600; }
+.preview-row .val { color: rgba(255,255,255,0.55); font-weight: 700; font-size: 0.9em; }
+.preview-row .ptier { font-size: 0.72em; font-weight: 800; padding: 2px 8px; border-radius: 99px; }
+.ptier-1 { background: rgba(245,200,66,0.2); color: #f5c842; }
+.ptier-2 { background: rgba(99,210,132,0.2); color: #4ade80; }
+.ptier-3 { background: rgba(148,163,184,0.15); color: #94a3b8; }
+.preview-loading { color: rgba(255,255,255,0.35); font-size: 0.82em; padding: 12px 0; }
+.preview-note { color: rgba(255,255,255,0.4); font-size: 0.75em; margin-top: 12px; text-align: center; }
+
 </style>
 </head>
 <body>
@@ -179,6 +201,23 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
     <div class='hero-stat'><div class='val'>3</div><div class='lbl'>Positions</div></div>
     <div class='hero-stat'><div class='val'>32</div><div class='lbl'>Équipes NHL</div></div>
     <div class='hero-stat'><div class='val'>5+</div><div class='lbl'>Tiers de classement</div></div>
+  </div>
+</div>
+
+<!-- APERÇU DES JOUEURS -->
+<div class='preview-section' id='apercu'>
+  <div class='preview-inner'>
+    <div class='preview-header'>
+      <div class='section-eyebrow'>Aperçu du guide</div>
+      <h2 class='section-title'>Les meilleurs joueurs de la saison</h2>
+      <p class='section-sub'>Un extrait des classements en temps réel — données directement depuis la base du guide.</p>
+    </div>
+    <div class='preview-grid'>
+      <div class='preview-card'><div class='preview-card-label'>⚡ Attaquants</div><div id='preview-fwd' class='preview-loading'>Chargement…</div></div>
+      <div class='preview-card'><div class='preview-card-label'>🛡️ Défenseurs</div><div id='preview-def' class='preview-loading'>Chargement…</div></div>
+      <div class='preview-card'><div class='preview-card-label'>🥅 Gardiens</div><div id='preview-g' class='preview-loading'>Chargement…</div></div>
+    </div>
+    <p class='preview-note'>Classements complets disponibles dans le guide · <a href='https://buy.stripe.com/test_00wbJ1dXQ6vl58iew9b7y01' style='color:#f5c842;font-weight:700;' target='_blank'>Obtenir le guide — 5 $</a></p>
   </div>
 </div>
 
@@ -373,6 +412,46 @@ if (stickyCta && finalCta) {
     stickyCta.style.display = rect.top < window.innerHeight ? 'none' : '';
   }, { passive: true });
 }
+
+// ── APERÇU SUPABASE ──
+(async function loadPreview() {
+  const SUPABASE_URL = 'https://fifurqlitkywtmhgtzeu.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpZnVycWxpdGt5d3RtaGd0emV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDIyMjQsImV4cCI6MjA5MjI3ODIyNH0.KPVPj1qwbSJJMyLR_-AhDcRs0vi2sUU6qbFQ-kH53C0';
+  const headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY };
+
+  const TIER_COLORS = { '1':'#f5c842','2':'#4ade80','3':'#94a3b8','4':'#fb923c','5':'#38bdf8','6':'#f472b6','7':'#a78bfa','8':'#64748b' };
+  function tierNum(t) { if (!t) return 99; const m = String(t).match(/\d+/); return m ? parseInt(m[0]) : 99; }
+  function tierColor(t) { return TIER_COLORS[String(tierNum(t))] || '#94a3b8'; }
+
+  function renderRows(players, moreCount, moreLabel) {
+    const rows = players.map(p => {
+      const tn = tierNum(p.tier);
+      const cls = tn <= 2 ? 'ptier-' + tn : 'ptier-3';
+      return `<div class='preview-row'><span class='name'>${p.name}</span><span class='ptier ${cls}' style='background:${tierColor(p.tier)}22;color:${tierColor(p.tier)};'>T${tn}</span><span class='val'>${p.proj_pts ?? '—'} pts</span></div>`;
+    }).join('');
+    const more = moreCount > 0 ? `<div class='preview-row' style='border-bottom:none;opacity:0.45;font-size:0.8em;'><span class='name'>+ ${moreCount} autres ${moreLabel}</span></div>` : '';
+    return rows + more;
+  }
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/poolers_players?select=name,pos,tier,rank,proj_pts&order=rank.asc&limit=1000`, { headers });
+    if (!res.ok) throw new Error();
+    const players = await res.json();
+    const fwd = players.filter(p => ['C','LW','RW'].includes(p.pos));
+    const def = players.filter(p => p.pos === 'D');
+    const g   = players.filter(p => p.pos === 'G');
+
+    document.getElementById('preview-fwd').innerHTML = renderRows(fwd.slice(0,7), Math.max(0, fwd.length-7), 'attaquants');
+    document.getElementById('preview-def').innerHTML = def.length
+      ? renderRows(def.slice(0,5), Math.max(0, def.length-5), 'défenseurs')
+      : "<span style='color:rgba(255,255,255,0.3);font-size:0.82em;'>Classement disponible dans le guide complet.</span>";
+    document.getElementById('preview-g').innerHTML = renderRows(g.slice(0,5), Math.max(0, g.length-5), 'gardiens');
+  } catch(e) {
+    ['preview-fwd','preview-def','preview-g'].forEach(id => {
+      document.getElementById(id).innerHTML = "<span style='color:rgba(255,255,255,0.3);font-size:0.82em;'>Données indisponibles.</span>";
+    });
+  }
+})();
 </script>
 </body>
 </html>
