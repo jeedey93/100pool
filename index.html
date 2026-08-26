@@ -62,6 +62,9 @@ nav { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; he
 .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
 .hero-trust { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 28px; position: relative; z-index: 1; }
 .hero-trust-item { color: rgba(255,255,255,0.55); font-size: 0.78em; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+.hero-stats { display: flex; gap: 40px; justify-content: center; margin-top: 48px; flex-wrap: wrap; position: relative; z-index: 1; }
+.hero-stat .val { font-size: 2em; font-weight: 900; color: #f5c842; line-height: 1; }
+.hero-stat .lbl { font-size: 0.72em; color: rgba(255,255,255,0.55); letter-spacing: 0.5px; margin-top: 4px; text-transform: uppercase; }
 
 /* ── PROOF STRIP ── */
 .proof { background: white; border-bottom: 1px solid #e8edf2; padding: 20px 24px; }
@@ -237,13 +240,23 @@ footer p { color: rgba(255,255,255,0.25); font-size: 0.74em; }
 
 <!-- HERO -->
 <div class='hero'>
-  <img src='100pool.jpg' alt='100% Pool' class='hero-logo'>
-  <div class='hero-eyebrow'>🏒 Hockey Pool NHL</div>
-  <h1>Prépare ton pool.<br><span>Domine ta saison.</span></h1>
-  <p class='hero-sub'>100% Pool, c'est un guide de repêchage et un podcast — par Guillaume Corbeau et Olivier Fiset de toutsurlehockey.com.</p>
+  <div class='hero-eyebrow'>🏒 Guide des poolers · Saison 2026-27</div>
+  <h1>Arrive à ton draft<br>avec un <span>coup d'avance.</span></h1>
+  <p class='hero-sub'>447 joueurs NHL analysés et classés par tiers — attaquants, défenseurs et gardiens. Projections, sleepers et score de valeur pour dominer ton pool.</p>
+  <div class='hero-price'>5 $ · Accès instantané · Valide toute la saison</div>
   <div class='hero-actions'>
-    <a href='/guide-poolers/' class='btn-cta'>Guide des poolers →</a>
-    <a href='/podcast/' class='btn-cta btn-cta-ghost'>Podcast ↓</a>
+    <a href='https://buy.stripe.com/test_00wbJ1dXQ6vl58iew9b7y01' class='btn-cta' target='_blank'>Obtenir mon guide — 5 $</a>
+  </div>
+  <div class='hero-trust'>
+    <span class='hero-trust-item'>✓ Livraison par courriel</span>
+    <span class='hero-trust-item'>✓ Aucun abonnement</span>
+    <span class='hero-trust-item'>✓ Paiement sécurisé Stripe</span>
+  </div>
+  <div class='hero-stats'>
+    <div class='hero-stat'><div class='val'>447</div><div class='lbl'>Joueurs couverts</div></div>
+    <div class='hero-stat'><div class='val'>3</div><div class='lbl'>Positions</div></div>
+    <div class='hero-stat'><div class='val'>32</div><div class='lbl'>Équipes NHL</div></div>
+    <div class='hero-stat'><div class='val'>5+</div><div class='lbl'>Tiers de classement</div></div>
   </div>
 </div>
 
