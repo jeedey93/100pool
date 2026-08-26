@@ -4,7 +4,8 @@
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <title>100% Pool — Analyses NHL & Guide des poolers</title>
-<meta name='description' content='100% Pool — Guide de repêchage NHL et podcast par Guillaume Corbeau et Olivier Fiset. Prépare ton pool avec un coup d'avance.'><meta property='og:type' content='website'>
+<meta name='description' content='447 joueurs NHL analysés et classés par tiers — attaquants, défenseurs et gardiens. Arrivez à votre repêchage avec un coup d'avance. 5 $.'>
+<meta property='og:type' content='website'>
 <meta property='og:url' content='https://100pool.ca/'>
 <meta property='og:title' content='100% Pool — Analyses NHL & Guide des poolers'>
 <meta property='og:description' content='447 joueurs NHL analysés et classés par tiers. Projections, sleepers, valeur et stratégie de repêchage. 5 $.'>
@@ -62,11 +63,60 @@ nav { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; he
 .hero-trust { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 28px; position: relative; z-index: 1; }
 .hero-trust-item { color: rgba(255,255,255,0.55); font-size: 0.78em; font-weight: 600; display: flex; align-items: center; gap: 5px; }
 
+/* ── PROOF STRIP ── */
+.proof { background: white; border-bottom: 1px solid #e8edf2; padding: 20px 24px; }
+.proof-inner { max-width: 860px; margin: 0 auto; display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; align-items: center; }
+.proof-item { display: flex; align-items: center; gap: 8px; font-size: 0.85em; font-weight: 700; color: #475569; }
+.proof-item strong { color: #1e293b; }
+.proof-divider { width: 1px; height: 20px; background: #e2e8f0; }
+@media (max-width: 600px) { .proof-divider { display: none; } }
+
 /* ── SECTION WRAPPER ── */
 .section { max-width: 860px; margin: 0 auto; padding: 64px 24px; }
+.section-sm { max-width: 860px; margin: 0 auto; padding: 48px 24px; }
 .section-eyebrow { font-size: 0.72em; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #2d8a3e; margin-bottom: 12px; }
 .section-title { font-size: clamp(1.5em, 3.5vw, 2em); font-weight: 800; color: #0f172a; line-height: 1.2; margin-bottom: 14px; }
 .section-sub { font-size: 0.95em; color: #64748b; line-height: 1.75; max-width: 560px; }
+
+/* ── PREVIEW PLACEHOLDER ── */
+.preview-section { background: linear-gradient(160deg, #163d1c, #1e6b2e); padding: 64px 24px; }
+.preview-inner { max-width: 860px; margin: 0 auto; }
+.preview-header { text-align: center; margin-bottom: 40px; }
+.preview-header .section-eyebrow { color: #f5c842; }
+.preview-header .section-title { color: white; }
+.preview-header .section-sub { color: rgba(255,255,255,0.65); margin: 0 auto; }
+.preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 36px; }
+@media (max-width: 640px) { .preview-grid { grid-template-columns: 1fr; } }
+.preview-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 20px; }
+.preview-card-label { font-size: 0.7em; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #f5c842; margin-bottom: 10px; }
+.preview-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 0.83em; }
+.preview-row:last-child { border-bottom: none; }
+.preview-row .name { color: white; font-weight: 600; }
+.preview-row .val { color: rgba(255,255,255,0.55); font-weight: 700; font-size: 0.9em; }
+.preview-row .tier { font-size: 0.72em; font-weight: 800; padding: 2px 8px; border-radius: 99px; }
+.tier-1 { background: rgba(245,200,66,0.2); color: #f5c842; }
+.tier-2 { background: rgba(99,210,132,0.2); color: #4ade80; }
+.tier-3 { background: rgba(148,163,184,0.15); color: #94a3b8; }
+.preview-loading { color: rgba(255,255,255,0.35); font-size: 0.82em; padding: 12px 0; }
+.preview-cta-wrap { text-align: center; }
+.preview-note { color: rgba(255,255,255,0.4); font-size: 0.75em; margin-top: 12px; }
+
+/* ── WHY SECTION ── */
+.why-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 36px; }
+@media (max-width: 600px) { .why-grid { grid-template-columns: 1fr; } }
+.why-item { background: white; border-radius: 16px; padding: 24px; border: 1px solid #e8edf2; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+.why-icon { font-size: 1.5em; margin-bottom: 10px; }
+.why-title { font-size: 0.95em; font-weight: 800; color: #1e293b; margin-bottom: 6px; }
+.why-desc { font-size: 0.82em; color: #64748b; line-height: 1.65; }
+
+/* ── INCLUDES ── */
+.includes-bg { background: white; border-top: 1px solid #e8edf2; border-bottom: 1px solid #e8edf2; }
+.includes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 36px; }
+@media (max-width: 600px) { .includes-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 380px) { .includes-grid { grid-template-columns: 1fr; } }
+.include-item { background: #f8fafc; border-radius: 12px; padding: 16px; border: 1px solid #e8edf2; display: flex; gap: 10px; align-items: flex-start; }
+.include-check { color: #2d8a3e; font-size: 1em; flex-shrink: 0; margin-top: 1px; }
+.include-text { font-size: 0.83em; color: #374151; font-weight: 600; line-height: 1.4; }
 
 /* ── CREDIBILITY ── */
 .cred-bg { background: #f8fafc; border-top: 1px solid #e8edf2; }
@@ -77,6 +127,53 @@ nav { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; he
 .host-name { font-size: 1.05em; font-weight: 800; color: #0f172a; margin-bottom: 3px; }
 .host-role { font-size: 0.78em; color: #2d8a3e; font-weight: 700; margin-bottom: 12px; }
 .host-bio { font-size: 0.82em; color: #64748b; line-height: 1.65; }
+.method-box { background: white; border-radius: 16px; padding: 28px 32px; border: 1px solid #e8edf2; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-top: 20px; }
+.method-title { font-size: 0.85em; font-weight: 800; color: #1e293b; margin-bottom: 14px; }
+.method-steps { display: flex; flex-direction: column; gap: 10px; }
+.method-step { display: flex; gap: 12px; align-items: flex-start; font-size: 0.83em; color: #475569; line-height: 1.5; }
+.method-step-num { background: #dcfce7; color: #15803d; font-weight: 800; font-size: 0.75em; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+
+/* ── PODCAST ── */
+.podcast-bg { background: white; border-top: 1px solid #e8edf2; }
+.podcast-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; margin-top: 36px; }
+@media (max-width: 640px) { .podcast-inner { grid-template-columns: 1fr; } }
+.podcast-desc { font-size: 0.88em; color: #475569; line-height: 1.75; margin-bottom: 20px; }
+.podcast-platforms { display: flex; gap: 10px; flex-wrap: wrap; }
+.plat-btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 16px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.8em; transition: opacity 0.2s; }
+.plat-btn:hover { opacity: 0.85; }
+.btn-spotify { background: #1DB954; color: white; }
+.btn-youtube { background: #FF0000; color: white; }
+.yt-wrap { border-radius: 14px; overflow: hidden; aspect-ratio: 16/9; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+.yt-wrap iframe { width: 100%; height: 100%; display: block; }
+
+/* ── HOW IT WORKS ── */
+.how-bg { background: linear-gradient(160deg, #163d1c, #1e6b2e); }
+.how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
+@media (max-width: 600px) { .how-grid { grid-template-columns: 1fr; gap: 16px; } }
+.how-step { text-align: center; }
+.how-num { width: 48px; height: 48px; border-radius: 50%; background: rgba(245,200,66,0.15); border: 2px solid rgba(245,200,66,0.4); color: #f5c842; font-weight: 900; font-size: 1.2em; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+.how-title { color: white; font-size: 0.95em; font-weight: 800; margin-bottom: 8px; }
+.how-desc { color: rgba(255,255,255,0.6); font-size: 0.82em; line-height: 1.6; }
+.how-arrow { color: rgba(255,255,255,0.2); font-size: 1.5em; display: flex; align-items: center; justify-content: center; margin-top: 16px; }
+@media (max-width: 600px) { .how-arrow { display: none; } }
+
+/* ── FAQ ── */
+.faq-bg { background: #f8fafc; border-top: 1px solid #e8edf2; }
+.faq-list { margin-top: 32px; display: flex; flex-direction: column; gap: 12px; }
+.faq-item { background: white; border-radius: 14px; border: 1px solid #e8edf2; overflow: hidden; }
+.faq-q { font-size: 0.92em; font-weight: 700; color: #1e293b; padding: 18px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; user-select: none; }
+.faq-q:hover { background: #f8fafc; }
+.faq-icon { color: #94a3b8; font-size: 1.1em; flex-shrink: 0; transition: transform 0.2s; }
+.faq-item.open .faq-icon { transform: rotate(45deg); }
+.faq-a { font-size: 0.86em; color: #64748b; line-height: 1.75; padding: 0 20px 18px; display: none; }
+.faq-item.open .faq-a { display: block; }
+
+/* ── FINAL CTA ── */
+.final-cta { background: linear-gradient(160deg, #163d1c, #2d8a3e); padding: 80px 24px; text-align: center; }
+.final-cta h2 { font-size: clamp(1.8em, 4vw, 2.6em); font-weight: 900; color: white; margin-bottom: 14px; letter-spacing: -0.5px; }
+.final-cta h2 span { color: #f5c842; }
+.final-cta p { color: rgba(255,255,255,0.65); font-size: 1em; max-width: 420px; margin: 0 auto 36px; line-height: 1.65; }
+.final-cta-note { color: rgba(255,255,255,0.4); font-size: 0.78em; margin-top: 16px; }
 
 /* ── FOOTER ── */
 footer { background: #0f1f13; padding: 40px 24px; text-align: center; }
@@ -87,36 +184,6 @@ footer .logo span { color: white; font-weight: 800; font-size: 0.95em; }
 .footer-links a { color: rgba(255,255,255,0.45); font-size: 0.8em; text-decoration: none; font-weight: 600; transition: color 0.2s; }
 .footer-links a:hover { color: rgba(255,255,255,0.8); }
 footer p { color: rgba(255,255,255,0.25); font-size: 0.74em; }
-
-/* ── PRODUCTS GRID ── */
-.products { background: #f0f4f8; padding: 64px 24px; }
-.products-inner { max-width: 860px; margin: 0 auto; }
-.products-eyebrow { text-align: center; font-size: 0.72em; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #2d8a3e; margin-bottom: 12px; }
-.products-title { text-align: center; font-size: clamp(1.5em, 3vw, 2em); font-weight: 800; color: #0f172a; margin-bottom: 40px; }
-.products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-@media (max-width: 620px) { .products-grid { grid-template-columns: 1fr; } }
-
-.product-card { background: white; border-radius: 20px; border: 1px solid #e8edf2; box-shadow: 0 2px 12px rgba(0,0,0,0.05); overflow: hidden; display: flex; flex-direction: column; }
-.product-card-header { padding: 28px 28px 20px; border-bottom: 1px solid #f1f5f9; }
-.product-card-icon { font-size: 2em; margin-bottom: 12px; }
-.product-card-title { font-size: 1.15em; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
-.product-card-desc { font-size: 0.84em; color: #64748b; line-height: 1.65; }
-.product-card-body { padding: 20px 28px 28px; flex: 1; display: flex; flex-direction: column; gap: 16px; }
-.product-card-features { list-style: none; display: flex; flex-direction: column; gap: 8px; flex: 1; }
-.product-card-features li { font-size: 0.82em; color: #475569; display: flex; gap: 8px; align-items: flex-start; line-height: 1.4; }
-.product-card-features li::before { content: '✓'; color: #2d8a3e; font-weight: 800; flex-shrink: 0; }
-.product-card-price { font-size: 0.85em; color: #94a3b8; font-weight: 600; }
-.product-card-price strong { color: #f5c842; font-size: 1.3em; font-weight: 900; }
-.product-card-cta { display: flex; flex-direction: column; gap: 8px; }
-.btn-product-primary { display: inline-flex; align-items: center; justify-content: center; background: #f5c842; color: #1a3d10; font-weight: 800; font-size: 0.92em; padding: 13px 24px; border-radius: 10px; text-decoration: none; transition: all 0.2s; }
-.btn-product-primary:hover { background: #f9d55a; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
-.btn-product-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: white; color: #1e293b; font-weight: 700; font-size: 0.85em; padding: 11px 20px; border-radius: 10px; text-decoration: none; border: 1.5px solid #e2e8f0; transition: all 0.2s; }
-.btn-product-secondary:hover { border-color: #2d8a3e; color: #2d8a3e; }
-.platform-pills { display: flex; gap: 8px; flex-wrap: wrap; }
-.plat-pill { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.78em; transition: opacity 0.2s; }
-.plat-pill:hover { opacity: 0.85; }
-.plat-pill-spotify { background: #1DB954; color: white; }
-.plat-pill-youtube { background: #FF0000; color: white; }
 
 /* ── STICKY CTA (mobile) ── */
 .sticky-cta { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 150; background: white; border-top: 1px solid #e2e8f0; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); padding: 12px 16px; align-items: center; justify-content: space-between; gap: 12px; }
@@ -149,105 +216,230 @@ footer p { color: rgba(255,255,255,0.25); font-size: 0.74em; }
   </div>
 </nav>
 
-<!-- HERO -->
+<!-- 1. HERO -->
 <div class='hero'>
   <img src='100pool.jpg' alt='100% Pool' class='hero-logo'>
-  <div class='hero-eyebrow'>🏒 Hockey Pool NHL</div>
-  <h1>Prépare ton pool.<br><span>Domine ta saison.</span></h1>
-  <p class='hero-sub'>100% Pool, c'est un guide de repêchage et un podcast — par Guillaume Corbeau et Olivier Fiset de toutsurlehockey.com.</p>
+  <div class='hero-eyebrow'>🏒 Guide des poolers 2026-27</div>
+  <h1>Arrive à ton draft<br>avec un <span>coup d'avance.</span></h1>
+  <p class='hero-sub'>447 joueurs NHL analysés et classés par tiers — attaquants, défenseurs et gardiens. Projections, sleepers, valeur et stratégie pour dominer ton pool.</p>
+  <div class='hero-price'>5 $ · Accès instantané · Valide toute la saison</div>
   <div class='hero-actions'>
-    <a href='/guide-poolers/' class='btn-cta'>Guide des poolers →</a>
-    <a href='/podcast/' class='btn-cta btn-cta-ghost'>Podcast ↓</a>
+    <a href='https://buy.stripe.com/test_00wbJ1dXQ6vl58iew9b7y01' class='btn-cta' target='_blank'>Obtenir mon guide — 5 $</a>
+    <a href='#apercu' class='btn-cta btn-cta-ghost'>Voir un aperçu ↓</a>
+  </div>
+  <div class='hero-trust'>
+    <span class='hero-trust-item'>✓ Livraison par courriel</span>
+    <span class='hero-trust-item'>✓ Aucun abonnement</span>
+    <span class='hero-trust-item'>✓ Par Guillaume &amp; Olivier</span>
   </div>
 </div>
 
-<!-- PRODUCTS -->
-<div class='products'>
-  <div class='products-inner'>
-    <div class='products-eyebrow'>Ce qu'on fait</div>
-    <h2 class='products-title'>Deux façons de préparer ton pool</h2>
-    <div class='products-grid'>
+<!-- 2. PROOF STRIP -->
+<div class='proof'>
+  <div class='proof-inner'>
+    <div class='proof-item'>🏒 <strong>447</strong> joueurs couverts</div>
+    <div class='proof-divider'></div>
+    <div class='proof-item'>📊 <strong>Attaquants · Défenseurs · Gardiens</strong></div>
+    <div class='proof-divider'></div>
+    <div class='proof-item'>⚡ <strong>Accès instantané</strong> après paiement</div>
+    <div class='proof-divider'></div>
+    <div class='proof-item'>📬 <strong>Lien par courriel</strong> · Valide 1 an</div>
+  </div>
+</div>
 
-      <!-- Guide -->
-      <div class='product-card'>
-        <div class='product-card-header'>
-          <div class='product-card-icon'>📋</div>
-          <div class='product-card-title'>Guide des poolers 2026-27</div>
-          <div class='product-card-desc'>447 joueurs NHL analysés et classés par tiers — projections, sleepers et score de valeur pour dominer ton repêchage.</div>
-        </div>
-        <div class='product-card-body'>
-          <ul class='product-card-features'>
-            <li>447 joueurs · Attaquants, défenseurs, gardiens</li>
-            <li>Classement par tiers avec score de valeur</li>
-            <li>Projections de points saison 2026-27</li>
-            <li>Sleepers et joueurs à risque identifiés</li>
-            <li>Accès en ligne, mobile et ordinateur</li>
-          </ul>
-          <div class='product-card-price'>Accès complet · <strong>5 $</strong></div>
-          <div class='product-card-cta'>
-            <a href='https://buy.stripe.com/test_00wbJ1dXQ6vl58iew9b7y01' class='btn-product-primary' target='_blank'>Obtenir le guide — 5 $</a>
-            <a href='/guide-poolers/' class='btn-product-secondary'>En savoir plus →</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Podcast -->
-      <div class='product-card'>
-        <div class='product-card-header'>
-          <div class='product-card-icon'>🎙️</div>
-          <div class='product-card-title'>100% Pool Podcast</div>
-          <div class='product-card-desc'>Analyses de joueurs, stratégies de repêchage, débats buy/sell — Guillaume et Olivier décortiquent la ligue pour toi.</div>
-        </div>
-        <div class='product-card-body'>
-          <ul class='product-card-features'>
-            <li>Évaluations de joueurs NHL en profondeur</li>
-            <li>Stratégies de repêchage par ronde</li>
-            <li>Analyses buy/sell en cours de saison</li>
-            <li>Débats sur les sujets chauds de la ligue</li>
-            <li>Disponible sur Spotify et YouTube</li>
-          </ul>
-          <div class='product-card-price'>Gratuit · Disponible maintenant</div>
-          <div class='product-card-cta'>
-            <div class='platform-pills'>
-              <a href='https://open.spotify.com/show/2yXacvG6p9qqRTTh0RqfSL' target='_blank' class='plat-pill plat-pill-spotify'>
-                <svg width='13' height='13' viewBox='0 0 24 24' fill='white'><path d='M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z'/></svg>
-                Spotify
-              </a>
-              <a href='https://www.youtube.com/@100POOLpodcast' target='_blank' class='plat-pill plat-pill-youtube'>
-                <svg width='13' height='13' viewBox='0 0 24 24' fill='white'><path d='M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z'/></svg>
-                YouTube
-              </a>
-            </div>
-            <a href='/podcast/' class='btn-product-secondary'>Voir tous les épisodes →</a>
-          </div>
-        </div>
-      </div>
-
+<!-- 3. APERÇU DU GUIDE -->
+<div class='preview-section' id='apercu'>
+  <div class='preview-inner'>
+    <div class='preview-header'>
+      <div class='section-eyebrow'>Aperçu du guide</div>
+      <h2 class='section-title'>Vois ce que tu vas avoir</h2>
+      <p class='section-sub'>Un extrait réel du classement — tiers et position pour chaque joueur.</p>
+    </div>
+    <div class='preview-grid' id='previewGrid'>
+      <div class='preview-card'><div class='preview-card-label'>⚡ Attaquants</div><div id='preview-fwd' class='preview-loading'>Chargement…</div></div>
+      <div class='preview-card'><div class='preview-card-label'>🛡️ Défenseurs</div><div id='preview-def' class='preview-loading'>Chargement…</div></div>
+      <div class='preview-card'><div class='preview-card-label'>🥅 Gardiens</div><div id='preview-g' class='preview-loading'>Chargement…</div></div>
+    </div>
+    <div class='preview-cta-wrap' style='text-align:center;'>
+      <a href='https://buy.stripe.com/test_00wbJ1dXQ6vl58iew9b7y01' class='btn-cta' target='_blank'>Obtenir le guide complet — 5 $</a>
+      <p class='preview-note'>Projections complètes, score de valeur, sleepers et analyses — tout est dans le guide.</p>
     </div>
   </div>
 </div>
 
-<!-- ANIMATEURS -->
+<!-- 4. POURQUOI ÇA AIDE -->
+<div style='background:#f0f4f8;'>
+  <div class='section'>
+    <div class='section-eyebrow'>Pourquoi ça aide</div>
+    <h2 class='section-title'>Les problèmes que le Guide règle</h2>
+    <p class='section-sub'>Ce que vivent presque tous les poolers le jour du draft — et comment le Guide les règle.</p>
+    <div class='why-grid'>
+      <div class='why-item'>
+        <div class='why-icon'>😓</div>
+        <div class='why-title'>"Je savais pas quoi faire au tour 8"</div>
+        <div class='why-desc'>Les tiers et le score de valeur te donnent une liste de picks selon la ronde — plus de panique en milieu de draft.</div>
+      </div>
+      <div class='why-item'>
+        <div class='why-icon'>📉</div>
+        <div class='why-title'>"J'ai sur-payé des joueurs blessés"</div>
+        <div class='why-desc'>Chaque joueur inclut un niveau de risque. Tu sais à l'avance qui est fragile et qui offre le meilleur upside.</div>
+      </div>
+      <div class='why-item'>
+        <div class='why-icon'>🤔</div>
+        <div class='why-title'>"Les gardiens, c'est toujours un mystère"</div>
+        <div class='why-desc'>60+ gardiens classés par titulaire confirmé, situation de concurrence et projection de saison complète.</div>
+      </div>
+      <div class='why-item'>
+        <div class='why-icon'>🔍</div>
+        <div class='why-title'>"J'ai manqué les sleepers évidents"</div>
+        <div class='why-desc'>Les joueurs sous-évalués sont identifiés clairement — ceux qui vont surperformer leur ADP et te donner un avantage.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. CE QUI EST INCLUS -->
+<div class='includes-bg'>
+  <div class='section'>
+    <div class='section-eyebrow'>Ce qui est inclus</div>
+    <h2 class='section-title'>Tout pour ton repêchage</h2>
+    <p class='section-sub'>Un outil complet, pas juste une liste. Chaque joueur est analysé avec les données qui comptent vraiment.</p>
+    <div class='includes-grid'>
+      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>447 joueurs — attaquants, défenseurs, gardiens</span></div>
+      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Classement par tiers (Tier 1 à Tier 5+)</span></div>
+      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Projections de points saison 2026-27</span></div>
+      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Score de valeur par position</span></div>
+      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Sleepers et breakouts identifiés</span></div>
+      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Risque et upside pour chaque joueur</span></div>
+      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Stats complètes des 3 dernières saisons</span></div>
+      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Gardiens : titulaires et situations de partage</span></div>
+      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Outils de tri par équipe, position et valeur</span></div>
+      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Accès en ligne — aucune app à télécharger</span></div>
+      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Mis à jour pour la saison 2026-27</span></div>
+      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Valide toute la saison — accès 1 an</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 6. CRÉDIBILITÉ -->
 <div class='cred-bg'>
   <div class='section'>
-    <div class='section-eyebrow'>L'équipe derrière 100% Pool</div>
+    <div class='section-eyebrow'>Qui est derrière le guide</div>
     <h2 class='section-title'>Par des poolers, pour des poolers</h2>
-    <p class='section-sub'>Guillaume et Olivier de toutsurlehockey.com — deux passionnés de hockey et de pool NHL qui débattent chaque semaine des sujets qui comptent pour ton repêchage.</p>
+    <p class='section-sub'>Le Guide des poolers, c'est le résultat de centaines d'heures d'analyse — par deux passionnés de hockey et de pool NHL.</p>
     <div class='hosts-grid'>
       <div class='host-card'>
         <img src='guillaume.jpg' alt='Guillaume Corbeau' class='host-avatar' onerror="this.style.background='#e8edf2';this.removeAttribute('src')">
         <div class='host-name'>Guillaume Corbeau</div>
         <div class='host-role'>Co-animateur · Le mordu des stats</div>
-        <p class='host-bio'>Guillaume arrive au micro avec ses projections, ses données avancées et une opinion bien arrêtée sur chaque joueur de la ligue. Son rôle : sortir les chiffres, défendre ses rankings et convaincre Olivier que ses sleepers sont justifiés — avec les stats pour le prouver.</p>
+        <p class='host-bio'>Guillaume arrive au micro avec ses projections, ses données avancées et une opinion bien arrêtée sur chaque joueur de la ligue. Son rôle dans le podcast : sortir les chiffres, défendre ses rankings et convaincre Olivier que ses sleepers sont justifiés — avec les stats pour le prouver.</p>
       </div>
       <div class='host-card'>
         <img src='olivier.jpg' alt='Olivier Fiset' class='host-avatar' onerror="this.style.background='#e8edf2';this.removeAttribute('src')">
         <div class='host-name'>Olivier Fiset</div>
         <div class='host-role'>Co-animateur · La voix du pooler</div>
-        <p class='host-bio'>Olivier mène les débats, challenge les analyses de Guillaume et s'assure que tout reste accessible. Pooler compétitif dans l'âme, il apporte l'instinct du vrai joueur de pool — et n'hésite pas à lever la main quand il n'est pas d'accord.</p>
+        <p class='host-bio'>Olivier mène les débats, challenge les analyses de Guillaume et s'assure que tout reste accessible. Pooler compétitif dans l'âme, il apporte l'instinct du vrai joueur de pool — et n'hésite pas à lever la main quand il n'est pas d'accord. Ce sont ces chamaillages qui font le charme du podcast.</p>
+      </div>
+    </div>
+    <div class='method-box'>
+      <div class='method-title'>Comment le Guide est construit</div>
+      <div class='method-steps'>
+        <div class='method-step'><span class='method-step-num'>1</span>Analyse des stats des 3 dernières saisons + contexte d'équipe pour chaque joueur</div>
+        <div class='method-step'><span class='method-step-num'>2</span>Projection de points saison 2026-27 avec prise en compte des blessures, changements de ligne et ADP</div>
+        <div class='method-step'><span class='method-step-num'>3</span>Classement par tiers avec score de valeur pondéré — pour comparer des joueurs de différentes positions</div>
+        <div class='method-step'><span class='method-step-num'>4</span>Identification des sleepers, breakouts et gambles à fort upside pour chaque ronde de repêchage</div>
       </div>
     </div>
   </div>
+</div>
+
+<!-- 7. PODCAST -->
+<div class='podcast-bg'>
+  <div class='section'>
+    <div class='section-eyebrow'>Les analyses derrière le Guide</div>
+    <h2 class='section-title'>100% Pool Podcast</h2>
+    <div class='podcast-inner'>
+      <div>
+        <p class='podcast-desc'>Écoute comment Guillaume et Olivier construisent leurs rankings, identifient les sleepers et analysent les tendances de la saison — le même niveau d'analyse que dans le Guide, en format audio.</p>
+        <div class='podcast-platforms'>
+          <a href='https://open.spotify.com/show/2yXacvG6p9qqRTTh0RqfSL' target='_blank' class='plat-btn btn-spotify'>
+            <svg width='14' height='14' viewBox='0 0 24 24' fill='white'><path d='M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z'/></svg>
+            Spotify
+          </a>
+          <a href='https://www.youtube.com/@100POOLpodcast' target='_blank' class='plat-btn btn-youtube'>
+            <svg width='14' height='14' viewBox='0 0 24 24' fill='white'><path d='M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z'/></svg>
+            YouTube
+          </a>
+        </div>
+      </div>
+      <div class='yt-wrap'>
+        <iframe src='https://www.youtube.com/embed/CsnSsblG1u0' title='100% Pool Podcast' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen loading='lazy'></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 8. COMMENT ÇA MARCHE -->
+<div class='how-bg'>
+  <div class='section' style='text-align:center;'>
+    <div class='section-eyebrow' style='color:#f5c842;'>Comment ça marche</div>
+    <h2 class='section-title' style='color:white;'>Accès en 3 étapes</h2>
+    <div class='how-grid'>
+      <div class='how-step'>
+        <div class='how-num'>1</div>
+        <div class='how-title'>Tu achètes le guide</div>
+        <div class='how-desc'>Paiement sécurisé via Stripe. Visa, Mastercard ou Apple Pay — ça prend 30 secondes.</div>
+      </div>
+      <div class='how-step'>
+        <div class='how-num'>2</div>
+        <div class='how-title'>Tu reçois ton lien</div>
+        <div class='how-desc'>Un courriel avec ton lien d'accès personnel arrive en quelques secondes. Aucun mot de passe.</div>
+      </div>
+      <div class='how-step'>
+        <div class='how-num'>3</div>
+        <div class='how-title'>Tu prépares ton draft</div>
+        <div class='how-desc'>Accès complet au guide en ligne — sur téléphone ou ordinateur. Ton lien est valide toute la saison.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 9. FAQ -->
+<div class='faq-bg'>
+  <div class='section-sm'>
+    <div class='section-eyebrow'>FAQ</div>
+    <h2 class='section-title'>Questions fréquentes</h2>
+    <div class='faq-list'>
+      <div class='faq-item'>
+        <div class='faq-q' onclick='toggleFaq(this)'>C'est quoi exactement le Guide des poolers? <span class='faq-icon'>+</span></div>
+        <div class='faq-a'>C'est un outil de préparation de repêchage NHL complet — 447 joueurs analysés et classés par tiers, avec projections de points, score de valeur, sleepers identifiés et stats des 3 dernières saisons. Tout est accessible en ligne, sur téléphone ou ordinateur.</div>
+      </div>
+      <div class='faq-item'>
+        <div class='faq-q' onclick='toggleFaq(this)'>Comment je reçois mon accès après le paiement? <span class='faq-icon'>+</span></div>
+        <div class='faq-a'>Dès que ton paiement est confirmé, tu reçois un courriel avec ton lien d'accès personnel. Clique sur le lien — c'est tout. Aucun compte à créer, aucun mot de passe.</div>
+      </div>
+      <div class='faq-item'>
+        <div class='faq-q' onclick='toggleFaq(this)'>C'est pour quel type de pool? <span class='faq-icon'>+</span></div>
+        <div class='faq-a'>Le Guide est surtout optimisé pour les pools annuels standard (points, catégories). Les classements par tiers et le score de valeur sont aussi utiles pour les formats keeper et dynasty.</div>
+      </div>
+      <div class='faq-item'>
+        <div class='faq-q' onclick='toggleFaq(this)'>Combien de temps j'ai accès? <span class='faq-icon'>+</span></div>
+        <div class='faq-a'>Ton lien est valide pour 1 an à partir de la date d'achat — amplement pour toute la saison 2026-27.</div>
+      </div>
+      <div class='faq-item'>
+        <div class='faq-q' onclick='toggleFaq(this)'>Je n'ai pas reçu mon courriel — quoi faire? <span class='faq-icon'>+</span></div>
+        <div class='faq-a'>Vérifie ton dossier courriels indésirables (spam). Si le courriel n'arrive toujours pas après 5 minutes, écris-nous à <a href='mailto:guide@100pool.ca' style='color:#2d8a3e;'>guide@100pool.ca</a> avec l'adresse utilisée pour l'achat.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 10. FINAL CTA -->
+<div class='final-cta'>
+  <h2>Prêt pour ton draft?<br><span>Obtiens ton guide maintenant.</span></h2>
+  <p>447 joueurs analysés · Accès instantané · 5 $ pour toute la saison</p>
+  <a href='https://buy.stripe.com/test_00wbJ1dXQ6vl58iew9b7y01' class='btn-cta' target='_blank' style='font-size:1.05em;padding:17px 36px;'>Obtenir mon guide — 5 $</a>
+  <p class='final-cta-note'>Paiement sécurisé via Stripe · Lien envoyé par courriel · Valide 1 an</p>
 </div>
 
 <!-- FOOTER -->
@@ -267,7 +459,7 @@ footer p { color: rgba(255,255,255,0.25); font-size: 0.74em; }
 </footer>
 
 <!-- STICKY CTA (mobile) -->
-<div class='sticky-cta'>
+<div class='sticky-cta' id='stickyCta'>
   <div class='sticky-cta-label'>Guide 2026-27<br><span>5 $ · Accès instantané</span></div>
   <a href='https://buy.stripe.com/test_00wbJ1dXQ6vl58iew9b7y01' target='_blank'>Obtenir →</a>
 </div>
@@ -280,6 +472,89 @@ document.addEventListener('click', function(e) {
   if (!document.querySelector('nav').contains(e.target))
     document.getElementById('navMobile').classList.remove('open');
 });
+
+function toggleFaq(el) {
+  el.parentElement.classList.toggle('open');
+}
+
+// Hide sticky CTA when near final CTA button
+const stickyCta = document.getElementById('stickyCta');
+const finalCta = document.querySelector('.final-cta');
+if (stickyCta && finalCta) {
+  window.addEventListener('scroll', function() {
+    const rect = finalCta.getBoundingClientRect();
+    stickyCta.style.display = rect.top < window.innerHeight ? 'none' : '';
+  }, { passive: true });
+}
+
+// Preview — load real data from Supabase
+(async function loadPreview() {
+  const SUPABASE_URL = 'https://fifurqlitkywtmhgtzeu.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpZnVycWxpdGt5d3RtaGd0emV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDIyMjQsImV4cCI6MjA5MjI3ODIyNH0.KPVPj1qwbSJJMyLR_-AhDcRs0vi2sUU6qbFQ-kH53C0';
+  const headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY };
+
+  const TIER_COLORS = {
+    '1': '#f5c842', '2': '#3b82f6', '3': '#8b5cf6',
+    '4': '#34d399', '5': '#38bdf8', '6': '#f472b6',
+    '7': '#fb923c', '8': '#94a3b8'
+  };
+
+  function tierNum(t) {
+    if (!t) return 99;
+    const m = String(t).match(/\d+/);
+    return m ? parseInt(m[0]) : 99;
+  }
+
+  function tierColor(t) {
+    return TIER_COLORS[String(tierNum(t))] || '#94a3b8';
+  }
+
+  function renderRows(players, moreCount, moreLabel) {
+    const rows = players.map(p => {
+      const tn = tierNum(p.tier);
+      const color = tierColor(p.tier);
+      const label = p.tier || ('Tier ' + tn);
+      return `<div class='preview-row'>
+        <span class='name'>${p.name}</span>
+        <span style='font-size:0.72em;font-weight:800;padding:2px 9px;border-radius:99px;background:${color}22;color:${color};border:1px solid ${color}55;'>${label}</span>
+      </div>`;
+    }).join('');
+    const more = `<div class='preview-row' style='border-bottom:none;opacity:0.45;font-size:0.8em;'>
+      <span>+ ${moreCount} ${moreLabel} dans le guide</span><span class='val'>→</span>
+    </div>`;
+    return rows + more;
+  }
+
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/poolers_players?select=name,pos,tier,rank&order=rank.asc&limit=1000`,
+      { headers }
+    );
+    if (!res.ok) throw new Error('fetch failed');
+    const players = await res.json();
+
+    const fwd = players.filter(p => ['C','LW','RW'].includes(p.pos)).slice(0, 7);
+    const def = players.filter(p => p.pos === 'D').slice(0, 5);
+    const g   = players.filter(p => p.pos === 'G').slice(0, 5);
+
+    const totalFwd = players.filter(p => ['C','LW','RW'].includes(p.pos)).length;
+    const totalDef = players.filter(p => p.pos === 'D').length;
+    const totalG   = players.filter(p => p.pos === 'G').length;
+
+    document.getElementById('preview-fwd').innerHTML = renderRows(fwd, totalFwd - fwd.length, 'attaquants');
+    if (def.length > 0) {
+      document.getElementById('preview-def').innerHTML = renderRows(def, totalDef - def.length, 'défenseurs');
+    } else {
+      document.getElementById('preview-def').innerHTML = '<span style="opacity:0.45;font-size:0.82em;line-height:1.6;display:block;padding:8px 0;">Classement disponible<br>dans le guide complet.</span>';
+    }
+    document.getElementById('preview-g').innerHTML = renderRows(g, totalG - g.length, 'gardiens');
+  } catch(e) {
+    ['preview-fwd','preview-def','preview-g'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '<span style="opacity:0.4;font-size:0.82em;">Aperçu non disponible</span>';
+    });
+  }
+})();
 </script>
 </body>
 </html>
