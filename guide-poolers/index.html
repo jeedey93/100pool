@@ -151,13 +151,9 @@ nav { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; he
 .tier-name { font-size: 0.95em; font-weight: 800; color: #1e293b; margin-bottom: 4px; }
 .tier-desc { font-size: 0.82em; color: #64748b; line-height: 1.55; }
 
-/* ── HOW TO USE ── */
-.how-wrap { background: white; border-radius: 16px; border: 1px solid #e8edf2; box-shadow: 0 2px 12px rgba(0,0,0,0.05); overflow: hidden; margin-top: 36px; }
-.how-step { display: flex; gap: 20px; padding: 22px 28px; align-items: flex-start; border-bottom: 1px solid #f1f5f9; }
-.how-step:last-child { border-bottom: none; }
-.how-num { width: 34px; height: 34px; min-width: 34px; border-radius: 10px; background: linear-gradient(135deg, #2d8a3e, #1e6b2e); color: #f5c842; font-weight: 800; font-size: 0.88em; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.how-title { font-size: 0.92em; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
-.how-body  { font-size: 0.82em; color: #64748b; line-height: 1.6; }
+/* ── HOW TO USE (redesign) ── */
+.how-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 600px) { .how-grid { grid-template-columns: 1fr; } }
 
 /* ── PRICING BOX ── */
 .pricing-section { background: white; border-top: 1px solid #e8edf2; }
@@ -457,80 +453,64 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
   </div>
 </div>
 
-<!-- LE SYSTÈME DE TIERS -->
-<div class='tiers-bg'>
-  <div class='section'>
-    <div class='section-eyebrow'>Le système de tiers</div>
-    <div class='section-title'>Chaque joueur à sa juste place</div>
-    <div class='section-sub'>Le guide classe chaque joueur dans un tier selon ses projections et son profil de risque — pour savoir qui viser à chaque ronde.</div>
-    <div class='tiers-grid'>
-      <div class='tier-card'>
-        <span class='tier-dot-lg' style='background:#f5c842'></span>
-        <div>
-          <div class='tier-name'>Elite / Tier 1 — Les intouchables</div>
-          <div class='tier-desc'>McDavid, Celebrini, Kucherov. À repêcher en premières rondes peu importe ton format — ils produisent de façon constante et dominent chaque saison.</div>
-        </div>
-      </div>
-      <div class='tier-card'>
-        <span class='tier-dot-lg' style='background:#3b82f6'></span>
-        <div>
-          <div class='tier-name'>Tier 2 — Superstars</div>
-          <div class='tier-desc'>Suzuki, Marner, Robertson. Joueurs de premier trio avec un plancher de production élevé. Le cœur de ton alignement — fiables et consistants.</div>
-        </div>
-      </div>
-      <div class='tier-card'>
-        <span class='tier-dot-lg' style='background:#94a3b8'></span>
-        <div>
-          <div class='tier-name'>Tier 3 — All-Stars</div>
-          <div class='tier-desc'>Raymond, Aho, Guentzel. Production solide en milieu de draft. Peu de risque — idéaux pour solidifier ton alignement aux rondes intermédiaires.</div>
-        </div>
-      </div>
-      <div class='tier-card'>
-        <span class='tier-dot-lg' style='background:#34d399'></span>
-        <div>
-          <div class='tier-name'>Tier 4+ — Sleepers &amp; Gambles</div>
-          <div class='tier-desc'>Fort upside, plus de risque. Les joueurs sous-évalués qui peuvent surperformer leur ADP et te donner un avantage en fin de draft.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- COMMENT L'UTILISER -->
-<div style='background:white;border-top:1px solid #e8edf2;'>
-  <div class='section'>
-    <div class='section-eyebrow'>Comment l'utiliser</div>
-    <div class='section-title'>Conçu pour le jour du draft</div>
-    <div class='section-sub'>Rapide sur téléphone ou ordinateur — ouvre-le à la table et filtre en temps réel pendant ton repêchage.</div>
-    <div class='how-wrap'>
-      <div class='how-step'>
-        <div class='how-num'>1</div>
+<div style='background:linear-gradient(160deg,#163d1c,#1e6b2e);padding:72px 24px;'>
+  <div style='max-width:900px;margin:0 auto;'>
+    <div style='text-align:center;margin-bottom:52px;'>
+      <div class='section-eyebrow' style='color:#f5c842;'>Comment l'utiliser</div>
+      <h2 style='font-size:clamp(1.6em,3.5vw,2.2em);font-weight:900;color:white;margin-bottom:12px;letter-spacing:-0.5px;'>En 4 étapes, tu es prêt.</h2>
+      <p style='color:rgba(255,255,255,0.6);font-size:0.95em;max-width:460px;margin:0 auto;line-height:1.65;'>Aucune app, aucune installation. Ton guide arrive par courriel et fonctionne sur tous tes appareils.</p>
+    </div>
+    <div class='how-grid'>
+
+      <div style='background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:14px;'>
+        <div style='display:flex;align-items:center;gap:12px;'>
+          <div style='width:44px;height:44px;min-width:44px;border-radius:14px;background:#f5c842;display:flex;align-items:center;justify-content:center;font-size:1.3em;'>💳</div>
+          <span style='background:rgba(245,200,66,0.15);border:1px solid rgba(245,200,66,0.3);color:#f5c842;font-size:0.68em;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:99px;'>Étape 1</span>
+        </div>
         <div>
-          <div class='how-title'>Tu achètes, tu reçois ton lien par courriel</div>
-          <div class='how-body'>Paiement unique de 5 $ via Stripe. Ton lien d'accès personnel arrive par courriel en quelques secondes — aucune app à installer.</div>
+          <div style='font-size:1em;font-weight:800;color:white;margin-bottom:6px;'>Achète en 30 secondes</div>
+          <div style='font-size:0.82em;color:rgba(255,255,255,0.6);line-height:1.65;'>Paiement unique de 5 $ via Stripe — Visa, Mastercard, Apple Pay. Ton lien d'accès personnel arrive par courriel instantanément.</div>
         </div>
       </div>
-      <div class='how-step'>
-        <div class='how-num'>2</div>
+
+      <div style='background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:14px;'>
+        <div style='display:flex;align-items:center;gap:12px;'>
+          <div style='width:44px;height:44px;min-width:44px;border-radius:14px;background:#f5c842;display:flex;align-items:center;justify-content:center;font-size:1.3em;'>🔗</div>
+          <span style='background:rgba(245,200,66,0.15);border:1px solid rgba(245,200,66,0.3);color:#f5c842;font-size:0.68em;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:99px;'>Étape 2</span>
+        </div>
         <div>
-          <div class='how-title'>Trie par ce qui compte pour toi</div>
-          <div class='how-body'>Clique sur n'importe quelle colonne — projections, tier, risque, PPM. Les meilleurs joueurs selon tes critères en un clic.</div>
+          <div style='font-size:1em;font-weight:800;color:white;margin-bottom:6px;'>Ouvre ton lien sur n'importe quel appareil</div>
+          <div style='font-size:0.82em;color:rgba(255,255,255,0.6);line-height:1.65;'>Téléphone, tablette ou ordi — ton lien fonctionne partout, sans installation. Parfait à avoir ouvert pendant ton draft.</div>
         </div>
       </div>
-      <div class='how-step'>
-        <div class='how-num'>3</div>
+
+      <div style='background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:14px;'>
+        <div style='display:flex;align-items:center;gap:12px;'>
+          <div style='width:44px;height:44px;min-width:44px;border-radius:14px;background:#f5c842;display:flex;align-items:center;justify-content:center;font-size:1.3em;'>🎯</div>
+          <span style='background:rgba(245,200,66,0.15);border:1px solid rgba(245,200,66,0.3);color:#f5c842;font-size:0.68em;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:99px;'>Étape 3</span>
+        </div>
         <div>
-          <div class='how-title'>Filtre par position, tier, équipe</div>
-          <div class='how-body'>Tu cherches un centre de Tier 2 dans une bonne équipe? Deux filtres et tu y es. Idéal pour cibler ton pick selon la ronde.</div>
+          <div style='font-size:1em;font-weight:800;color:white;margin-bottom:6px;'>Trie et filtre en temps réel</div>
+          <div style='font-size:0.82em;color:rgba(255,255,255,0.6);line-height:1.65;'>Clique sur n'importe quelle colonne — projections, tier, risque, PPM. Filtre par position, équipe ou tier. Le bon pick en un clic.</div>
         </div>
       </div>
-      <div class='how-step'>
-        <div class='how-num'>4</div>
+
+      <div style='background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:14px;'>
+        <div style='display:flex;align-items:center;gap:12px;'>
+          <div style='width:44px;height:44px;min-width:44px;border-radius:14px;background:#f5c842;display:flex;align-items:center;justify-content:center;font-size:1.3em;'>📅</div>
+          <span style='background:rgba(245,200,66,0.15);border:1px solid rgba(245,200,66,0.3);color:#f5c842;font-size:0.68em;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:99px;'>Étape 4</span>
+        </div>
         <div>
-          <div class='how-title'>Garde ton avantage toute la saison</div>
-          <div class='how-body'>Ton lien est valide 1 an. Reviens vérifier un joueur avant un échange ou une décision de cap — le guide reste accessible.</div>
+          <div style='font-size:1em;font-weight:800;color:white;margin-bottom:6px;'>Accès valide toute la saison</div>
+          <div style='font-size:0.82em;color:rgba(255,255,255,0.6);line-height:1.65;'>Ton lien reste actif 1 an. Reviens consulter avant un échange, vérifier un gardien blessé ou planifier tes prochains moves.</div>
         </div>
       </div>
+
+    </div>
+    <div style='text-align:center;margin-top:44px;'>
+      <a href='https://buy.stripe.com/test_00wbJ1dXQ6vl58iew9b7y01' class='btn-cta' target='_blank' style='font-size:1.05em;padding:17px 40px;'>Obtenir mon guide — 5 $</a>
+      <p style='color:rgba(255,255,255,0.35);font-size:0.76em;margin-top:12px;'>Paiement sécurisé · Lien envoyé par courriel · Valide 1 an</p>
     </div>
   </div>
 </div>
