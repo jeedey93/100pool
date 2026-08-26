@@ -32,7 +32,7 @@ nav { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; he
 .nav-btn { background: #f5c842; color: #1a3d10 !important; font-weight: 800; border-radius: 8px; }
 .nav-btn:hover { background: #f9d55a !important; }
 .nav-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; margin-left: auto; flex-direction: column; gap: 5px; align-items: center; justify-content: center; }
-.nav-hamburger span { display: block; width: 22px; height: 2px; background: white; border-radius: 2px; transition: all 0.2s; }
+.nav-hamburger span { display: block; width: 22px; height: 2px; background: white; border-radius: 2px; }
 .nav-mobile { display: none; position: absolute; top: 56px; left: 0; right: 0; background: linear-gradient(135deg, #1a5c28, #2d8a3e); border-top: 1px solid rgba(255,255,255,0.1); padding: 8px 16px 16px; flex-direction: column; gap: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
 .nav-mobile.open { display: flex; }
 .nav-mobile .nav-link { padding: 11px 14px; font-size: 0.95em; border-radius: 8px; }
@@ -70,30 +70,77 @@ nav { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; he
 .section-title { font-size: clamp(1.5em, 3vw, 2em); font-weight: 800; color: #0f172a; margin-bottom: 14px; line-height: 1.2; }
 .section-sub { color: #64748b; font-size: 0.93em; line-height: 1.75; max-width: 600px; }
 
-/* ── PRICING BOX ── */
-.pricing-box { background: linear-gradient(150deg, #163d1c, #2d8a3e); border-radius: 20px; padding: 44px; margin-top: 36px; position: relative; overflow: hidden; }
-.pricing-box::before { content: ''; position: absolute; top: -60px; right: -60px; width: 200px; height: 200px; background: rgba(245,200,66,0.08); border-radius: 50%; pointer-events: none; }
-.pricing-badge { display: inline-block; background: rgba(245,200,66,0.15); border: 1px solid rgba(245,200,66,0.4); color: #f5c842; font-size: 0.7em; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 12px; border-radius: 99px; margin-bottom: 16px; }
-.pricing-title { color: white; font-size: 1.3em; font-weight: 800; margin-bottom: 8px; }
-.pricing-price { font-size: 3em; font-weight: 900; color: white; line-height: 1; margin-bottom: 6px; }
-.pricing-price sup { font-size: 0.38em; color: rgba(255,255,255,0.6); vertical-align: super; }
-.pricing-price sub { font-size: 0.3em; color: rgba(255,255,255,0.45); vertical-align: baseline; margin-left: 4px; }
-.pricing-note { color: rgba(255,255,255,0.6); font-size: 0.88em; margin-bottom: 28px; line-height: 1.6; }
-.pricing-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: 32px; }
-@media (max-width: 560px) { .pricing-cols { grid-template-columns: 1fr; } }
-.pricing-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-.pricing-list li { display: flex; align-items: flex-start; gap: 9px; font-size: 0.87em; color: rgba(255,255,255,0.85); line-height: 1.4; }
-.pricing-list li::before { content: '✓'; color: #f5c842; font-weight: 800; flex-shrink: 0; }
-.pricing-security { color: rgba(255,255,255,0.35); font-size: 0.74em; margin-top: 14px; }
+/* ── DEMO TABLE (aperçu visuel du guide) ── */
+.demo-bg { background: white; border-top: 1px solid #e8edf2; border-bottom: 1px solid #e8edf2; }
+.demo-wrap { border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08); margin-top: 36px; position: relative; }
+.demo-toolbar { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 12px 18px; display: flex; align-items: center; gap: 10px; }
+.demo-dot { width: 11px; height: 11px; border-radius: 50%; }
+.demo-toolbar-label { margin-left: auto; font-size: 0.75em; color: #94a3b8; font-weight: 600; letter-spacing: 0.5px; }
+.demo-table { width: 100%; border-collapse: collapse; font-size: 0.82em; }
+.demo-table thead { background: #f1f5f9; }
+.demo-table thead th { padding: 10px 14px; text-align: left; font-size: 0.72em; font-weight: 700; color: #64748b; letter-spacing: 0.8px; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; white-space: nowrap; }
+.demo-table tbody tr { border-bottom: 1px solid #f1f5f9; transition: background 0.15s; }
+.demo-table tbody tr:hover { background: #f8fafc; }
+.demo-table td { padding: 11px 14px; white-space: nowrap; }
+.demo-rank { color: #94a3b8; font-weight: 700; font-size: 0.85em; width: 36px; }
+.demo-name { font-weight: 700; color: #0f172a; }
+.demo-team { color: #64748b; font-size: 0.88em; }
+.demo-pos { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 20px; border-radius: 5px; font-size: 0.72em; font-weight: 800; }
+.pos-C { background: #dbeafe; color: #1d4ed8; }
+.pos-LW { background: #dcfce7; color: #15803d; }
+.pos-RW { background: #fef9c3; color: #854d0e; }
+.pos-G  { background: #f3e8ff; color: #7c3aed; }
+.demo-tier { display: inline-flex; align-items: center; gap: 5px; font-size: 0.78em; font-weight: 700; }
+.tier-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.demo-pts { font-weight: 800; color: #0f172a; }
+.demo-proj { color: #2d8a3e; font-weight: 800; }
+.demo-risk { font-size: 0.75em; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
+.risk-Low    { background: #dcfce7; color: #15803d; }
+.risk-Medium { background: #fef9c3; color: #854d0e; }
+.risk-High   { background: #fee2e2; color: #dc2626; }
+.demo-blur-row td { filter: blur(4px); user-select: none; pointer-events: none; }
+.demo-overlay { position: absolute; bottom: 0; left: 0; right: 0; height: 130px; background: linear-gradient(to top, white 40%, transparent); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 20px; }
+.demo-overlay-btn { background: #f5c842; color: #1a3d10; font-weight: 800; font-size: 0.88em; padding: 11px 24px; border-radius: 10px; text-decoration: none; box-shadow: 0 4px 16px rgba(0,0,0,0.12); transition: all 0.2s; }
+.demo-overlay-btn:hover { background: #f9d55a; transform: translateY(-2px); }
+@media (max-width: 600px) {
+  .demo-table .hide-mobile { display: none; }
+}
 
-/* ── INCLUDES ── */
-.includes-bg { background: white; border-top: 1px solid #e8edf2; border-bottom: 1px solid #e8edf2; }
-.includes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 36px; }
-@media (max-width: 640px) { .includes-grid { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 380px) { .includes-grid { grid-template-columns: 1fr; } }
-.include-item { background: #f8fafc; border-radius: 12px; padding: 16px; border: 1px solid #e8edf2; display: flex; gap: 10px; align-items: flex-start; }
-.include-check { color: #2d8a3e; font-size: 0.95em; flex-shrink: 0; margin-top: 1px; }
-.include-text { font-size: 0.83em; color: #374151; font-weight: 600; line-height: 1.4; }
+/* ── FEATURE CARDS ── */
+.features-bg { background: #f0f4f8; }
+.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 36px; }
+@media (max-width: 700px) { .features-grid { grid-template-columns: 1fr; } }
+.feature-card { background: white; border-radius: 16px; padding: 24px; border: 1px solid #e8edf2; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+.feature-icon { font-size: 1.6em; margin-bottom: 12px; }
+.feature-title { font-size: 0.95em; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
+.feature-body { font-size: 0.82em; color: #64748b; line-height: 1.6; }
+.feature-example { margin-top: 14px; background: #f8fafc; border-radius: 10px; padding: 12px 14px; border: 1px solid #e8edf2; }
+.feature-example-label { font-size: 0.68em; font-weight: 700; color: #94a3b8; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 6px; }
+.feature-example-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.feature-example-name { font-size: 0.82em; font-weight: 700; color: #0f172a; }
+.feature-example-val { font-size: 0.82em; font-weight: 800; color: #2d8a3e; }
+.feature-example-badge { font-size: 0.7em; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
+
+/* ── PLAYER PREVIEW (Supabase live) ── */
+.preview-section { background: linear-gradient(160deg, #163d1c, #2d8a3e); padding: 64px 24px; }
+.preview-inner { max-width: 900px; margin: 0 auto; }
+.preview-header { text-align: center; margin-bottom: 36px; }
+.preview-header .section-eyebrow { color: #f5c842; }
+.preview-header .section-title { color: white; }
+.preview-header .section-sub { color: rgba(255,255,255,0.6); margin: 0 auto; }
+.preview-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+@media (max-width: 700px) { .preview-grid { grid-template-columns: 1fr; } }
+.preview-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 18px; }
+.preview-card-label { font-size: 0.78em; font-weight: 700; color: rgba(255,255,255,0.5); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 10px; }
+.preview-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.82em; gap: 6px; }
+.preview-row:last-child { border-bottom: none; }
+.preview-name { color: white; font-weight: 600; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.preview-pts { color: #f5c842; font-weight: 800; flex-shrink: 0; }
+.ptier-1 { border-left: 3px solid #f5c842; padding-left: 8px; }
+.ptier-2 { border-left: 3px solid #60a5fa; padding-left: 8px; }
+.ptier-3 { border-left: 3px solid #94a3b8; padding-left: 8px; }
+.preview-cta { text-align: center; margin-top: 32px; }
+.preview-cta p { color: rgba(255,255,255,0.5); font-size: 0.82em; margin-bottom: 16px; }
 
 /* ── TIERS ── */
 .tiers-bg { background: #f0f4f8; }
@@ -111,6 +158,23 @@ nav { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; he
 .how-num { width: 34px; height: 34px; min-width: 34px; border-radius: 10px; background: linear-gradient(135deg, #2d8a3e, #1e6b2e); color: #f5c842; font-weight: 800; font-size: 0.88em; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .how-title { font-size: 0.92em; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
 .how-body  { font-size: 0.82em; color: #64748b; line-height: 1.6; }
+
+/* ── PRICING BOX ── */
+.pricing-section { background: white; border-top: 1px solid #e8edf2; }
+.pricing-box { background: linear-gradient(150deg, #163d1c, #2d8a3e); border-radius: 20px; padding: 44px; margin-top: 36px; position: relative; overflow: hidden; }
+.pricing-box::before { content: ''; position: absolute; top: -60px; right: -60px; width: 200px; height: 200px; background: rgba(245,200,66,0.08); border-radius: 50%; pointer-events: none; }
+.pricing-badge { display: inline-block; background: rgba(245,200,66,0.15); border: 1px solid rgba(245,200,66,0.4); color: #f5c842; font-size: 0.7em; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 12px; border-radius: 99px; margin-bottom: 16px; }
+.pricing-title { color: white; font-size: 1.3em; font-weight: 800; margin-bottom: 8px; }
+.pricing-price { font-size: 3em; font-weight: 900; color: white; line-height: 1; margin-bottom: 6px; }
+.pricing-price sup { font-size: 0.38em; color: rgba(255,255,255,0.6); vertical-align: super; }
+.pricing-price sub { font-size: 0.3em; color: rgba(255,255,255,0.45); vertical-align: baseline; margin-left: 4px; }
+.pricing-note { color: rgba(255,255,255,0.6); font-size: 0.88em; margin-bottom: 28px; line-height: 1.6; }
+.pricing-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: 32px; }
+@media (max-width: 560px) { .pricing-cols { grid-template-columns: 1fr; } }
+.pricing-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.pricing-list li { display: flex; align-items: flex-start; gap: 9px; font-size: 0.87em; color: rgba(255,255,255,0.85); line-height: 1.4; }
+.pricing-list li::before { content: '✓'; color: #f5c842; font-weight: 800; flex-shrink: 0; }
+.pricing-security { color: rgba(255,255,255,0.35); font-size: 0.74em; margin-top: 14px; }
 
 /* ── FINAL CTA ── */
 .final-cta { background: linear-gradient(160deg, #163d1c, #2d8a3e); padding: 72px 24px; text-align: center; }
@@ -182,92 +246,272 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
   </div>
 </div>
 
-<!-- PRICING -->
-<div class='section' id='section-acces'>
-  <div id='access-banner' class='access-banner'>
-    <span>🔒 Ce contenu est réservé aux acheteurs. Achetez le guide ci-dessous pour y accéder.</span>
-  </div>
-  <div class='section-eyebrow'>Accès</div>
-  <div class='section-title'>Obtenir le guide complet</div>
-  <div class='section-sub'>Un paiement unique de 5 $ — aucun abonnement, aucun renouvellement. Ton lien d'accès personnel arrive par courriel en quelques secondes.</div>
-
-  <div class='pricing-box'>
-    <span class='pricing-badge'>Disponible maintenant</span>
-    <div class='pricing-title'>Guide des poolers 2026-27</div>
-    <div class='pricing-price'><sup>$</sup>5 <sub>CAD</sub></div>
-    <p class='pricing-note'>Accès instantané après paiement · Lien valide 1 an · Aucun abonnement</p>
-    <div class='pricing-cols'>
-      <ul class='pricing-list'>
-        <li>447 joueurs — attaquants, défenseurs, gardiens</li>
-        <li>Classement par tiers (Tier 1 à Tier 5+)</li>
-        <li>Projections de points saison 2026-27</li>
-        <li>Score de valeur par position</li>
-        <li>Sleepers et breakouts identifiés</li>
-        <li>Risque et upside pour chaque joueur</li>
-      </ul>
-      <ul class='pricing-list'>
-        <li>Stats complètes des 3 dernières saisons</li>
-        <li>Gardiens : titulaires et situations de partage</li>
-        <li>Outils de tri par équipe, position et valeur</li>
-        <li>Accès en ligne — aucune app à télécharger</li>
-        <li>Mis à jour pour la saison 2026-27</li>
-        <li>Valide toute la saison — accès 1 an</li>
-      </ul>
+<!-- APERÇU DU GUIDE (demo table) -->
+<div class='demo-bg'>
+  <div class='section'>
+    <div class='section-eyebrow'>Aperçu du guide</div>
+    <div class='section-title'>Voici ce que tu obtiens</div>
+    <div class='section-sub'>Chaque joueur classé, analysé, et prêt à être filtré. Voici un extrait du vrai guide — les acheteurs voient les 447 joueurs complets.</div>
+    <div class='demo-wrap'>
+      <div class='demo-toolbar'>
+        <div class='demo-dot' style='background:#f87171'></div>
+        <div class='demo-dot' style='background:#fbbf24'></div>
+        <div class='demo-dot' style='background:#34d399'></div>
+        <span class='demo-toolbar-label'>100pool.ca / guide 2026-27</span>
+      </div>
+      <div style='overflow-x:auto'>
+        <table class='demo-table'>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Joueur</th>
+              <th class='hide-mobile'>Équipe</th>
+              <th>Pos</th>
+              <th class='hide-mobile'>Tier</th>
+              <th>Proj</th>
+              <th class='hide-mobile'>Saison passée</th>
+              <th>Risque</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class='demo-rank'>1</td>
+              <td class='demo-name'>Connor McDavid</td>
+              <td class='demo-team hide-mobile'>EDM</td>
+              <td><span class='demo-pos pos-C'>C</span></td>
+              <td class='hide-mobile'><span class='demo-tier'><span class='tier-dot' style='background:#f5c842'></span>Elite</span></td>
+              <td class='demo-proj'>138</td>
+              <td class='hide-mobile demo-pts'>138</td>
+              <td><span class='demo-risk risk-Low'>Bas</span></td>
+            </tr>
+            <tr>
+              <td class='demo-rank'>2</td>
+              <td class='demo-name'>Macklin Celebrini</td>
+              <td class='demo-team hide-mobile'>SJS</td>
+              <td><span class='demo-pos pos-C'>C</span></td>
+              <td class='hide-mobile'><span class='demo-tier'><span class='tier-dot' style='background:#f5c842'></span>Tier 1</span></td>
+              <td class='demo-proj'>127</td>
+              <td class='hide-mobile demo-pts'>115</td>
+              <td><span class='demo-risk risk-Low'>Bas</span></td>
+            </tr>
+            <tr>
+              <td class='demo-rank'>4</td>
+              <td class='demo-name'>Nikita Kucherov</td>
+              <td class='demo-team hide-mobile'>TBL</td>
+              <td><span class='demo-pos pos-RW'>RW</span></td>
+              <td class='hide-mobile'><span class='demo-tier'><span class='tier-dot' style='background:#f5c842'></span>Tier 1</span></td>
+              <td class='demo-proj'>118</td>
+              <td class='hide-mobile demo-pts'>130</td>
+              <td><span class='demo-risk risk-Low'>Bas</span></td>
+            </tr>
+            <tr>
+              <td class='demo-rank'>7</td>
+              <td class='demo-name'>Nick Suzuki</td>
+              <td class='demo-team hide-mobile'>MTL</td>
+              <td><span class='demo-pos pos-C'>C</span></td>
+              <td class='hide-mobile'><span class='demo-tier'><span class='tier-dot' style='background:#3b82f6'></span>Tier 2</span></td>
+              <td class='demo-proj'>101</td>
+              <td class='hide-mobile demo-pts'>101</td>
+              <td><span class='demo-risk risk-Low'>Bas</span></td>
+            </tr>
+            <tr>
+              <td class='demo-rank'>26</td>
+              <td class='demo-name'>Lucas Raymond</td>
+              <td class='demo-team hide-mobile'>DET</td>
+              <td><span class='demo-pos pos-RW'>RW</span></td>
+              <td class='hide-mobile'><span class='demo-tier'><span class='tier-dot' style='background:#94a3b8'></span>Tier 3</span></td>
+              <td class='demo-proj'>84</td>
+              <td class='hide-mobile demo-pts'>76</td>
+              <td><span class='demo-risk risk-Low'>Bas</span></td>
+            </tr>
+            <tr>
+              <td class='demo-rank'>46</td>
+              <td class='demo-name'>Connor Bedard</td>
+              <td class='demo-team hide-mobile'>CHI</td>
+              <td><span class='demo-pos pos-C'>C</span></td>
+              <td class='hide-mobile'><span class='demo-tier'><span class='tier-dot' style='background:#3b82f6'></span>Tier 2</span></td>
+              <td class='demo-proj'>77</td>
+              <td class='hide-mobile demo-pts'>75</td>
+              <td><span class='demo-risk risk-Low'>Bas</span></td>
+            </tr>
+            <tr class='demo-blur-row'>
+              <td class='demo-rank'>62</td>
+              <td class='demo-name'>Jimmy Snuggerud</td>
+              <td class='demo-team hide-mobile'>STL</td>
+              <td><span class='demo-pos pos-RW'>RW</span></td>
+              <td class='hide-mobile'><span class='demo-tier'><span class='tier-dot' style='background:#34d399'></span>Sleeper</span></td>
+              <td class='demo-proj'>71</td>
+              <td class='hide-mobile demo-pts'>51</td>
+              <td><span class='demo-risk risk-Medium'>Moyen</span></td>
+            </tr>
+            <tr class='demo-blur-row'>
+              <td class='demo-rank'>74</td>
+              <td class='demo-name'>••••• ••••••••</td>
+              <td class='demo-team hide-mobile'>•••</td>
+              <td><span class='demo-pos pos-LW'>LW</span></td>
+              <td class='hide-mobile'><span class='demo-tier'><span class='tier-dot' style='background:#34d399'></span>Sleeper</span></td>
+              <td class='demo-proj'>68</td>
+              <td class='hide-mobile demo-pts'>44</td>
+              <td><span class='demo-risk risk-Medium'>Moyen</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class='demo-overlay'>
+        <a href='https://buy.stripe.com/test_00wbJ1dXQ6vl58iew9b7y01' class='demo-overlay-btn' target='_blank'>Voir les 447 joueurs — 5 $</a>
+      </div>
     </div>
-    <a href='https://buy.stripe.com/test_00wbJ1dXQ6vl58iew9b7y01' class='btn-cta' target='_blank'>Obtenir mon guide — 5 $</a>
-    <p class='pricing-security'>Paiement sécurisé par Stripe · Visa, Mastercard, Apple Pay · Lien envoyé par courriel</p>
   </div>
 </div>
 
-<!-- CE QUI EST INCLUS -->
-<div class='includes-bg'>
+<!-- CE QUE TU OBTIENS (feature cards) -->
+<div class='features-bg'>
   <div class='section'>
     <div class='section-eyebrow'>Ce qui est inclus</div>
-    <div class='section-title'>Tout pour ton repêchage</div>
-    <div class='section-sub'>Un outil complet, pas juste une liste. Chaque joueur est analysé avec les données qui comptent vraiment.</div>
-    <div class='includes-grid'>
-      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>447 joueurs — attaquants, défenseurs, gardiens</span></div>
-      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Classement par tiers (Tier 1 à Tier 5+)</span></div>
-      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Projections de points 2026-27</span></div>
-      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Score de valeur par position</span></div>
-      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Sleepers et breakouts identifiés</span></div>
-      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Risque et upside pour chaque joueur</span></div>
-      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Stats complètes des 3 dernières saisons</span></div>
-      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Gardiens : titulaires et situations de partage</span></div>
-      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Outils de tri par équipe, position et valeur</span></div>
-      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Accès en ligne — aucune app à télécharger</span></div>
-      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Mis à jour pour la saison 2026-27</span></div>
-      <div class='include-item'><span class='include-check'>✓</span><span class='include-text'>Valide toute la saison — accès 1 an</span></div>
+    <div class='section-title'>Tout pour dominer ton draft</div>
+    <div class='section-sub'>Pas juste une liste de noms. Chaque joueur est analysé avec les données qui changent vraiment ton repêchage.</div>
+    <div class='features-grid'>
+
+      <div class='feature-card'>
+        <div class='feature-icon'>🎯</div>
+        <div class='feature-title'>Projections de points</div>
+        <div class='feature-body'>Des projections réalistes pour 2026-27 basées sur les tendances, l'âge, le contexte d'équipe et le temps de jeu.</div>
+        <div class='feature-example'>
+          <div class='feature-example-label'>Exemple</div>
+          <div class='feature-example-row'>
+            <span class='feature-example-name'>M. Celebrini</span>
+            <span class='feature-example-val'>127 pts projetés</span>
+          </div>
+          <div class='feature-example-row' style='margin-top:5px'>
+            <span class='feature-example-name'>N. Suzuki</span>
+            <span class='feature-example-val'>101 pts projetés</span>
+          </div>
+        </div>
+      </div>
+
+      <div class='feature-card'>
+        <div class='feature-icon'>📊</div>
+        <div class='feature-title'>Classement par tiers</div>
+        <div class='feature-body'>Chaque joueur placé dans un tier selon son niveau — de l'Élite au Tier 5+. Tu sais exactement qui viser à chaque ronde.</div>
+        <div class='feature-example'>
+          <div class='feature-example-label'>Exemple</div>
+          <div class='feature-example-row'>
+            <span class='feature-example-name'>McDavid</span>
+            <span class='feature-example-badge' style='background:#fef9c3;color:#854d0e;'>⭐ Elite</span>
+          </div>
+          <div class='feature-example-row' style='margin-top:5px'>
+            <span class='feature-example-name'>L. Raymond</span>
+            <span class='feature-example-badge' style='background:#f1f5f9;color:#475569;'>Tier 3</span>
+          </div>
+        </div>
+      </div>
+
+      <div class='feature-card'>
+        <div class='feature-icon'>💎</div>
+        <div class='feature-title'>Sleepers identifiés</div>
+        <div class='feature-body'>Les joueurs à fort upside sous-évalués dans les pools — repère-les avant les autres et prépare tes fins de ronde.</div>
+        <div class='feature-example'>
+          <div class='feature-example-label'>Exemple de sleeper</div>
+          <div class='feature-example-row'>
+            <span class='feature-example-name'>J. Snuggerud (STL)</span>
+            <span class='feature-example-val'>71 pts · upside 90</span>
+          </div>
+          <div style='font-size:0.72em;color:#64748b;margin-top:5px;line-height:1.4;'>A fini la saison sur le 1er trio · tire beaucoup au filet</div>
+        </div>
+      </div>
+
+      <div class='feature-card'>
+        <div class='feature-icon'>⚠️</div>
+        <div class='feature-title'>Risque et bust alerts</div>
+        <div class='feature-body'>Chaque joueur a un niveau de risque (Bas / Moyen / Élevé) et un indicateur de bust pour éviter les mauvaises surprises.</div>
+        <div class='feature-example'>
+          <div class='feature-example-label'>Exemple</div>
+          <div class='feature-example-row'>
+            <span class='feature-example-name'>K. Kaprizov</span>
+            <span class='feature-example-badge' style='background:#fef9c3;color:#854d0e;'>⚠ Risque moyen</span>
+          </div>
+        </div>
+      </div>
+
+      <div class='feature-card'>
+        <div class='feature-icon'>🔍</div>
+        <div class='feature-title'>Filtres en temps réel</div>
+        <div class='feature-body'>Trie par position, équipe, tier ou projections en un clic. Parfait pour trouver le meilleur pick disponible pendant ton draft.</div>
+        <div class='feature-example'>
+          <div class='feature-example-label'>Exemple de filtre</div>
+          <div style='font-size:0.8em;color:#374151;line-height:1.5;margin-top:2px;'>Centre · Tier 2 · Risque bas<br><span style='color:#2d8a3e;font-weight:700;'>→ 8 joueurs trouvés</span></div>
+        </div>
+      </div>
+
+      <div class='feature-card'>
+        <div class='feature-icon'>📱</div>
+        <div class='feature-title'>Accès sur tous les appareils</div>
+        <div class='feature-body'>Fonctionne sur téléphone, tablette ou ordi. Ouvre ton lien directement à la table pendant le draft — aucune installation.</div>
+        <div class='feature-example'>
+          <div class='feature-example-label'>Accès inclus</div>
+          <div style='font-size:0.8em;color:#374151;line-height:1.6;margin-top:2px;'>Lien personnel par courriel<br>Valide 1 an · Aucun abonnement</div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
 
-<!-- LES TIERS -->
+<!-- APERÇU JOUEURS LIVE (Supabase) -->
+<div class='preview-section' id='apercu'>
+  <div class='preview-inner'>
+    <div class='preview-header'>
+      <div class='section-eyebrow'>Données en direct</div>
+      <h2 class='section-title'>Un extrait des vrais joueurs</h2>
+      <p class='section-sub'>Ces données viennent directement du guide — classées par projections, actualisées pour 2026-27.</p>
+    </div>
+    <div class='preview-grid'>
+      <div class='preview-card'>
+        <div class='preview-card-label'>⚡ Attaquants</div>
+        <div id='preview-fwd'>…</div>
+      </div>
+      <div class='preview-card'>
+        <div class='preview-card-label'>🛡️ Défenseurs</div>
+        <div id='preview-def'>…</div>
+      </div>
+      <div class='preview-card'>
+        <div class='preview-card-label'>🥅 Gardiens</div>
+        <div id='preview-g'>…</div>
+      </div>
+    </div>
+    <div class='preview-cta'>
+      <p>Ce n'est qu'un aperçu — le guide complet couvre 447 joueurs avec tiers, risques, notes et sleepers.</p>
+      <a href='https://buy.stripe.com/test_00wbJ1dXQ6vl58iew9b7y01' class='btn-cta' target='_blank'>Obtenir le guide complet — 5 $</a>
+    </div>
+  </div>
+</div>
+
+<!-- LE SYSTÈME DE TIERS -->
 <div class='tiers-bg'>
   <div class='section'>
     <div class='section-eyebrow'>Le système de tiers</div>
     <div class='section-title'>Chaque joueur à sa juste place</div>
-    <div class='section-sub'>Le Guide classe chaque joueur dans un tier selon ses projections et son score de valeur — pour savoir qui viser à chaque ronde.</div>
+    <div class='section-sub'>Le guide classe chaque joueur dans un tier selon ses projections et son profil de risque — pour savoir qui viser à chaque ronde.</div>
     <div class='tiers-grid'>
       <div class='tier-card'>
         <span class='tier-dot-lg' style='background:#f5c842'></span>
         <div>
-          <div class='tier-name'>Tier 1 — Élites</div>
-          <div class='tier-desc'>Les meilleurs joueurs de la ligue. À repêcher en premières rondes peu importe ton format — ils produisent de façon constante saison après saison.</div>
+          <div class='tier-name'>Elite / Tier 1 — Les intouchables</div>
+          <div class='tier-desc'>McDavid, Celebrini, Kucherov. À repêcher en premières rondes peu importe ton format — ils produisent de façon constante et dominent chaque saison.</div>
         </div>
       </div>
       <div class='tier-card'>
         <span class='tier-dot-lg' style='background:#3b82f6'></span>
         <div>
-          <div class='tier-name'>Tier 2 — Top</div>
-          <div class='tier-desc'>Joueurs de premier ou deuxième trio avec un plancher de production élevé. Le cœur de ton alignment — fiables et performants.</div>
+          <div class='tier-name'>Tier 2 — Superstars</div>
+          <div class='tier-desc'>Suzuki, Marner, Robertson. Joueurs de premier trio avec un plancher de production élevé. Le cœur de ton alignement — fiables et consistants.</div>
         </div>
       </div>
       <div class='tier-card'>
         <span class='tier-dot-lg' style='background:#94a3b8'></span>
         <div>
-          <div class='tier-name'>Tier 3 — Solides</div>
-          <div class='tier-desc'>Production constante en milieu de draft. Pas de gros chiffres, mais peu de risque — idéaux pour solidifier ton alignment aux rondes intermédiaires.</div>
+          <div class='tier-name'>Tier 3 — All-Stars</div>
+          <div class='tier-desc'>Raymond, Aho, Guentzel. Production solide en milieu de draft. Peu de risque — idéaux pour solidifier ton alignement aux rondes intermédiaires.</div>
         </div>
       </div>
       <div class='tier-card'>
@@ -291,31 +535,69 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
       <div class='how-step'>
         <div class='how-num'>1</div>
         <div>
-          <div class='how-title'>Trie par ce qui compte pour toi</div>
-          <div class='how-body'>Clique sur n'importe quelle colonne pour trier — projections, score de valeur, PPM ou stats de la saison passée. Les meilleurs en haut en un clic.</div>
+          <div class='how-title'>Tu achètes, tu reçois ton lien par courriel</div>
+          <div class='how-body'>Paiement unique de 5 $ via Stripe. Ton lien d'accès personnel arrive par courriel en quelques secondes — aucune app à installer.</div>
         </div>
       </div>
       <div class='how-step'>
         <div class='how-num'>2</div>
         <div>
-          <div class='how-title'>Filtre par position, tier, équipe ou tendance</div>
-          <div class='how-body'>Tu cherches un centre de Tier 2 dans une bonne équipe? Deux filtres et tu y es. Idéal pour cibler ton pick selon la ronde.</div>
+          <div class='how-title'>Trie par ce qui compte pour toi</div>
+          <div class='how-body'>Clique sur n'importe quelle colonne — projections, tier, risque, PPM. Les meilleurs joueurs selon tes critères en un clic.</div>
         </div>
       </div>
       <div class='how-step'>
         <div class='how-num'>3</div>
         <div>
-          <div class='how-title'>Identifie les sleepers avant les autres</div>
-          <div class='how-body'>Les joueurs à fort upside sont clairement identifiés — repère-les avant ton draft et prépare tes picks de fin de ronde à l'avance.</div>
+          <div class='how-title'>Filtre par position, tier, équipe</div>
+          <div class='how-body'>Tu cherches un centre de Tier 2 dans une bonne équipe? Deux filtres et tu y es. Idéal pour cibler ton pick selon la ronde.</div>
         </div>
       </div>
       <div class='how-step'>
         <div class='how-num'>4</div>
         <div>
-          <div class='how-title'>Accède sur téléphone ou ordinateur</div>
-          <div class='how-body'>Ton lien fonctionne sur tous les appareils. Ouvre-le directement à la table pendant le draft — aucune app à installer.</div>
+          <div class='how-title'>Garde ton avantage toute la saison</div>
+          <div class='how-body'>Ton lien est valide 1 an. Reviens vérifier un joueur avant un échange ou une décision de cap — le guide reste accessible.</div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<div class='pricing-section' id='section-acces'>
+  <div class='section'>
+    <div id='access-banner' class='access-banner'>
+      <span>🔒 Ce contenu est réservé aux acheteurs. Achetez le guide ci-dessous pour y accéder.</span>
+    </div>
+    <div class='section-eyebrow'>Accès</div>
+    <div class='section-title'>Obtenir le guide complet</div>
+    <div class='section-sub'>Un paiement unique de 5 $ — aucun abonnement, aucun renouvellement. Ton lien d'accès personnel arrive par courriel en quelques secondes.</div>
+    <div class='pricing-box'>
+      <span class='pricing-badge'>Disponible maintenant</span>
+      <div class='pricing-title'>Guide des poolers 2026-27</div>
+      <div class='pricing-price'><sup>$</sup>5 <sub>CAD</sub></div>
+      <p class='pricing-note'>Accès instantané après paiement · Lien valide 1 an · Aucun abonnement</p>
+      <div class='pricing-cols'>
+        <ul class='pricing-list'>
+          <li>447 joueurs — attaquants, défenseurs, gardiens</li>
+          <li>Classement par tiers (Elite à Tier 5+)</li>
+          <li>Projections de points saison 2026-27</li>
+          <li>Sleepers et breakouts identifiés</li>
+          <li>Risque et bust alert pour chaque joueur</li>
+          <li>Notes et analyse par joueur</li>
+        </ul>
+        <ul class='pricing-list'>
+          <li>Stats complètes des 3 dernières saisons</li>
+          <li>Gardiens : titulaires et situations de partage</li>
+          <li>Outils de tri par équipe, position et tier</li>
+          <li>Accès en ligne — aucune app à télécharger</li>
+          <li>Mis à jour pour la saison 2026-27</li>
+          <li>Valide toute la saison — accès 1 an</li>
+        </ul>
+      </div>
+      <a href='https://buy.stripe.com/test_00wbJ1dXQ6vl58iew9b7y01' class='btn-cta' target='_blank' style='width:100%;font-size:1.05em;padding:17px 36px;'>Obtenir mon guide — 5 $</a>
+      <p class='pricing-security'>Paiement sécurisé par Stripe · Visa, Mastercard, Apple Pay · Lien envoyé par courriel</p>
     </div>
   </div>
 </div>
@@ -351,6 +633,9 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
 </div>
 
 <script>
+const SUPABASE_URL = 'https://fifurqlitkywtmhgtzeu.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpZnVycWxpdGt5d3RtaGd0emV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDIyMjQsImV4cCI6MjA5MjI3ODIyNH0.KPVPj1qwbSJJMyLR_-AhDcRs0vi2sUU6qbFQ-kH53C0';
+
 function toggleNav() {
   document.getElementById('navMobile').classList.toggle('open');
 }
@@ -373,6 +658,50 @@ if (stickyCta && finalCta) {
     stickyCta.style.display = rect.top < window.innerHeight ? 'none' : '';
   }, { passive: true });
 }
+
+async function loadPreview() {
+  const fwdPositions = ['C','LW','RW'];
+  const tierOrder = { 'Elite':0, 'Tier 1 - GOAT':1, 'Tier 1 - Élite':1, 'Tier 2 - Superstar':2, 'Tier 3 - All-Star':3, 'Tier 4 - Elite':4 };
+
+  function tierClass(tier) {
+    if (!tier) return 'ptier-3';
+    if (tier.includes('Elite') || tier.includes('GOAT') || tier === 'Elite') return 'ptier-1';
+    if (tier.includes('Tier 1') || tier.includes('Tier 2')) return 'ptier-2';
+    return 'ptier-3';
+  }
+
+  function renderRows(players, containerId) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    if (!players || !players.length) { el.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:0.8em;padding:8px 0;">Données indisponibles</div>'; return; }
+    el.innerHTML = players.slice(0, 8).map(p =>
+      `<div class='preview-row ${tierClass(p.tier)}'>
+        <span class='preview-name'>${p.name}</span>
+        <span class='preview-pts'>${p.proj_pts ?? '—'} pts</span>
+      </div>`
+    ).join('');
+  }
+
+  try {
+    const [fwdRes, gRes] = await Promise.all([
+      fetch(`${SUPABASE_URL}/rest/v1/poolers_players?select=name,pos,tier,proj_pts&pos=in.(C,LW,RW)&order=proj_pts.desc&limit=8`, { headers: { apikey: SUPABASE_KEY } }),
+      fetch(`${SUPABASE_URL}/rest/v1/poolers_players?select=name,pos,tier,proj_pts&pos=eq.G&order=proj_pts.desc&limit=8`, { headers: { apikey: SUPABASE_KEY } })
+    ]);
+    const fwd = await fwdRes.json();
+    const g = await gRes.json();
+    renderRows(Array.isArray(fwd) ? fwd : [], 'preview-fwd');
+    renderRows([], 'preview-def');
+    renderRows(Array.isArray(g) ? g : [], 'preview-g');
+    document.querySelector('#preview-def').innerHTML = '<div style="color:rgba(255,255,255,0.35);font-size:0.8em;padding:8px 0;">Données à venir</div>';
+  } catch(e) {
+    ['preview-fwd','preview-def','preview-g'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:0.8em;padding:8px 0;">Chargement…</div>';
+    });
+  }
+}
+
+loadPreview();
 </script>
 </body>
 </html>
