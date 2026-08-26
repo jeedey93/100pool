@@ -124,7 +124,7 @@ nav { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; he
 .hosts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 32px; }
 @media (max-width: 560px) { .hosts-grid { grid-template-columns: 1fr; } }
 .host-card { background: white; border-radius: 16px; padding: 28px; border: 1px solid #e8edf2; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-.host-avatar { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, #d1fae5, #a7f3d0); display: flex; align-items: center; justify-content: center; font-size: 1.4em; margin-bottom: 14px; }
+.host-avatar { width: 72px; height: 72px; border-radius: 50%; background: #e8edf2; display: block; margin-bottom: 16px; object-fit: cover; border: 3px solid #f0fdf4; }
 .host-name { font-size: 1.05em; font-weight: 800; color: #0f172a; margin-bottom: 3px; }
 .host-role { font-size: 0.78em; color: #2d8a3e; font-weight: 700; margin-bottom: 12px; }
 .host-bio { font-size: 0.82em; color: #64748b; line-height: 1.65; }
@@ -357,13 +357,13 @@ footer p { color: rgba(255,255,255,0.25); font-size: 0.74em; }
     <p class='section-sub'>Le Guide des poolers, c'est le résultat de centaines d'heures d'analyse — par deux passionnés de hockey et de pool NHL.</p>
     <div class='hosts-grid'>
       <div class='host-card'>
-        <div class='host-avatar'>📊</div>
+        <img src='guillaume.jpg' alt='Guillaume Corbeau' class='host-avatar' onerror="this.style.background='#e8edf2';this.removeAttribute('src')">
         <div class='host-name'>Guillaume Corbeau</div>
         <div class='host-role'>Co-animateur · Le mordu des stats</div>
         <p class='host-bio'>Guillaume arrive au micro avec ses projections, ses données avancées et une opinion bien arrêtée sur chaque joueur de la ligue. Son rôle dans le podcast : sortir les chiffres, défendre ses rankings et convaincre Olivier que ses sleepers sont justifiés — avec les stats pour le prouver.</p>
       </div>
       <div class='host-card'>
-        <div class='host-avatar'>🎙️</div>
+        <img src='olivier.jpg' alt='Olivier Fiset' class='host-avatar' onerror="this.style.background='#e8edf2';this.removeAttribute('src')">
         <div class='host-name'>Olivier Fiset</div>
         <div class='host-role'>Co-animateur · La voix du pooler</div>
         <p class='host-bio'>Olivier mène les débats, challenge les analyses de Guillaume et s'assure que tout reste accessible. Pooler compétitif dans l'âme, il apporte l'instinct du vrai joueur de pool — et n'hésite pas à lever la main quand il n'est pas d'accord. Ce sont ces chamaillages qui font le charme du podcast.</p>
