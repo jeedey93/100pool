@@ -21,11 +21,24 @@
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f4f8; color: #1e293b; min-height: 100vh; }
 
 /* ── NAV ── */
-nav { background: linear-gradient(135deg, #1e6b2e, #2d8a3e); padding: 12px 24px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); position: sticky; top: 0; z-index: 100; }
-nav img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
-nav span { color: white; font-weight: 700; font-size: 1em; }
-nav a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.83em; margin-left: auto; padding: 7px 16px; border-radius: 20px; border: 1px solid rgba(245,166,35,0.5); color: #f5a623; transition: all 0.2s; font-weight: 600; }
-nav a:hover { background: rgba(245,166,35,0.15); color: #f5a623; }
+nav { background: linear-gradient(135deg, #1e6b2e, #2d8a3e); padding: 14px 32px; display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); position: sticky; top: 0; z-index: 100; }
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.nav-logo span { color: white; font-weight: 800; font-size: 1.05em; }
+.nav-links { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.nav-link { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.85em; font-weight: 600; padding: 7px 14px; border-radius: 8px; transition: all 0.2s; }
+.nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
+.nav-link.active { background: rgba(255,255,255,0.15); color: white; }
+.nav-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; margin-left: auto; flex-direction: column; gap: 5px; }
+.nav-hamburger span { display: block; width: 22px; height: 2px; background: white; border-radius: 2px; transition: all 0.2s; }
+.nav-mobile { display: none; position: absolute; top: 100%; left: 0; right: 0; background: linear-gradient(135deg, #1e6b2e, #2d8a3e); border-top: 1px solid rgba(255,255,255,0.1); padding: 8px 16px 16px; flex-direction: column; gap: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.nav-mobile.open { display: flex; }
+.nav-mobile .nav-link { padding: 11px 14px; font-size: 0.95em; border-radius: 8px; }
+@media (max-width: 640px) {
+  nav { padding: 12px 16px; position: relative; flex-wrap: wrap; }
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+}
 
 /* ── HERO ── */
 .hero { background: linear-gradient(150deg, #1a5c28 0%, #2d8a3e 45%, #1e6b2e 100%); padding: 90px 24px 100px; text-align: center; position: relative; overflow: hidden; }
@@ -140,13 +153,20 @@ nav a:hover { background: rgba(245,166,35,0.15); color: #f5a623; }
 
 <!-- NAV -->
 <nav>
-  <a href='/' style='display:flex;align-items:center;gap:10px;text-decoration:none;'>
+  <a class='nav-logo' href='/'>
     <img src='../100pool.jpg' alt='100% Pool'>
     <span>100% Pool</span>
   </a>
-  <div style='display:flex;gap:6px;margin-left:auto;'>
-    <a href='/guide-poolers/' style='background:rgba(255,255,255,0.15);color:white;'>Guide des poolers</a>
-    <a href='/podcast/'>Podcast</a>
+  <div class='nav-links'>
+    <a href='/guide-poolers/' class='nav-link active'>Guide des poolers</a>
+    <a href='/podcast/' class='nav-link'>Podcast</a>
+  </div>
+  <button class='nav-hamburger' onclick='toggleNav()' aria-label='Menu'>
+    <span></span><span></span><span></span>
+  </button>
+  <div class='nav-mobile' id='navMobile'>
+    <a href='/guide-poolers/' class='nav-link active'>Guide des poolers</a>
+    <a href='/podcast/' class='nav-link'>Podcast</a>
   </div>
 </nav>
 
@@ -334,6 +354,15 @@ if (new URLSearchParams(location.search).get('acces') === 'requis') {
   document.getElementById('access-banner').style.display = 'flex';
   document.getElementById('section-acces').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+</script>
+<script>
+function toggleNav() {
+  document.getElementById('navMobile').classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  if (!document.querySelector('nav').contains(e.target))
+    document.getElementById('navMobile').classList.remove('open');
+});
 </script>
 </body>
 </html>

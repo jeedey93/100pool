@@ -21,12 +21,22 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 /* ── NAV ── */
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: linear-gradient(135deg, #2c5aa0 0%, #1e3a8a 100%); box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
-.nav-inner { max-width: 1600px; margin: 0 auto; padding: 10px 15px; display: flex; align-items: center; }
-.nav-logo { display: flex; align-items: center; gap: 10px; }
+.nav-inner { max-width: 1600px; margin: 0 auto; padding: 10px 15px; display: flex; align-items: center; flex-wrap: wrap; }
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
 .nav-logo img { width: 32px; height: 32px; border-radius: 50%; }
 .nav-logo span { color: white; font-weight: 700; font-size: 1em; }
-.nav-back { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.83em; margin-left: auto; padding: 7px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3); font-weight: 600; transition: all 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+.nav-back { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.83em; margin-left: auto; padding: 7px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3); font-weight: 600; transition: all 0.2s; white-space: nowrap; }
 .nav-back:hover { background: rgba(255,255,255,0.12); color: white; }
+.nav-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; margin-left: auto; flex-direction: column; gap: 5px; }
+.nav-hamburger span { display: block; width: 22px; height: 2px; background: white; border-radius: 2px; }
+.nav-mobile { display: none; width: 100%; padding: 8px 0 12px; flex-direction: column; gap: 4px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 8px; }
+.nav-mobile.open { display: flex; }
+.nav-mobile .nav-link { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9em; font-weight: 600; padding: 10px 8px; border-radius: 8px; }
+.nav-mobile .nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
+@media (max-width: 640px) {
+  .nav-back { display: none; }
+  .nav-hamburger { display: flex; }
+}
 
 /* ── LAYOUT ── */
 .page-wrap { max-width: 1500px; margin: 0 auto; padding: 80px 16px 60px; }
@@ -460,11 +470,19 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 <!-- NAV -->
 <nav>
   <div class='nav-inner'>
-    <div class='nav-logo'>
-      <img src='../100pool.jpg' alt='Logo'>
+    <a class='nav-logo' href='/'>
+      <img src='../100pool.jpg' alt='100% Pool'>
       <span>100% Pool</span>
+    </a>
+    <a href='/' class='nav-back'>← Accueil</a>
+    <button class='nav-hamburger' onclick='toggleNav()' aria-label='Menu'>
+      <span></span><span></span><span></span>
+    </button>
+    <div class='nav-mobile' id='navMobile'>
+      <a href='/' class='nav-link'>← Accueil</a>
+      <a href='/guide-poolers/' class='nav-link'>Guide des poolers</a>
+      <a href='/podcast/' class='nav-link'>Podcast</a>
     </div>
-    <a href='../' class='nav-back' onmouseover='this.style.background="rgba(255,255,255,0.12)";this.style.color="white"' onmouseout='this.style.background="";this.style.color="rgba(255,255,255,0.7)"'>← Retour à l'accueil</a>
   </div>
 </nav>
 
@@ -623,6 +641,13 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 <div class='tooltip' id='tooltip' style='display:none'></div>
 
 <script>
+function toggleNav() {
+  document.getElementById('navMobile').classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  if (!document.querySelector('nav').contains(e.target))
+    document.getElementById('navMobile').classList.remove('open');
+});
 let allPlayers = [];
 let sortCol = 'rank';
 let sortDir = 'asc';
