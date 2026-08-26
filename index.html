@@ -21,84 +21,97 @@
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f4f8; color: #1e293b; min-height: 100vh; }
 
 /* ── NAV ── */
-nav { background: linear-gradient(135deg, #1e6b2e, #2d8a3e); padding: 14px 32px; display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); position: sticky; top: 0; z-index: 100; }
-.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-.nav-logo img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
-.nav-logo span { color: white; font-weight: 800; font-size: 1.05em; }
+nav { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; height: 56px; display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); position: sticky; top: 0; z-index: 100; }
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; line-height: 1; }
+.nav-logo img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; vertical-align: middle; }
+.nav-logo span { color: white; font-weight: 800; font-size: 1.05em; vertical-align: middle; }
 .nav-links { display: flex; align-items: center; gap: 6px; margin-left: auto; }
 .nav-link { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.85em; font-weight: 600; padding: 7px 14px; border-radius: 8px; transition: all 0.2s; }
 .nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
 .nav-link.active { background: rgba(255,255,255,0.15); color: white; }
-.nav-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; margin-left: auto; flex-direction: column; gap: 5px; }
+.nav-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; margin-left: auto; flex-direction: column; gap: 5px; align-items: center; justify-content: center; }
 .nav-hamburger span { display: block; width: 22px; height: 2px; background: white; border-radius: 2px; transition: all 0.2s; }
-.nav-mobile { display: none; position: absolute; top: 100%; left: 0; right: 0; background: linear-gradient(135deg, #1e6b2e, #2d8a3e); border-top: 1px solid rgba(255,255,255,0.1); padding: 8px 16px 16px; flex-direction: column; gap: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.nav-mobile { display: none; position: absolute; top: 56px; left: 0; right: 0; background: linear-gradient(135deg, #1a5c28, #2d8a3e); border-top: 1px solid rgba(255,255,255,0.1); padding: 8px 16px 16px; flex-direction: column; gap: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
 .nav-mobile.open { display: flex; }
 .nav-mobile .nav-link { padding: 11px 14px; font-size: 0.95em; border-radius: 8px; }
 @media (max-width: 640px) {
-  nav { padding: 12px 16px; position: relative; flex-wrap: wrap; }
+  nav { padding: 0 16px; position: relative; }
   .nav-links { display: none; }
   .nav-hamburger { display: flex; }
 }
 
 /* ── HERO ── */
-.hero { background: linear-gradient(150deg, #1a5c28 0%, #2d8a3e 45%, #1e6b2e 100%); padding: 100px 24px 110px; text-align: center; position: relative; overflow: hidden; }
-.hero::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); pointer-events: none; }
-.hero-logo { width: 96px; height: 96px; border-radius: 24px; box-shadow: 0 16px 48px rgba(0,0,0,0.35); object-fit: cover; margin-bottom: 28px; position: relative; z-index: 1; }
-.hero-eyebrow { display: inline-block; background: rgba(245,166,35,0.15); border: 1px solid rgba(245,166,35,0.5); color: #f5a623; font-size: 0.72em; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 14px; border-radius: 99px; margin-bottom: 20px; position: relative; z-index: 1; }
-.hero h1 { font-size: clamp(2.2em, 5vw, 3.4em); font-weight: 900; color: white; line-height: 1.1; margin-bottom: 16px; letter-spacing: -0.5px; position: relative; z-index: 1; }
-.hero h1 span { color: #f5a623; }
-.hero-sub { color: rgba(255,255,255,0.78); font-size: clamp(0.95em, 2vw, 1.12em); max-width: 540px; margin: 0 auto; line-height: 1.65; position: relative; z-index: 1; }
+.hero { background: linear-gradient(160deg, #163d1c 0%, #1e6b2e 40%, #2d8a3e 70%, #1a7a32 100%); padding: 88px 24px 120px; text-align: center; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); pointer-events: none; }
+.hero-logo { width: 100px; height: 100px; border-radius: 26px; box-shadow: 0 20px 56px rgba(0,0,0,0.4), 0 0 0 4px rgba(255,255,255,0.12); object-fit: cover; margin-bottom: 32px; position: relative; z-index: 1; }
+.hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(245,166,35,0.12); border: 1px solid rgba(245,166,35,0.4); color: #f5c842; font-size: 0.72em; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 16px; border-radius: 99px; margin-bottom: 24px; position: relative; z-index: 1; }
+.hero h1 { font-size: clamp(2.4em, 6vw, 3.6em); font-weight: 900; color: white; line-height: 1.08; margin-bottom: 20px; letter-spacing: -1px; position: relative; z-index: 1; }
+.hero h1 span { color: #f5c842; }
+.hero-sub { color: rgba(255,255,255,0.72); font-size: clamp(0.95em, 2vw, 1.1em); max-width: 500px; margin: 0 auto 40px; line-height: 1.7; position: relative; z-index: 1; }
+.hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
+.hero-btn { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.92em; padding: 13px 24px; border-radius: 10px; text-decoration: none; transition: all 0.2s; }
+.hero-btn-primary { background: #f5c842; color: #1a3d10; }
+.hero-btn-primary:hover { background: #f9d55a; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+.hero-btn-secondary { background: rgba(255,255,255,0.12); color: white; border: 1px solid rgba(255,255,255,0.2); }
+.hero-btn-secondary:hover { background: rgba(255,255,255,0.2); transform: translateY(-1px); }
 
 /* ── PRODUCTS ── */
-.products { max-width: 900px; margin: -48px auto 0; padding: 0 24px 80px; position: relative; z-index: 10; }
+.products { max-width: 900px; margin: -56px auto 0; padding: 0 24px 80px; position: relative; z-index: 10; }
 .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 @media (max-width: 640px) { .products-grid { grid-template-columns: 1fr; } }
 
-.product-card { background: white; border-radius: 20px; border: 1px solid #e8edf2; box-shadow: 0 8px 32px rgba(0,0,0,0.1); overflow: hidden; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; }
-.product-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.14); }
-.product-card-header { padding: 28px 28px 20px; }
-.product-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5em; margin-bottom: 16px; }
-.product-badge { display: inline-block; font-size: 0.68em; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; margin-bottom: 10px; }
+.product-card { background: white; border-radius: 20px; border: 1px solid #e2e8f0; box-shadow: 0 4px 24px rgba(0,0,0,0.09); overflow: hidden; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; }
+.product-card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(0,0,0,0.14); }
+.product-card-header { padding: 28px 28px 22px; }
+.product-icon { width: 54px; height: 54px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.6em; margin-bottom: 18px; }
+.product-badge { display: inline-block; font-size: 0.68em; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border-radius: 99px; margin-bottom: 12px; }
 .badge-live { background: #dcfce7; color: #15803d; }
 .badge-podcast { background: #fce7f3; color: #9d174d; }
-.product-title { font-size: 1.15em; font-weight: 800; color: #1e293b; margin-bottom: 8px; }
-.product-desc { font-size: 0.85em; color: #64748b; line-height: 1.6; }
-.product-card-footer { margin-top: auto; padding: 20px 28px; border-top: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; }
+.product-title { font-size: 1.18em; font-weight: 800; color: #0f172a; margin-bottom: 10px; line-height: 1.3; }
+.product-desc { font-size: 0.86em; color: #64748b; line-height: 1.65; }
+.product-card-footer { margin-top: auto; padding: 18px 28px; border-top: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; }
 .product-cta { font-size: 0.85em; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 .product-card.guide .product-cta { color: #2d8a3e; }
 .product-card.podcast .product-cta { color: #9d174d; }
 .product-meta { font-size: 0.75em; color: #94a3b8; font-weight: 600; }
 
-/* Guide card accent */
-.product-card.guide .product-card-header { background: linear-gradient(135deg, #f0fdf4, #ffffff); }
-.product-card.guide .product-icon { background: #dcfce7; }
-/* Podcast card accent */
-.product-card.podcast .product-card-header { background: linear-gradient(135deg, #fdf4ff, #ffffff); }
-.product-card.podcast .product-icon { background: #fce7f3; }
+.product-card.guide .product-card-header { background: linear-gradient(145deg, #edfbf2, #ffffff); }
+.product-card.guide .product-icon { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+.product-card.podcast .product-card-header { background: linear-gradient(145deg, #fdf4ff, #ffffff); }
+.product-card.podcast .product-icon { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
+
+/* ── FEATURES STRIP ── */
+.features { max-width: 900px; margin: 0 auto; padding: 0 24px 72px; }
+.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media (max-width: 640px) { .features-grid { grid-template-columns: 1fr; } }
+.feature-item { background: white; border-radius: 16px; padding: 24px; border: 1px solid #e8edf2; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+.feature-icon { font-size: 1.5em; margin-bottom: 10px; }
+.feature-title { font-size: 0.92em; font-weight: 700; color: #1e293b; margin-bottom: 6px; }
+.feature-desc { font-size: 0.8em; color: #64748b; line-height: 1.6; }
 
 /* ── ABOUT ── */
 .about { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
-.about-inner { background: white; border-radius: 20px; border: 1px solid #e8edf2; box-shadow: 0 2px 12px rgba(0,0,0,0.05); padding: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
-@media (max-width: 640px) { .about-inner { grid-template-columns: 1fr; padding: 32px 24px; gap: 24px; } }
-.about-eyebrow { font-size: 0.72em; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #2d8a3e; margin-bottom: 10px; }
-.about-title { font-size: 1.5em; font-weight: 800; color: #0f172a; margin-bottom: 14px; line-height: 1.25; }
-.about-body { font-size: 0.9em; color: #475569; line-height: 1.75; }
-.about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.about-stat { background: #f8fafc; border-radius: 12px; padding: 18px; text-align: center; }
-.about-stat .val { font-size: 1.8em; font-weight: 900; color: #2d8a3e; line-height: 1; }
-.about-stat .lbl { font-size: 0.72em; color: #64748b; margin-top: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.about-inner { background: white; border-radius: 20px; border: 1px solid #e8edf2; box-shadow: 0 2px 12px rgba(0,0,0,0.05); padding: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+@media (max-width: 640px) { .about-inner { grid-template-columns: 1fr; padding: 32px 24px; gap: 28px; } }
+.about-eyebrow { font-size: 0.72em; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #2d8a3e; margin-bottom: 12px; }
+.about-title { font-size: 1.55em; font-weight: 800; color: #0f172a; margin-bottom: 16px; line-height: 1.2; }
+.about-body { font-size: 0.9em; color: #475569; line-height: 1.8; }
+.about-link { display: inline-flex; align-items: center; gap: 6px; color: #2d8a3e; font-size: 0.88em; font-weight: 700; text-decoration: none; margin-top: 20px; }
+.about-link:hover { text-decoration: underline; }
+.about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.about-stat { background: linear-gradient(135deg, #f0fdf4, #f8fafc); border: 1px solid #dcfce7; border-radius: 14px; padding: 20px; text-align: center; }
+.about-stat .val { font-size: 2em; font-weight: 900; color: #2d8a3e; line-height: 1; }
+.about-stat .lbl { font-size: 0.7em; color: #64748b; margin-top: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
 /* ── FOOTER ── */
-footer { background: linear-gradient(135deg, #1e6b2e, #2d8a3e); padding: 40px 24px; text-align: center; }
-footer .logo { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 12px; }
-footer .logo img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
-footer .logo span { color: white; font-weight: 800; font-size: 0.95em; }
-footer p { color: rgba(255,255,255,0.5); font-size: 0.78em; }
-
-@media (max-width: 640px) {
-  nav { padding: 12px 16px; }
-  .hero { padding: 72px 16px 80px; }
-}
+footer { background: linear-gradient(135deg, #163d1c, #1e6b2e); padding: 48px 24px; text-align: center; }
+footer .logo { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 16px; }
+footer .logo img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
+footer .logo span { color: white; font-weight: 800; font-size: 1em; }
+.footer-links { display: flex; gap: 20px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+.footer-links a { color: rgba(255,255,255,0.5); font-size: 0.82em; text-decoration: none; font-weight: 600; transition: color 0.2s; }
+.footer-links a:hover { color: rgba(255,255,255,0.85); }
+footer p { color: rgba(255,255,255,0.35); font-size: 0.76em; }
 </style>
 </head>
 <body>
@@ -127,7 +140,11 @@ footer p { color: rgba(255,255,255,0.5); font-size: 0.78em; }
   <img src='100pool.jpg' alt='100% Pool' class='hero-logo'>
   <div class='hero-eyebrow'>🏒 Hockey Pool · NHL</div>
   <h1>Le pool de hockey,<br><span>faite comme du monde.</span></h1>
-  <p class='hero-sub'>100% Pool est une communauté dédiée aux amateurs de pools de hockey NHL — outils, analyses et contenu pour dominer votre ligue.</p>
+  <p class='hero-sub'>Outils, analyses et contenu pour dominer votre ligue NHL — du repêchage jusqu'aux séries.</p>
+  <div class='hero-actions'>
+    <a href='/guide-poolers/' class='hero-btn hero-btn-primary'>📊 Voir le Guide 2026-27</a>
+    <a href='/podcast/' class='hero-btn hero-btn-secondary'>🎙️ Écouter le Podcast</a>
+  </div>
 </div>
 
 <!-- PRODUCTS -->
@@ -150,7 +167,7 @@ footer p { color: rgba(255,255,255,0.5); font-size: 0.78em; }
     <a href='/podcast/' class='product-card podcast'>
       <div class='product-card-header'>
         <div class='product-icon'>🎙️</div>
-        <span class='product-badge badge-podcast'>Podcast</span>
+        <span class='product-badge badge-podcast'>Podcast · Gratuit</span>
         <div class='product-title'>100% Pool Podcast</div>
         <div class='product-desc'>Analyses de joueurs, stratégies de repêchage, buy/sell en saison et évaluations des gardiens. Avec Guillaume Corbeau et Olivier Fiset.</div>
       </div>
@@ -163,13 +180,35 @@ footer p { color: rgba(255,255,255,0.5); font-size: 0.78em; }
   </div>
 </div>
 
+<!-- FEATURES -->
+<div class='features'>
+  <div class='features-grid'>
+    <div class='feature-item'>
+      <div class='feature-icon'>📈</div>
+      <div class='feature-title'>Projections complètes</div>
+      <div class='feature-desc'>447 joueurs avec projections de points, paliers et score de valeur pour chaque position.</div>
+    </div>
+    <div class='feature-item'>
+      <div class='feature-icon'>🎯</div>
+      <div class='feature-title'>Stratégie de repêchage</div>
+      <div class='feature-desc'>Analyses buy/sell, joueurs sous-évalués et conseils d'experts pour maximiser votre alignement.</div>
+    </div>
+    <div class='feature-item'>
+      <div class='feature-icon'>🎙️</div>
+      <div class='feature-title'>Podcast hebdomadaire</div>
+      <div class='feature-desc'>Épisodes réguliers sur Spotify et YouTube avec Guillaume Corbeau et Olivier Fiset.</div>
+    </div>
+  </div>
+</div>
+
 <!-- ABOUT -->
 <div class='about'>
   <div class='about-inner'>
     <div>
       <div class='about-eyebrow'>À propos</div>
       <div class='about-title'>Tout pour gagner votre pool</div>
-      <p class='about-body'>100% Pool regroupe des outils et du contenu conçus spécifiquement pour les poolers NHL sérieux. Que ce soit pour préparer votre repêchage ou suivre la saison, on vous couvre avec des données à jour et des analyses de qualité.</p>
+      <p class='about-body'>100% Pool regroupe des outils et du contenu conçus pour les poolers NHL sérieux. Du repêchage jusqu'aux séries, on vous couvre avec des données à jour et des analyses de qualité — par des amateurs de pool, pour des amateurs de pool.</p>
+      <a href='/guide-poolers/' class='about-link'>Découvrir le Guide des poolers →</a>
     </div>
     <div class='about-stats'>
       <div class='about-stat'><div class='val'>447</div><div class='lbl'>Joueurs couverts</div></div>
@@ -185,6 +224,12 @@ footer p { color: rgba(255,255,255,0.5); font-size: 0.78em; }
   <div class='logo'>
     <img src='100pool.jpg' alt='100% Pool'>
     <span>100% Pool</span>
+  </div>
+  <div class='footer-links'>
+    <a href='/guide-poolers/'>Guide des poolers</a>
+    <a href='/podcast/'>Podcast</a>
+    <a href='https://www.youtube.com/@100POOLpodcast' target='_blank'>YouTube</a>
+    <a href='https://open.spotify.com/show/2yXacvG6p9qqRTTh0RqfSL' target='_blank'>Spotify</a>
   </div>
   <p>© 2026 100% Pool · toutsurlehockey.com</p>
 </footer>
