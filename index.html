@@ -97,8 +97,7 @@ nav { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; he
 .tier-1 { background: rgba(245,200,66,0.2); color: #f5c842; }
 .tier-2 { background: rgba(99,210,132,0.2); color: #4ade80; }
 .tier-3 { background: rgba(148,163,184,0.15); color: #94a3b8; }
-.preview-blur { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 160px; }
-.preview-blur-text { color: rgba(255,255,255,0.4); font-size: 0.82em; margin-bottom: 14px; line-height: 1.5; }
+.preview-loading { color: rgba(255,255,255,0.35); font-size: 0.82em; padding: 12px 0; }
 .preview-cta-wrap { text-align: center; }
 .preview-note { color: rgba(255,255,255,0.4); font-size: 0.75em; margin-top: 12px; }
 
@@ -254,39 +253,12 @@ footer p { color: rgba(255,255,255,0.25); font-size: 0.74em; }
     <div class='preview-header'>
       <div class='section-eyebrow'>Aperçu du guide</div>
       <h2 class='section-title'>Vois ce que tu vas avoir</h2>
-      <p class='section-sub'>Un extrait réel du classement — projections, tiers et valeur pour chaque joueur.</p>
+      <p class='section-sub'>Un extrait réel du classement — tiers et position pour chaque joueur.</p>
     </div>
-    <div class='preview-grid'>
-      <!-- Attaquants -->
-      <div class='preview-card'>
-        <div class='preview-card-label'>⚡ Attaquants — Top 10</div>
-        <div class='preview-row'><span class='name'>Connor McDavid</span><span class='tier tier-1'>Tier 1</span></div>
-        <div class='preview-row'><span class='name'>Leon Draisaitl</span><span class='tier tier-1'>Tier 1</span></div>
-        <div class='preview-row'><span class='name'>Nathan MacKinnon</span><span class='tier tier-1'>Tier 1</span></div>
-        <div class='preview-row'><span class='name'>Nikita Kucherov</span><span class='tier tier-2'>Tier 2</span></div>
-        <div class='preview-row'><span class='name'>David Pastrnak</span><span class='tier tier-2'>Tier 2</span></div>
-        <div class='preview-row'><span class='name'>+ 200 attaquants dans le guide</span><span class='val'>→</span></div>
-      </div>
-      <!-- Défenseurs -->
-      <div class='preview-card'>
-        <div class='preview-card-label'>🛡️ Défenseurs — Top 5</div>
-        <div class='preview-row'><span class='name'>Cale Makar</span><span class='tier tier-1'>Tier 1</span></div>
-        <div class='preview-row'><span class='name'>Victor Hedman</span><span class='tier tier-1'>Tier 1</span></div>
-        <div class='preview-row'><span class='name'>Quinn Hughes</span><span class='tier tier-2'>Tier 2</span></div>
-        <div class='preview-row'><span class='name'>Rasmus Dahlin</span><span class='tier tier-2'>Tier 2</span></div>
-        <div class='preview-row'><span class='name'>Drew Doughty</span><span class='tier tier-3'>Tier 3</span></div>
-        <div class='preview-row'><span class='name'>+ 100 défenseurs dans le guide</span><span class='val'>→</span></div>
-      </div>
-      <!-- Gardiens -->
-      <div class='preview-card'>
-        <div class='preview-card-label'>🥅 Gardiens — Top 5</div>
-        <div class='preview-row'><span class='name'>Andrei Vasilevskiy</span><span class='tier tier-1'>Tier 1</span></div>
-        <div class='preview-row'><span class='name'>Connor Hellebuyck</span><span class='tier tier-1'>Tier 1</span></div>
-        <div class='preview-row'><span class='name'>Jake Oettinger</span><span class='tier tier-2'>Tier 2</span></div>
-        <div class='preview-row'><span class='name'>Ilya Sorokin</span><span class='tier tier-2'>Tier 2</span></div>
-        <div class='preview-row'><span class='name'>Juuse Saros</span><span class='tier tier-2'>Tier 2</span></div>
-        <div class='preview-row'><span class='name'>+ 60 gardiens dans le guide</span><span class='val'>→</span></div>
-      </div>
+    <div class='preview-grid' id='previewGrid'>
+      <div class='preview-card'><div class='preview-card-label'>⚡ Attaquants</div><div id='preview-fwd' class='preview-loading'>Chargement…</div></div>
+      <div class='preview-card'><div class='preview-card-label'>🛡️ Défenseurs</div><div id='preview-def' class='preview-loading'>Chargement…</div></div>
+      <div class='preview-card'><div class='preview-card-label'>🥅 Gardiens</div><div id='preview-g' class='preview-loading'>Chargement…</div></div>
     </div>
     <div class='preview-cta-wrap' style='text-align:center;'>
       <a href='https://buy.stripe.com/test_00wbJ1dXQ6vl58iew9b7y01' class='btn-cta' target='_blank'>Obtenir le guide complet — 5 $</a>
@@ -514,6 +486,71 @@ if (stickyCta && finalCta) {
     stickyCta.style.display = rect.top < window.innerHeight ? 'none' : '';
   }, { passive: true });
 }
+
+// Preview — load real data from Supabase
+(async function loadPreview() {
+  const SUPABASE_URL = 'https://fifurqlitkywtmhgtzeu.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpZnVycWxpdGt5d3RtaGd0emV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDIyMjQsImV4cCI6MjA5MjI3ODIyNH0.KPVPj1qwbSJJMyLR_-AhDcRs0vi2sUU6qbFQ-kH53C0';
+  const headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY };
+
+  const TIER_COLORS = {
+    '1': '#f5c842', '2': '#3b82f6', '3': '#8b5cf6',
+    '4': '#34d399', '5': '#38bdf8', '6': '#f472b6',
+    '7': '#fb923c', '8': '#94a3b8'
+  };
+
+  function tierNum(t) {
+    if (!t) return 99;
+    const m = String(t).match(/\d+/);
+    return m ? parseInt(m[0]) : 99;
+  }
+
+  function tierColor(t) {
+    return TIER_COLORS[String(tierNum(t))] || '#94a3b8';
+  }
+
+  function renderRows(players, moreCount, moreLabel) {
+    const rows = players.map(p => {
+      const tn = tierNum(p.tier);
+      const color = tierColor(p.tier);
+      const label = p.tier || ('Tier ' + tn);
+      return `<div class='preview-row'>
+        <span class='name'>${p.name}</span>
+        <span style='font-size:0.72em;font-weight:800;padding:2px 9px;border-radius:99px;background:${color}22;color:${color};border:1px solid ${color}55;'>${label}</span>
+      </div>`;
+    }).join('');
+    const more = `<div class='preview-row' style='border-bottom:none;opacity:0.45;font-size:0.8em;'>
+      <span>+ ${moreCount} ${moreLabel} dans le guide</span><span class='val'>→</span>
+    </div>`;
+    return rows + more;
+  }
+
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/poolers_players?select=name,pos,tier,rank&order=rank.asc&limit=200`,
+      { headers }
+    );
+    if (!res.ok) throw new Error('fetch failed');
+    const players = await res.json();
+
+    const fwd = players.filter(p => ['C','LW','RW'].includes(p.pos)).slice(0, 7);
+    const def = players.filter(p => p.pos === 'D').slice(0, 5);
+    const g   = players.filter(p => p.pos === 'G').slice(0, 5);
+
+    const totalFwd = players.filter(p => ['C','LW','RW'].includes(p.pos)).length;
+    const totalDef = players.filter(p => p.pos === 'D').length;
+    const totalG   = players.filter(p => p.pos === 'G').length;
+
+    document.getElementById('preview-fwd').innerHTML = renderRows(fwd, totalFwd - fwd.length, 'attaquants');
+    document.getElementById('preview-def').innerHTML = renderRows(def, totalDef - def.length, 'défenseurs');
+    document.getElementById('preview-g').innerHTML   = renderRows(g,   totalG   - g.length,   'gardiens');
+  } catch(e) {
+    ['preview-fwd','preview-def','preview-g'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '<span style="opacity:0.4;font-size:0.82em;">Aperçu non disponible</span>';
+    });
+  }
+})();
 </script>
 </body>
 </html>
