@@ -527,7 +527,7 @@ if (stickyCta && finalCta) {
 
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/poolers_players?select=name,pos,tier,rank&order=rank.asc&limit=200`,
+      `${SUPABASE_URL}/rest/v1/poolers_players?select=name,pos,tier,rank&order=rank.asc&limit=1000`,
       { headers }
     );
     if (!res.ok) throw new Error('fetch failed');
@@ -542,8 +542,12 @@ if (stickyCta && finalCta) {
     const totalG   = players.filter(p => p.pos === 'G').length;
 
     document.getElementById('preview-fwd').innerHTML = renderRows(fwd, totalFwd - fwd.length, 'attaquants');
-    document.getElementById('preview-def').innerHTML = renderRows(def, totalDef - def.length, 'défenseurs');
-    document.getElementById('preview-g').innerHTML   = renderRows(g,   totalG   - g.length,   'gardiens');
+    if (def.length > 0) {
+      document.getElementById('preview-def').innerHTML = renderRows(def, totalDef - def.length, 'défenseurs');
+    } else {
+      document.getElementById('preview-def').innerHTML = '<span style="opacity:0.45;font-size:0.82em;line-height:1.6;display:block;padding:8px 0;">Classement disponible<br>dans le guide complet.</span>';
+    }
+    document.getElementById('preview-g').innerHTML = renderRows(g, totalG - g.length, 'gardiens');
   } catch(e) {
     ['preview-fwd','preview-def','preview-g'].forEach(id => {
       const el = document.getElementById(id);
