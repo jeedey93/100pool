@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang='fr'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+<title>FAQ — Guide du Pooler 2026-27 — 100% Pool</title>
+<meta name='description' content='Questions fréquentes sur le Guide du Pooler 2026-2027. Accès, contenu, compatibilité mobile et plus.'>
+<link rel='icon' type='image/png' href='../100pool.jpg'>
+<link rel='apple-touch-icon' href='../100pool.jpg'>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { overflow-x: hidden; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f4f8; color: #1e293b; min-height: 100vh; }
+
+/* ── NAV ── */
+nav { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; height: 56px; display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); position: sticky; top: 0; z-index: 200; }
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; line-height: 1; }
+.nav-logo img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; vertical-align: middle; }
+.nav-logo span { color: white; font-weight: 800; font-size: 1.05em; vertical-align: middle; }
+.nav-links { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.nav-link { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.85em; font-weight: 600; padding: 7px 14px; border-radius: 8px; transition: all 0.2s; }
+.nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
+.nav-link.active { background: rgba(255,255,255,0.15); color: white; }
+.nav-btn { background: #f5c842; color: #1a3d10 !important; font-weight: 800; border-radius: 8px; }
+.nav-btn:hover { background: #f9d55a !important; }
+.nav-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; margin-left: auto; flex-direction: column; gap: 5px; align-items: center; justify-content: center; }
+.nav-hamburger span { display: block; width: 22px; height: 2px; background: white; border-radius: 2px; }
+.nav-mobile { display: none; position: absolute; top: 56px; left: 0; right: 0; background: linear-gradient(135deg, #1a5c28, #2d8a3e); border-top: 1px solid rgba(255,255,255,0.1); padding: 8px 16px 16px; flex-direction: column; gap: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.nav-mobile.open { display: flex; }
+.nav-mobile .nav-link { padding: 11px 14px; font-size: 0.95em; border-radius: 8px; }
+@media (max-width: 640px) {
+  nav { padding: 0 16px; position: relative; }
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+}
+
+/* ── HERO ── */
+.hero { background: linear-gradient(160deg, #163d1c 0%, #1e6b2e 40%, #2d8a3e 75%, #1a7a32 100%); text-align: center; padding: 56px 24px 64px; color: white; }
+.hero-eyebrow { display: inline-block; background: rgba(245,200,66,0.15); border: 1px solid rgba(245,200,66,0.35); color: #f5c842; font-size: 0.75em; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; padding: 6px 16px; border-radius: 20px; margin-bottom: 20px; }
+.hero h1 { font-size: clamp(1.8em, 4vw, 2.6em); font-weight: 900; letter-spacing: -0.5px; line-height: 1.15; margin-bottom: 16px; }
+.hero h1 span { color: #f5c842; }
+.hero-sub { color: rgba(255,255,255,0.7); font-size: 1em; max-width: 520px; margin: 0 auto; }
+
+/* ── FAQ ── */
+.faq-wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 80px; }
+.faq-item { background: white; border-radius: 16px; border: 1px solid #e8edf2; box-shadow: 0 2px 12px rgba(0,0,0,0.05); margin-bottom: 16px; overflow: hidden; }
+.faq-question { width: 100%; background: none; border: none; text-align: left; padding: 22px 24px; font-size: 1em; font-weight: 700; color: #0f172a; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 16px; line-height: 1.4; }
+.faq-question:hover { background: #f8fafc; }
+.faq-chevron { flex-shrink: 0; width: 20px; height: 20px; color: #2d8a3e; transition: transform 0.25s; }
+.faq-item.open .faq-chevron { transform: rotate(180deg); }
+.faq-answer { display: none; padding: 0 24px 24px; color: #475569; font-size: 0.95em; line-height: 1.75; border-top: 1px solid #f1f5f9; }
+.faq-item.open .faq-answer { display: block; }
+.faq-answer p { padding-top: 18px; }
+.faq-answer p + p { padding-top: 12px; }
+.faq-answer strong { color: #0f172a; }
+
+/* ── CTA FINAL ── */
+.final-cta { background: linear-gradient(160deg, #163d1c, #2d8a3e); text-align: center; padding: 64px 24px; color: white; }
+.final-cta h2 { font-size: clamp(1.5em, 3vw, 2em); font-weight: 900; margin-bottom: 12px; }
+.final-cta p { color: rgba(255,255,255,0.65); font-size: 0.95em; margin-bottom: 32px; }
+.btn-cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #f5c842; color: #1a3d10; font-weight: 800; font-size: 1.05em; padding: 17px 36px; border-radius: 12px; text-decoration: none; transition: all 0.2s; }
+.btn-cta:hover { background: #f9d55a; transform: translateY(-2px); box-shadow: 0 10px 28px rgba(0,0,0,0.18); }
+.trust-note { color: rgba(255,255,255,0.4); font-size: 0.78em; margin-top: 16px; }
+
+/* ── FOOTER ── */
+footer { background: #0f1f13; padding: 32px 24px; text-align: center; }
+.footer-logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; margin-bottom: 16px; }
+.footer-logo img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+.footer-logo span { color: white; font-weight: 800; font-size: 0.95em; }
+.footer-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 20px; }
+.footer-links a { color: rgba(255,255,255,0.4); text-decoration: none; font-size: 0.82em; transition: color 0.2s; }
+.footer-links a:hover { color: rgba(255,255,255,0.8); }
+.footer-copy { color: rgba(255,255,255,0.22); font-size: 0.74em; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href='../' class='nav-logo'>
+    <img src='../100pool.jpg' alt='100% Pool'>
+    <span>100% Pool</span>
+  </a>
+  <div class='nav-links'>
+    <a href='../' class='nav-link'>Accueil</a>
+    <a href='../guide-poolers/' class='nav-link'>Guide des poolers</a>
+    <a href='../podcast/' class='nav-link'>Podcast</a>
+    <a href='../faq/' class='nav-link active'>FAQ</a>
+    <a href='https://buy.stripe.com/test_00wbJ1dXQ6vl58iew9b7y01' class='nav-link nav-btn' target='_blank'>Obtenir le guide — 5 $</a>
+  </div>
+  <button class='nav-hamburger' onclick='toggleNav()' aria-label='Menu'>
+    <span></span><span></span><span></span>
+  </button>
+  <div class='nav-mobile' id='navMobile'>
+    <a href='../' class='nav-link'>Accueil</a>
+    <a href='../guide-poolers/' class='nav-link'>Guide des poolers</a>
+    <a href='../podcast/' class='nav-link'>Podcast</a>
+    <a href='../faq/' class='nav-link active'>FAQ</a>
+    <a href='https://buy.stripe.com/test_00wbJ1dXQ6vl58iew9b7y01' class='nav-link nav-btn' target='_blank'>Obtenir le guide — 5 $</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class='hero'>
+  <div class='hero-eyebrow'>Questions fréquentes</div>
+  <h1>FAQ — <span>Guide du Pooler</span><br>2026-2027</h1>
+  <p class='hero-sub'>Tout ce que tu dois savoir avant d'acheter.</p>
+</div>
+
+<!-- FAQ -->
+<div class='faq-wrap'>
+
+  <div class='faq-item open'>
+    <button class='faq-question' onclick='toggle(this)'>
+      1. Est-ce un abonnement?
+      <svg class='faq-chevron' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>
+    </button>
+    <div class='faq-answer'>
+      <p>Non. <strong>Le Guide du Pooler coûte 5 $ en paiement unique.</strong> Aucun abonnement mensuel et aucun renouvellement automatique. Tu paies une fois et tu as accès au guide pour toute la saison 2026-2027.</p>
+    </div>
+  </div>
+
+  <div class='faq-item'>
+    <button class='faq-question' onclick='toggle(this)'>
+      2. Qu'est-ce qui est inclus dans le Guide du Pooler?
+      <svg class='faq-chevron' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>
+    </button>
+    <div class='faq-answer'>
+      <p>Le guide regroupe notre classement de <strong>447 joueurs de la LNH</strong>, incluant les attaquants, les défenseurs et les gardiens.</p>
+      <p>Tu y retrouveras notamment nos <strong>projections 2026-2027, nos tiers, plusieurs statistiques pertinentes et nos indicateurs pour identifier les valeurs, les joueurs avec du upside, les sleepers et les choix plus risqués.</strong></p>
+      <p>L'objectif : t'aider à prendre de meilleures décisions avant et pendant ton repêchage.</p>
+    </div>
+  </div>
+
+  <div class='faq-item'>
+    <button class='faq-question' onclick='toggle(this)'>
+      3. Comment vais-je recevoir le guide après mon achat?
+      <svg class='faq-chevron' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>
+    </button>
+    <div class='faq-answer'>
+      <p>Après ton paiement, tu recevras un <strong>lien te donnant accès au Guide du Pooler</strong>.</p>
+      <p>Tu pourras ensuite l'ouvrir directement à partir de ton téléphone ou de ton ordinateur et le garder accessible pendant ton repêchage.</p>
+    </div>
+  </div>
+
+  <div class='faq-item'>
+    <button class='faq-question' onclick='toggle(this)'>
+      4. Puis-je utiliser le guide sur mon téléphone?
+      <svg class='faq-chevron' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>
+    </button>
+    <div class='faq-answer'>
+      <p>Oui. Le guide est accessible sur <strong>mobile et ordinateur</strong>, donc tu peux l'avoir ouvert directement à côté de toi pendant ton draft.</p>
+      <p>Pour une analyse plus détaillée et pour consulter plusieurs statistiques en même temps, l'expérience sur ordinateur demeure évidemment plus confortable.</p>
+    </div>
+  </div>
+
+  <div class='faq-item'>
+    <button class='faq-question' onclick='toggle(this)'>
+      5. Combien de temps ai-je accès au guide?
+      <svg class='faq-chevron' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>
+    </button>
+    <div class='faq-answer'>
+      <p>Ton accès est valide pour <strong>toute la saison 2026-2027</strong>.</p>
+      <p>Le lien d'accès demeure actif pendant un an, ce qui te permet de revenir consulter le guide après ton repêchage au besoin.</p>
+    </div>
+  </div>
+
+  <div class='faq-item'>
+    <button class='faq-question' onclick='toggle(this)'>
+      6. Est-ce que le guide convient à tous les types de pools?
+      <svg class='faq-chevron' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>
+    </button>
+    <div class='faq-answer'>
+      <p>Le guide a été conçu pour être utile dans la majorité des pools de hockey basés principalement sur la <strong>production offensive et les performances des joueurs</strong>.</p>
+      <p>Comme chaque pool possède ses propres règles et son propre système de pointage, nos rankings doivent servir comme <strong>outil d'aide à la décision</strong>, et non comme un classement universel applicable exactement de la même façon à tous les formats.</p>
+      <p>Plus ton pool accorde d'importance aux statistiques que nous analysons, plus le guide devient pertinent pour ton repêchage.</p>
+    </div>
+  </div>
+
+  <div class='faq-item'>
+    <button class='faq-question' onclick='toggle(this)'>
+      7. Quelle est la différence entre le guide et vos rankings présentés dans le podcast?
+      <svg class='faq-chevron' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>
+    </button>
+    <div class='faq-answer'>
+      <p>Dans le podcast, on explique nos choix, on débat des joueurs et on analyse les tendances.</p>
+      <p>Le Guide du Pooler est plutôt <strong>l'outil pratique qui rassemble tout au même endroit</strong>.</p>
+      <p>Tu peux donc écouter le podcast pour comprendre <strong>pourquoi</strong> on aime ou moins certains joueurs, puis utiliser le guide pendant ton draft pour rapidement retrouver les rankings, projections et informations dont tu as besoin.</p>
+      <p><strong>Le podcast explique. Le guide t'aide à drafter.</strong></p>
+    </div>
+  </div>
+
+  <div class='faq-item'>
+    <button class='faq-question' onclick='toggle(this)'>
+      8. Est-ce que le guide est utile même si je connais beaucoup le hockey?
+      <svg class='faq-chevron' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>
+    </button>
+    <div class='faq-answer'>
+      <p>Oui — et probablement encore plus.</p>
+      <p>Le but du guide n'est pas de simplement te dire que Connor McDavid est bon au hockey.</p>
+      <p>Il sert surtout à te permettre de <strong>comparer rapidement plusieurs joueurs, identifier des valeurs plus tard dans le draft, repérer du upside et éviter certains choix trop risqués.</strong></p>
+      <p>Même pour un pooler expérimenté, avoir toutes les informations regroupées au même endroit peut faire une grosse différence quand il reste 30 secondes avant ton prochain choix.</p>
+    </div>
+  </div>
+
+  <div class='faq-item'>
+    <button class='faq-question' onclick='toggle(this)'>
+      9. Est-ce que les rankings sont simplement basés sur les points de l'an dernier?
+      <svg class='faq-chevron' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>
+    </button>
+    <div class='faq-answer'>
+      <p>Non.</p>
+      <p>Nos rankings ne sont pas simplement une copie du classement des pointeurs de la saison précédente.</p>
+      <p>Nous analysons plusieurs éléments : <strong>production récente, rythme de points, rôle dans l'équipe, avantage numérique, tirs, historique, potentiel de progression, risque et contexte pour la saison 2026-2027.</strong></p>
+      <p>Le but est justement d'essayer d'identifier <strong>ce qui risque d'arriver cette saison</strong>, et non seulement ce qui est arrivé l'an dernier.</p>
+    </div>
+  </div>
+
+  <div class='faq-item'>
+    <button class='faq-question' onclick='toggle(this)'>
+      10. Pourquoi vendre le guide seulement 5 $?
+      <svg class='faq-chevron' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>
+    </button>
+    <div class='faq-answer'>
+      <p>Parce qu'on veut que le Guide du Pooler demeure <strong>accessible au plus grand nombre de poolers possible</strong>.</p>
+      <p>On a mis énormément d'heures dans les rankings, les projections et l'analyse des joueurs, mais notre objectif avec 100% Pool est aussi de bâtir une communauté et de rendre notre contenu accessible.</p>
+      <p>Pour <strong>5 $</strong>, tu obtiens notre travail de préparation regroupé dans un seul outil que tu peux garder ouvert pendant tout ton draft.</p>
+      <p>Une bonne sélection de plus grâce au guide… et ton 5 $ est déjà bien investi.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- FINAL CTA -->
+<div class='final-cta'>
+  <h2>Prêt à drafter comme un pro?</h2>
+  <p>447 joueurs analysés · Projections · Tiers · Sleepers · 5 $</p>
+  <a href='https://buy.stripe.com/test_00wbJ1dXQ6vl58iew9b7y01' class='btn-cta' target='_blank'>Obtenir mon guide — 5 $</a>
+  <p class='trust-note'>Paiement sécurisé via Stripe · Lien envoyé par courriel en quelques secondes</p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <a href='../' class='footer-logo'>
+    <img src='../100pool.jpg' alt='100% Pool'>
+    <span>100% Pool</span>
+  </a>
+  <div class='footer-links'>
+    <a href='../'>Accueil</a>
+    <a href='../guide-poolers/'>Guide des poolers</a>
+    <a href='../podcast/'>Podcast</a>
+    <a href='../faq/'>FAQ</a>
+  </div>
+  <p class='footer-copy'>© 2026 100% Pool. Tous droits réservés.</p>
+</footer>
+
+<script>
+function toggleNav() {
+  document.getElementById('navMobile').classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  if (!document.querySelector('nav').contains(e.target))
+    document.getElementById('navMobile').classList.remove('open');
+});
+
+function toggle(btn) {
+  const item = btn.closest('.faq-item');
+  item.classList.toggle('open');
+}
+</script>
+</body>
+</html>
