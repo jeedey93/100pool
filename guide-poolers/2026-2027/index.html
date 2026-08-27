@@ -361,6 +361,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 .scarcity-intro h2 { font-size: 1.1em; font-weight: 800; color: #1e293b; margin-bottom: 6px; }
 .scarcity-intro p  { font-size: 0.88em; color: #64748b; line-height: 1.6; }
 .scarcity-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+@media (max-width: 700px) { .scarcity-row { grid-template-columns: 1fr !important; } }
 .scarcity-card { background: white; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden; }
 .scarcity-card-header { padding: 14px 18px 10px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f1f5f9; }
 .scarcity-pos { font-size: 1em; font-weight: 900; padding: 4px 12px; border-radius: 8px; }
@@ -1462,9 +1463,15 @@ function renderScarcity() {
         <h2>📊 Guide de rareté par position</h2>
         <p>Combien de joueurs Tier 1–3 existent à chaque position. Utilisez ceci pour planifier quand repêcher — les positions avec peu d'options premium nécessitent des choix plus tôt.</p>
       </div>
-      <div class='scarcity-grid' style='grid-template-columns:repeat(auto-fill,minmax(260px,1fr));'>
+      <div class='scarcity-row' style='display:grid;grid-template-columns:repeat(3,1fr);gap:16px;'>
         ${buildCard('FWD', true)}
-        ${POSITIONS.map(pos => buildCard(pos, false)).join('')}
+        ${buildCard('D', false)}
+        ${buildCard('G', false)}
+      </div>
+      <div class='scarcity-row' style='display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px;'>
+        ${buildCard('C', false)}
+        ${buildCard('LW', false)}
+        ${buildCard('RW', false)}
       </div>
     </div>`;
 }
