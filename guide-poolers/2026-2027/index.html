@@ -706,7 +706,9 @@ async function validateToken(token) {
 }
 
 async function checkAccess() {
-  if (IS_DEMO) return; // mode démo public — pas de validation
+  if (IS_DEMO) return;
+  // Mot de passe maître
+  if (localStorage.getItem('pool_pw') === '1') return;
   const urlToken = new URLSearchParams(location.search).get('token');
   if (urlToken) {
     const valid = await validateToken(urlToken);
@@ -721,6 +723,12 @@ async function checkAccess() {
     const valid = await validateToken(stored);
     if (valid) return;
     localStorage.removeItem('pool_token');
+  }
+  // Demander le mot de passe
+  const pw = prompt('Mot de passe requis :');
+  if (pw === '100%poolpodcast') {
+    localStorage.setItem('pool_pw', '1');
+    return;
   }
   location.href = '/guide-poolers/?acces=requis';
 }
