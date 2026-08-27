@@ -573,6 +573,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
             <label><input type='checkbox' id='col-trend' checked onchange='applyColVis()'> Tendance</label>
             <label><input type='checkbox' id='col-value' checked onchange='applyColVis()'> Efficacité (PTS÷√AAV)</label>
             <label><input type='checkbox' id='col-risk' checked onchange='applyColVis()'> 🔴 Niveau de risque</label>
+            <label><input type='checkbox' id='col-injury' checked onchange='applyColVis()'> 🩹 Blessures / Risque santé</label>
           </div>
         </div>
         <button class='ctrl-btn btn-primary' onclick='window.print()'>🖨 Imprimer</button>
@@ -880,6 +881,7 @@ const COL_GROUPS = {
   'col-trend':   ['cg-trend'],
   'col-value':   ['cg-value'],
   'col-risk':    ['cg-risk'],
+  'col-injury':  ['cg-injury'],
 };
 
 function applyColVis() {
@@ -1061,6 +1063,7 @@ function goalieHeaderHTML() {
     <th onclick='sortGoalieBy("aav")'         data-col='aav'  class='cg-salary'>💰 AAV<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("tier")'        data-col='tier' class='cg-tier'>Palier<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("risk")'        data-col='risk' class='cg-risk'>Risque<span class='sort-icon'></span></th>
+    <th data-col='injury' class='cg-injury'>🩹<span class='sort-icon'></span></th>
   </tr>`;
 }
 
@@ -1094,6 +1097,7 @@ function skaterHeaderHTML() {
     <th onclick='sortBy("_trend")'  data-col='_trend'   class='cg-trend'>Tendance<span class='sort-icon'></span></th>
     <th onclick='sortBy("_pv")'     data-col='_pv'      class='cg-value'>Efficacité<span class='sort-icon'></span></th>
     <th onclick='sortBy("risk")'    data-col='risk'     class='cg-risk'>Risque<span class='sort-icon'></span></th>
+    <th data-col='injury' class='cg-injury'>🩹<span class='sort-icon'></span></th>
   </tr>`;
 }
 
@@ -1123,9 +1127,9 @@ function buildRowHTML(p, displayRank) {
     const projPtsDisplay = p.proj_pts ?? '—';
 
     return `<tr class='${tierRowClass(p.tier)}'>
-      <td>${displayRank ?? p.rank}</td>
+      <td>${displayRank}</td>
       <td>
-        <div class='player-name' onclick='openModal(${p.id})'>${p.name}${bandaid}</div>
+        <div class='player-name' onclick='openModal(${p.id})'>${p.name}</div>
         ${noteEsc ? `<div class='notes-display' title="${noteFull}">${noteEsc}</div>` : ''}
         ${bustHtml}
       </td>
@@ -1164,6 +1168,7 @@ function buildRowHTML(p, displayRank) {
         ${pv !== null ? `<div class='pv-track'><div class='pv-fill' style='width:${Math.min(100, Math.round((pv/_effMax)*100))}%'></div></div>` : ''}
       </div></td>
       <td class='cg-risk'>${riskHtml}</td>
+      <td class='cg-injury' style='text-align:center;font-size:1em;'>${bandaid || '—'}</td>
     </tr>`;
 }
 
@@ -1179,9 +1184,6 @@ function renderAll() {
   const skaters = filtered.filter(p => p.pos !== 'G');
   const goalies  = filtered.filter(p => p.pos === 'G');
 
-  // Use position rank (1-based within the filtered list) when a pos filter is active; global rank otherwise
-  const useLocalRank = !!posFilter;
-
   document.getElementById('resultsCount').textContent = filtered.length + ' joueurs';
 
   // ── Skater table ──
@@ -1192,7 +1194,7 @@ function renderAll() {
     if (!skaters.length) {
       tbody.innerHTML = '<tr><td colspan="21"><div class="empty-state"><div class="icon">🔍</div>Aucun joueur ne correspond à vos filtres.</div></td></tr>';
     } else {
-      tbody.innerHTML = skaters.map((p, i) => buildRowHTML(p, useLocalRank ? i + 1 : null)).join('');
+      tbody.innerHTML = skaters.map((p, i) => buildRowHTML(p, i + 1)).join('');
     }
   }
 
@@ -1242,7 +1244,7 @@ function renderCards(filtered) {
     container.innerHTML = '<div class="empty-state"><div class="icon">🔍</div>Aucun joueur ne correspond à vos filtres.</div>';
     return;
   }
-  container.innerHTML = filtered.map(p => {
+  container.innerHTML = filtered.map((p, i) => {
     const trend    = getTrend(p);
     const diff     = p.proj_pts - (p.last_pts || p.proj_pts);
     const diffStr  = diff > 0 ? '+' + diff : '' + diff;
@@ -1282,7 +1284,7 @@ function renderCards(filtered) {
       </div>`;
     return `<div class='player-card ${tierClass(p.tier)}'>
       <div class='card-header'>
-        <span class='card-rank'>${p.rank}</span>
+        <span class='card-rank'>${i + 1}</span>
         <div>
           <div class='card-name'>${p.name}</div>
           ${p.notes ? `<div class='card-note'>${p.notes}</div>` : ''}
@@ -1347,13 +1349,13 @@ function renderBusts() {
     grid.innerHTML = '<div class="empty-state"><div class="icon">💣</div>Aucune alerte déception pour l\'instant.</div>';
     return;
   }
-  grid.innerHTML = busts.map(p => {
+  grid.innerHTML = busts.map((p, i) => {
     const trend = getTrend(p);
     const diff  = p.proj_pts - (p.last_pts || p.proj_pts);
     const diffStr = diff > 0 ? '+' + diff : '' + diff;
     const trendLbl = trend === 'up' ? `↑ ${diffStr}` : trend === 'down' ? `↓ ${diffStr}` : `→ ${diffStr}`;
     return `<div class='sleeper-card' style='border-color:#fda4af;background:#fff1f2' onclick='openModal(${p.id})'>
-      <div class='sleeper-rank' style='color:#be123c'>💣 Alerte déception — Rang #${p.rank}</div>
+      <div class='sleeper-rank' style='color:#be123c'>💣 Alerte déception — #${i + 1}</div>
       <div class='sleeper-name'>${p.name}</div>
       <div class='sleeper-meta'>${p.team} · ${p.pos} · Âge ${p.age ?? 'N/A'}${p.aav ? ' · ' + p.aav + 'M$' : ''}</div>
       <div class='sleeper-stats'>
@@ -1611,10 +1613,10 @@ function switchTab(name, btn) {
 // ── CSV EXPORT ────────────────────────────────────────────
 function downloadCSV() {
   const headers = ['Rang','Joueur','Équipe','Pos','Âge','MJ Dern.','B Dern.','A Dern.','PTS Dern.','PPM Dern.','MJ Proj.','B Proj.','A Proj.','PTS Proj.','PPM Proj.','Plafond','AAV','PP%','Palier','Tendance','Efficacité','Notes'];
-  const rows = sorted(getFiltered()).map(p => {
+  const rows = sorted(getFiltered()).map((p, i) => {
     const trend = getTrend(p);
     const diff  = p.proj_pts - (p.last_pts || p.proj_pts);
-    return [p.rank, p.name, p.team, p.pos, p.age,
+    return [i + 1, p.name, p.team, p.pos, p.age,
       p.last_gp??'', p.last_g??'', p.last_a??'', p.last_pts??'', ppg(p.last_pts, p.last_gp),
       p.proj_gp, p.proj_g, p.proj_a, p.proj_pts, ppg(p.proj_pts, p.proj_gp),
       p.upside ?? '',
