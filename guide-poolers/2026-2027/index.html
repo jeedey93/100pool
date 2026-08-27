@@ -949,6 +949,7 @@ function sorted(players) {
     if (sortCol === '_goalie_gaa') return getGoalieStats(p).gaa ?? 99;
     if (sortCol === '_goalie_svp') return getGoalieStats(p).svp ?? 0;
     if (sortCol === 'tier') return parseInt(tierNum(p.tier)) || 99;
+    if (sortCol === 'risk') return p.risk === 'Low' ? 1 : p.risk === 'Medium' ? 2 : 3;
     return p[sortCol];
   };
   return [...players].sort((a, b) => {
@@ -968,6 +969,7 @@ function sortedGoalies(players) {
     if (goalieSortCol === '_goalie_gaa') return getGoalieStats(p).gaa ?? 99;
     if (goalieSortCol === '_goalie_svp') return getGoalieStats(p).svp ?? 0;
     if (goalieSortCol === '_pv')         return getPV(p) ?? 0;
+    if (goalieSortCol === 'risk') return p.risk === 'Low' ? 1 : p.risk === 'Medium' ? 2 : 3;
     return p[goalieSortCol];
   };
   return [...players].sort((a, b) => {
