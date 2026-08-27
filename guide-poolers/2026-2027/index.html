@@ -967,6 +967,7 @@ function sortedGoalies(players) {
     if (goalieSortCol === '_goalie_otl') return getGoalieStats(p).otl ?? 0;
     if (goalieSortCol === '_goalie_gaa') return getGoalieStats(p).gaa ?? 99;
     if (goalieSortCol === '_goalie_svp') return getGoalieStats(p).svp ?? 0;
+    if (goalieSortCol === '_pv')         return getPV(p) ?? 0;
     return p[goalieSortCol];
   };
   return [...players].sort((a, b) => {
@@ -1045,7 +1046,7 @@ function goalieHeaderHTML() {
   <tr class='group-row'>
     <th colspan='5' style='background:#f1f5f9;'></th>
     <th colspan='7' class='col-group-proj'>🥅 PROJECTION 2026-27</th>
-    <th colspan='3' style='background:#f1f5f9;'></th>
+    <th colspan='4' style='background:#f1f5f9;'></th>
   </tr>
   <tr class='col-row'>
     <th onclick='sortGoalieBy("rank")'        data-col='rank'>#<span class='sort-icon'></span></th>
@@ -1062,10 +1063,10 @@ function goalieHeaderHTML() {
     <th onclick='sortGoalieBy("proj_a")'      data-col='proj_a'  class='col-group-proj' style='border-right:2px solid #bbf7d0;color:#15803d;'>SO<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("aav")'         data-col='aav'  class='cg-salary'>💰 AAV<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("tier")'        data-col='tier' class='cg-tier'>Palier<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("_pv")'         data-col='_pv'  class='cg-value'>Efficacité<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("risk")'        data-col='risk' class='cg-risk'>Risque<span class='sort-icon'></span></th>
     <th data-col='injury' class='cg-injury'>🩹<span class='sort-icon'></span></th>
-  </tr>`;
-}
+  </tr>`;}
 
 function skaterHeaderHTML() {
   return `
