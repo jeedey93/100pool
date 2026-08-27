@@ -950,6 +950,7 @@ function sorted(players) {
     if (sortCol === '_goalie_svp') return getGoalieStats(p).svp ?? 0;
     if (sortCol === 'tier') return parseInt(tierNum(p.tier)) || 99;
     if (sortCol === 'risk') return p.risk === 'Low' ? 1 : p.risk === 'Medium' ? 2 : 3;
+    if (sortCol === 'injury') return p.bandaid ? 1 : 0;
     return p[sortCol];
   };
   return [...players].sort((a, b) => {
@@ -970,6 +971,7 @@ function sortedGoalies(players) {
     if (goalieSortCol === '_goalie_svp') return getGoalieStats(p).svp ?? 0;
     if (goalieSortCol === '_pv')         return getPV(p) ?? 0;
     if (goalieSortCol === 'risk') return p.risk === 'Low' ? 1 : p.risk === 'Medium' ? 2 : 3;
+    if (goalieSortCol === 'injury') return p.bandaid ? 1 : 0;
     return p[goalieSortCol];
   };
   return [...players].sort((a, b) => {
@@ -1067,7 +1069,7 @@ function goalieHeaderHTML() {
     <th onclick='sortGoalieBy("tier")'        data-col='tier' class='cg-tier'>Palier<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("_pv")'         data-col='_pv'  class='cg-value'>Efficacité<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("risk")'        data-col='risk' class='cg-risk'>Risque<span class='sort-icon'></span></th>
-    <th data-col='injury' class='cg-injury'>🩹<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("injury")' data-col='injury' class='cg-injury'>🩹<span class='sort-icon'></span></th>
   </tr>`;}
 
 function skaterHeaderHTML() {
@@ -1100,7 +1102,7 @@ function skaterHeaderHTML() {
     <th onclick='sortBy("_trend")'  data-col='_trend'   class='cg-trend'>Tendance<span class='sort-icon'></span></th>
     <th onclick='sortBy("_pv")'     data-col='_pv'      class='cg-value'>Efficacité<span class='sort-icon'></span></th>
     <th onclick='sortBy("risk")'    data-col='risk'     class='cg-risk'>Risque<span class='sort-icon'></span></th>
-    <th data-col='injury' class='cg-injury'>🩹<span class='sort-icon'></span></th>
+    <th onclick='sortBy("injury")'    data-col='injury'   class='cg-injury'>🩹<span class='sort-icon'></span></th>
   </tr>`;
 }
 
