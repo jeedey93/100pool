@@ -667,8 +667,8 @@ document.addEventListener('click', function(e) {
     document.getElementById('navMobile').classList.remove('open');
 });
 let allPlayers = [];
-let sortCol = 'rank';
-let sortDir = 'asc';
+let sortCol = 'proj_pts';
+let sortDir = 'desc';
 let goalieSortCol = 'proj_g';
 let goalieSortDir = 'desc';
 
@@ -767,7 +767,7 @@ async function checkAccess() {
 
 // ── INIT ─────────────────────────────────────────────────
 async function init() {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/poolers_players?order=rank.asc&select=*`, { headers: SB_HEADERS });
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/poolers_players?order=proj_pts.desc&select=*`, { headers: SB_HEADERS });
   let players = await res.json();
   if (IS_DEMO) {
     players = players.slice(0, 20);
@@ -1189,7 +1189,7 @@ function renderAll() {
   // ── Skater table ──
   if (showSkaterTable) {
     document.getElementById('playerThead').innerHTML = skaterHeaderHTML();
-    document.querySelector('#playerTable thead th[data-col="rank"]').classList.add('sorted-asc');
+    document.querySelector('#playerTable thead th[data-col="proj_pts"]').classList.add('sorted-desc');
     const tbody = document.getElementById('playerTbody');
     if (!skaters.length) {
       tbody.innerHTML = '<tr><td colspan="21"><div class="empty-state"><div class="icon">🔍</div>Aucun joueur ne correspond à vos filtres.</div></td></tr>';
