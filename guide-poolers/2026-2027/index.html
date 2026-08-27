@@ -1116,7 +1116,7 @@ function buildRowHTML(p, displayRank) {
     const ppPct    = p.pp_pct != null ? p.pp_pct + '%' : '—';
     const riskHtml = p.risk ? `<span class='risk risk-${p.risk}'>${p.risk === 'Low' ? '🟢' : p.risk === 'Medium' ? '🟡' : '🔴'} ${p.risk === 'Low' ? 'Faible' : p.risk === 'Medium' ? 'Moyen' : 'Élevé'}</span>` : '—';
     const bustHtml = p.bust_alert ? `<span class='bust'>💣 Déception</span>` : '';
-    const bandaid  = p.risk === 'High' ? '🔴' : p.risk === 'Medium' ? '🟡' : '';
+    const bandaid  = p.bandaid ? '🩹' : '';
     const ageClass = p.age <= 22 ? 'age-young' : p.age >= 32 ? 'age-old' : '';
     const isGoalie  = p.pos === 'G';
     const gs        = isGoalie ? getGoalieStats(p) : {};
