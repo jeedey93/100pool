@@ -300,16 +300,19 @@ footer p { color: rgba(255,255,255,0.25); font-size: 0.74em; }
     <div class='section-eyebrow'>Aperçu du guide</div>
     <div class='section-title'>Voici ce que tu obtiens</div>
     <div class='section-sub'>Chaque joueur classé, analysé, et prêt à être filtré. Voici un extrait du vrai guide — les acheteurs voient les 447 joueurs complets.</div>
-    <div class='demo-wrap' style='height:520px;'>
+    <div class='demo-wrap' style='height:auto;'>
       <div class='demo-toolbar'>
         <div class='demo-dot' style='background:#f87171'></div>
         <div class='demo-dot' style='background:#fbbf24'></div>
         <div class='demo-dot' style='background:#34d399'></div>
         <span class='demo-toolbar-label'>100pool.ca / guide 2026-27</span>
       </div>
-      <iframe src='/guide-poolers/2026-2027?demo=1' style='width:100%;height:calc(100% - 42px);border:none;display:block;' title='Aperçu du guide des poolers' scrolling='yes'></iframe>
-      <div class='demo-overlay'>
-        <a href='https://buy.stripe.com/test_00wbJ1dXQ6vl58iew9b7y01' class='demo-overlay-btn' target='_blank'>Obtenir l'accès complet — 5 $</a>
+      <div style='position:relative;overflow:hidden;'>
+        <img src='guide-screenshot.png' alt='Aperçu du guide des poolers 2026-27' style='width:100%;display:block;'>
+        <div style='position:absolute;bottom:0;left:0;right:0;height:38%;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);background:rgba(255,255,255,0.15);'></div>
+        <div style='position:absolute;bottom:0;left:0;right:0;height:22%;background:linear-gradient(to top,white 35%,transparent);display:flex;align-items:flex-end;justify-content:center;padding-bottom:20px;'>
+          <a href='https://buy.stripe.com/test_00wbJ1dXQ6vl58iew9b7y01' class='demo-overlay-btn' target='_blank'>Voir les 447 joueurs — 5 $</a>
+        </div>
       </div>
     </div>
   </div>
