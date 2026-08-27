@@ -67,16 +67,19 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
 .tab-pane.active { display: block; }
 
 /* ── CONTROLS ── */
-.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; background: white; border-radius: 12px; padding: 12px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-.search-box { flex: 1; min-width: 160px; max-width: 220px; position: relative; }
-.search-box input { width: 100%; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; color: #1e293b; padding: 7px 10px 7px 30px; font-size: 0.85em; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+.controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; background: white; border-radius: 14px; padding: 14px 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); border: 1px solid #e8edf2; }
+.controls-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.controls-row + .controls-row { padding-top: 10px; border-top: 1px solid #f1f5f9; }
+.search-box { flex: 1; min-width: 180px; max-width: 260px; position: relative; }
+.search-box input { width: 100%; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 9px; color: #1e293b; padding: 8px 10px 8px 32px; font-size: 0.88em; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
 .search-box input:focus { border-color: #2d8a3e; box-shadow: 0 0 0 3px rgba(45,138,62,0.15); background: white; }
-.search-box::before { content: '🔍'; position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-size: 0.8em; pointer-events: none; }
+.search-box::before { content: '🔍'; position: absolute; left: 9px; top: 50%; transform: translateY(-50%); font-size: 0.82em; pointer-events: none; }
 .results-count { color: #94a3b8; font-size: 0.78em; white-space: nowrap; }
 .ctrl-btn { background: white; border: 1px solid #e2e8f0; border-radius: 8px; color: #64748b; padding: 7px 12px; font-size: 0.82em; font-weight: 600; cursor: pointer; white-space: nowrap; transition: color 0.2s, border-color 0.2s; }
 .ctrl-btn:hover { color: #1e293b; border-color: #cbd5e1; }
 .ctrl-btn.btn-primary { background: #2d8a3e; color: white; border-color: #2d8a3e; }
 .ctrl-btn.btn-primary:hover { background: #1a5c28; }
+.filter-divider { width: 1px; height: 20px; background: #e2e8f0; flex-shrink: 0; }
 
 /* ── FILTER PILLS ── */
 .filter-group { display: flex; gap: 4px; flex-wrap: nowrap; align-items: center; }
@@ -330,8 +333,10 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   .page-header { padding: 20px 16px; border-radius: 10px; }
   .page-header h1 { font-size: 1.15em; }
   /* controls */
-  .controls { gap: 6px; }
-  .search-box { width: 100%; min-width: unset; flex: unset; }
+  .controls { gap: 8px; }
+  .controls-row { gap: 6px; }
+  .filter-divider { display: none; }
+  .search-box { width: 100%; min-width: unset; flex: unset; max-width: unset; }
   .search-box input { font-size: 16px; }
   .filter-select { font-size: 16px; padding: 7px 8px; }
   .ctrl-btn { font-size: 0.82em; padding: 7px 10px; }
@@ -523,60 +528,64 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   <!-- TAB: ALL PLAYERS -->
   <div id='tab-all' class='tab-pane active'>
     <div class='controls'>
-      <!-- Search -->
-      <div class='search-box'>
-        <input type='text' id='searchInput' placeholder='Rechercher un joueur…' oninput='applyFilters()'>
-      </div>
-      <span class='results-count' id='resultsCount'></span>
-
-      <!-- Position -->
-      <div class='filter-group'>
-        <span class='filter-label'>Pos</span>
-        <button class='pill active' data-filter='pos' data-value='' onclick='setPill(this,"pos")'>Tous</button>
-        <button class='pill' data-filter='pos' data-value='F' onclick='setPill(this,"pos")'>F</button>
-        <button class='pill' data-filter='pos' data-value='D' onclick='setPill(this,"pos")'>D</button>
-        <button class='pill' data-filter='pos' data-value='G' onclick='setPill(this,"pos")'>G</button>
-      </div>
-
-      <!-- Tier -->
-      <div class='filter-group' id='tierPills'>
-        <span class='filter-label'>Palier</span>
-        <button class='pill active' data-filter='tier' data-value='' onclick='setPill(this,"tier")'>Tous</button>
-      </div>
-
-      <!-- Team popover -->
-      <div class='team-popover-wrap' id='teamPopoverWrap'>
-        <button class='pill' id='teamBtn' onclick='toggleTeamPopover(event)'>Équipe ▾</button>
-        <div class='team-popover' id='teamPopover'></div>
-      </div>
-
-      <!-- Risk -->
-      <div class='filter-group'>
-        <span class='filter-label'>Risque</span>
-        <button class='pill active' data-filter='risk' data-value='' onclick='setPill(this,"risk")'>Tous</button>
-        <button class='pill' data-filter='risk' data-value='Low' onclick='setPill(this,"risk")'>🟢 Faible</button>
-        <button class='pill' data-filter='risk' data-value='Medium' onclick='setPill(this,"risk")'>🟡 Moy.</button>
-        <button class='pill' data-filter='risk' data-value='High' onclick='setPill(this,"risk")'>🔴 Élevé</button>
-      </div>
-
-      <!-- Actions -->
-      <div style='margin-left:auto;display:flex;gap:6px;align-items:center;'>
-        <div class='col-toggle-wrap'>
-          <button class='ctrl-btn' onclick='toggleColMenu(event)'>⚙ Colonnes</button>
-          <div class='col-toggle-menu' id='colMenu'>
-            <div class='menu-title'>Afficher / Masquer</div>
-            <label><input type='checkbox' id='col-last' onchange='applyColVis()'> 📅 Stats saison dernière</label>
-            <label><input type='checkbox' id='col-ppg' checked onchange='applyColVis()'> PPG (pts/partie)</label>
-            <label><input type='checkbox' id='col-salary' checked onchange='applyColVis()'> 💰 Salaire (AAV)</label>
-            <label><input type='checkbox' id='col-pp' onchange='applyColVis()'> PP% (points avantage numérique)</label>
-            <label><input type='checkbox' id='col-tier' checked onchange='applyColVis()'> Palier</label>
-            <label><input type='checkbox' id='col-trend' checked onchange='applyColVis()'> Tendance</label>
-            <label><input type='checkbox' id='col-value' checked onchange='applyColVis()'> Efficacité (PTS÷√AAV)</label>
-            <label><input type='checkbox' id='col-risk' checked onchange='applyColVis()'> 🔴 Niveau de risque</label>
-            <label><input type='checkbox' id='col-injury' checked onchange='applyColVis()'> 🩹 Blessures / Risque santé</label>
-          </div>
+      <!-- Row 1: Search + Position + Équipe + Actions -->
+      <div class='controls-row'>
+        <div class='search-box'>
+          <input type='text' id='searchInput' placeholder='Rechercher un joueur…' oninput='applyFilters()'>
         </div>
-        <button class='ctrl-btn btn-primary' onclick='window.print()'>🖨 Imprimer</button>
+        <span class='results-count' id='resultsCount'></span>
+        <div class='filter-divider'></div>
+        <!-- Position -->
+        <div class='filter-group'>
+          <span class='filter-label'>Pos</span>
+          <button class='pill active' data-filter='pos' data-value='' onclick='setPill(this,"pos")'>Tous</button>
+          <button class='pill' data-filter='pos' data-value='F' onclick='setPill(this,"pos")'>F</button>
+          <button class='pill' data-filter='pos' data-value='D' onclick='setPill(this,"pos")'>D</button>
+          <button class='pill' data-filter='pos' data-value='G' onclick='setPill(this,"pos")'>G</button>
+        </div>
+        <div class='filter-divider'></div>
+        <!-- Team popover -->
+        <div class='team-popover-wrap' id='teamPopoverWrap'>
+          <button class='pill' id='teamBtn' onclick='toggleTeamPopover(event)'>Équipe ▾</button>
+          <div class='team-popover' id='teamPopover'></div>
+        </div>
+        <!-- Actions -->
+        <div style='margin-left:auto;display:flex;gap:6px;align-items:center;'>
+          <div class='col-toggle-wrap'>
+            <button class='ctrl-btn' onclick='toggleColMenu(event)'>⚙ Colonnes</button>
+            <div class='col-toggle-menu' id='colMenu'>
+              <div class='menu-title'>Afficher / Masquer</div>
+              <label><input type='checkbox' id='col-last' onchange='applyColVis()'> 📅 Stats saison dernière</label>
+              <label><input type='checkbox' id='col-ppg' checked onchange='applyColVis()'> PPG (pts/partie)</label>
+              <label><input type='checkbox' id='col-salary' checked onchange='applyColVis()'> 💰 Salaire (AAV)</label>
+              <label><input type='checkbox' id='col-pp' onchange='applyColVis()'> PP% (points avantage numérique)</label>
+              <label><input type='checkbox' id='col-tier' checked onchange='applyColVis()'> Palier</label>
+              <label><input type='checkbox' id='col-trend' checked onchange='applyColVis()'> Tendance</label>
+              <label><input type='checkbox' id='col-value' checked onchange='applyColVis()'> Efficacité (PTS÷√AAV)</label>
+              <label><input type='checkbox' id='col-risk' checked onchange='applyColVis()'> 🔴 Niveau de risque</label>
+              <label><input type='checkbox' id='col-injury' checked onchange='applyColVis()'> 🩹 Blessures / Risque santé</label>
+            </div>
+          </div>
+          <button class='ctrl-btn btn-primary' onclick='window.print()'>🖨 Imprimer</button>
+        </div>
+      </div>
+
+      <!-- Row 2: Tier + Risk -->
+      <div class='controls-row'>
+        <!-- Tier -->
+        <div class='filter-group' id='tierPills'>
+          <span class='filter-label'>Palier</span>
+          <button class='pill active' data-filter='tier' data-value='' onclick='setPill(this,"tier")'>Tous</button>
+        </div>
+        <div class='filter-divider'></div>
+        <!-- Risk -->
+        <div class='filter-group'>
+          <span class='filter-label'>Risque</span>
+          <button class='pill active' data-filter='risk' data-value='' onclick='setPill(this,"risk")'>Tous</button>
+          <button class='pill' data-filter='risk' data-value='Low' onclick='setPill(this,"risk")'>🟢 Faible</button>
+          <button class='pill' data-filter='risk' data-value='Medium' onclick='setPill(this,"risk")'>🟡 Moyen</button>
+          <button class='pill' data-filter='risk' data-value='High' onclick='setPill(this,"risk")'>🔴 Élevé</button>
+        </div>
       </div>
     </div>
     <div class='table-wrap'>
