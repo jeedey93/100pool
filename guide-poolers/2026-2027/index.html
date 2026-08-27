@@ -1437,7 +1437,7 @@ function renderRegression() {
 
 function renderScarcity() {
   const POSITIONS = ['C', 'LW', 'RW', 'D', 'G'];
-  const POS_LABEL = { C: 'Centre', LW: 'Ailier gauche', RW: 'Ailier droit', D: 'Défenseur', G: 'Gardien', FWD: 'Attaquants combinés (C+LW+RW)' };
+  const POS_LABEL = { C: 'Centre', LW: 'Ailier gauche', RW: 'Ailier droit', D: 'Défenseur', G: 'Gardien', FWD: 'Attaquants' };
 
   // Group by position, then by tier number
   const counts = {};
@@ -1463,7 +1463,7 @@ function renderScarcity() {
 
   function cliffMsg(pos) {
     const t1 = t1Count(pos), prem = premiumCount(pos);
-    if (pos === 'FWD') return `<strong>Tous les avants :</strong> ${prem} options Tier 1–3 au total — C, LW et RW combinés.`;
+    if (pos === 'FWD') return `<strong>Attaquants :</strong> ${prem} options Tier 1–3 au total.`;
     if (pos === 'D') {
       if (t1 <= 3) return `<strong>⚠️ Critique :</strong> Seulement ${t1} défenseur Tier 1 dans tout le guide. Ne pas attendre après la ronde 3.`;
       if (prem <= 8) return `<strong>À noter :</strong> Seulement ${prem} défenseurs Tier 1–3. La profondeur chute rapidement.`;
