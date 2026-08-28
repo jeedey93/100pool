@@ -298,8 +298,12 @@ footer p { color: rgba(255,255,255,0.25); font-size: 0.74em; }
   <div class='section'>
     <div class='section-eyebrow'>Aperçu du guide</div>
     <div class='section-title'>Voici ce que tu obtiens</div>
-    <div class='section-sub'>Chaque joueur classé, analysé, et prêt à être filtré. Voici un extrait du vrai guide — les acheteurs voient les 447 joueurs complets.</div>
-    <div class='demo-wrap' style='height:auto;'>
+    <div class='section-sub'>Chaque joueur classé, analysé, et prêt à être filtré. Clique sur un joueur pour voir sa fiche complète — historique NHL, tendance, tier et rapport de dépistage.</div>
+    <div style='display:flex;gap:8px;margin-top:24px;margin-bottom:16px;'>
+      <button id='hp-tab-liste' onclick='switchHpPreview("liste")' style='padding:8px 18px;border-radius:8px;border:1.5px solid #1a5c28;background:#1a5c28;color:white;font-weight:700;font-size:0.85em;cursor:pointer;'>Liste des joueurs</button>
+      <button id='hp-tab-fiche' onclick='switchHpPreview("fiche")' style='padding:8px 18px;border-radius:8px;border:1.5px solid #e2e8f0;background:white;color:#64748b;font-weight:700;font-size:0.85em;cursor:pointer;'>Fiche joueur</button>
+    </div>
+    <div id='hp-preview-liste' class='demo-wrap' style='height:auto;'>
       <div class='demo-toolbar'>
         <div class='demo-dot' style='background:#f87171'></div>
         <div class='demo-dot' style='background:#fbbf24'></div>
@@ -314,20 +318,25 @@ footer p { color: rgba(255,255,255,0.25); font-size: 0.74em; }
         </div>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- APERÇU FICHE JOUEUR -->
-<div style='background:#f8fafc;padding:48px 0 56px;'>
-  <div class='section' style='max-width:900px;'>
-    <div class='section-eyebrow'>Fiche joueur</div>
-    <h2 class='section-title' style='margin-bottom:10px;'>Une fiche complète pour chaque joueur</h2>
-    <p class='section-sub' style='margin-bottom:32px;'>Historique NHL des 5 dernières saisons, tendance, tier, valeur contractuelle et rapport de dépistage — tout en un clic.</p>
-    <div class='demo-window' style='box-shadow:0 20px 60px rgba(0,0,0,0.12);border-radius:16px;overflow:hidden;'>
+    <div id='hp-preview-fiche' class='demo-wrap' style='height:auto;display:none;'>
+      <div class='demo-toolbar'>
+        <div class='demo-dot' style='background:#f87171'></div>
+        <div class='demo-dot' style='background:#fbbf24'></div>
+        <div class='demo-dot' style='background:#34d399'></div>
+        <span class='demo-toolbar-label'>100pool.ca / guide 2026-27</span>
+      </div>
       <img src='joueur-screenshot.png' alt='Aperçu de la fiche joueur' style='width:100%;display:block;'>
     </div>
   </div>
 </div>
+<script>
+function switchHpPreview(tab) {
+  document.getElementById('hp-preview-liste').style.display = tab === 'liste' ? 'block' : 'none';
+  document.getElementById('hp-preview-fiche').style.display = tab === 'fiche' ? 'block' : 'none';
+  document.getElementById('hp-tab-liste').style.cssText = 'padding:8px 18px;border-radius:8px;border:1.5px solid ' + (tab==='liste'?'#1a5c28;background:#1a5c28;color:white':'#e2e8f0;background:white;color:#64748b') + ';font-weight:700;font-size:0.85em;cursor:pointer;';
+  document.getElementById('hp-tab-fiche').style.cssText = 'padding:8px 18px;border-radius:8px;border:1.5px solid ' + (tab==='fiche'?'#1a5c28;background:#1a5c28;color:white':'#e2e8f0;background:white;color:#64748b') + ';font-weight:700;font-size:0.85em;cursor:pointer;';
+}
+</script>
 
 <!-- PRICING -->
 <div class='pricing-section'>
