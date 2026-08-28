@@ -716,7 +716,8 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
       <img class='modal-hero-team-bg' id='modalTeamLogo' src='' alt=''>
       <button class='modal-close' onclick='closeModalDirect()'>✕</button>
       <div class='modal-hero-content'>
-        <img class='modal-player-photo' id='modalPhoto' src='' alt=''>
+        <img class='modal-player-photo' id='modalPhoto' src='' alt='' style='display:none'>
+        <div class='modal-player-avatar' id='modalAvatar' style='display:none'></div>
         <div class='modal-hero-info'>
           <div class='modal-player-name' id='modalName'></div>
           <div class='modal-player-meta' id='modalMeta'></div>
@@ -1706,9 +1707,24 @@ function openModal(id) {
   document.getElementById('modalMeta').textContent =
     [p.team, p.pos, p.age ? `${p.age} ans` : null, p.aav ? `${p.aav}M$ AAV` : 'CEN'].filter(Boolean).join(' · ');
   document.getElementById('modalTeamLogo').src = `https://assets.nhle.com/logos/nhl/svg/${p.team}_light.svg`;
-  // Photo: will be set after we get the NHL ID
+  document.getElementById('scoutingModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+
+  // Photo / avatar
   const photoEl = document.getElementById('modalPhoto');
+  const avatarEl = document.getElementById('modalAvatar');
+  photoEl.style.display = 'none'; avatarEl.style.display = 'none';
   photoEl.src = ''; photoEl.style.opacity = '0';
+  const initials = p.name.split(' ').map(w => w[0]).filter(Boolean).slice(0, 2).join('');
+  if (p.headshot_url) {
+    photoEl.style.display = 'block';
+    photoEl.src = p.headshot_url;
+    photoEl.onload = () => { photoEl.style.opacity = '1'; photoEl.style.transition = 'opacity 0.3s'; };
+    photoEl.onerror = () => { photoEl.style.display = 'none'; avatarEl.textContent = initials; avatarEl.style.display = 'flex'; };
+  } else {
+    avatarEl.textContent = initials;
+    avatarEl.style.display = 'flex';
+  }
 
   // Badges
   const badges = [
@@ -1757,18 +1773,7 @@ function openModal(id) {
   }
   document.getElementById('modalBody').innerHTML = body || `<div class='modal-scouting' style='color:#94a3b8;font-style:italic'>Aucun rapport de dépistage disponible.</div>`;
 
-  document.getElementById('scoutingModal').classList.remove('hidden');
-  document.body.style.overflow = 'hidden';
-
-  // Photo from stored headshot_url, history from season_history
   const nhlId = p.nhl_id;
-  if (p.headshot_url) {
-    photoEl.src = p.headshot_url;
-    photoEl.onload = () => { photoEl.style.opacity = '1'; photoEl.style.transition = 'opacity 0.3s'; };
-    photoEl.onerror = () => { photoEl.style.display = 'none'; };
-  } else {
-    photoEl.style.display = 'none';
-  }
   loadNhlHistory(nhlId, p.pos, p).then(html => {
     document.getElementById('modalHistory').innerHTML = html;
   });
