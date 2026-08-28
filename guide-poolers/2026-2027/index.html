@@ -1399,7 +1399,16 @@ function renderSleepers() {
 
 // ── RENDER BUSTS ─────────────────────────────────────────
 function renderBusts() {
-  const busts = allPlayers.filter(p => p.bust_alert).sort((a, b) => a.rank - b.rank);
+  const busts = allPlayers.filter(p => {
+    if (!p.bust_alert) return false;
+    // Exclure si tendance PPG positive
+    if (p.last_pts != null && p.last_gp > 0 && p.proj_gp > 0) {
+      const ppgLast = p.last_pts / p.last_gp;
+      const ppgProj = p.proj_pts / p.proj_gp;
+      if (ppgProj > ppgLast) return false;
+    }
+    return true;
+  }).sort((a, b) => a.rank - b.rank);
   const grid = document.getElementById('bustsGrid');
   if (!busts.length) {
     grid.innerHTML = '<div class="empty-state"><div class="icon">💣</div>Aucune alerte déception pour l\'instant.</div>';
