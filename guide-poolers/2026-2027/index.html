@@ -1729,7 +1729,7 @@ function openModal(id) {
   // Badges
   const badges = [
     `<span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span>`,
-    p.risk && p.risk !== 'Low' ? `<span class='risk risk-${p.risk}'>${p.risk === 'Medium' ? '🟡 Moyen' : '🔴 Élevé'}</span>` : '',
+    p.risk ? `<span class='risk risk-${p.risk}'>${p.risk === 'Low' ? '🟢 Faible' : p.risk === 'Medium' ? '🟡 Moyen' : '🔴 Élevé'}</span>` : '',
     p.bandaid ? `<span class='bust' style='background:#fff7ed;color:#c2410c;border-color:#fed7aa'>🩹 Blessure</span>` : '',
     p.bust_alert ? `<span class='bust'>💣 Déception</span>` : '',
   ].filter(Boolean).join('');
