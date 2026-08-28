@@ -159,27 +159,44 @@ tbody tr.tier-row-11 { border-left: 3px solid #fda4af; }
 .bust { display: inline-flex; align-items: center; gap: 3px; font-size: 0.72em; font-weight: 800; padding: 3px 8px; border-radius: 99px; background: #fff1f2; color: #be123c; border: 1px solid #fda4af; white-space: nowrap; }
 
 /* ── SCOUTING MODAL ── */
-.modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.5); z-index: 8000; display: flex; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(4px); }
+.modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.6); z-index: 8000; display: flex; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(6px); }
 .modal-overlay.hidden { display: none; }
-.modal-box { background: white; border-radius: 20px; width: 100%; max-width: 560px; box-shadow: 0 24px 60px rgba(0,0,0,0.2); overflow: hidden; animation: modalIn 0.2s ease; }
-@keyframes modalIn { from { opacity:0; transform: scale(0.95) translateY(8px); } to { opacity:1; transform: none; } }
-.modal-header { padding: 20px 24px 16px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: flex-start; gap: 12px; }
-.modal-header-info { flex: 1; }
-.modal-player-name { font-size: 1.3em; font-weight: 800; color: #1e293b; margin-bottom: 6px; }
-.modal-badges { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-.modal-close { background: #f1f5f9; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 1em; color: #64748b; flex-shrink: 0; transition: background 0.15s; display: flex; align-items: center; justify-content: center; }
-.modal-close:hover { background: #e2e8f0; color: #1e293b; }
-.modal-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 16px 24px; border-bottom: 1px solid #f1f5f9; }
-.modal-stat-group { background: #f8fafc; border-radius: 10px; padding: 10px 14px; }
-.modal-stat-label { font-size: 0.65em; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.modal-box { background: white; border-radius: 20px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.3); animation: modalIn 0.2s ease; }
+@keyframes modalIn { from { opacity:0; transform: scale(0.95) translateY(10px); } to { opacity:1; transform: none; } }
+
+/* Modal header */
+.modal-hero { background: linear-gradient(135deg, #0f2d17 0%, #1a5c28 50%, #2d8a3e 100%); padding: 24px 24px 20px; position: relative; overflow: hidden; border-radius: 20px 20px 0 0; }
+.modal-hero-team-bg { position: absolute; right: -10px; top: 50%; transform: translateY(-50%); width: 120px; height: 120px; opacity: 0.08; }
+.modal-hero-content { display: flex; align-items: center; gap: 16px; position: relative; z-index: 1; }
+.modal-player-photo { width: 72px; height: 72px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.25); object-fit: cover; background: rgba(255,255,255,0.1); flex-shrink: 0; }
+.modal-hero-info { flex: 1; min-width: 0; }
+.modal-player-name { font-size: 1.35em; font-weight: 900; color: white; line-height: 1.1; margin-bottom: 6px; }
+.modal-player-meta { font-size: 0.8em; color: rgba(255,255,255,0.7); margin-bottom: 8px; }
+.modal-badges { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+.modal-close { position: absolute; top: 14px; right: 14px; background: rgba(255,255,255,0.15); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 0.9em; color: white; z-index: 2; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+.modal-close:hover { background: rgba(255,255,255,0.25); }
+
+/* Stats history table */
+.modal-history { padding: 16px 20px; border-bottom: 1px solid #f1f5f9; }
+.modal-section-title { font-size: 0.68em; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #94a3b8; margin-bottom: 10px; }
+.modal-history-table { width: 100%; border-collapse: collapse; font-size: 0.82em; }
+.modal-history-table th { text-align: right; color: #94a3b8; font-weight: 700; font-size: 0.75em; text-transform: uppercase; padding: 0 6px 6px; letter-spacing: 0.5px; }
+.modal-history-table th:first-child { text-align: left; }
+.modal-history-table td { text-align: right; padding: 5px 6px; color: #374151; border-top: 1px solid #f8fafc; }
+.modal-history-table td:first-child { text-align: left; color: #64748b; font-weight: 600; }
+.modal-history-table tr.proj-row td { background: #f0fdf4; color: #15803d; font-weight: 800; border-radius: 4px; }
+.modal-history-table tr.proj-row td:first-child { border-radius: 6px 0 0 6px; }
+.modal-history-table tr.proj-row td:last-child { border-radius: 0 6px 6px 0; }
+.modal-history-loading { text-align: center; color: #94a3b8; font-size: 0.82em; padding: 12px; }
+
+/* Modal body */
+.modal-body { padding: 14px 20px 20px; display: flex; flex-direction: column; gap: 12px; }
 .modal-stat-label.last { color: #15803d; }
 .modal-stat-label.proj { color: #15803d; }
-.modal-stat-row { display: flex; gap: 16px; }
+.modal-stat-row { display: flex; gap: 12px; flex-wrap: wrap; }
 .modal-stat-item .v { font-size: 1.1em; font-weight: 800; }
 .modal-stat-item .l { font-size: 0.65em; color: #94a3b8; text-transform: uppercase; }
-.modal-body { padding: 16px 24px 20px; display: flex; flex-direction: column; gap: 14px; }
-.modal-section-title { font-size: 0.72em; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; }
-.modal-scouting { font-size: 0.88em; color: #374151; line-height: 1.65; }
+.modal-scouting { font-size: 0.88em; color: #374151; line-height: 1.7; }
 .modal-comp { display: flex; align-items: center; gap: 8px; background: #f0fdf4; border-radius: 8px; padding: 8px 12px; font-size: 0.85em; color: #15803d; font-weight: 600; }
 .modal-risks { display: flex; flex-direction: column; gap: 5px; }
 .modal-risk-item { display: flex; align-items: center; gap: 7px; font-size: 0.83em; color: #475569; }
@@ -671,14 +688,22 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 <!-- SCOUTING MODAL -->
 <div class='modal-overlay hidden' id='scoutingModal' onclick='closeModal(event)'>
   <div class='modal-box'>
-    <div class='modal-header'>
-      <div class='modal-header-info'>
-        <div class='modal-player-name' id='modalName'></div>
-        <div class='modal-badges' id='modalBadges'></div>
-      </div>
+    <div class='modal-hero'>
+      <img class='modal-hero-team-bg' id='modalTeamLogo' src='' alt=''>
       <button class='modal-close' onclick='closeModalDirect()'>✕</button>
+      <div class='modal-hero-content'>
+        <img class='modal-player-photo' id='modalPhoto' src='' alt=''>
+        <div class='modal-hero-info'>
+          <div class='modal-player-name' id='modalName'></div>
+          <div class='modal-player-meta' id='modalMeta'></div>
+          <div class='modal-badges' id='modalBadges'></div>
+        </div>
+      </div>
     </div>
-    <div class='modal-stats' id='modalStats'></div>
+    <div class='modal-history'>
+      <div class='modal-section-title'>Historique NHL</div>
+      <div id='modalHistory'><div class='modal-history-loading'>Chargement…</div></div>
+    </div>
     <div class='modal-body' id='modalBody'></div>
   </div>
 </div>
@@ -1624,56 +1649,110 @@ function renderScarcity() {
 }
 
 // ── SCOUTING MODAL ───────────────────────────────────────
+// NHL player ID cache
+const nhlIdCache = {};
+
+async function getNhlId(name, team) {
+  const key = name + '|' + team;
+  if (nhlIdCache[key] !== undefined) return nhlIdCache[key];
+  try {
+    const q = encodeURIComponent(name);
+    const res = await fetch(`https://search.d3.nhle.com/api/v1/search/player?culture=fr-ca&limit=5&q=${q}&active=true`);
+    const results = await res.json();
+    // Best match: exact name, then last name + team, then last name
+    const nameLower = name.toLowerCase();
+    const last = nameLower.split(' ').pop();
+    let match = results.find(r => r.name?.toLowerCase() === nameLower)
+      || results.find(r => r.name?.toLowerCase().includes(last) && r.lastTeamAbbrev === team)
+      || results.find(r => r.name?.toLowerCase().includes(last))
+      || results[0];
+    nhlIdCache[key] = match ? match.playerId : null;
+  } catch { nhlIdCache[key] = null; }
+  return nhlIdCache[key];
+}
+
+async function loadNhlHistory(nhlId, pos, projRow) {
+  try {
+    const res = await fetch(`https://api-web.nhle.com/v1/player/${nhlId}/landing`);
+    const data = await res.json();
+    const isG = pos === 'G';
+
+    // Get last 4 NHL regular season entries, sorted by season desc, aggregate multi-team seasons
+    const bySeasonMap = {};
+    for (const s of data.seasonTotals || []) {
+      if (s.gameTypeId !== 2 || s.leagueAbbrev !== 'NHL') continue;
+      const yr = s.season;
+      if (!bySeasonMap[yr]) bySeasonMap[yr] = [];
+      bySeasonMap[yr].push(s);
+    }
+    const seasons = Object.keys(bySeasonMap).sort((a,b) => b-a).slice(0, 5).map(yr => {
+      const entries = bySeasonMap[yr];
+      const gp = entries.reduce((s,e) => s + (e.gamesPlayed||0), 0);
+      const label = yr.toString().slice(0,4) + '-' + yr.toString().slice(6);
+      const teamLabel = entries.length > 1 ? 'Multi' : (entries[0].teamCommonName?.default || '—');
+      if (isG) {
+        const gpT = gp || 1;
+        return { label, team: teamLabel, gp,
+          w: entries.reduce((s,e)=>s+(e.wins||0),0),
+          gaa: (entries.reduce((s,e)=>s+(e.goalsAgainstAvg||0)*(e.gamesPlayed||0),0)/gpT).toFixed(2),
+          svp: (entries.reduce((s,e)=>s+(e.savePctg||0)*(e.gamesPlayed||0),0)/gpT).toFixed(3),
+          so: entries.reduce((s,e)=>s+(e.shutouts||0),0) };
+      }
+      const pts = entries.reduce((s,e)=>s+(e.points||0),0);
+      return { label, team: teamLabel, gp,
+        g: entries.reduce((s,e)=>s+(e.goals||0),0),
+        a: entries.reduce((s,e)=>s+(e.assists||0),0),
+        pts, ppg: gp > 0 ? (pts/gp).toFixed(2) : '—' };
+    });
+
+    if (!seasons.length) return '<div class="modal-history-loading">Aucune saison NHL trouvée.</div>';
+
+    if (isG) {
+      return `<table class='modal-history-table'>
+        <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>V</th><th>GAA</th><th>SV%</th><th>SO</th></tr>
+        ${seasons.map(s => `<tr><td>${s.label}</td><td>${s.team}</td><td>${s.gp}</td><td>${s.w}</td><td>${s.gaa}</td><td>${s.svp}</td><td>${s.so}</td></tr>`).join('')}
+        <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>—</td><td>—</td><td>—</td></tr>
+      </table>`;
+    }
+    return `<table class='modal-history-table'>
+      <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>B</th><th>A</th><th>PTS</th><th>PPG</th></tr>
+      ${seasons.map(s => `<tr><td>${s.label}</td><td>${s.team}</td><td>${s.gp}</td><td>${s.g}</td><td>${s.a}</td><td>${s.pts}</td><td>${s.ppg}</td></tr>`).join('')}
+      <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>${projRow.proj_a??'—'}</td><td>${projRow.proj_pts??'—'}</td><td>${ppg(projRow.proj_pts,projRow.proj_gp)}</td></tr>
+    </table>`;
+  } catch {
+    return '<div class="modal-history-loading">Impossible de charger l\'historique.</div>';
+  }
+}
+
 function openModal(id) {
   const p = allPlayers.find(p => p.id === id);
   if (!p) return;
+
+  // Hero: photo + team logo
+  const nhlMugBase = 'https://assets.nhle.com/mugs/nhl/60x60/';
   document.getElementById('modalName').textContent = p.name;
+  document.getElementById('modalMeta').textContent =
+    [p.team, p.pos, p.age ? `${p.age} ans` : null, p.aav ? `${p.aav}M$ AAV` : 'CEN'].filter(Boolean).join(' · ');
+  document.getElementById('modalTeamLogo').src = `https://assets.nhle.com/logos/nhl/svg/${p.team}_light.svg`;
+  // Photo: will be set after we get the NHL ID
+  const photoEl = document.getElementById('modalPhoto');
+  photoEl.src = ''; photoEl.style.opacity = '0';
 
   // Badges
   const badges = [
-    `<span class='team-tag'>${p.team}</span>`,
-    `<span class='pos-tag pos-${p.pos}'>${p.pos}</span>`,
     `<span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span>`,
-    p.risk ? `<span class='risk risk-${p.risk}'>${p.risk === 'Low' ? '🟢' : p.risk === 'Medium' ? '🟡' : '🔴'} ${p.risk === 'Low' ? 'Faible' : p.risk === 'Medium' ? 'Moyen' : 'Élevé'} Risque</span>` : '',
-    p.bust_alert ? `<span class='bust'>💣 Alerte déception</span>` : '',
+    p.risk ? `<span class='risk risk-${p.risk}'>${p.risk === 'Low' ? '🟢 Faible' : p.risk === 'Medium' ? '🟡 Moyen' : '🔴 Élevé'}</span>` : '',
+    p.bandaid ? `<span class='bust' style='background:#fff7ed;color:#c2410c;border-color:#fed7aa'>🩹 Blessure</span>` : '',
+    p.bust_alert ? `<span class='bust'>💣 Déception</span>` : '',
   ].filter(Boolean).join('');
   document.getElementById('modalBadges').innerHTML = badges;
 
-  // Stats
-  const isG = p.pos === 'G';
-  const gs  = getGoalieStats(p);
-  document.getElementById('modalStats').innerHTML = `
-    ${!isG ? `<div class='modal-stat-group'>
-      <div class='modal-stat-label last'>📅 2025-26 Réel</div>
-      <div class='modal-stat-row'>
-        <div class='modal-stat-item'><div class='v last-stat'>${p.last_g ?? '—'}</div><div class='l'>G</div></div>
-        <div class='modal-stat-item'><div class='v last-stat'>${p.last_a ?? '—'}</div><div class='l'>A</div></div>
-        <div class='modal-stat-item'><div class='v last-pts'>${p.last_pts ?? '—'}</div><div class='l'>PTS</div></div>
-        <div class='modal-stat-item'><div class='v ppg-last'>${ppg(p.last_pts, p.last_gp)}</div><div class='l'>PPG</div></div>
-      </div>
-    </div>` : ''}
-    <div class='modal-stat-group'>
-      <div class='modal-stat-label proj'>${isG ? '🥅' : '🎯'} Projection 2026-27</div>
-      <div class='modal-stat-row'>
-        ${isG ? `
-        <div class='modal-stat-item'><div class='v proj-stat'>${p.proj_g ?? '—'}</div><div class='l'>W</div></div>
-        <div class='modal-stat-item'><div class='v proj-stat'>${gs.l ?? '—'}</div><div class='l'>L</div></div>
-        <div class='modal-stat-item'><div class='v proj-stat'>${gs.otl ?? '—'}</div><div class='l'>OT</div></div>
-        <div class='modal-stat-item'><div class='v proj-stat'>${gs.gaa ?? '—'}</div><div class='l'>GAA</div></div>
-        <div class='modal-stat-item'><div class='v proj-stat'>${gs.svp != null ? gs.svp.toFixed(3) : '—'}</div><div class='l'>SV%</div></div>
-        <div class='modal-stat-item'><div class='v proj-stat'>${p.proj_a ?? '—'}</div><div class='l'>SO</div></div>
-        ` : `
-        <div class='modal-stat-item'><div class='v proj-stat'>${p.proj_g}</div><div class='l'>G</div></div>
-        <div class='modal-stat-item'><div class='v proj-stat'>${p.proj_a}</div><div class='l'>A</div></div>
-        <div class='modal-stat-item'><div class='v proj-pts'>${p.proj_pts}</div><div class='l'>PTS</div></div>
-        <div class='modal-stat-item'><div class='v ppg-proj'>${ppg(p.proj_pts, p.proj_gp)}</div><div class='l'>PPG</div></div>
-        `}
-      </div>
-    </div>`;
+  // History placeholder
+  document.getElementById('modalHistory').innerHTML = '<div class="modal-history-loading">Chargement…</div>';
 
   // Body
   let body = '';
-  if (p.notes) body += `<div><div class='modal-section-title'>Notes</div><div class='modal-scouting'>${p.notes}</div></div>`;
+  if (p.notes) body += `<div><div class='modal-section-title'>Notes de dépistage</div><div class='modal-scouting'>${p.notes}</div></div>`;
   if (p.comp_player) body += `<div><div class='modal-section-title'>Joueur comparable</div><div class='modal-comp'>🏒 ${p.comp_player}</div></div>`;
   if (p.key_risks) {
     const risks = p.key_risks.split(',').map(r => r.trim()).filter(Boolean);
@@ -1684,6 +1763,20 @@ function openModal(id) {
 
   document.getElementById('scoutingModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
+
+  // Async: load NHL ID → photo + history
+  getNhlId(p.name, p.team).then(async nhlId => {
+    if (nhlId) {
+      photoEl.src = `https://assets.nhle.com/mugs/nhl/60x60/${nhlId}.png`;
+      photoEl.onload = () => { photoEl.style.opacity = '1'; photoEl.style.transition = 'opacity 0.3s'; };
+      photoEl.onerror = () => { photoEl.style.display = 'none'; };
+      const html = await loadNhlHistory(nhlId, p.pos, p);
+      document.getElementById('modalHistory').innerHTML = html;
+    } else {
+      photoEl.style.display = 'none';
+      document.getElementById('modalHistory').innerHTML = '<div class="modal-history-loading">Joueur non trouvé dans l\'API NHL.</div>';
+    }
+  });
 }
 
 function closeModal(e) {
