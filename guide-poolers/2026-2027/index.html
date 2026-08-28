@@ -1650,56 +1650,24 @@ function renderScarcity() {
 
 // ── SCOUTING MODAL ───────────────────────────────────────
 async function loadNhlHistory(nhlId, pos, projRow) {
-  try {
-    const res = await fetch(`https://api-web.nhle.com/v1/player/${nhlId}/landing`);
-    const data = await res.json();
-    const isG = pos === 'G';
-
-    // Get last 4 NHL regular season entries, sorted by season desc, aggregate multi-team seasons
-    const bySeasonMap = {};
-    for (const s of data.seasonTotals || []) {
-      if (s.gameTypeId !== 2 || s.leagueAbbrev !== 'NHL') continue;
-      const yr = s.season;
-      if (!bySeasonMap[yr]) bySeasonMap[yr] = [];
-      bySeasonMap[yr].push(s);
-    }
-    const seasons = Object.keys(bySeasonMap).sort((a,b) => b-a).slice(0, 5).map(yr => {
-      const entries = bySeasonMap[yr];
-      const gp = entries.reduce((s,e) => s + (e.gamesPlayed||0), 0);
-      const label = yr.toString().slice(0,4) + '-' + yr.toString().slice(6);
-      const teamLabel = entries.length > 1 ? 'Multi' : (entries[0].teamCommonName?.default || '—');
-      if (isG) {
-        const gpT = gp || 1;
-        return { label, team: teamLabel, gp,
-          w: entries.reduce((s,e)=>s+(e.wins||0),0),
-          gaa: (entries.reduce((s,e)=>s+(e.goalsAgainstAvg||0)*(e.gamesPlayed||0),0)/gpT).toFixed(2),
-          svp: (entries.reduce((s,e)=>s+(e.savePctg||0)*(e.gamesPlayed||0),0)/gpT).toFixed(3),
-          so: entries.reduce((s,e)=>s+(e.shutouts||0),0) };
-      }
-      const pts = entries.reduce((s,e)=>s+(e.points||0),0);
-      return { label, team: teamLabel, gp,
-        g: entries.reduce((s,e)=>s+(e.goals||0),0),
-        a: entries.reduce((s,e)=>s+(e.assists||0),0),
-        pts, ppg: gp > 0 ? (pts/gp).toFixed(2) : '—' };
-    });
-
-    if (!seasons.length) return '<div class="modal-history-loading">Aucune saison NHL trouvée.</div>';
-
-    if (isG) {
-      return `<table class='modal-history-table'>
-        <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>V</th><th>GAA</th><th>SV%</th><th>SO</th></tr>
-        ${seasons.map(s => `<tr><td>${s.label}</td><td>${s.team}</td><td>${s.gp}</td><td>${s.w}</td><td>${s.gaa}</td><td>${s.svp}</td><td>${s.so}</td></tr>`).join('')}
-        <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>—</td><td>—</td><td>—</td></tr>
-      </table>`;
-    }
+  // History is stored in season_history (jsonb) from Supabase — no NHL API call needed
+  const history = projRow.season_history
+    ? (typeof projRow.season_history === 'string' ? JSON.parse(projRow.season_history) : projRow.season_history)
+    : [];
+  if (!history || !history.length) return '<div class="modal-history-loading">Aucune saison NHL disponible.</div>';
+  const isG = pos === 'G';
+  if (isG) {
     return `<table class='modal-history-table'>
-      <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>B</th><th>A</th><th>PTS</th><th>PPG</th></tr>
-      ${seasons.map(s => `<tr><td>${s.label}</td><td>${s.team}</td><td>${s.gp}</td><td>${s.g}</td><td>${s.a}</td><td>${s.pts}</td><td>${s.ppg}</td></tr>`).join('')}
-      <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>${projRow.proj_a??'—'}</td><td>${projRow.proj_pts??'—'}</td><td>${ppg(projRow.proj_pts,projRow.proj_gp)}</td></tr>
+      <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>V</th><th>GAA</th><th>SV%</th><th>SO</th></tr>
+      ${history.map(s => `<tr><td>${s.season}</td><td>${s.team}</td><td>${s.gp??'—'}</td><td>${s.w??'—'}</td><td>${s.gaa??'—'}</td><td>${s.svp??'—'}</td><td>${s.so??'—'}</td></tr>`).join('')}
+      <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>—</td><td>—</td><td>—</td></tr>
     </table>`;
-  } catch {
-    return '<div class="modal-history-loading">Impossible de charger l\'historique.</div>';
   }
+  return `<table class='modal-history-table'>
+    <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>B</th><th>A</th><th>PTS</th><th>PPG</th></tr>
+    ${history.map(s => `<tr><td>${s.season}</td><td>${s.team}</td><td>${s.gp??'—'}</td><td>${s.g??'—'}</td><td>${s.a??'—'}</td><td>${s.pts??'—'}</td><td>${s.ppg??'—'}</td></tr>`).join('')}
+    <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>${projRow.proj_a??'—'}</td><td>${projRow.proj_pts??'—'}</td><td>${ppg(projRow.proj_pts,projRow.proj_gp)}</td></tr>
+  </table>`;
 }
 
 function openModal(id) {
@@ -1742,19 +1710,18 @@ function openModal(id) {
   document.getElementById('scoutingModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
 
-  // Async: load photo + history using stored nhl_id
+  // Photo from stored headshot_url, history from season_history
   const nhlId = p.nhl_id;
-  if (nhlId) {
-    photoEl.src = `https://assets.nhle.com/mugs/nhl/60x60/${nhlId}.png`;
+  if (p.headshot_url) {
+    photoEl.src = p.headshot_url;
     photoEl.onload = () => { photoEl.style.opacity = '1'; photoEl.style.transition = 'opacity 0.3s'; };
     photoEl.onerror = () => { photoEl.style.display = 'none'; };
-    loadNhlHistory(nhlId, p.pos, p).then(html => {
-      document.getElementById('modalHistory').innerHTML = html;
-    });
   } else {
     photoEl.style.display = 'none';
-    document.getElementById('modalHistory').innerHTML = '<div class="modal-history-loading">Aucun identifiant NHL disponible.</div>';
   }
+  loadNhlHistory(nhlId, p.pos, p).then(html => {
+    document.getElementById('modalHistory').innerHTML = html;
+  });
 }
 
 function closeModal(e) {
