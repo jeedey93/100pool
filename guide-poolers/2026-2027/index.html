@@ -1220,7 +1220,7 @@ function buildRowHTML(p, displayRank) {
     const noteFull = (p.notes || '').replace(/"/g, '&quot;');
     const aav      = p.aav ? `$${parseFloat(p.aav).toFixed(2)}M` : '—';
     const ppPct    = p.pp_pct != null ? p.pp_pct + '%' : '—';
-    const riskHtml = p.risk ? `<span class='risk risk-${p.risk}'>${p.risk === 'Low' ? '🟢' : p.risk === 'Medium' ? '🟡' : '🔴'} ${p.risk === 'Low' ? 'Faible' : p.risk === 'Medium' ? 'Moyen' : 'Élevé'}</span>` : '—';
+    const riskHtml = p.risk && p.risk !== 'Low' ? `<span class='risk risk-${p.risk}'>${p.risk === 'Medium' ? '🟡 Moyen' : '🔴 Élevé'}</span>` : '—';
     const bustHtml = p.bust_alert ? `<span class='bust'>💣 Déception</span>` : '';
     const bandaid  = p.bandaid ? '🩹' : '';
     const ageClass = p.age <= 22 ? 'age-young' : p.age >= 32 ? 'age-old' : '';
@@ -1729,7 +1729,7 @@ function openModal(id) {
   // Badges
   const badges = [
     `<span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span>`,
-    p.risk ? `<span class='risk risk-${p.risk}'>${p.risk === 'Low' ? '🟢 Faible' : p.risk === 'Medium' ? '🟡 Moyen' : '🔴 Élevé'}</span>` : '',
+    p.risk && p.risk !== 'Low' ? `<span class='risk risk-${p.risk}'>${p.risk === 'Medium' ? '🟡 Moyen' : '🔴 Élevé'}</span>` : '',
     p.bandaid ? `<span class='bust' style='background:#fff7ed;color:#c2410c;border-color:#fed7aa'>🩹 Blessure</span>` : '',
     p.bust_alert ? `<span class='bust'>💣 Déception</span>` : '',
   ].filter(Boolean).join('');
