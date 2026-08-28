@@ -161,14 +161,14 @@ tbody tr.tier-row-11 { border-left: 3px solid #fda4af; }
 /* ── SCOUTING MODAL ── */
 .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.6); z-index: 8000; display: flex; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(6px); }
 .modal-overlay.hidden { display: none; }
-.modal-box { background: white; border-radius: 20px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.3); animation: modalIn 0.2s ease; }
+.modal-box { background: white; border-radius: 20px; width: 100%; max-width: 760px; max-height: 92vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.3); animation: modalIn 0.2s ease; }
 @keyframes modalIn { from { opacity:0; transform: scale(0.95) translateY(10px); } to { opacity:1; transform: none; } }
 
 /* Modal header */
-.modal-hero { background: linear-gradient(135deg, #0f2d17 0%, #1a5c28 50%, #2d8a3e 100%); padding: 24px 24px 20px; position: relative; overflow: hidden; border-radius: 20px 20px 0 0; }
-.modal-hero-team-bg { position: absolute; right: -10px; top: 50%; transform: translateY(-50%); width: 120px; height: 120px; opacity: 0.08; }
-.modal-hero-content { display: flex; align-items: center; gap: 16px; position: relative; z-index: 1; }
-.modal-player-photo { width: 72px; height: 72px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.25); object-fit: cover; background: rgba(255,255,255,0.1); flex-shrink: 0; }
+.modal-hero { background: linear-gradient(135deg, #0f2d17 0%, #1a5c28 50%, #2d8a3e 100%); padding: 28px 28px 22px; position: relative; overflow: hidden; border-radius: 20px 20px 0 0; }
+.modal-hero-team-bg { position: absolute; right: -10px; top: 50%; transform: translateY(-50%); width: 140px; height: 140px; opacity: 0.08; }
+.modal-hero-content { display: flex; align-items: center; gap: 20px; position: relative; z-index: 1; }
+.modal-player-photo { width: 88px; height: 88px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.25); object-fit: cover; background: rgba(255,255,255,0.1); flex-shrink: 0; }
 .modal-hero-info { flex: 1; min-width: 0; }
 .modal-player-name { font-size: 1.35em; font-weight: 900; color: white; line-height: 1.1; margin-bottom: 6px; }
 .modal-player-meta { font-size: 0.8em; color: rgba(255,255,255,0.7); margin-bottom: 8px; }
@@ -704,6 +704,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
       <div class='modal-section-title'>Historique NHL</div>
       <div id='modalHistory'><div class='modal-history-loading'>Chargement…</div></div>
     </div>
+    <div id='modalStatsRow'></div>
     <div class='modal-body' id='modalBody'></div>
   </div>
 </div>
@@ -1655,17 +1656,18 @@ async function loadNhlHistory(nhlId, pos, projRow) {
     ? (typeof projRow.season_history === 'string' ? JSON.parse(projRow.season_history) : projRow.season_history)
     : [];
   if (!history || !history.length) return '<div class="modal-history-loading">Aucune saison NHL disponible.</div>';
+  const sorted = [...history].reverse(); // oldest first
   const isG = pos === 'G';
   if (isG) {
     return `<table class='modal-history-table'>
       <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>V</th><th>GAA</th><th>SV%</th><th>SO</th></tr>
-      ${history.map(s => `<tr><td>${s.season}</td><td>${s.team}</td><td>${s.gp??'—'}</td><td>${s.w??'—'}</td><td>${s.gaa??'—'}</td><td>${s.svp??'—'}</td><td>${s.so??'—'}</td></tr>`).join('')}
+      ${sorted.map(s => `<tr><td>${s.season}</td><td>${s.team}</td><td>${s.gp??'—'}</td><td>${s.w??'—'}</td><td>${s.gaa??'—'}</td><td>${s.svp??'—'}</td><td>${s.so??'—'}</td></tr>`).join('')}
       <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>—</td><td>—</td><td>—</td></tr>
     </table>`;
   }
   return `<table class='modal-history-table'>
     <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>B</th><th>A</th><th>PTS</th><th>PPG</th></tr>
-    ${history.map(s => `<tr><td>${s.season}</td><td>${s.team}</td><td>${s.gp??'—'}</td><td>${s.g??'—'}</td><td>${s.a??'—'}</td><td>${s.pts??'—'}</td><td>${s.ppg??'—'}</td></tr>`).join('')}
+    ${sorted.map(s => `<tr><td>${s.season}</td><td>${s.team}</td><td>${s.gp??'—'}</td><td>${s.g??'—'}</td><td>${s.a??'—'}</td><td>${s.pts??'—'}</td><td>${s.ppg??'—'}</td></tr>`).join('')}
     <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>${projRow.proj_a??'—'}</td><td>${projRow.proj_pts??'—'}</td><td>${ppg(projRow.proj_pts,projRow.proj_gp)}</td></tr>
   </table>`;
 }
@@ -1696,6 +1698,28 @@ function openModal(id) {
   // History placeholder
   document.getElementById('modalHistory').innerHTML = '<div class="modal-history-loading">Chargement…</div>';
 
+  // Stats rapides
+  const isG = p.pos === 'G';
+  const trend = getTrend(p);
+  const trendDiff = p.proj_pts - (p.last_pts ?? p.proj_pts);
+  const trendLabel = trend === 'up' ? `↑ +${trendDiff}` : trend === 'down' ? `↓ ${trendDiff}` : `→ ${trendDiff}`;
+  const trendClass = `trend trend-${trend}`;
+  const pv = getPV(p);
+
+  let statsRow = `<div style='display:flex;flex-wrap:wrap;gap:8px;padding:12px 20px;border-bottom:1px solid #f1f5f9;'>`;
+  if (!isG) {
+    statsRow += `<div style='background:#f0fdf4;border-radius:8px;padding:8px 14px;flex:1;min-width:80px;text-align:center'><div style='font-size:1.15em;font-weight:800;color:#15803d'>${p.proj_pts??'—'}</div><div style='font-size:0.65em;color:#94a3b8;text-transform:uppercase;letter-spacing:1px'>PTS Proj</div></div>`;
+    statsRow += `<div style='background:#f8fafc;border-radius:8px;padding:8px 14px;flex:1;min-width:80px;text-align:center'><div style='font-size:1.15em;font-weight:800;color:#1e293b'>${ppg(p.proj_pts,p.proj_gp)}</div><div style='font-size:0.65em;color:#94a3b8;text-transform:uppercase;letter-spacing:1px'>PPG Proj</div></div>`;
+    if (p.last_pts != null) statsRow += `<div style='background:#f8fafc;border-radius:8px;padding:8px 14px;flex:1;min-width:80px;text-align:center'><div style='font-size:1.15em;font-weight:800;color:#1e293b'>${ppg(p.last_pts,p.last_gp)}</div><div style='font-size:0.65em;color:#94a3b8;text-transform:uppercase;letter-spacing:1px'>PPG 2025-26</div></div>`;
+    statsRow += `<div style='background:#f8fafc;border-radius:8px;padding:8px 14px;flex:1;min-width:80px;text-align:center'><div style='font-size:1em;font-weight:800'><span class='${trendClass}'>${trendLabel}</span></div><div style='font-size:0.65em;color:#94a3b8;text-transform:uppercase;letter-spacing:1px'>Tendance</div></div>`;
+  }
+  if (p.upside) statsRow += `<div style='background:#faf5ff;border-radius:8px;padding:8px 14px;flex:1;min-width:80px;text-align:center'><div style='font-size:1.15em;font-weight:800;color:#7c3aed'>${p.upside}</div><div style='font-size:0.65em;color:#94a3b8;text-transform:uppercase;letter-spacing:1px'>Plafond</div></div>`;
+  if (pv) statsRow += `<div style='background:#f8fafc;border-radius:8px;padding:8px 14px;flex:1;min-width:80px;text-align:center'><div style='font-size:1.15em;font-weight:800;color:#1e293b'>${pv.toFixed(1)}</div><div style='font-size:0.65em;color:#94a3b8;text-transform:uppercase;letter-spacing:1px'>Valeur</div></div>`;
+  if (p.pp_pct != null) statsRow += `<div style='background:#f8fafc;border-radius:8px;padding:8px 14px;flex:1;min-width:80px;text-align:center'><div style='font-size:1.15em;font-weight:800;color:#1e293b'>${p.pp_pct}%</div><div style='font-size:0.65em;color:#94a3b8;text-transform:uppercase;letter-spacing:1px'>PP%</div></div>`;
+  if (p.aav) statsRow += `<div style='background:#f8fafc;border-radius:8px;padding:8px 14px;flex:1;min-width:80px;text-align:center'><div style='font-size:1.15em;font-weight:800;color:#1e293b'>${p.aav}M$</div><div style='font-size:0.65em;color:#94a3b8;text-transform:uppercase;letter-spacing:1px'>AAV</div></div>`;
+  statsRow += `</div>`;
+  document.getElementById('modalStatsRow').innerHTML = statsRow;
+
   // Body
   let body = '';
   if (p.notes) body += `<div><div class='modal-section-title'>Notes de dépistage</div><div class='modal-scouting'>${p.notes}</div></div>`;
@@ -1704,8 +1728,7 @@ function openModal(id) {
     const risks = p.key_risks.split(',').map(r => r.trim()).filter(Boolean);
     body += `<div><div class='modal-section-title'>Risques principaux</div><div class='modal-risks'>${risks.map(r => `<div class='modal-risk-item'>${r}</div>`).join('')}</div></div>`;
   }
-  if (!body) body = `<div class='modal-scouting' style='color:#94a3b8;font-style:italic'>Aucun rapport de dépistage disponible pour l'instant.</div>`;
-  document.getElementById('modalBody').innerHTML = body;
+  document.getElementById('modalBody').innerHTML = body || `<div class='modal-scouting' style='color:#94a3b8;font-style:italic'>Aucun rapport de dépistage disponible pour l'instant.</div>`;
 
   document.getElementById('scoutingModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
