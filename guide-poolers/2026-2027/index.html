@@ -170,6 +170,20 @@ tbody tr.tier-row-11 { border-left: 3px solid #fda4af; }
 .modal-hero-team-bg { position: absolute; right: 24px; bottom: -10px; width: 160px; height: 160px; opacity: 0.07; pointer-events: none; }
 .modal-hero-content { display: flex; align-items: center; gap: 22px; position: relative; z-index: 1; }
 .modal-player-photo { width: 96px; height: 96px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.3); object-fit: cover; background: rgba(255,255,255,0.1); flex-shrink: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.modal-player-avatar { width: 96px; height: 96px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.3); flex-shrink: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.3); background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 1.6em; font-weight: 900; color: white; letter-spacing: -1px; }
+@media (max-width: 600px) {
+  .modal-overlay { padding: 0; align-items: flex-end; }
+  .modal-box { border-radius: 20px 20px 0 0; max-height: 95vh; }
+  .modal-hero { border-radius: 20px 20px 0 0; padding: 20px 18px 18px; }
+  .modal-player-photo, .modal-player-avatar { width: 70px; height: 70px; font-size: 1.2em; }
+  .modal-player-name { font-size: 1.15em; }
+  .modal-hero-content { gap: 14px; }
+  .modal-stat-cards { grid-template-columns: repeat(3, 1fr); padding: 14px 16px; gap: 8px; }
+  .modal-history { padding: 14px 16px; }
+  .modal-history-table { font-size: 0.76em; }
+  .modal-history-table th, .modal-history-table td { padding: 5px 5px; }
+  .modal-body { padding: 14px 16px 20px; }
+}
 .modal-hero-info { flex: 1; min-width: 0; }
 .modal-player-name { font-size: 1.55em; font-weight: 900; color: white; line-height: 1.1; margin-bottom: 7px; letter-spacing: -0.3px; }
 .modal-player-meta { font-size: 0.82em; color: rgba(255,255,255,0.65); margin-bottom: 10px; letter-spacing: 0.2px; }
@@ -1716,12 +1730,9 @@ function openModal(id) {
   const trendClass = `trend trend-${trend}`;
   const pv = getPV(p);
 
-  // Stat cards — no duplication with hero (team/pos/age/aav already in meta)
+  // Stat cards — history table already shows pts/ppg, so show contextual info only
   const cards = [];
   if (!isG) {
-    cards.push(`<div class='modal-stat-card accent'><div class='sc-val'>${p.proj_pts??'—'}</div><div class='sc-lbl'>PTS Proj</div></div>`);
-    cards.push(`<div class='modal-stat-card accent'><div class='sc-val'>${ppg(p.proj_pts,p.proj_gp)}</div><div class='sc-lbl'>PPG Proj</div></div>`);
-    if (p.last_pts != null) cards.push(`<div class='modal-stat-card'><div class='sc-val'>${ppg(p.last_pts,p.last_gp)}</div><div class='sc-lbl'>PPG 2025-26</div></div>`);
     cards.push(`<div class='modal-stat-card'><div class='sc-val'><span class='${trendClass}' style='font-size:0.85em'>${trendLabel}</span></div><div class='sc-lbl'>Tendance</div></div>`);
   } else {
     const gs = getGoalieStats(p);
@@ -1732,6 +1743,7 @@ function openModal(id) {
   if (p.upside) cards.push(`<div class='modal-stat-card purple'><div class='sc-val'>${p.upside}</div><div class='sc-lbl'>Plafond</div></div>`);
   if (pv)       cards.push(`<div class='modal-stat-card'><div class='sc-val'>${pv.toFixed(1)}</div><div class='sc-lbl'>Valeur</div></div>`);
   if (p.pp_pct != null) cards.push(`<div class='modal-stat-card'><div class='sc-val'>${p.pp_pct}%</div><div class='sc-lbl'>PP%</div></div>`);
+  if (p.aav)    cards.push(`<div class='modal-stat-card'><div class='sc-val'>${p.aav}M$</div><div class='sc-lbl'>AAV</div></div>`);
   document.getElementById('modalStatsRow').innerHTML = cards.length
     ? `<div class='modal-stat-cards'>${cards.join('')}</div>` : '';
 
