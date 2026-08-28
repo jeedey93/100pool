@@ -159,48 +159,58 @@ tbody tr.tier-row-11 { border-left: 3px solid #fda4af; }
 .bust { display: inline-flex; align-items: center; gap: 3px; font-size: 0.72em; font-weight: 800; padding: 3px 8px; border-radius: 99px; background: #fff1f2; color: #be123c; border: 1px solid #fda4af; white-space: nowrap; }
 
 /* ── SCOUTING MODAL ── */
-.modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.6); z-index: 8000; display: flex; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(6px); }
+.modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.65); z-index: 8000; display: flex; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(8px); }
 .modal-overlay.hidden { display: none; }
-.modal-box { background: white; border-radius: 20px; width: 100%; max-width: 760px; max-height: 92vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.3); animation: modalIn 0.2s ease; }
-@keyframes modalIn { from { opacity:0; transform: scale(0.95) translateY(10px); } to { opacity:1; transform: none; } }
+.modal-box { background: #f8fafc; border-radius: 24px; width: 100%; max-width: 780px; max-height: 92vh; overflow-y: auto; box-shadow: 0 32px 100px rgba(0,0,0,0.35); animation: modalIn 0.22s ease; }
+@keyframes modalIn { from { opacity:0; transform: scale(0.94) translateY(14px); } to { opacity:1; transform: none; } }
 
-/* Modal header */
-.modal-hero { background: linear-gradient(135deg, #0f2d17 0%, #1a5c28 50%, #2d8a3e 100%); padding: 28px 28px 22px; position: relative; overflow: hidden; border-radius: 20px 20px 0 0; }
-.modal-hero-team-bg { position: absolute; right: -10px; top: 50%; transform: translateY(-50%); width: 140px; height: 140px; opacity: 0.08; }
-.modal-hero-content { display: flex; align-items: center; gap: 20px; position: relative; z-index: 1; }
-.modal-player-photo { width: 88px; height: 88px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.25); object-fit: cover; background: rgba(255,255,255,0.1); flex-shrink: 0; }
+/* Modal hero */
+.modal-hero { background: linear-gradient(140deg, #0a1f0f 0%, #163820 40%, #1e5c2e 70%, #2d8a3e 100%); padding: 28px 28px 24px; position: relative; overflow: hidden; border-radius: 24px 24px 0 0; }
+.modal-hero::after { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); pointer-events: none; }
+.modal-hero-team-bg { position: absolute; right: 24px; bottom: -10px; width: 160px; height: 160px; opacity: 0.07; pointer-events: none; }
+.modal-hero-content { display: flex; align-items: center; gap: 22px; position: relative; z-index: 1; }
+.modal-player-photo { width: 96px; height: 96px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.3); object-fit: cover; background: rgba(255,255,255,0.1); flex-shrink: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
 .modal-hero-info { flex: 1; min-width: 0; }
-.modal-player-name { font-size: 1.35em; font-weight: 900; color: white; line-height: 1.1; margin-bottom: 6px; }
-.modal-player-meta { font-size: 0.8em; color: rgba(255,255,255,0.7); margin-bottom: 8px; }
+.modal-player-name { font-size: 1.55em; font-weight: 900; color: white; line-height: 1.1; margin-bottom: 7px; letter-spacing: -0.3px; }
+.modal-player-meta { font-size: 0.82em; color: rgba(255,255,255,0.65); margin-bottom: 10px; letter-spacing: 0.2px; }
 .modal-badges { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
-.modal-close { position: absolute; top: 14px; right: 14px; background: rgba(255,255,255,0.15); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 0.9em; color: white; z-index: 2; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
-.modal-close:hover { background: rgba(255,255,255,0.25); }
+.modal-close { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.15); border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 0.9em; color: rgba(255,255,255,0.8); z-index: 2; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.modal-close:hover { background: rgba(255,255,255,0.22); color: white; }
+
+/* Stat cards row */
+.modal-stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; padding: 18px 22px; background: white; border-bottom: 1px solid #eef2f7; }
+.modal-stat-card { background: #f8fafc; border: 1px solid #eef2f7; border-radius: 12px; padding: 12px 10px; text-align: center; }
+.modal-stat-card .sc-val { font-size: 1.25em; font-weight: 900; color: #1e293b; line-height: 1; margin-bottom: 5px; }
+.modal-stat-card .sc-lbl { font-size: 0.62em; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #94a3b8; }
+.modal-stat-card.accent { background: #f0fdf4; border-color: #bbf7d0; }
+.modal-stat-card.accent .sc-val { color: #15803d; }
+.modal-stat-card.purple { background: #faf5ff; border-color: #e9d5ff; }
+.modal-stat-card.purple .sc-val { color: #7c3aed; }
 
 /* Stats history table */
-.modal-history { padding: 16px 20px; border-bottom: 1px solid #f1f5f9; }
-.modal-section-title { font-size: 0.68em; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #94a3b8; margin-bottom: 10px; }
-.modal-history-table { width: 100%; border-collapse: collapse; font-size: 0.82em; }
-.modal-history-table th { text-align: right; color: #94a3b8; font-weight: 700; font-size: 0.75em; text-transform: uppercase; padding: 0 6px 6px; letter-spacing: 0.5px; }
-.modal-history-table th:first-child { text-align: left; }
-.modal-history-table td { text-align: right; padding: 5px 6px; color: #374151; border-top: 1px solid #f8fafc; }
-.modal-history-table td:first-child { text-align: left; color: #64748b; font-weight: 600; }
-.modal-history-table tr.proj-row td { background: #f0fdf4; color: #15803d; font-weight: 800; border-radius: 4px; }
-.modal-history-table tr.proj-row td:first-child { border-radius: 6px 0 0 6px; }
+.modal-history { padding: 18px 22px; background: white; border-bottom: 1px solid #eef2f7; }
+.modal-section-title { font-size: 0.67em; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; color: #94a3b8; margin-bottom: 12px; }
+.modal-history-table { width: 100%; border-collapse: collapse; font-size: 0.83em; }
+.modal-history-table th { text-align: right; color: #94a3b8; font-weight: 700; font-size: 0.72em; text-transform: uppercase; padding: 0 8px 8px; letter-spacing: 0.5px; border-bottom: 2px solid #f1f5f9; }
+.modal-history-table th:first-child, .modal-history-table th:nth-child(2) { text-align: left; }
+.modal-history-table td { text-align: right; padding: 7px 8px; color: #374151; }
+.modal-history-table td:first-child { text-align: left; color: #1e293b; font-weight: 700; }
+.modal-history-table td:nth-child(2) { text-align: left; color: #64748b; font-size: 0.9em; }
+.modal-history-table tbody tr:nth-child(even) td { background: #f8fafc; }
+.modal-history-table tbody tr:nth-child(even) td:first-child { border-radius: 6px 0 0 6px; }
+.modal-history-table tbody tr:nth-child(even) td:last-child { border-radius: 0 6px 6px 0; }
+.modal-history-table tr.proj-row td { background: #f0fdf4; color: #15803d; font-weight: 800; }
+.modal-history-table tr.proj-row td:first-child { border-radius: 6px 0 0 6px; color: #15803d; }
 .modal-history-table tr.proj-row td:last-child { border-radius: 0 6px 6px 0; }
-.modal-history-loading { text-align: center; color: #94a3b8; font-size: 0.82em; padding: 12px; }
+.modal-history-loading { text-align: center; color: #94a3b8; font-size: 0.82em; padding: 16px; }
 
 /* Modal body */
-.modal-body { padding: 14px 20px 20px; display: flex; flex-direction: column; gap: 12px; }
-.modal-stat-label.last { color: #15803d; }
-.modal-stat-label.proj { color: #15803d; }
-.modal-stat-row { display: flex; gap: 12px; flex-wrap: wrap; }
-.modal-stat-item .v { font-size: 1.1em; font-weight: 800; }
-.modal-stat-item .l { font-size: 0.65em; color: #94a3b8; text-transform: uppercase; }
-.modal-scouting { font-size: 0.88em; color: #374151; line-height: 1.7; }
-.modal-comp { display: flex; align-items: center; gap: 8px; background: #f0fdf4; border-radius: 8px; padding: 8px 12px; font-size: 0.85em; color: #15803d; font-weight: 600; }
-.modal-risks { display: flex; flex-direction: column; gap: 5px; }
-.modal-risk-item { display: flex; align-items: center; gap: 7px; font-size: 0.83em; color: #475569; }
-.modal-risk-item::before { content: '⚠️'; font-size: 0.85em; }
+.modal-body { padding: 18px 22px 24px; background: white; border-radius: 0 0 24px 24px; display: flex; flex-direction: column; gap: 16px; }
+.modal-scouting { font-size: 0.88em; color: #374151; line-height: 1.75; }
+.modal-comp { display: flex; align-items: center; gap: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 10px 14px; font-size: 0.85em; color: #15803d; font-weight: 700; }
+.modal-risks { display: flex; flex-direction: column; gap: 6px; }
+.modal-risk-item { display: flex; align-items: flex-start; gap: 8px; font-size: 0.84em; color: #475569; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 7px 10px; }
+.modal-risk-item::before { content: '⚠️'; flex-shrink: 0; }
 
 /* Team / pos badges */
 .team-tag { display: inline-block; background: #dbeafe; color: #1e40af; font-size: 0.78em; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
@@ -1706,21 +1716,26 @@ function openModal(id) {
   const trendClass = `trend trend-${trend}`;
   const pv = getPV(p);
 
-  let statsRow = `<div style='display:flex;flex-wrap:wrap;gap:8px;padding:12px 20px;border-bottom:1px solid #f1f5f9;'>`;
+  // Stat cards — no duplication with hero (team/pos/age/aav already in meta)
+  const cards = [];
   if (!isG) {
-    statsRow += `<div style='background:#f0fdf4;border-radius:8px;padding:8px 14px;flex:1;min-width:80px;text-align:center'><div style='font-size:1.15em;font-weight:800;color:#15803d'>${p.proj_pts??'—'}</div><div style='font-size:0.65em;color:#94a3b8;text-transform:uppercase;letter-spacing:1px'>PTS Proj</div></div>`;
-    statsRow += `<div style='background:#f8fafc;border-radius:8px;padding:8px 14px;flex:1;min-width:80px;text-align:center'><div style='font-size:1.15em;font-weight:800;color:#1e293b'>${ppg(p.proj_pts,p.proj_gp)}</div><div style='font-size:0.65em;color:#94a3b8;text-transform:uppercase;letter-spacing:1px'>PPG Proj</div></div>`;
-    if (p.last_pts != null) statsRow += `<div style='background:#f8fafc;border-radius:8px;padding:8px 14px;flex:1;min-width:80px;text-align:center'><div style='font-size:1.15em;font-weight:800;color:#1e293b'>${ppg(p.last_pts,p.last_gp)}</div><div style='font-size:0.65em;color:#94a3b8;text-transform:uppercase;letter-spacing:1px'>PPG 2025-26</div></div>`;
-    statsRow += `<div style='background:#f8fafc;border-radius:8px;padding:8px 14px;flex:1;min-width:80px;text-align:center'><div style='font-size:1em;font-weight:800'><span class='${trendClass}'>${trendLabel}</span></div><div style='font-size:0.65em;color:#94a3b8;text-transform:uppercase;letter-spacing:1px'>Tendance</div></div>`;
+    cards.push(`<div class='modal-stat-card accent'><div class='sc-val'>${p.proj_pts??'—'}</div><div class='sc-lbl'>PTS Proj</div></div>`);
+    cards.push(`<div class='modal-stat-card accent'><div class='sc-val'>${ppg(p.proj_pts,p.proj_gp)}</div><div class='sc-lbl'>PPG Proj</div></div>`);
+    if (p.last_pts != null) cards.push(`<div class='modal-stat-card'><div class='sc-val'>${ppg(p.last_pts,p.last_gp)}</div><div class='sc-lbl'>PPG 2025-26</div></div>`);
+    cards.push(`<div class='modal-stat-card'><div class='sc-val'><span class='${trendClass}' style='font-size:0.85em'>${trendLabel}</span></div><div class='sc-lbl'>Tendance</div></div>`);
+  } else {
+    const gs = getGoalieStats(p);
+    cards.push(`<div class='modal-stat-card accent'><div class='sc-val'>${p.proj_g??'—'}</div><div class='sc-lbl'>V Proj</div></div>`);
+    if (gs.gaa) cards.push(`<div class='modal-stat-card'><div class='sc-val'>${gs.gaa}</div><div class='sc-lbl'>GAA</div></div>`);
+    if (gs.svp) cards.push(`<div class='modal-stat-card'><div class='sc-val'>${gs.svp.toFixed(3)}</div><div class='sc-lbl'>SV%</div></div>`);
   }
-  if (p.upside) statsRow += `<div style='background:#faf5ff;border-radius:8px;padding:8px 14px;flex:1;min-width:80px;text-align:center'><div style='font-size:1.15em;font-weight:800;color:#7c3aed'>${p.upside}</div><div style='font-size:0.65em;color:#94a3b8;text-transform:uppercase;letter-spacing:1px'>Plafond</div></div>`;
-  if (pv) statsRow += `<div style='background:#f8fafc;border-radius:8px;padding:8px 14px;flex:1;min-width:80px;text-align:center'><div style='font-size:1.15em;font-weight:800;color:#1e293b'>${pv.toFixed(1)}</div><div style='font-size:0.65em;color:#94a3b8;text-transform:uppercase;letter-spacing:1px'>Valeur</div></div>`;
-  if (p.pp_pct != null) statsRow += `<div style='background:#f8fafc;border-radius:8px;padding:8px 14px;flex:1;min-width:80px;text-align:center'><div style='font-size:1.15em;font-weight:800;color:#1e293b'>${p.pp_pct}%</div><div style='font-size:0.65em;color:#94a3b8;text-transform:uppercase;letter-spacing:1px'>PP%</div></div>`;
-  if (p.aav) statsRow += `<div style='background:#f8fafc;border-radius:8px;padding:8px 14px;flex:1;min-width:80px;text-align:center'><div style='font-size:1.15em;font-weight:800;color:#1e293b'>${p.aav}M$</div><div style='font-size:0.65em;color:#94a3b8;text-transform:uppercase;letter-spacing:1px'>AAV</div></div>`;
-  statsRow += `</div>`;
-  document.getElementById('modalStatsRow').innerHTML = statsRow;
+  if (p.upside) cards.push(`<div class='modal-stat-card purple'><div class='sc-val'>${p.upside}</div><div class='sc-lbl'>Plafond</div></div>`);
+  if (pv)       cards.push(`<div class='modal-stat-card'><div class='sc-val'>${pv.toFixed(1)}</div><div class='sc-lbl'>Valeur</div></div>`);
+  if (p.pp_pct != null) cards.push(`<div class='modal-stat-card'><div class='sc-val'>${p.pp_pct}%</div><div class='sc-lbl'>PP%</div></div>`);
+  document.getElementById('modalStatsRow').innerHTML = cards.length
+    ? `<div class='modal-stat-cards'>${cards.join('')}</div>` : '';
 
-  // Body
+  // Body — notes, comparable, risks
   let body = '';
   if (p.notes) body += `<div><div class='modal-section-title'>Notes de dépistage</div><div class='modal-scouting'>${p.notes}</div></div>`;
   if (p.comp_player) body += `<div><div class='modal-section-title'>Joueur comparable</div><div class='modal-comp'>🏒 ${p.comp_player}</div></div>`;
@@ -1728,7 +1743,7 @@ function openModal(id) {
     const risks = p.key_risks.split(',').map(r => r.trim()).filter(Boolean);
     body += `<div><div class='modal-section-title'>Risques principaux</div><div class='modal-risks'>${risks.map(r => `<div class='modal-risk-item'>${r}</div>`).join('')}</div></div>`;
   }
-  document.getElementById('modalBody').innerHTML = body || `<div class='modal-scouting' style='color:#94a3b8;font-style:italic'>Aucun rapport de dépistage disponible pour l'instant.</div>`;
+  document.getElementById('modalBody').innerHTML = body || `<div class='modal-scouting' style='color:#94a3b8;font-style:italic'>Aucun rapport de dépistage disponible.</div>`;
 
   document.getElementById('scoutingModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
