@@ -415,7 +415,7 @@ function renderPool() {
     const capWouldExceed = !isAdded && (capUsed() + (p.aav ? parseFloat(p.aav) : 0)) > CAP_MAX;
     const disabled = !isAdded && (grpFull || capWouldExceed);
     const cls = isAdded ? 'player-row added' : disabled ? 'player-row disabled' : 'player-row';
-    const aav = p.aav ? `${p.aav}M$` : 'Libre';
+    const aav = p.aav ? `${parseFloat(p.aav).toFixed(2)}M$` : 'Libre';
     const isG = p.pos === 'G';
     const lastPts = isG ? (p.proj_g != null ? `${p.proj_g ?? '—'} V` : '—') : (p.last_pts != null ? `${p.last_pts} pts` : '—');
     const projPts = p.proj_pts != null ? `${p.proj_pts} pts` : '—';
@@ -455,7 +455,7 @@ function renderRoster() {
     for (let i = 0; i < g.limit; i++) {
       const p = players[i];
       if (p) {
-        const aav = p.aav ? `${p.aav}M$` : '';
+        const aav = p.aav ? `${parseFloat(p.aav).toFixed(2)}M$` : '';
         const pts = p.proj_pts != null ? `${p.proj_pts} pts` : '';
         slots.push(`
           <div class='roster-slot filled'>
