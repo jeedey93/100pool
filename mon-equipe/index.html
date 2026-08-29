@@ -246,7 +246,7 @@ const CAP_MAX = 104;
 const STORAGE_KEY = '100pool_team_2026';
 
 const LIMITS = { F: 12, D: 6, G: 2 };
-const POS_GROUP = p => ['C','LW','RW','F'].includes(p.pos) ? 'F' : p.pos === 'D' ? 'D' : 'G';
+const POS_GROUP = p => ['C','LW','RW','F'].includes(p.pos) ? 'F' : p.pos === 'D' ? 'D' : p.pos === 'G' ? 'G' : null;
 const POS_LABEL = { F: 'Attaquants', D: 'Défenseurs', G: 'Gardiens' };
 
 let allPlayers = [];
@@ -322,6 +322,7 @@ function addPlayer(id) {
   const p = allPlayers.find(p => p.id === id);
   if (!p) return;
   const grp = POS_GROUP(p);
+  if (!grp) return;
   const cur = team.filter(tid => { const tp = allPlayers.find(p=>p.id===tid); return tp && POS_GROUP(tp)===grp; }).length;
   if (cur >= LIMITS[grp]) { showToast(`Limite de ${POS_LABEL[grp].toLowerCase()} atteinte (${LIMITS[grp]})`, true); return; }
   const newCap = capUsed() + (p.aav ? parseFloat(p.aav) : 0);
