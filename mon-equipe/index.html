@@ -246,7 +246,8 @@ const CAP_MAX = 104;
 const STORAGE_KEY = '100pool_team_2026';
 
 const LIMITS = { F: 12, D: 6, G: 2 };
-const POS_GROUP = p => ['C','LW','RW','F'].includes(p.pos) ? 'F' : p.pos === 'D' ? 'D' : p.pos === 'G' ? 'G' : null;
+const IS_FWD = pos => pos && /^(C|LW|RW|AG|AD|F)(\/.*)?$/.test(pos);
+const POS_GROUP = p => IS_FWD(p.pos) ? 'F' : p.pos === 'D' ? 'D' : p.pos === 'G' ? 'G' : null;
 const POS_LABEL = { F: 'Attaquants', D: 'Défenseurs', G: 'Gardiens' };
 
 let allPlayers = [];
@@ -382,7 +383,7 @@ function loadTeamFromUrl() {
 function getFiltered() {
   return allPlayers.filter(p => {
     if (posFilter !== 'ALL') {
-      if (posFilter === 'F' && !['C','LW','RW','F'].includes(p.pos)) return false;
+      if (posFilter === 'F' && !IS_FWD(p.pos)) return false;
       if (posFilter === 'D' && p.pos !== 'D') return false;
       if (posFilter === 'G' && p.pos !== 'G') return false;
     }
