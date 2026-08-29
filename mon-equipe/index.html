@@ -109,7 +109,11 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
 .player-info { flex: 1; min-width: 0; }
 .player-name { font-size: 0.88em; font-weight: 700; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .player-meta { font-size: 0.72em; color: #94a3b8; font-weight: 600; }
-.player-pts { font-size: 0.82em; font-weight: 800; color: #64748b; white-space: nowrap; }
+.player-stats-col { display: flex; flex-direction: column; gap: 2px; align-items: flex-end; }
+.stat-row { display: flex; align-items: center; gap: 4px; }
+.stat-lbl { font-size: 0.65em; font-weight: 700; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.5px; width: 28px; text-align: right; }
+.stat-val { font-size: 0.78em; font-weight: 800; color: #64748b; white-space: nowrap; min-width: 42px; text-align: right; }
+.stat-val.proj { color: #2d8a3e; }
 .player-aav { font-size: 0.78em; font-weight: 700; color: #94a3b8; white-space: nowrap; min-width: 44px; text-align: right; }
 .add-btn { width: 26px; height: 26px; background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 50%; color: #2d8a3e; font-size: 1.1em; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; line-height: 1; }
 .player-row:hover .add-btn { background: #2d8a3e; border-color: #2d8a3e; color: white; }
@@ -410,15 +414,20 @@ function renderPool() {
     const capWouldExceed = !isAdded && (capUsed() + (p.aav ? parseFloat(p.aav) : 0)) > CAP_MAX;
     const disabled = !isAdded && (grpFull || capWouldExceed);
     const cls = isAdded ? 'player-row added' : disabled ? 'player-row disabled' : 'player-row';
-    const pts = p.proj_pts != null ? `${p.proj_pts} pts` : '—';
     const aav = p.aav ? `${p.aav}M$` : 'Libre';
+    const isG = p.pos === 'G';
+    const lastPts = isG ? (p.proj_g != null ? `${p.proj_g ?? '—'} V` : '—') : (p.last_pts != null ? `${p.last_pts} pts` : '—');
+    const projPts = p.proj_pts != null ? `${p.proj_pts} pts` : '—';
     return `<div class='${cls}' onclick='addPlayer(${p.id})'>
       <img class='player-team-logo' src='https://assets.nhle.com/logos/nhl/svg/${p.team}_light.svg' alt='${p.team}' loading='lazy'>
       <div class='player-info'>
         <div class='player-name'>${p.name}</div>
         <div class='player-meta'>${p.team} · ${p.pos}${p.age ? ' · ' + p.age + ' ans' : ''}</div>
       </div>
-      <div class='player-pts'>${pts}</div>
+      <div class='player-stats-col'>
+        <div class='stat-row'><span class='stat-lbl'>Dern.</span><span class='stat-val'>${lastPts}</span></div>
+        <div class='stat-row'><span class='stat-lbl'>Proj.</span><span class='stat-val proj'>${projPts}</span></div>
+      </div>
       <div class='player-aav'>${aav}</div>
       <div class='add-btn'>${isAdded ? '✓' : '+'}</div>
     </div>`;
