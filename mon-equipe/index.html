@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang='fr'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+<title>Constructeur d'équipe — 100% Pool</title>
+<meta name='description' content='Construis ton équipe de pool NHL 2026-27 avec un plafond salarial de 104M$. 12 attaquants, 6 défenseurs, 2 gardiens.'>
+<meta property='og:type' content='website'>
+<meta property='og:url' content='https://100pool.ca/mon-equipe/'>
+<meta property='og:title' content='Constructeur d'équipe NHL — 100% Pool'>
+<meta property='og:image' content='https://100pool.ca/100pool.jpg'>
+<link rel='icon' type='image/png' href='../100pool.jpg'>
+<link rel='apple-touch-icon' href='../100pool.jpg?v=2'>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { overflow-x: hidden; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
+
+/* ── NAV ── */
+nav { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; height: 56px; display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); position: sticky; top: 0; z-index: 200; }
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; line-height: 1; }
+.nav-logo img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; vertical-align: middle; }
+.nav-logo span { color: white; font-weight: 800; font-size: 1.05em; vertical-align: middle; }
+.nav-links { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.nav-link { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.85em; font-weight: 600; padding: 7px 14px; border-radius: 8px; transition: all 0.2s; }
+.nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
+.nav-link.active { background: rgba(255,255,255,0.15); color: white; }
+.nav-btn { background: #f5c842; color: #1a3d10 !important; font-weight: 800; border-radius: 8px; }
+.nav-btn:hover { background: #f9d55a !important; }
+.nav-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; margin-left: auto; flex-direction: column; gap: 5px; align-items: center; justify-content: center; }
+.nav-hamburger span { display: block; width: 22px; height: 2px; background: white; border-radius: 2px; transition: all 0.2s; }
+.nav-mobile { display: none; position: fixed; top: 56px; left: 0; right: 0; background: linear-gradient(135deg, #1a5c28, #2d8a3e); border-top: 1px solid rgba(255,255,255,0.1); padding: 8px 16px 16px; flex-direction: column; gap: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.nav-mobile.open { display: flex; }
+.nav-mobile .nav-link { padding: 11px 14px; font-size: 0.95em; border-radius: 8px; }
+@media (max-width: 640px) {
+  nav { padding: 0 16px; }
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+}
+
+/* ── FOOTER ── */
+footer { background: #0f1f13; padding: 40px 24px; text-align: center; }
+footer .logo { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 14px; }
+footer .logo img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+footer .logo span { color: white; font-weight: 800; font-size: 0.95em; }
+.footer-links { display: flex; gap: 20px; justify-content: center; margin-bottom: 14px; flex-wrap: wrap; }
+.footer-links a { color: rgba(255,255,255,0.4); font-size: 0.8em; text-decoration: none; font-weight: 600; transition: color 0.2s; }
+.footer-links a:hover { color: rgba(255,255,255,0.8); }
+footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
+
+/* ── PAGE HEADER ── */
+.page-header { background: linear-gradient(135deg, #1a5c28 0%, #2d8a3e 50%, #1e6b2e 100%); padding: 36px 24px 32px; text-align: center; }
+.page-header h1 { font-size: 1.8em; font-weight: 900; color: white; margin-bottom: 6px; }
+.page-header p { color: rgba(255,255,255,0.75); font-size: 0.9em; }
+
+/* ── CAP BAR ── */
+.cap-bar-wrap { background: white; border-bottom: 1px solid #e8edf2; padding: 14px 24px; position: sticky; top: 56px; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+.cap-bar-inner { max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+.cap-bar-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.cap-label { font-size: 0.85em; font-weight: 700; color: #475569; }
+.cap-amount { font-size: 1.1em; font-weight: 900; color: #1e293b; }
+.cap-amount .used { color: #2d8a3e; }
+.cap-amount.over .used { color: #dc2626; }
+.cap-slots { display: flex; gap: 16px; flex-wrap: wrap; }
+.cap-slot { font-size: 0.78em; font-weight: 700; color: #64748b; white-space: nowrap; }
+.cap-slot .val { font-weight: 900; color: #1e293b; }
+.cap-slot .val.full { color: #2d8a3e; }
+.cap-slot .val.over { color: #dc2626; }
+.cap-progress { height: 8px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+.cap-progress-fill { height: 100%; background: linear-gradient(90deg, #2d8a3e, #34d399); border-radius: 99px; transition: width 0.3s, background 0.3s; }
+.cap-progress-fill.over { background: linear-gradient(90deg, #dc2626, #f87171); }
+.cap-actions { display: flex; gap: 8px; }
+.cap-btn { background: white; border: 1px solid #e2e8f0; border-radius: 8px; color: #64748b; padding: 6px 12px; font-size: 0.78em; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+.cap-btn:hover { border-color: #cbd5e1; color: #1e293b; }
+.cap-btn.danger { color: #dc2626; border-color: #fecaca; }
+.cap-btn.danger:hover { background: #fff1f2; }
+.cap-btn.share-btn { color: #2d8a3e; border-color: #bbf7d0; }
+.cap-btn.share-btn:hover { background: #f0fdf4; }
+
+/* ── MAIN LAYOUT ── */
+.builder-wrap { max-width: 1400px; margin: 0 auto; padding: 20px 16px 60px; display: grid; grid-template-columns: 1fr 420px; gap: 20px; }
+@media (max-width: 900px) {
+  .builder-wrap { grid-template-columns: 1fr; }
+}
+
+/* ── PLAYER POOL (left) ── */
+.pool-panel { background: white; border-radius: 14px; border: 1px solid #e8edf2; box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden; }
+.panel-title { font-size: 0.78em; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #94a3b8; padding: 14px 16px 0; }
+.pool-controls { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid #f1f5f9; }
+.pool-search { position: relative; }
+.pool-search input { width: 100%; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 9px; color: #1e293b; padding: 8px 10px 8px 32px; font-size: 0.88em; outline: none; transition: border-color 0.2s; }
+.pool-search input:focus { border-color: #2d8a3e; background: white; }
+.pool-search::before { content: '🔍'; position: absolute; left: 9px; top: 50%; transform: translateY(-50%); font-size: 0.82em; pointer-events: none; }
+.pool-filters { display: flex; gap: 4px; flex-wrap: wrap; }
+.pill { background: #f1f5f9; border: 1.5px solid #e2e8f0; border-radius: 99px; color: #64748b; font-size: 0.76em; font-weight: 700; padding: 4px 11px; cursor: pointer; transition: all 0.15s; white-space: nowrap; user-select: none; }
+.pill:hover { border-color: #cbd5e1; color: #1e293b; }
+.pill.active { background: #2d8a3e; border-color: #2d8a3e; color: white; }
+.pool-list { max-height: calc(100vh - 260px); overflow-y: auto; }
+.pool-list::-webkit-scrollbar { width: 5px; }
+.pool-list::-webkit-scrollbar-track { background: transparent; }
+.pool-list::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 99px; }
+.player-row { display: flex; align-items: center; gap: 10px; padding: 9px 16px; border-bottom: 1px solid #f8fafc; cursor: pointer; transition: background 0.15s; }
+.player-row:hover { background: #f0fdf4; }
+.player-row.added { opacity: 0.38; pointer-events: none; }
+.player-row.disabled { opacity: 0.28; pointer-events: none; cursor: not-allowed; }
+.player-team-logo { width: 28px; height: 28px; object-fit: contain; flex-shrink: 0; }
+.player-info { flex: 1; min-width: 0; }
+.player-name { font-size: 0.88em; font-weight: 700; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.player-meta { font-size: 0.72em; color: #94a3b8; font-weight: 600; }
+.player-pts { font-size: 0.82em; font-weight: 800; color: #64748b; white-space: nowrap; }
+.player-aav { font-size: 0.78em; font-weight: 700; color: #94a3b8; white-space: nowrap; min-width: 44px; text-align: right; }
+.add-btn { width: 26px; height: 26px; background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 50%; color: #2d8a3e; font-size: 1.1em; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; line-height: 1; }
+.player-row:hover .add-btn { background: #2d8a3e; border-color: #2d8a3e; color: white; }
+.pool-empty { padding: 48px 24px; text-align: center; color: #94a3b8; font-size: 0.88em; }
+
+/* ── ROSTER PANEL (right) ── */
+.roster-panel { display: flex; flex-direction: column; gap: 14px; }
+.roster-group { background: white; border-radius: 14px; border: 1px solid #e8edf2; box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden; }
+.group-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px 10px; border-bottom: 1px solid #f1f5f9; }
+.group-title { font-size: 0.78em; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #475569; }
+.group-count { font-size: 0.75em; font-weight: 700; color: #94a3b8; }
+.group-count .cur { font-weight: 900; color: #1e293b; }
+.group-count .cur.full { color: #2d8a3e; }
+.roster-slots { padding: 8px 12px 10px; display: flex; flex-direction: column; gap: 4px; }
+.roster-slot { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 9px; background: #f8fafc; border: 1.5px dashed #e2e8f0; min-height: 44px; transition: all 0.15s; }
+.roster-slot.filled { background: white; border-style: solid; border-color: #e8edf2; }
+.roster-slot.filled:hover { border-color: #fecaca; background: #fff8f8; }
+.slot-logo { width: 24px; height: 24px; object-fit: contain; flex-shrink: 0; }
+.slot-name { flex: 1; font-size: 0.83em; font-weight: 700; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.slot-pos { font-size: 0.68em; font-weight: 800; color: #94a3b8; background: #f1f5f9; padding: 2px 6px; border-radius: 5px; white-space: nowrap; }
+.slot-pts { font-size: 0.75em; font-weight: 700; color: #64748b; white-space: nowrap; }
+.slot-aav { font-size: 0.72em; font-weight: 700; color: #94a3b8; white-space: nowrap; min-width: 36px; text-align: right; }
+.slot-remove { width: 20px; height: 20px; background: none; border: none; color: #cbd5e1; font-size: 1em; cursor: pointer; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; padding: 0; line-height: 1; }
+.roster-slot.filled:hover .slot-remove { color: #ef4444; }
+.slot-empty-label { font-size: 0.75em; color: #cbd5e1; font-style: italic; }
+
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1e293b; color: white; padding: 10px 20px; border-radius: 10px; font-size: 0.85em; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.2); z-index: 999; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; white-space: nowrap; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.warn { background: #dc2626; }
+
+/* ── LOADING ── */
+.loading { display: flex; align-items: center; justify-content: center; padding: 80px 24px; flex-direction: column; gap: 14px; }
+.spinner { width: 32px; height: 32px; border: 3px solid #e2e8f0; border-top-color: #2d8a3e; border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading p { color: #94a3b8; font-size: 0.88em; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href='/' class='nav-logo'>
+    <img src='../100pool.jpg' alt='100% Pool'>
+    <span>100% Pool</span>
+  </a>
+  <div class='nav-links'>
+    <a href='/' class='nav-link'>Accueil</a>
+    <a href='/guide-poolers/2026-2027/' class='nav-link'>Guide</a>
+    <a href='/mon-equipe/' class='nav-link active'>Mon équipe</a>
+    <a href='/podcast/' class='nav-link'>Podcast</a>
+    <a href='/guide-poolers/' class='nav-link nav-btn'>Obtenir le guide</a>
+  </div>
+  <button class='nav-hamburger' onclick='toggleMenu()' aria-label='Menu'>
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class='nav-mobile' id='navMobile'>
+  <a href='/' class='nav-link'>Accueil</a>
+  <a href='/guide-poolers/2026-2027/' class='nav-link'>Guide</a>
+  <a href='/mon-equipe/' class='nav-link active'>Mon équipe</a>
+  <a href='/podcast/' class='nav-link'>Podcast</a>
+  <a href='/guide-poolers/' class='nav-link nav-btn'>Obtenir le guide</a>
+</div>
+
+<!-- HEADER -->
+<div class='page-header'>
+  <h1>Constructeur d'équipe</h1>
+  <p>12 attaquants · 6 défenseurs · 2 gardiens · Plafond de 104M$</p>
+</div>
+
+<!-- CAP BAR -->
+<div class='cap-bar-wrap'>
+  <div class='cap-bar-inner'>
+    <div class='cap-bar-top'>
+      <div>
+        <div class='cap-label'>Plafond salarial</div>
+        <div class='cap-amount' id='capAmount'><span class='used' id='capUsed'>0.0M$</span> / 104.0M$</div>
+      </div>
+      <div class='cap-slots' id='capSlots'>
+        <div class='cap-slot'>Attaquants : <span class='val' id='cntF'>0</span>/12</div>
+        <div class='cap-slot'>Défenseurs : <span class='val' id='cntD'>0</span>/6</div>
+        <div class='cap-slot'>Gardiens : <span class='val' id='cntG'>0</span>/2</div>
+        <div class='cap-slot'>Total : <span class='val' id='cntTotal'>0</span>/20</div>
+      </div>
+      <div class='cap-actions'>
+        <button class='cap-btn share-btn' onclick='shareTeam()'>Partager</button>
+        <button class='cap-btn danger' onclick='clearTeam()'>Réinitialiser</button>
+      </div>
+    </div>
+    <div class='cap-progress'>
+      <div class='cap-progress-fill' id='capFill' style='width:0%'></div>
+    </div>
+  </div>
+</div>
+
+<!-- BUILDER -->
+<div class='builder-wrap' id='builderWrap'>
+  <div class='loading' id='loadingState'>
+    <div class='spinner'></div>
+    <p>Chargement des joueurs…</p>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class='toast' id='toast'></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class='logo'>
+    <img src='../100pool.jpg' alt='100% Pool'>
+    <span>100% Pool</span>
+  </div>
+  <div class='footer-links'>
+    <a href='/'>Accueil</a>
+    <a href='/guide-poolers/'>Guide des poolers</a>
+    <a href='/mon-equipe/'>Mon équipe</a>
+    <a href='/podcast/'>Podcast</a>
+    <a href='/faq/'>FAQ</a>
+    <a href='mailto:100pool.podcast@gmail.com'>Contact</a>
+  </div>
+  <p>© 2026 100% Pool</p>
+</footer>
+
+<script>
+const SUPABASE_URL = 'https://fifurqlitkywtmhgtzeu.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpZnVycWxpdGt5d3RtaGd0emV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDIyMjQsImV4cCI6MjA5MjI3ODIyNH0.KPVPj1qwbSJJMyLR_-AhDcRs0vi2sUU6qbFQ-kH53C0';
+const SB_HEADERS = { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` };
+const CAP_MAX = 104;
+const STORAGE_KEY = '100pool_team_2026';
+
+const LIMITS = { F: 12, D: 6, G: 2 };
+const POS_GROUP = p => ['C','LW','RW','F'].includes(p.pos) ? 'F' : p.pos === 'D' ? 'D' : 'G';
+const POS_LABEL = { F: 'Attaquants', D: 'Défenseurs', G: 'Gardiens' };
+
+let allPlayers = [];
+let team = [];   // array of player ids
+let posFilter = 'ALL';
+let searchQ = '';
+
+// ── NAV ──────────────────────────────────────────────────
+function toggleMenu() {
+  document.getElementById('navMobile').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('nav')) document.getElementById('navMobile').classList.remove('open');
+});
+
+// ── STORAGE ──────────────────────────────────────────────
+function saveTeam() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(team));
+}
+function loadTeamFromStorage() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
+}
+
+// ── CAP ───────────────────────────────────────────────────
+function capUsed() {
+  return team.reduce((sum, id) => {
+    const p = allPlayers.find(p => p.id === id);
+    return sum + (p && p.aav ? parseFloat(p.aav) : 0);
+  }, 0);
+}
+
+function updateCapBar() {
+  const used = capUsed();
+  const pct = Math.min((used / CAP_MAX) * 100, 100);
+  const over = used > CAP_MAX;
+  const usedStr = used.toFixed(1) + 'M$';
+
+  document.getElementById('capUsed').textContent = usedStr;
+  document.getElementById('capAmount').classList.toggle('over', over);
+
+  const fill = document.getElementById('capFill');
+  fill.style.width = pct + '%';
+  fill.classList.toggle('over', over);
+
+  const fwd = team.filter(id => { const p = allPlayers.find(p=>p.id===id); return p && POS_GROUP(p)==='F'; }).length;
+  const def = team.filter(id => { const p = allPlayers.find(p=>p.id===id); return p && POS_GROUP(p)==='D'; }).length;
+  const gol = team.filter(id => { const p = allPlayers.find(p=>p.id===id); return p && POS_GROUP(p)==='G'; }).length;
+
+  document.getElementById('cntF').textContent = fwd;
+  document.getElementById('cntD').textContent = def;
+  document.getElementById('cntG').textContent = gol;
+  document.getElementById('cntTotal').textContent = team.length;
+
+  document.getElementById('cntF').className = 'val' + (fwd === LIMITS.F ? ' full' : '');
+  document.getElementById('cntD').className = 'val' + (def === LIMITS.D ? ' full' : '');
+  document.getElementById('cntG').className = 'val' + (gol === LIMITS.G ? ' full' : '');
+}
+
+// ── TOAST ─────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg, warn = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (warn ? ' warn' : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+}
+
+// ── ADD / REMOVE ─────────────────────────────────────────
+function addPlayer(id) {
+  if (team.includes(id)) return;
+  const p = allPlayers.find(p => p.id === id);
+  if (!p) return;
+  const grp = POS_GROUP(p);
+  const cur = team.filter(tid => { const tp = allPlayers.find(p=>p.id===tid); return tp && POS_GROUP(tp)===grp; }).length;
+  if (cur >= LIMITS[grp]) { showToast(`Limite de ${POS_LABEL[grp].toLowerCase()} atteinte (${LIMITS[grp]})`, true); return; }
+  const newCap = capUsed() + (p.aav ? parseFloat(p.aav) : 0);
+  if (newCap > CAP_MAX) { showToast(`Plafond de ${CAP_MAX}M$ dépassé !`, true); return; }
+  team.push(id);
+  saveTeam();
+  updateCapBar();
+  renderRoster();
+  renderPool();
+  showToast(`${p.name} ajouté`);
+}
+
+function removePlayer(id) {
+  team = team.filter(tid => tid !== id);
+  saveTeam();
+  updateCapBar();
+  renderRoster();
+  renderPool();
+  const p = allPlayers.find(p => p.id === id);
+  if (p) showToast(`${p.name} retiré`);
+}
+
+function clearTeam() {
+  if (!team.length) return;
+  if (!confirm('Réinitialiser ton équipe ?')) return;
+  team = [];
+  saveTeam();
+  updateCapBar();
+  renderRoster();
+  renderPool();
+}
+
+// ── SHARE ─────────────────────────────────────────────────
+function shareTeam() {
+  if (!team.length) { showToast('Aucun joueur dans ton équipe', true); return; }
+  const encoded = btoa(JSON.stringify(team));
+  const url = window.location.origin + '/mon-equipe/?team=' + encodeURIComponent(encoded);
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => showToast('Lien copié dans le presse-papiers !'));
+  } else {
+    prompt('Copie ce lien :', url);
+  }
+}
+
+function loadTeamFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const t = params.get('team');
+  if (!t) return false;
+  try {
+    const ids = JSON.parse(atob(decodeURIComponent(t)));
+    if (Array.isArray(ids)) { team = ids.filter(id => allPlayers.find(p => p.id === id)); return true; }
+  } catch {}
+  return false;
+}
+
+// ── POOL RENDER ───────────────────────────────────────────
+function getFiltered() {
+  return allPlayers.filter(p => {
+    if (posFilter !== 'ALL') {
+      if (posFilter === 'F' && !['C','LW','RW','F'].includes(p.pos)) return false;
+      if (posFilter !== 'F' && posFilter !== 'ALL' && p.pos !== posFilter) return false;
+    }
+    if (searchQ) {
+      const q = searchQ.toLowerCase();
+      if (!p.name.toLowerCase().includes(q) && !p.team.toLowerCase().includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function renderPool() {
+  const list = document.getElementById('playerList');
+  if (!list) return;
+  const players = getFiltered();
+  if (!players.length) {
+    list.innerHTML = `<div class='pool-empty'>Aucun joueur trouvé.</div>`;
+    return;
+  }
+
+  const fwd = team.filter(id => { const p = allPlayers.find(p=>p.id===id); return p && POS_GROUP(p)==='F'; }).length;
+  const def = team.filter(id => { const p = allPlayers.find(p=>p.id===id); return p && POS_GROUP(p)==='D'; }).length;
+  const gol = team.filter(id => { const p = allPlayers.find(p=>p.id===id); return p && POS_GROUP(p)==='G'; }).length;
+
+  list.innerHTML = players.map(p => {
+    const isAdded = team.includes(p.id);
+    const grp = POS_GROUP(p);
+    const grpFull = (grp==='F' && fwd>=LIMITS.F) || (grp==='D' && def>=LIMITS.D) || (grp==='G' && gol>=LIMITS.G);
+    const capWouldExceed = !isAdded && (capUsed() + (p.aav ? parseFloat(p.aav) : 0)) > CAP_MAX;
+    const disabled = !isAdded && (grpFull || capWouldExceed);
+    const cls = isAdded ? 'player-row added' : disabled ? 'player-row disabled' : 'player-row';
+    const pts = p.proj_pts != null ? `${p.proj_pts} pts` : '—';
+    const aav = p.aav ? `${p.aav}M$` : 'Libre';
+    return `<div class='${cls}' onclick='addPlayer(${p.id})'>
+      <img class='player-team-logo' src='https://assets.nhle.com/logos/nhl/svg/${p.team}_light.svg' alt='${p.team}' loading='lazy'>
+      <div class='player-info'>
+        <div class='player-name'>${p.name}</div>
+        <div class='player-meta'>${p.team} · ${p.pos}${p.age ? ' · ' + p.age + ' ans' : ''}</div>
+      </div>
+      <div class='player-pts'>${pts}</div>
+      <div class='player-aav'>${aav}</div>
+      <div class='add-btn'>${isAdded ? '✓' : '+'}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── ROSTER RENDER ─────────────────────────────────────────
+function renderRoster() {
+  const panel = document.getElementById('rosterPanel');
+  if (!panel) return;
+
+  const groups = [
+    { key: 'F', label: 'Attaquants', limit: 12 },
+    { key: 'D', label: 'Défenseurs', limit: 6 },
+    { key: 'G', label: 'Gardiens', limit: 2 },
+  ];
+
+  panel.innerHTML = groups.map(g => {
+    const players = team
+      .map(id => allPlayers.find(p => p.id === id))
+      .filter(p => p && POS_GROUP(p) === g.key);
+
+    const slots = [];
+    for (let i = 0; i < g.limit; i++) {
+      const p = players[i];
+      if (p) {
+        const aav = p.aav ? `${p.aav}M$` : '';
+        const pts = p.proj_pts != null ? `${p.proj_pts} pts` : '';
+        slots.push(`
+          <div class='roster-slot filled'>
+            <img class='slot-logo' src='https://assets.nhle.com/logos/nhl/svg/${p.team}_light.svg' alt='${p.team}' loading='lazy'>
+            <div class='slot-name'>${p.name}</div>
+            <span class='slot-pos'>${p.pos}</span>
+            <div class='slot-pts'>${pts}</div>
+            <div class='slot-aav'>${aav}</div>
+            <button class='slot-remove' onclick='removePlayer(${p.id})' title='Retirer'>×</button>
+          </div>`);
+      } else {
+        slots.push(`<div class='roster-slot'><span class='slot-empty-label'>Vide</span></div>`);
+      }
+    }
+
+    const cur = players.length;
+    const isFull = cur === g.limit;
+    return `
+      <div class='roster-group'>
+        <div class='group-header'>
+          <div class='group-title'>${g.label}</div>
+          <div class='group-count'><span class='cur${isFull ? ' full' : ''}'>${cur}</span> / ${g.limit}</div>
+        </div>
+        <div class='roster-slots'>${slots.join('')}</div>
+      </div>`;
+  }).join('');
+}
+
+// ── BUILD LAYOUT ─────────────────────────────────────────
+function buildLayout() {
+  document.getElementById('builderWrap').innerHTML = `
+    <div class='pool-panel'>
+      <div class='panel-title'>Joueurs disponibles</div>
+      <div class='pool-controls'>
+        <div class='pool-search'>
+          <input type='text' id='searchInput' placeholder='Chercher un joueur ou une équipe…' oninput='onSearch(this.value)'>
+        </div>
+        <div class='pool-filters'>
+          <button class='pill active' onclick='setPos("ALL",this)'>Tous</button>
+          <button class='pill' onclick='setPos("F",this)'>Attaquants</button>
+          <button class='pill' onclick='setPos("C",this)'>C</button>
+          <button class='pill' onclick='setPos("LW",this)'>AG</button>
+          <button class='pill' onclick='setPos("RW",this)'>AD</button>
+          <button class='pill' onclick='setPos("D",this)'>Défenseurs</button>
+          <button class='pill' onclick='setPos("G",this)'>Gardiens</button>
+        </div>
+      </div>
+      <div class='pool-list' id='playerList'></div>
+    </div>
+    <div class='roster-panel' id='rosterPanel'></div>
+  `;
+}
+
+function setPos(pos, btn) {
+  posFilter = pos;
+  document.querySelectorAll('.pool-filters .pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPool();
+}
+
+function onSearch(val) {
+  searchQ = val.trim();
+  renderPool();
+}
+
+// ── INIT ──────────────────────────────────────────────────
+async function init() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/poolers_players?order=proj_pts.desc&select=id,name,team,pos,age,aav,proj_pts,proj_g,proj_a,proj_gp,last_pts,last_gp,tier`, { headers: SB_HEADERS });
+  if (!res.ok) {
+    document.getElementById('builderWrap').innerHTML = `<div class='loading'><p>Erreur de chargement. Recharge la page.</p></div>`;
+    return;
+  }
+  allPlayers = await res.json();
+
+  if (!loadTeamFromUrl()) {
+    team = loadTeamFromStorage().filter(id => allPlayers.find(p => p.id === id));
+  }
+
+  buildLayout();
+  renderRoster();
+  renderPool();
+  updateCapBar();
+}
+
+init();
+</script>
+</body>
+</html>
