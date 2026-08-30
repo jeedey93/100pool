@@ -916,22 +916,30 @@ function renderDashboard() {
     const remLabel = over ? `${(used - CAP_MAX).toFixed(2)}M$ dépassé` : `${remaining.toFixed(2)}M$ restant`;
     const remCls = over ? 'red' : tight ? 'orange' : 'green';
 
-    const topPlayers = picks
-      .map(id => allPlayers.find(p => p.id === id))
-      .filter(Boolean)
-      .sort((a, b) => (b.proj_pts ?? 0) - (a.proj_pts ?? 0))
-      .slice(0, 3);
+    const groups = [
+      { key: 'F', label: 'Attaquants' },
+      { key: 'D', label: 'Défenseurs' },
+      { key: 'G', label: 'Gardiens' },
+    ];
 
-    const topHtml = topPlayers.length ? `
-      <div class='dash-top-picks'>
-        <div class='dash-top-label'>Top joueurs</div>
-        ${topPlayers.map(p => `
+    const rosterHtml = picks.length ? groups.map(g => {
+      const gPlayers = picks
+        .map(id => allPlayers.find(p => p.id === id))
+        .filter(p => p && POS_GROUP(p) === g.key)
+        .sort((a, b) => (b.proj_pts ?? 0) - (a.proj_pts ?? 0));
+      if (!gPlayers.length) return '';
+      return `<div class='dash-top-picks'>
+        <div class='dash-top-label'>${g.label}</div>
+        ${gPlayers.map(p => `
           <div class='dash-top-player'>
             <img class='dash-top-logo' src='https://assets.nhle.com/logos/nhl/svg/${p.team}_light.svg' alt='${p.team}' loading='lazy'>
             <div class='dash-top-name'>${p.name}</div>
             <div class='dash-top-pts'>${p.proj_pts ?? '—'} pts</div>
           </div>`).join('')}
-      </div>` : `<div class='dash-empty'>Aucun joueur sélectionné</div>`;
+      </div>`;
+    }).join('') : '';
+
+    const topHtml = rosterHtml || `<div class='dash-empty'>Aucun joueur sélectionné</div>`;
 
     return `<div class='dash-card'>
       <div class='dash-card-header'>
