@@ -224,6 +224,46 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
 .team-list-item .del-btn:hover { color: #dc2626; }
 .add-team-btn { display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: #f0fdf4; border: 1.5px dashed #bbf7d0; border-radius: 9px; color: #2d8a3e; font-size: 0.85em; font-weight: 700; cursor: pointer; transition: all 0.15s; }
 .add-team-btn:hover { background: #dcfce7; }
+
+/* ── DASHBOARD ── */
+.dashboard-wrap { max-width: 1400px; margin: 0 auto; padding: 20px 16px 60px; }
+.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.dash-card { background: white; border-radius: 14px; border: 1px solid #e8edf2; box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden; }
+.dash-card-header { padding: 14px 18px 10px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; }
+.dash-team-name { font-size: 1em; font-weight: 900; color: #1e293b; }
+.dash-pick-btn { font-size: 0.75em; font-weight: 700; color: #2d8a3e; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 7px; padding: 4px 10px; cursor: pointer; transition: all 0.15s; }
+.dash-pick-btn:hover { background: #dcfce7; }
+.dash-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; padding: 12px 18px; border-bottom: 1px solid #f1f5f9; }
+.dash-stat { text-align: center; }
+.dash-stat-val { font-size: 1.15em; font-weight: 900; color: #1e293b; line-height: 1; }
+.dash-stat-val.green { color: #2d8a3e; }
+.dash-stat-val.orange { color: #f59e0b; }
+.dash-stat-val.red { color: #dc2626; }
+.dash-stat-lbl { font-size: 0.65em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; margin-top: 3px; }
+.dash-cap-bar { height: 5px; background: #e2e8f0; margin: 0 18px 12px; border-radius: 99px; overflow: hidden; }
+.dash-cap-fill { height: 100%; border-radius: 99px; transition: width 0.4s; }
+.dash-slots { display: flex; gap: 6px; padding: 0 18px 14px; flex-wrap: wrap; }
+.dash-slot-group { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 70px; }
+.dash-slot-label { font-size: 0.62em; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; margin-bottom: 2px; }
+.dash-slot-bar { height: 6px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+.dash-slot-fill { height: 100%; background: #2d8a3e; border-radius: 99px; transition: width 0.3s; }
+.dash-slot-fill.full { background: #15803d; }
+.dash-slot-text { font-size: 0.72em; font-weight: 700; color: #64748b; }
+.dash-slot-text .cur { font-weight: 900; color: #1e293b; }
+.dash-slot-text .cur.full { color: #2d8a3e; }
+.dash-top-picks { padding: 0 18px 14px; }
+.dash-top-label { font-size: 0.65em; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; margin-bottom: 6px; }
+.dash-top-player { display: flex; align-items: center; gap: 7px; padding: 4px 0; border-bottom: 1px solid #f8fafc; }
+.dash-top-player:last-child { border-bottom: none; }
+.dash-top-logo { width: 18px; height: 18px; object-fit: contain; flex-shrink: 0; }
+.dash-top-name { font-size: 0.78em; font-weight: 700; color: #1e293b; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dash-top-pts { font-size: 0.72em; font-weight: 700; color: #2d8a3e; white-space: nowrap; }
+.dash-empty { padding: 20px 18px; text-align: center; color: #94a3b8; font-size: 0.82em; font-style: italic; }
+.dash-summary { background: white; border-radius: 14px; border: 1px solid #e8edf2; box-shadow: 0 1px 4px rgba(0,0,0,0.06); padding: 16px 20px; margin-bottom: 16px; display: flex; gap: 24px; flex-wrap: wrap; align-items: center; }
+.dash-summary-stat { text-align: center; }
+.dash-summary-val { font-size: 1.3em; font-weight: 900; color: #1e293b; }
+.dash-summary-lbl { font-size: 0.65em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; }
+.dash-summary-divider { width: 1px; height: 36px; background: #e8edf2; }
 </style>
 </head>
 <body>
@@ -484,7 +524,8 @@ function startSync() {
       updated.forEach((t, i) => {
         if (i !== activeTeamIdx) teams[i] = t;
       });
-      renderPool();
+      if (activeTeamIdx === -1) renderDashboard();
+      else renderPool();
     } catch {}
   }, 15000);
 }
@@ -510,9 +551,10 @@ function renderLeague() {
   const def = picks.filter(id => { const p = allPlayers.find(p=>p.id===id); return p && POS_GROUP(p)==='D'; }).length;
   const gol = picks.filter(id => { const p = allPlayers.find(p=>p.id===id); return p && POS_GROUP(p)==='G'; }).length;
 
-  const tabsHtml = teams.map((tm, i) =>
-    `<button class='team-tab${i===activeTeamIdx?' active':''}' onclick='switchTeam(${i})'>${tm.name}</button>`
-  ).join('') + `<button class='team-tab-add' onclick='openSettings()' title='Gérer les équipes'>⚙</button>`;
+  const tabsHtml = `<button class='team-tab${activeTeamIdx===-1?' active':''}' onclick='switchTeam(-1)'>📊 Tableau de bord</button>` +
+    teams.map((tm, i) =>
+      `<button class='team-tab${i===activeTeamIdx?' active':''}' onclick='switchTeam(${i})'>${tm.name}</button>`
+    ).join('') + `<button class='team-tab-add' onclick='openSettings()' title='Gérer les équipes'>⚙</button>`;
 
   const nhlTeams = [...new Set(allPlayers.map(p => p.team))].sort();
   const teamOptions = nhlTeams.map(nt => `<option value='${nt}'>${nt}</option>`).join('');
@@ -533,6 +575,7 @@ function renderLeague() {
       <div class='team-tabs-wrap'>${tabsHtml}</div>
     </div>
 
+    ${activeTeamIdx === -1 ? `<div id='dashboardView'></div>` : `
     <div class='team-bar-wrap'>
       <div class='team-bar-inner'>
         <div class='team-bar-left'>
@@ -598,10 +641,14 @@ function renderLeague() {
         <div class='pool-list' id='playerList'></div>
       </div>
       <div class='roster-panel' id='rosterPanel'></div>
-    </div>`;
+    </div>`}`;
 
-  renderRoster();
-  renderPool();
+  if (activeTeamIdx === -1) {
+    renderDashboard();
+  } else {
+    renderRoster();
+    renderPool();
+  }
 }
 
 // ── TEAM BAR UPDATE ───────────────────────────────────────
@@ -830,10 +877,111 @@ function clearTeam() {
   renderPool();
 }
 
+// ── DASHBOARD ─────────────────────────────────────────────
+function renderDashboard() {
+  const el = document.getElementById('dashboardView');
+  if (!el) return;
+
+  const totalPicksAll = teams.reduce((s, t) => s + t.picks.length, 0);
+  const totalCapAll = teams.reduce((s, t) => s + capUsed(t.picks), 0);
+  const totalPtsAll = teams.reduce((s, t) => s + totalPts(t.picks), 0);
+  const takenCount = allPicks().length;
+  const availCount = allPlayers.length - takenCount;
+
+  const summaryHtml = `
+    <div class='dash-summary'>
+      <div class='dash-summary-stat'><div class='dash-summary-val'>${teams.length}</div><div class='dash-summary-lbl'>Équipes</div></div>
+      <div class='dash-summary-divider'></div>
+      <div class='dash-summary-stat'><div class='dash-summary-val'>${takenCount}</div><div class='dash-summary-lbl'>Joueurs repêchés</div></div>
+      <div class='dash-summary-divider'></div>
+      <div class='dash-summary-stat'><div class='dash-summary-val'>${availCount}</div><div class='dash-summary-lbl'>Joueurs disponibles</div></div>
+      <div class='dash-summary-divider'></div>
+      <div class='dash-summary-stat'><div class='dash-summary-val'>${totalPtsAll}</div><div class='dash-summary-lbl'>Pts projetés (total)</div></div>
+      <div class='dash-summary-divider'></div>
+      <div class='dash-summary-stat'><div class='dash-summary-val'>${(totalCapAll / teams.length).toFixed(1)}M$</div><div class='dash-summary-lbl'>Cap moyen utilisé</div></div>
+    </div>`;
+
+  const cardsHtml = teams.map((t, i) => {
+    const picks = t.picks;
+    const used = capUsed(picks);
+    const remaining = CAP_MAX - used;
+    const over = used > CAP_MAX;
+    const tight = !over && remaining < 10;
+    const pts = totalPts(picks);
+    const fwd = picks.filter(id => { const p = allPlayers.find(p=>p.id===id); return p && POS_GROUP(p)==='F'; }).length;
+    const def = picks.filter(id => { const p = allPlayers.find(p=>p.id===id); return p && POS_GROUP(p)==='D'; }).length;
+    const gol = picks.filter(id => { const p = allPlayers.find(p=>p.id===id); return p && POS_GROUP(p)==='G'; }).length;
+    const pct = Math.min((used / CAP_MAX) * 100, 100);
+    const capColor = over ? '#dc2626' : tight ? '#f59e0b' : '#2d8a3e';
+    const remLabel = over ? `${(used - CAP_MAX).toFixed(2)}M$ dépassé` : `${remaining.toFixed(2)}M$ restant`;
+    const remCls = over ? 'red' : tight ? 'orange' : 'green';
+
+    const topPlayers = picks
+      .map(id => allPlayers.find(p => p.id === id))
+      .filter(Boolean)
+      .sort((a, b) => (b.proj_pts ?? 0) - (a.proj_pts ?? 0))
+      .slice(0, 3);
+
+    const topHtml = topPlayers.length ? `
+      <div class='dash-top-picks'>
+        <div class='dash-top-label'>Top joueurs</div>
+        ${topPlayers.map(p => `
+          <div class='dash-top-player'>
+            <img class='dash-top-logo' src='https://assets.nhle.com/logos/nhl/svg/${p.team}_light.svg' alt='${p.team}' loading='lazy'>
+            <div class='dash-top-name'>${p.name}</div>
+            <div class='dash-top-pts'>${p.proj_pts ?? '—'} pts</div>
+          </div>`).join('')}
+      </div>` : `<div class='dash-empty'>Aucun joueur sélectionné</div>`;
+
+    return `<div class='dash-card'>
+      <div class='dash-card-header'>
+        <div class='dash-team-name'>${t.name}</div>
+        <button class='dash-pick-btn' onclick='switchTeam(${i})'>Gérer →</button>
+      </div>
+      <div class='dash-stats'>
+        <div class='dash-stat'>
+          <div class='dash-stat-val ${remCls}'>${used.toFixed(1)}M$</div>
+          <div class='dash-stat-lbl'>Cap utilisé</div>
+        </div>
+        <div class='dash-stat'>
+          <div class='dash-stat-val green'>${pts}</div>
+          <div class='dash-stat-lbl'>Pts projetés</div>
+        </div>
+        <div class='dash-stat'>
+          <div class='dash-stat-val'>${picks.length}/20</div>
+          <div class='dash-stat-lbl'>Joueurs</div>
+        </div>
+      </div>
+      <div class='dash-cap-bar'><div class='dash-cap-fill' style='width:${pct}%;background:${capColor}'></div></div>
+      <div class='dash-slots'>
+        <div class='dash-slot-group'>
+          <div class='dash-slot-label'>Att.</div>
+          <div class='dash-slot-bar'><div class='dash-slot-fill${fwd===LIMITS.F?' full':''}' style='width:${(fwd/LIMITS.F)*100}%'></div></div>
+          <div class='dash-slot-text'><span class='cur${fwd===LIMITS.F?' full':''}'>${fwd}</span>/${LIMITS.F}</div>
+        </div>
+        <div class='dash-slot-group'>
+          <div class='dash-slot-label'>Déf.</div>
+          <div class='dash-slot-bar'><div class='dash-slot-fill${def===LIMITS.D?' full':''}' style='width:${(def/LIMITS.D)*100}%'></div></div>
+          <div class='dash-slot-text'><span class='cur${def===LIMITS.D?' full':''}'>${def}</span>/${LIMITS.D}</div>
+        </div>
+        <div class='dash-slot-group'>
+          <div class='dash-slot-label'>Gard.</div>
+          <div class='dash-slot-bar'><div class='dash-slot-fill${gol===LIMITS.G?' full':''}' style='width:${(gol/LIMITS.G)*100}%'></div></div>
+          <div class='dash-slot-text'><span class='cur${gol===LIMITS.G?' full':''}'>${gol}</span>/${LIMITS.G}</div>
+        </div>
+      </div>
+      ${topHtml}
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `<div class='dashboard-wrap'>${summaryHtml}<div class='dash-summary-lbl' style='margin-bottom:10px;font-size:0.72em;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#94a3b8'>Équipes</div><div class='dashboard-grid'>${cardsHtml}</div></div>`;
+}
+
 // ── TEAM SWITCHING ────────────────────────────────────────
 function switchTeam(idx) {
   activeTeamIdx = idx;
   renderLeague();
+  if (idx === -1) renderDashboard();
 }
 
 function switchMobileTab(tab, btn) {
