@@ -441,9 +441,9 @@ async function createLeague() {
   if (!name) { showToast('Entre un nom pour la ligue', true); return; }
   const slug = slugify(name) + '-' + Math.random().toString(36).slice(2,6);
   try {
-    const [lg] = await sbPost('/rest/v1/pool_leagues', { name, slug });
+    const [lg] = await sbPost('/rest/v1/ligue_pools', { name, slug });
     // Create one default team
-    await sbPost('/rest/v1/pool_teams', { league_id: lg.id, name: 'Équipe 1', picks: [] });
+    await sbPost('/rest/v1/ligue_equipes', { league_id: lg.id, name: 'Équipe 1', picks: [] });
     addRecent(slug, name);
     await loadLeague(slug);
   } catch(e) { showToast('Erreur lors de la création', true); console.error(e); }
@@ -459,10 +459,10 @@ async function joinLeague(slug) {
 async function loadLeague(slug) {
   document.getElementById('app').innerHTML = `<div class='loading'><div class='spinner'></div><p>Chargement de la ligue…</p></div>`;
   try {
-    const leagues = await sbGet(`/rest/v1/pool_leagues?slug=eq.${encodeURIComponent(slug)}&select=*`);
+    const leagues = await sbGet(`/rest/v1/ligue_pools?slug=eq.${encodeURIComponent(slug)}&select=*`);
     if (!leagues.length) { showToast('Ligue introuvable', true); renderLanding(); return; }
     league = leagues[0];
-    teams = await sbGet(`/rest/v1/pool_teams?league_id=eq.${league.id}&order=created_at.asc&select=*`);
+    teams = await sbGet(`/rest/v1/ligue_equipes?league_id=eq.${league.id}&order=created_at.asc&select=*`);
     teams = teams.map(t => ({ ...t, picks: Array.isArray(t.picks) ? t.picks : [] }));
     addRecent(slug, league.name);
     window.history.replaceState({}, '', `/ma-ligue/?ligue=${encodeURIComponent(slug)}`);
@@ -478,7 +478,7 @@ function startSync() {
   syncTimer = setInterval(async () => {
     if (!league) return;
     try {
-      const fresh = await sbGet(`/rest/v1/pool_teams?league_id=eq.${league.id}&order=created_at.asc&select=*`);
+      const fresh = await sbGet(`/rest/v1/ligue_equipes?league_id=eq.${league.id}&order=created_at.asc&select=*`);
       const updated = fresh.map(t => ({ ...t, picks: Array.isArray(t.picks) ? t.picks : [] }));
       // Merge: keep local picks for active team, update others
       updated.forEach((t, i) => {
@@ -494,7 +494,7 @@ async function savePicks() {
   const t = teams[activeTeamIdx];
   if (!t) return;
   try {
-    await sbPatch(`/rest/v1/pool_teams?id=eq.${t.id}`, { picks: t.picks });
+    await sbPatch(`/rest/v1/ligue_equipes?id=eq.${t.id}`, { picks: t.picks });
   } catch(e) { showToast('Erreur de sauvegarde', true); console.error(e); }
 }
 
@@ -904,7 +904,7 @@ async function saveSettings() {
   try {
     // Update league name
     if (newName !== league.name) {
-      await sbPatch(`/rest/v1/pool_leagues?id=eq.${league.id}`, { name: newName });
+      await sbPatch(`/rest/v1/ligue_pools?id=eq.${league.id}`, { name: newName });
       league.name = newName;
       addRecent(league.slug, newName);
     }
@@ -912,18 +912,18 @@ async function saveSettings() {
     // Upsert / delete teams
     for (const t of teams) {
       if (!t.id) {
-        const [created] = await sbPost('/rest/v1/pool_teams', { league_id: league.id, name: t.name, picks: [] });
+        const [created] = await sbPost('/rest/v1/ligue_equipes', { league_id: league.id, name: t.name, picks: [] });
         t.id = created.id;
       } else {
-        await sbPatch(`/rest/v1/pool_teams?id=eq.${t.id}`, { name: t.name });
+        await sbPatch(`/rest/v1/ligue_equipes?id=eq.${t.id}`, { name: t.name });
       }
     }
 
     // Delete removed teams (teams not in current list)
-    const freshTeams = await sbGet(`/rest/v1/pool_teams?league_id=eq.${league.id}&select=id`);
+    const freshTeams = await sbGet(`/rest/v1/ligue_equipes?league_id=eq.${league.id}&select=id`);
     const keepIds = new Set(teams.map(t => t.id));
     for (const ft of freshTeams) {
-      if (!keepIds.has(ft.id)) await sbDelete(`/rest/v1/pool_teams?id=eq.${ft.id}`);
+      if (!keepIds.has(ft.id)) await sbDelete(`/rest/v1/ligue_equipes?id=eq.${ft.id}`);
     }
 
     if (activeTeamIdx >= teams.length) activeTeamIdx = 0;
