@@ -61,6 +61,10 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
 .cap-amount { font-size: 1.05em; font-weight: 900; color: #1e293b; }
 .cap-amount .used { color: #2d8a3e; }
 .cap-amount.over .used { color: #dc2626; }
+.cap-remaining { font-size: 0.8em; font-weight: 700; color: #64748b; margin-top: 1px; }
+.cap-remaining .rem { color: #2d8a3e; }
+.cap-remaining.tight .rem { color: #f59e0b; }
+.cap-remaining.over .rem { color: #dc2626; }
 .cap-pts { font-size: 1.05em; font-weight: 900; color: #2d8a3e; }
 .cap-slots { display: flex; gap: 14px; flex-wrap: wrap; }
 .cap-slot { font-size: 0.78em; font-weight: 700; color: #64748b; white-space: nowrap; }
@@ -137,6 +141,16 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
 .add-btn { width: 26px; height: 26px; background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 50%; color: #2d8a3e; font-size: 1.1em; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; line-height: 1; }
 .player-row:hover .add-btn { background: #2d8a3e; border-color: #2d8a3e; color: white; }
 .pool-empty { padding: 48px 24px; text-align: center; color: #94a3b8; font-size: 0.88em; }
+.pool-count { font-size: 0.72em; font-weight: 700; color: #94a3b8; padding: 6px 16px 4px; }
+.pool-count strong { color: #475569; }
+.player-row.added { opacity: 1; background: #f0fdf4; pointer-events: none; }
+.player-row.added .player-name { color: #15803d; }
+.player-row.added .add-btn { background: #2d8a3e; border-color: #2d8a3e; color: white; }
+.player-row.disabled { opacity: 0.28; pointer-events: none; cursor: not-allowed; }
+.roster-slot { transition: all 0.25s ease; }
+.roster-slot.removing { opacity: 0; transform: translateX(12px); }
+.roster-empty-state { padding: 28px 16px; text-align: center; color: #94a3b8; font-size: 0.82em; line-height: 1.6; }
+.roster-empty-state strong { color: #475569; display: block; font-size: 1em; margin-bottom: 4px; }
 
 /* ── ROSTER PANEL (right) ── */
 .roster-panel { display: flex; flex-direction: column; gap: 14px; }
@@ -215,6 +229,7 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
         <div>
           <div class='cap-label'>Plafond salarial</div>
           <div class='cap-amount' id='capAmount'><span class='used' id='capUsed'>0.00M$</span> / 104.00M$</div>
+          <div class='cap-remaining' id='capRemaining'><span class='rem' id='capRem'>104.00M$</span> <span id='capRemLabel'>restant</span></div>
         </div>
         <div>
           <div class='cap-label'>Pts projetés</div>
@@ -342,12 +357,19 @@ function totalProjPts() {
 
 function updateCapBar() {
   const used = capUsed();
+  const remaining = CAP_MAX - used;
   const pct = Math.min((used / CAP_MAX) * 100, 100);
   const over = used > CAP_MAX;
+  const tight = !over && remaining < 10;
 
   document.getElementById('capUsed').textContent = used.toFixed(2) + 'M$';
   document.getElementById('capAmount').classList.toggle('over', over);
   document.getElementById('capPts').textContent = totalProjPts() + ' pts';
+
+  document.getElementById('capRem').textContent = Math.abs(remaining).toFixed(2) + 'M$';
+  document.getElementById('capRemLabel').textContent = over ? 'dépassé' : 'restant';
+  const remEl = document.getElementById('capRemaining');
+  remEl.className = 'cap-remaining' + (over ? ' over' : tight ? ' tight' : '');
 
   const fill = document.getElementById('capFill');
   fill.style.width = pct + '%';
@@ -411,6 +433,17 @@ function addPlayer(id) {
 }
 
 function removePlayer(id) {
+  // Animation avant retrait
+  const slot = document.querySelector(`.roster-slot.filled [onclick="removePlayer(${id})"]`)?.closest('.roster-slot');
+  if (slot) {
+    slot.classList.add('removing');
+    setTimeout(() => doRemove(id), 220);
+  } else {
+    doRemove(id);
+  }
+}
+
+function doRemove(id) {
   team = team.filter(tid => tid !== id);
   saveTeam();
   updateCapBar();
@@ -485,6 +518,15 @@ function renderPool() {
   const list = document.getElementById('playerList');
   if (!list) return;
   const players = getSorted(getFiltered());
+
+  // Compteur de résultats
+  const countEl = document.getElementById('poolCount');
+  if (countEl) {
+    const added = players.filter(p => team.includes(p.id)).length;
+    const label = posFilter !== 'ALL' ? { F: 'attaquants', D: 'défenseurs', G: 'gardiens' }[posFilter] || 'joueurs' : 'joueurs';
+    countEl.innerHTML = `<strong>${players.length}</strong> ${label}${added > 0 ? ` · <span style="color:#2d8a3e">${added} sélectionné${added>1?'s':''}</span>` : ''}`;
+  }
+
   if (!players.length) {
     list.innerHTML = `<div class='pool-empty'>Aucun joueur trouvé.</div>`;
     return;
@@ -533,12 +575,24 @@ function renderRoster() {
     { key: 'G', label: 'Gardiens', limit: 2 },
   ];
 
+  // État vide global
+  if (team.length === 0) {
+    panel.innerHTML = `
+      <div class='roster-group'>
+        <div class='roster-empty-state'>
+          <strong>Ton équipe est vide</strong>
+          Commence par ajouter des attaquants depuis la liste à gauche. Clique sur un joueur pour l'ajouter à ton équipe.
+        </div>
+      </div>`;
+    return;
+  }
+
   panel.innerHTML = groups.map(g => {
     const players = team
       .map(id => allPlayers.find(p => p.id === id))
       .filter(p => p && POS_GROUP(p) === g.key);
 
-    const groupPts = players.reduce((sum, p) => sum + (p.proj_pts ?? 0), 0);
+  const groupPts = players.reduce((sum, p) => sum + (p.proj_pts ?? 0), 0);
 
     const slots = [];
     for (let i = 0; i < g.limit; i++) {
@@ -585,6 +639,7 @@ function buildLayout() {
   document.getElementById('builderWrap').innerHTML = `
     <div class='pool-panel' id='poolPanel'>
       <div class='panel-title'>Joueurs disponibles</div>
+      <div class='pool-count' id='poolCount'></div>
       <div class='pool-controls'>
         <div class='pool-search-sort'>
           <div class='pool-search'>
