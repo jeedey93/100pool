@@ -31,3 +31,29 @@ AS $$
 $$;
 
 GRANT EXECUTE ON FUNCTION validate_access_token TO anon;
+
+-- ── LIGUE ──────────────────────────────────────────────────
+
+-- 4. Ligues de pool
+CREATE TABLE IF NOT EXISTS pool_leagues (
+  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name       text NOT NULL,
+  slug       text UNIQUE NOT NULL,
+  created_at timestamptz DEFAULT now()
+);
+
+-- 5. Équipes dans une ligue
+CREATE TABLE IF NOT EXISTS pool_teams (
+  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  league_id  uuid NOT NULL REFERENCES pool_leagues(id) ON DELETE CASCADE,
+  name       text NOT NULL,
+  picks      jsonb NOT NULL DEFAULT '[]',
+  created_at timestamptz DEFAULT now()
+);
+
+-- Anon peut lire et écrire (outil de commissaire privé, pas de login)
+ALTER TABLE pool_leagues ENABLE ROW LEVEL SECURITY;
+ALTER TABLE pool_teams   ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "anon_all_leagues" ON pool_leagues FOR ALL TO anon USING (true) WITH CHECK (true);
+CREATE POLICY "anon_all_teams"   ON pool_teams   FOR ALL TO anon USING (true) WITH CHECK (true);
