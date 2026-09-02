@@ -155,6 +155,13 @@ tbody tr.tier-row-11 { border-left: 3px solid #fda4af; }
 .risk-Medium { background: #fef9c3; color: #a16207; border: 1px solid #fde047; }
 .risk-High   { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
 
+/* Scouting category badge */
+.cat-badge { display: inline-block; font-size: 0.72em; font-weight: 700; padding: 2px 8px; border-radius: 99px; white-space: nowrap; }
+.cat-GAMBLE   { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+.cat-SLEEPER  { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+.cat-BREAKOUT { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.cat-AEVITER  { background: #fff1f2; color: #be123c; border: 1px solid #fda4af; }
+
 /* Bust alert badge */
 .bust { display: inline-flex; align-items: center; gap: 3px; font-size: 0.72em; font-weight: 800; padding: 3px 8px; border-radius: 99px; background: #fff1f2; color: #be123c; border: 1px solid #fda4af; white-space: nowrap; }
 
@@ -612,6 +619,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
               <label><input type='checkbox' id='col-value' onchange='applyColVis()'> Efficacité (PTS÷√AAV)</label>
               <label><input type='checkbox' id='col-risk' checked onchange='applyColVis()'> 🔴 Niveau de risque</label>
               <label><input type='checkbox' id='col-injury' checked onchange='applyColVis()'> 🩹 Blessures / Risque santé</label>
+              <label><input type='checkbox' id='col-cat' checked onchange='applyColVis()'> 🏷️ Catégorie (Gamble/Sleeper…)</label>
             </div>
           </div>
           <button class='ctrl-btn btn-primary' onclick='window.print()'>🖨 Imprimer</button>
@@ -970,6 +978,7 @@ const COL_GROUPS = {
   'col-value':   ['cg-value'],
   'col-risk':    ['cg-risk'],
   'col-injury':  ['cg-injury'],
+  'col-cat':     ['cg-cat'],
 };
 
 function applyColVis() {
@@ -1158,6 +1167,7 @@ function goalieHeaderHTML() {
     <th onclick='sortGoalieBy("_pv")'         data-col='_pv'  class='cg-value'>Efficacité<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("risk")'        data-col='risk' class='cg-risk'>Risque<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("injury")' data-col='injury' class='cg-injury'>🩹<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("scouting_category")' data-col='scouting_category' class='cg-cat'>Cat.<span class='sort-icon'></span></th>
   </tr>`;}
 
 function skaterHeaderHTML() {
@@ -1191,6 +1201,7 @@ function skaterHeaderHTML() {
     <th onclick='sortBy("_pv")'     data-col='_pv'      class='cg-value'>Efficacité<span class='sort-icon'></span></th>
     <th onclick='sortBy("risk")'    data-col='risk'     class='cg-risk'>Risque<span class='sort-icon'></span></th>
     <th onclick='sortBy("injury")'    data-col='injury'   class='cg-injury'>🩹<span class='sort-icon'></span></th>
+    <th onclick='sortBy("scouting_category")' data-col='scouting_category' class='cg-cat'>Cat.<span class='sort-icon'></span></th>
   </tr>`;
 }
 
@@ -1262,6 +1273,7 @@ function buildRowHTML(p, displayRank) {
       </div></td>
       <td class='cg-risk'>${riskHtml}</td>
       <td class='cg-injury' style='text-align:center;font-size:1em;'>${bandaid || '—'}</td>
+      <td class='cg-cat'>${p.scouting_category ? `<span class='cat-badge cat-${p.scouting_category === 'À ÉVITER' ? 'AEVITER' : p.scouting_category}'>${p.scouting_category}</span>` : '—'}</td>
     </tr>`;
 }
 
