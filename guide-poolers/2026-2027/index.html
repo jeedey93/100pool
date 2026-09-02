@@ -304,7 +304,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 .trend-flat { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
 
 /* Notes display */
-.note-icon { font-size: 0.85em; cursor: default; margin-left: 4px; opacity: 0.7; }
+.note-icon { color: #94a3b8; font-size: 0.75em; font-style: italic; margin-top: 3px; line-height: 1.4; max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: default; }
 
 /* Tooltip */
 .tooltip { position: fixed; z-index: 9000; background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px; font-size: 0.82em; font-style: italic; color: #1e293b; max-width: 260px; pointer-events: none; box-shadow: 0 4px 16px rgba(0,0,0,0.12); line-height: 1.4; }
@@ -491,7 +491,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 
   /* Text colors */
   .player-name  { color: #000 !important; font-size: 7.5pt !important; }
-  .note-icon { display: none; }
+  .note-icon { color: #777 !important; font-size: 6pt !important; }
   .last-stat, .last-pts { color: #15803d !important; }
   .proj-stat, .proj-pts { color: #15803d !important; }
   .ppg-last { color: #15803d !important; }
@@ -1265,7 +1265,7 @@ function buildRowHTML(p, displayRank) {
       <td>${displayRank}</td>
       <td>
         <div class='player-name' onclick='openModal(${p.id})'>${p.name}</div>
-        ${noteEsc ? `<span class='note-icon' onmouseenter='showTooltip(this,"${noteFull}")' onmouseleave='hideTooltip()'>💬</span>` : ''}
+        ${noteEsc ? `<div class='note-icon' onmouseenter='showTooltip(this,"${noteFull}")' onmouseleave='hideTooltip()'>${noteEsc.length > 50 ? noteEsc.slice(0,50) + '…' : noteEsc}</div>` : ''}
         ${bustHtml}
       </td>
       <td><span class='team-tag'>${p.team}</span></td>
