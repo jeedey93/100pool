@@ -49,16 +49,20 @@ serve(async (req) => {
     return new Response('No email', { status: 400 });
   }
 
-  // Insert access token via REST API
+  // Upsert access token — renews expiry if email already exists
   const dbRes = await fetch(`${SUPABASE_URL}/rest/v1/poolers_access`, {
     method: 'POST',
     headers: {
       'apikey': SUPABASE_SERVICE_KEY,
       'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
       'Content-Type': 'application/json',
-      'Prefer': 'return=representation',
+      'Prefer': 'return=representation,resolution=merge-duplicates',
     },
-    body: JSON.stringify({ email, product: 'guide_2026_27' }),
+    body: JSON.stringify({
+      email,
+      product: 'guide_2026_27',
+      expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+    }),
   });
 
   if (!dbRes.ok) {
