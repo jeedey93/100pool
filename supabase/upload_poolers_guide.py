@@ -165,31 +165,60 @@ def parse_players():
         })
 
     # ── GOALIES ──
-    # Cols: 0=Score(formule), 1=Tier, 2=Noms, 3=Âge, 4=Équipe, 5=?,
-    #       6=QS-25/26, 7=Steals-25/26, 8=?, 9=GP-25/26, 10=W-25/26,
-    #       11=W%-25/26, 12=SO-25/26, 13=GAA-25/26, 14=SV%-25/26,
-    #       15=xGP-26/27, 16=xW-26/27, 17=W%, 18=PTS/Score-proj,
-    #       19=Salaire, 20=Band-aid, 21=Risqué, 22=Upside, 23=Notes
+    # Two blocks in "Gardiens - VF":
+    # Block 1 (rows 3-74, 0-based index 2-73): projections
+    #   0=Score, 1=Tier, 2=Noms, 3=Âge, 4=Équipe, 6=QS-25/26, 7=Steals,
+    #   9=GP-25/26, 10=W-25/26, 12=SO-25/26, 13=GAA-25/26, 14=SV%-25/26,
+    #   15=xGP-26/27, 16=xW-26/27, 18=PTS-proj, 19=Salaire, 20=Band-aid,
+    #   21=Risqué, 22=Upside, 23=Notes
+    # Block 2 (rows 77-154, 0-based index 76-153): last-season stats + notes
+    #   1=Rang, 2=Noms, 3=Âge, 4=Pos, 5=Équipe, 6=GP, 7=W, 8=L, 9=OTL,
+    #   10=GAA, 11=SV%, 12=SO, 13=2V+1OTL+3SO, 14=QS%, 17=GSAx, 18=SV%5v5,
+    #   19=Score, 20=Salaire, 21=Band-aid, 22=Risqué, 23=Upside, 24=Notes
+    import json as _json
     ws = wb["Gardiens - VF"]
-    for r in list(ws.iter_rows(values_only=True))[2:]:
+    rows = list(ws.iter_rows(values_only=True))
+
+    # Parse block 2 first → keyed by name for merging
+    block2 = {}
+    for r in rows[76:154]:
+        name = str(r[2]).strip() if r[2] else None
+        if not name or name in ('Noms',):
+            continue
+        block2[name.lower()] = {
+            'last_gp':  int(float(r[6]))  if r[6]  else None,
+            'last_w':   int(float(r[7]))  if r[7]  else None,
+            'last_l':   int(float(r[8]))  if r[8]  else None,
+            'last_otl': int(float(r[9]))  if r[9]  else None,
+            'last_gaa': round(float(r[10]), 2) if r[10] else None,
+            'last_svp': round(float(r[11]), 3) if r[11] else None,
+            'last_so':  int(float(r[12])) if r[12] else None,
+            'qs_pct':   round(float(r[14]), 1) if r[14] else None,
+            'gsax':     round(float(r[17]), 2) if r[17] else None,
+            'notes':    str(r[24]).strip() if r[24] else None,
+        }
+
+    # Parse block 1 → projections, merge with block 2
+    for r in rows[2:73]:
         name = str(r[2]).strip() if r[2] else None
         if not name or name in ('Noms', 'GARDIENS'):
             continue
-        # Skip rows with no projected wins
         if r[16] is None and r[18] is None:
             continue
-        import json as _json
-        score  = round(float(r[18])) if r[18] else None
-        wins   = int(float(r[16])) if r[16] else None
-        gp     = int(float(r[15])) if r[15] else None
-        so     = int(float(r[12])) if r[12] else None
+        score = round(float(r[18])) if r[18] else None
+        wins  = int(float(r[16])) if r[16] else None
+        gp    = int(float(r[15])) if r[15] else None
+        b2    = block2.get(name.lower(), {})
         goalie_stats = _json.dumps({
-            'w':   int(float(r[10])) if r[10] else None,
-            'gp':  int(float(r[9]))  if r[9]  else None,
-            'gaa': round(float(r[13]), 2) if r[13] else None,
-            'svp': round(float(r[14]), 3) if r[14] else None,
-            'so':  so,
-            'qs':  round(float(r[6]), 1) if r[6] else None,
+            'w':    b2.get('last_w'),
+            'l':    b2.get('last_l'),
+            'otl':  b2.get('last_otl'),
+            'gp':   b2.get('last_gp'),
+            'gaa':  b2.get('last_gaa'),
+            'svp':  b2.get('last_svp'),
+            'so':   b2.get('last_so'),
+            'qs':   b2.get('qs_pct'),
+            'gsax': b2.get('gsax'),
         })
         players.append({
             "name":     name,
@@ -198,12 +227,12 @@ def parse_players():
             "team":     str(r[4]).strip() if r[4] else "FA",
             "proj_gp":  gp,
             "proj_g":   wins,
-            "proj_a":   so,
+            "proj_a":   b2.get('last_so'),
             "proj_pts": score,
             "aav":      parse_salary(r[19]),
             "risk":     compute_risk(r[20], r[21]),
             "tier":     str(r[1]).strip() if r[1] else None,
-            "notes":    str(r[23]).strip() if r[23] else None,
+            "notes":    b2.get('notes') or (str(r[23]).strip() if r[23] else None),
             "scouting": goalie_stats,
         })
 
