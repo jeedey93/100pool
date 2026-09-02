@@ -1177,7 +1177,7 @@ function goalieHeaderHTML() {
   return `
   <tr class='group-row'>
     <th colspan='5' style='background:#f1f5f9;'></th>
-    <th colspan='5' class='col-group-proj'>🥅 PROJECTION 2026-27</th>
+    <th colspan='2' class='col-group-proj'>🥅 PROJ 2026-27</th>
     <th colspan='4' style='background:#f1f5f9;'></th>
   </tr>
   <tr class='col-row'>
@@ -1187,10 +1187,7 @@ function goalieHeaderHTML() {
     <th onclick='sortGoalieBy("pos")'         data-col='pos'>Pos<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("age")'         data-col='age'>Âge<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("proj_gp")'     data-col='proj_gp' class='col-group-proj' style='border-left:2px solid #bbf7d0;color:#15803d;'>GP<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("proj_g")'      data-col='proj_g'  class='col-group-proj' style='color:#15803d;'>W<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("_goalie_gaa")' data-col='_goalie_gaa' class='col-group-proj' style='color:#15803d;'>GAA<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("_goalie_svp")' data-col='_goalie_svp' class='col-group-proj' style='color:#15803d;'>SV%<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("proj_pts")'    data-col='proj_pts' class='col-group-proj' style='border-right:2px solid #bbf7d0;color:#15803d;font-weight:800;'>PTS<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("proj_g")'      data-col='proj_g'  class='col-group-proj' style='border-right:2px solid #bbf7d0;color:#15803d;font-weight:800;'>W<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("aav")'         data-col='aav'  class='cg-salary'>💰 AAV<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("tier")'        data-col='tier' class='cg-tier'>Palier<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("_pv")'         data-col='_pv'  class='cg-value'>Efficacité<span class='sort-icon'></span></th>
@@ -1281,9 +1278,6 @@ function buildRowHTML(p, displayRank) {
       <td class='col-proj col-proj-first proj-stat'>${p.proj_gp ?? '—'}</td>
       <td class='col-proj proj-stat'>${p.proj_g ?? '—'}</td>
       ${isGoalie ? `
-      <td class='col-proj proj-stat'>${gs.gaa ?? '—'}</td>
-      <td class='col-proj proj-stat'>${gs.svp != null ? gs.svp.toFixed(3) : '—'}</td>
-      <td class='col-proj col-proj-last proj-pts'>${p.proj_pts ?? '—'}</td>
       ` : `
       <td class='col-proj proj-stat'>${p.proj_a ?? '—'}</td>
       <td class='col-proj proj-pts'>${projPtsDisplay}${upsideHtml}</td>
@@ -1589,9 +1583,15 @@ async function loadNhlHistory(nhlId, pos, projRow) {
   const sorted = [...history].reverse(); // oldest first
   const isG = pos === 'G';
   if (isG) {
+    const gs = getGoalieStats(projRow);
+    // Build rows from season_history, then append 2025-26 from scouting if not already there
+    const histRows = sorted.map(s => `<tr><td>${s.season}</td><td>${s.team??'—'}</td><td>${s.gp??'—'}</td><td>${s.w??'—'}</td><td>${s.gaa??'—'}</td><td>${s.svp??'—'}</td><td>${s.so??'—'}</td></tr>`).join('');
+    const lastRow = (gs.w != null || gs.gaa != null)
+      ? `<tr><td>2025-26</td><td>${projRow.team}</td><td>${gs.gp??'—'}</td><td>${gs.w??'—'}</td><td>${gs.gaa??'—'}</td><td>${gs.svp != null ? gs.svp.toFixed(3) : '—'}</td><td>${gs.so??'—'}</td></tr>`
+      : '';
     return `<table class='modal-history-table'>
       <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>V</th><th>GAA</th><th>SV%</th><th>SO</th></tr>
-      ${sorted.map(s => `<tr><td>${s.season}</td><td>${s.team}</td><td>${s.gp??'—'}</td><td>${s.w??'—'}</td><td>${s.gaa??'—'}</td><td>${s.svp??'—'}</td><td>${s.so??'—'}</td></tr>`).join('')}
+      ${histRows}${lastRow}
       <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>—</td><td>—</td><td>—</td></tr>
     </table>`;
   }
