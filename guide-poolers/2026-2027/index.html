@@ -813,6 +813,14 @@ async function checkAccess() {
         <div style='margin-top:20px;border-top:1px solid #f1f5f9;padding-top:16px;'>
           <a href='/guide-poolers/' style='color:#64748b;font-size:0.8em;text-decoration:none;'>Pas encore de guide? <span style='color:#2d8a3e;font-weight:700;text-decoration:underline;'>Obtenir le guide — 5 $</span></a>
         </div>
+        <div style='margin-top:12px;'>
+          <button id='resend-toggle' style='background:none;border:none;cursor:pointer;color:#94a3b8;font-size:0.78em;text-decoration:underline;padding:0;'>Perdu ton lien d'accès?</button>
+        </div>
+        <div id='resend-form' style='display:none;margin-top:14px;border-top:1px solid #f1f5f9;padding-top:14px;'>
+          <input id='resend-email' type='email' placeholder='ton@email.com' style='width:100%;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:0.9em;outline:none;color:#0f172a;margin-bottom:8px;font-family:inherit;box-sizing:border-box;'>
+          <button id='resend-btn' style='width:100%;background:#2d8a3e;color:white;font-weight:700;font-size:0.9em;padding:11px;border-radius:10px;border:none;cursor:pointer;'>Renvoyer mon lien</button>
+          <div id='resend-msg' style='font-size:0.78em;margin-top:8px;min-height:16px;color:#64748b;'></div>
+        </div>
       </div>`;
     document.body.appendChild(overlay);
     const input = overlay.querySelector('#pw-input');
@@ -835,6 +843,29 @@ async function checkAccess() {
     }
     btn.onclick = attempt;
     input.onkeydown = e => { if (e.key === 'Enter') attempt(); if (e.key !== 'Enter') { err.textContent = ''; input.style.borderColor = '#e2e8f0'; } };
+    overlay.querySelector('#resend-toggle').onclick = () => {
+      const f = overlay.querySelector('#resend-form');
+      f.style.display = f.style.display === 'none' ? 'block' : 'none';
+    };
+    overlay.querySelector('#resend-btn').onclick = async () => {
+      const emailVal = overlay.querySelector('#resend-email').value.trim();
+      const msg = overlay.querySelector('#resend-msg');
+      const rbtn = overlay.querySelector('#resend-btn');
+      if (!emailVal) { msg.style.color = '#e11d48'; msg.textContent = 'Entre ton adresse courriel.'; return; }
+      rbtn.disabled = true; rbtn.textContent = 'Envoi…';
+      try {
+        const res = await fetch('https://fifurqlitkywtmhgtzeu.supabase.co/functions/v1/resend-access', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
+          body: JSON.stringify({ email: emailVal }),
+        });
+        msg.style.color = '#15803d';
+        msg.textContent = 'Si un accès existe pour cet email, le lien a été renvoyé.';
+      } catch(e) {
+        msg.style.color = '#e11d48'; msg.textContent = 'Erreur — réessaie plus tard.';
+      }
+      rbtn.disabled = false; rbtn.textContent = 'Renvoyer mon lien';
+    };
   });
 }
 
