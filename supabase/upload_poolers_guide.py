@@ -99,7 +99,7 @@ def parse_salary(val):
 
 
 def parse_players():
-    wb = openpyxl.load_workbook(EXCEL_PATH, data_only=False)
+    wb = openpyxl.load_workbook(EXCEL_PATH, data_only=True)
     players = []
 
     # ── FORWARDS ──
@@ -165,47 +165,45 @@ def parse_players():
         })
 
     # ── GOALIES ──
-    # Cols: 0=Rang, 1=Noms, 2=Tier, 3=Âge, 4=Pos, 5=Équipe, 6=GP, 7=W, 8=L, 9=OTL,
-    #       10=GAA, 11=SV%, 12=SO, 13=2V+1OTL+3SO, 14=QS%, 15=RBS%, 16=RBW%,
-    #       17=GSAx, 18=SV%5v5, 19=Score, 20=Salaire, 21=Band-aid, 22=Risqué,
-    #       23=Upside, 24=Notes
+    # Cols: 0=Score(formule), 1=Tier, 2=Noms, 3=Âge, 4=Équipe, 5=?,
+    #       6=QS-25/26, 7=Steals-25/26, 8=?, 9=GP-25/26, 10=W-25/26,
+    #       11=W%-25/26, 12=SO-25/26, 13=GAA-25/26, 14=SV%-25/26,
+    #       15=xGP-26/27, 16=xW-26/27, 17=W%, 18=PTS/Score-proj,
+    #       19=Salaire, 20=Band-aid, 21=Risqué, 22=Upside, 23=Notes
     ws = wb["Gardiens - VF"]
     for r in list(ws.iter_rows(values_only=True))[2:]:
-        if r[0] is None:
+        name = str(r[2]).strip() if r[2] else None
+        if not name or name in ('Noms', 'GARDIENS'):
             continue
-        try:
-            int(float(r[0]))
-        except (TypeError, ValueError):
-            continue
-        name = str(r[1]).strip() if r[1] else None
-        if not name:
+        # Skip rows with no projected wins
+        if r[16] is None and r[18] is None:
             continue
         import json as _json
-        score  = round(float(r[19])) if r[19] else None
-        wins   = int(float(r[7])) if r[7] else None
+        score  = round(float(r[18])) if r[18] else None
+        wins   = int(float(r[16])) if r[16] else None
+        gp     = int(float(r[15])) if r[15] else None
         so     = int(float(r[12])) if r[12] else None
-        upside = int(float(r[23])) if r[23] else None
         goalie_stats = _json.dumps({
-            'w':   wins,
-            'l':   int(float(r[8])) if r[8] else None,
-            'otl': int(float(r[9])) if r[9] else None,
-            'gaa': round(float(r[10]), 2) if r[10] else None,
-            'svp': round(float(r[11]), 3) if r[11] else None,
+            'w':   int(float(r[10])) if r[10] else None,
+            'gp':  int(float(r[9]))  if r[9]  else None,
+            'gaa': round(float(r[13]), 2) if r[13] else None,
+            'svp': round(float(r[14]), 3) if r[14] else None,
             'so':  so,
+            'qs':  round(float(r[6]), 1) if r[6] else None,
         })
         players.append({
             "name":     name,
             "age":      int(float(r[3])) if r[3] else None,
             "pos":      "G",
-            "team":     str(r[5]).strip() if r[5] else "FA",
-            "proj_gp":  int(float(r[6])) if r[6] else None,
+            "team":     str(r[4]).strip() if r[4] else "FA",
+            "proj_gp":  gp,
             "proj_g":   wins,
             "proj_a":   so,
             "proj_pts": score,
-            "aav":      parse_salary(r[20]),
-            "risk":     compute_risk(r[21], r[22]),
-            "tier":     str(r[2]).strip() if r[2] else None,
-            "notes":    str(r[24]).strip() if r[24] else None,
+            "aav":      parse_salary(r[19]),
+            "risk":     compute_risk(r[20], r[21]),
+            "tier":     str(r[1]).strip() if r[1] else None,
+            "notes":    str(r[23]).strip() if r[23] else None,
             "scouting": goalie_stats,
         })
 
