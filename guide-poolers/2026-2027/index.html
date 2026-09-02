@@ -566,10 +566,10 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   <!-- TABS -->
   <div class='tabs'>
     <button class='tab-btn active' onclick='switchTab("all", this)'>Tous les joueurs</button>
-    <button class='tab-btn' onclick='switchTab("sleepers", this)'>🌟 Révélations</button>
-    <button class='tab-btn' onclick='switchTab("busts", this)'>💣 Alertes déception</button>
-    <button class='tab-btn' onclick='switchTab("improvers", this)'>📈 Top progressions</button>
-    <button class='tab-btn' onclick='switchTab("regression", this)'>📉 Top régressions</button>
+    <button class='tab-btn' onclick='switchTab("gamble", this)'>🎰 Gamble</button>
+    <button class='tab-btn' onclick='switchTab("sleeper", this)'>😴 Sleeper</button>
+    <button class='tab-btn' onclick='switchTab("breakout", this)'>🚀 Breakout</button>
+    <button class='tab-btn' onclick='switchTab("aeviter", this)'>⚠️ À Éviter</button>
     <button class='tab-btn' onclick='switchTab("scarcity", this)'>📊 Rareté</button>
   </div>
 
@@ -609,7 +609,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
               <label><input type='checkbox' id='col-pp' onchange='applyColVis()'> PP% (points avantage numérique)</label>
               <label><input type='checkbox' id='col-tier' checked onchange='applyColVis()'> Palier</label>
               <label><input type='checkbox' id='col-trend' checked onchange='applyColVis()'> Tendance</label>
-              <label><input type='checkbox' id='col-value' checked onchange='applyColVis()'> Efficacité (PTS÷√AAV)</label>
+              <label><input type='checkbox' id='col-value' onchange='applyColVis()'> Efficacité (PTS÷√AAV)</label>
               <label><input type='checkbox' id='col-risk' checked onchange='applyColVis()'> 🔴 Niveau de risque</label>
               <label><input type='checkbox' id='col-injury' checked onchange='applyColVis()'> 🩹 Blessures / Risque santé</label>
             </div>
@@ -653,50 +653,36 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   </div>
 
 
-  <!-- TAB: SLEEPERS -->
-  <div id='tab-sleepers' class='tab-pane'>
-    <div style='background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.83em;color:#15803d;line-height:1.6'>
-      <strong>🌟 Qu'est-ce qu'une Révélation?</strong> Un joueur sous-estimé qui combine une forte efficacité points-par-dollar (PTS proj ÷ √AAV ≥ 25) avec un plafond d'au moins 20 points au-dessus de sa projection de base — et qui n'est pas déjà dans le top 30. Ce sont des joueurs avec un vrai scénario de percée : un nouveau trio, une année de contrat, un retour de blessure, ou simplement une projection conservatrice. Fort potentiel de rendement, faible coût au repêchage. À cibler dans les rondes du milieu et de la fin.
-    </div>
-    <h3 style='font-size:0.95em;font-weight:800;color:#065f46;margin-bottom:10px;margin-top:4px'>💰 Joueurs établis (AAV &gt; 1,5 M$)</h3>
-    <div id='sleepersGrid' class='sleepers-grid'></div>
-    <h3 style='font-size:0.95em;font-weight:800;color:#15803d;margin-bottom:10px;margin-top:24px'>🧢 Recrues &amp; contrats d'entrée (AAV ≤ 1,5 M$)</h3>
-    <div id='sleepersRookieGrid' class='sleepers-grid'></div>
-  </div>
-
-  <div id='tab-busts' class='tab-pane'>
-    <div style='background:#fff1f2;border:1px solid #fda4af;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.83em;color:#be123c;line-height:1.6'>
-      <strong>💣 Qu'est-ce qu'une Alerte déception?</strong> Un joueur surpayé classé dans le top 150 qui combine un risque Élevé — historique de blessures ou performance volatile — avec une faible efficacité points-par-dollar (PTS proj ÷ √AAV &lt; 25) et un plafond serré de 20 points ou moins au-dessus de sa projection de base. Vous dépensez un choix de premier plan sur quelqu'un qui a peu de chances de surperformer. Procédez avec prudence.
-    </div>
-    <div id='bustsGrid' class='sleepers-grid'></div>
-  </div>
-
-  <!-- TAB: IMPROVERS -->
-  <div id='tab-improvers' class='tab-pane'>
-    <div style='background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.83em;color:#15803d;line-height:1.6'>
-      <strong>📈 Top progressions :</strong> Classé par delta de PPG (points par partie) × GP projetés — normalise les blessures et les recrues. Le badge 🩹 indique un joueur qui a joué moins de 50 matchs en 2025-26.
-    </div>
-    <div style='display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;'>
-      <button class='pill active' data-prog-pos='' onclick='setProgPos(this,"improvers")'>Tous</button>
-      <button class='pill' data-prog-pos='F' onclick='setProgPos(this,"improvers")'>Attaquants</button>
-      <button class='pill' data-prog-pos='D' onclick='setProgPos(this,"improvers")'>Défenseurs</button>
-      <button class='pill' data-prog-pos='G' onclick='setProgPos(this,"improvers")'>Gardiens</button>
-    </div>
-    <div id='improversGrid' class='sleepers-grid'></div>
-  </div>
-
-  <!-- TAB: REGRESSION -->
-  <div id='tab-regression' class='tab-pane'>
+  <!-- TAB: GAMBLE -->
+  <div id='tab-gamble' class='tab-pane'>
     <div style='background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.83em;color:#c2410c;line-height:1.6'>
-      <strong>📉 Candidats à la régression :</strong> Classé par delta de PPG (points par partie) × GP projetés — normalise les blessures et les recrues. Le badge 🩹 indique un joueur qui a joué moins de 50 matchs en 2025-26.
+      <strong>🎰 Gamble</strong> — Joueurs à haut potentiel mais avec un risque élevé. Blessures récentes, âge avancé, changement d'équipe, ou stats très variables. Peut payer gros ou décevoir complètement.
     </div>
-    <div style='display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;'>
-      <button class='pill active' data-reg-pos='' onclick='setProgPos(this,"regression")'>Tous</button>
-      <button class='pill' data-reg-pos='F' onclick='setProgPos(this,"regression")'>Attaquants</button>
-      <button class='pill' data-reg-pos='D' onclick='setProgPos(this,"regression")'>Défenseurs</button>
-      <button class='pill' data-reg-pos='G' onclick='setProgPos(this,"regression")'>Gardiens</button>
+    <div id='gambleGrid' class='sleepers-grid'></div>
+  </div>
+
+  <!-- TAB: SLEEPER -->
+  <div id='tab-sleeper' class='tab-pane'>
+    <div style='background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.83em;color:#15803d;line-height:1.6'>
+      <strong>😴 Sleeper</strong> — Joueurs sous-estimés avec un fort potentiel caché. Nouveau contexte, retour de blessure, ou ligne améliorée. Idéals pour les rondes intermédiaires ou tardives.
     </div>
-    <div id='regressionGrid' class='sleepers-grid'></div>
+    <div id='sleeperGrid' class='sleepers-grid'></div>
+  </div>
+
+  <!-- TAB: BREAKOUT -->
+  <div id='tab-breakout' class='tab-pane'>
+    <div style='background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.83em;color:#1d4ed8;line-height:1.6'>
+      <strong>🚀 Breakout</strong> — Joueurs en pleine progression, attendus pour une saison de percée. Jeunesse, opportunité accrue, ou développement fulgurant.
+    </div>
+    <div id='breakoutGrid' class='sleepers-grid'></div>
+  </div>
+
+  <!-- TAB: À ÉVITER -->
+  <div id='tab-aeviter' class='tab-pane'>
+    <div style='background:#fff1f2;border:1px solid #fda4af;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.83em;color:#be123c;line-height:1.6'>
+      <strong>⚠️ À Éviter</strong> — Joueurs à éviter en pool cette saison. Trop payé, trop risqué, ou contexte défavorable. Ne vaut pas leur coût de repêchage.
+    </div>
+    <div id='aeviterGrid' class='sleepers-grid'></div>
   </div>
 
   <!-- TAB: SCARCITY -->
@@ -911,10 +897,10 @@ async function init() {
   });
 
   renderAll();
-  renderSleepers();
-  renderBusts();
-  renderImprovers();
-  renderRegression();
+  renderCategory('GAMBLE',   'gambleGrid',   '🎰', '#fb923c');
+  renderCategory('SLEEPER',  'sleeperGrid',  '😴', '#34d399');
+  renderCategory('BREAKOUT', 'breakoutGrid', '🚀', '#60a5fa');
+  renderCategory('À ÉVITER', 'aeviterGrid',  '⚠️', '#fda4af');
   renderScarcity();
   applyColVis();
 }
@@ -1416,152 +1402,32 @@ function renderCards(filtered) {
 }
 
 
-// ── RENDER SLEEPERS ───────────────────────────────────────
-function renderSleepers() {
-  const all = allPlayers.filter(p => parseInt(tierNum(p.tier)) >= 8 && p.pos !== 'G')
-    .sort((a, b) => (b.proj_pts || 0) - (a.proj_pts || 0));
-  const established = all.filter(p => p.aav != null && p.aav > 1.5);
-  const rookies     = all.filter(p => p.aav == null || p.aav <= 1.5);
-
-  function cardHtml(p, i, color) {
-    return `<div class='sleeper-card' style='border-color:${color};cursor:pointer' onclick='openModal(${p.id})'>
-    <div class='sleeper-rank'><span style='color:${color}'>●</span> Révélation #${i + 1}</div>
-    <div class='sleeper-name'>${p.name}</div>
-    <div class='sleeper-meta'>${p.team} · ${p.pos} · Âge ${p.age ?? 'N/A'} · ${p.proj_gp} PJ${p.aav ? ' · ' + p.aav + 'M$' : ' · CEN'}${p.last_gp ? ' · ' + p.last_gp + ' PJ der. sais.' : ''}</div>
-    <div class='sleeper-stats'>
-      <div class='sleeper-stat'><div class='val proj-pts'>${p.proj_pts}</div><div class='lbl'>PTS</div></div>
-      <div class='sleeper-stat'><div class='val ppg-proj'>${ppg(p.proj_pts, p.proj_gp)}</div><div class='lbl'>PPG</div></div>
-      <div class='sleeper-stat'><div class='val last-pts'>${p.last_pts ?? '—'}</div><div class='lbl'>PTS dern.</div></div>
-    </div>
-    <div class='sleeper-note'>"${p.notes}"</div>
-  </div>`;
-  }
-
-  const grid = document.getElementById('sleepersGrid');
-  grid.innerHTML = established.length
-    ? established.map((p, i) => cardHtml(p, i, '#34d399')).join('')
-    : '<div class="empty-state"><div class="icon">🌟</div>Aucune révélation établie pour l\'instant.</div>';
-
-  const rookieGrid = document.getElementById('sleepersRookieGrid');
-  rookieGrid.innerHTML = rookies.length
-    ? rookies.map((p, i) => cardHtml(p, i, '#60a5fa')).join('')
-    : '<div class="empty-state"><div class="icon">🧢</div>Aucune révélation recrue pour l\'instant.</div>';
-}
-
-// ── RENDER BUSTS ─────────────────────────────────────────
-function renderBusts() {
-  const busts = allPlayers.filter(p => {
-    if (!p.bust_alert) return false;
-    // Exclure si tendance PPG positive
-    if (p.last_pts != null && p.last_gp > 0 && p.proj_gp > 0) {
-      const ppgLast = p.last_pts / p.last_gp;
-      const ppgProj = p.proj_pts / p.proj_gp;
-      if (ppgProj > ppgLast) return false;
-    }
-    return true;
-  }).sort((a, b) => a.rank - b.rank);
-  const grid = document.getElementById('bustsGrid');
-  if (!busts.length) {
-    grid.innerHTML = '<div class="empty-state"><div class="icon">💣</div>Aucune alerte déception pour l\'instant.</div>';
+// ── RENDER CATEGORY TAB ───────────────────────────────────
+function renderCategory(category, gridId, icon, color) {
+  const players = allPlayers
+    .filter(p => p.scouting_category === category)
+    .sort((a, b) => (a.rank || 999) - (b.rank || 999));
+  const grid = document.getElementById(gridId);
+  if (!players.length) {
+    grid.innerHTML = `<div class='empty-state'><div class='icon'>${icon}</div>Aucun joueur dans cette catégorie pour l'instant.</div>`;
     return;
   }
-  grid.innerHTML = busts.map((p, i) => {
-    const trend = getTrend(p);
-    const diff  = p.proj_pts - (p.last_pts || p.proj_pts);
-    const diffStr = diff > 0 ? '+' + diff : '' + diff;
-    const trendLbl = trend === 'up' ? `↑ ${diffStr}` : trend === 'down' ? `↓ ${diffStr}` : `→ ${diffStr}`;
-    return `<div class='sleeper-card' style='border-color:#fda4af;background:#fff1f2' onclick='openModal(${p.id})'>
-      <div class='sleeper-rank' style='color:#be123c'>💣 Alerte déception — #${i + 1}</div>
+  grid.innerHTML = players.map(p => {
+    const aav = p.aav ? `${parseFloat(p.aav).toFixed(2)}M$` : 'CEN';
+    const noteEsc = (p.notes || '').replace(/"/g, '&quot;');
+    return `<div class='sleeper-card' style='border-color:${color};cursor:pointer' onclick='openModal(${p.id})'>
+      <div class='sleeper-rank' style='color:${color}'>${icon} ${category} · Rang #${p.rank}</div>
       <div class='sleeper-name'>${p.name}</div>
-      <div class='sleeper-meta'>${p.team} · ${p.pos} · Âge ${p.age ?? 'N/A'}${p.aav ? ' · ' + p.aav + 'M$' : ''}</div>
+      <div class='sleeper-meta'>${p.team} · ${p.pos} · ${p.age ?? 'N/A'} ans · ${aav}${p.proj_gp ? ' · ' + p.proj_gp + ' PJ' : ''}</div>
       <div class='sleeper-stats'>
-        <div class='sleeper-stat'><div class='val last-pts'>${p.last_pts ?? '—'}</div><div class='lbl'>PTS dern.</div></div>
-        <div class='sleeper-stat'><div class='val proj-pts'>${p.proj_pts}</div><div class='lbl'>PTS proj</div></div>
-        <div class='sleeper-stat'><div class='val' style='color:#be123c'>${trendLbl}</div><div class='lbl'>Tendance</div></div>
+        <div class='sleeper-stat'><div class='val proj-stat'>${p.proj_g ?? '—'}</div><div class='lbl'>B</div></div>
+        <div class='sleeper-stat'><div class='val proj-stat'>${p.proj_a ?? '—'}</div><div class='lbl'>A</div></div>
+        <div class='sleeper-stat'><div class='val proj-pts'>${p.proj_pts ?? '—'}</div><div class='lbl'>PTS</div></div>
+        ${p.upside != null ? `<div class='sleeper-stat'><div class='val' style='color:#7c3aed'>↑${p.upside}</div><div class='lbl'>Plafond</div></div>` : ''}
       </div>
-      ${p.notes ? `<div class='sleeper-note' style='color:#be123c'>"${p.notes}"</div>` : ''}
+      ${noteEsc ? `<div class='sleeper-note' style='color:${color}'>"${noteEsc}"</div>` : ''}
     </div>`;
   }).join('');
-}
-
-// ── RENDER IMPROVERS ─────────────────────────────────────
-let progPosFilter = { improvers: '', regression: '' };
-
-function setProgPos(btn, tab) {
-  const attr = tab === 'improvers' ? 'data-prog-pos' : 'data-reg-pos';
-  btn.closest('div').querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  progPosFilter[tab] = btn.getAttribute(attr);
-  tab === 'improvers' ? renderImprovers() : renderRegression();
-}
-
-function progCard(p, i, type) {
-  const isInjured = (p.last_gp ?? 0) < 50;
-  const color = type === 'improvers' ? '#15803d' : '#dc2626';
-  const borderColor = type === 'improvers' ? '#86efac' : '#fca5a5';
-  const bg = type === 'improvers' ? '' : "background:#fff8f8;";
-  const icon = type === 'improvers' ? '📈' : '📉';
-  const label = type === 'improvers' ? 'Progression' : 'Régression';
-  const ppgColor = type === 'improvers' ? '#15803d' : '#dc2626';
-  return `<div class='sleeper-card' style='border-color:${borderColor};${bg}cursor:pointer' onclick='openModal(${p.id})'>
-    <div class='sleeper-rank' style='color:${color}'>${icon} ${label} #${i + 1}${isInjured ? ' <span title="Moins de 50 PJ en 2025-26" style="font-size:0.9em">🩹</span>' : ''}</div>
-    <div class='sleeper-name'>${p.name}</div>
-    <div class='sleeper-meta'>${p.team} · ${p.pos} · Âge ${p.age ?? 'N/A'}${p.aav ? ' · ' + p.aav + 'M$' : ''} · ${p.last_gp} PJ 2025-26</div>
-    <div class='sleeper-stats'>
-      <div class='sleeper-stat'><div class='val last-pts'>${p.last_pts}</div><div class='lbl'>PTS 2025-26</div></div>
-      <div class='sleeper-stat'><div class='val' style='color:#64748b'>${p.ppgLast.toFixed(2)}</div><div class='lbl'>PPG dern.</div></div>
-      <div class='sleeper-stat'><div class='val proj-pts'>${p.proj_pts}</div><div class='lbl'>PTS proj</div></div>
-      <div class='sleeper-stat'><div class='val' style='color:${ppgColor};font-weight:800'>${p.ppgProj.toFixed(2)}</div><div class='lbl'>PPG proj</div></div>
-    </div>
-    ${p.notes ? `<div class='sleeper-note' style='color:${color}'>"${p.notes}"</div>` : ''}
-  </div>`;
-}
-
-function renderImprovers() {
-  const grid = document.getElementById('improversGrid');
-  const posF = progPosFilter.improvers;
-  const eligible = allPlayers
-    .filter(p => p.last_pts != null && p.last_gp > 0 && p.proj_pts != null && p.proj_gp > 0)
-    .filter(p => !posF || (posF === 'F' ? ['C','LW','RW','F'].includes(p.pos) : p.pos === posF))
-    .map(p => {
-      const ppgLast = p.last_pts / p.last_gp;
-      const ppgProj = p.proj_pts / p.proj_gp;
-      const score = (ppgProj - ppgLast) * p.proj_gp;
-      return { ...p, ppgLast, ppgProj, score };
-    })
-    .filter(p => p.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 20);
-
-  if (!eligible.length) {
-    grid.innerHTML = `<div class='empty-state'><div class='icon'>📈</div>Aucune donnée disponible.</div>`;
-    return;
-  }
-  grid.innerHTML = eligible.map((p, i) => progCard(p, i, 'improvers')).join('');
-}
-
-// ── RENDER REGRESSION ────────────────────────────────────
-function renderRegression() {
-  const grid = document.getElementById('regressionGrid');
-  const posF = progPosFilter.regression;
-  const eligible = allPlayers
-    .filter(p => p.last_pts != null && p.last_gp > 0 && p.proj_pts != null && p.proj_gp > 0)
-    .filter(p => !posF || (posF === 'F' ? ['C','LW','RW','F'].includes(p.pos) : p.pos === posF))
-    .map(p => {
-      const ppgLast = p.last_pts / p.last_gp;
-      const ppgProj = p.proj_pts / p.proj_gp;
-      const score = (ppgProj - ppgLast) * p.proj_gp;
-      return { ...p, ppgLast, ppgProj, score };
-    })
-    .filter(p => p.score < 0)
-    .sort((a, b) => a.score - b.score)
-    .slice(0, 20);
-
-  if (!eligible.length) {
-    grid.innerHTML = `<div class='empty-state'><div class='icon'>📉</div>Aucune donnée disponible.</div>`;
-    return;
-  }
-  grid.innerHTML = eligible.map((p, i) => progCard(p, i, 'regression')).join('');
 }
 
 
