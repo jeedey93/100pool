@@ -1255,6 +1255,8 @@ function buildGoalieRowHTML(p, displayRank) {
     const ageClass  = p.age <= 22 ? 'age-young' : p.age >= 32 ? 'age-old' : '';
     const tierLabel = p.tier ? p.tier.replace(/^Tier \d+ - /, '') : '—';
     const notes     = p.notes || '';
+    const notesEsc  = notes.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+    const notesShort = notes.length > 60 ? notes.slice(0, 60) + '…' : notes;
     return `<tr class='${tierRowClass(p.tier)}'>
       <td>${displayRank}</td>
       <td><div class='player-name' onclick='openModal(${p.id})'>${p.name}</div></td>
@@ -1271,7 +1273,7 @@ function buildGoalieRowHTML(p, displayRank) {
       <td class='cg-cat'>${cat ? `<span class='cat-badge cat-${catKey}'>${cat}</span>` : '—'}</td>
       <td class='cg-injury' style='text-align:center;'>${bandaid}</td>
       <td class='cg-risk'>${riskCls ? `<span class='risk ${riskCls}'>${riskLabel === 'Élevé' ? '🔴' : '🟡'} ${riskLabel}</span>` : riskLabel}</td>
-      <td style='font-size:0.82em;color:#475569;max-width:300px;'>${notes}</td>
+      <td style='font-size:0.82em;color:#475569;max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:default;' ${notes ? `onmouseenter='showTooltip(this, this.dataset.note)' onmouseleave='hideTooltip()' data-note="${notesEsc}"` : ''}>${notesShort}</td>
     </tr>`;
 }
 
@@ -1282,8 +1284,8 @@ function buildRowHTML(p, displayRank) {
     const trendLbl = trend === 'up' ? `↑ ${diffStr}` : trend === 'down' ? `↓ ${diffStr}` : `→ ${diffStr}`;
     const pv       = getPV(p);
     const pc       = pvClass(pv);
-    const noteEsc  = (p.notes || '').replace(/'/g, '&#39;').replace(/"/g, '&quot;');
-    const noteFull = (p.notes || '').replace(/"/g, '&quot;');
+    const noteEsc  = (p.notes || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+    const noteFull = p.notes || '';
     const aav      = p.aav ? `$${parseFloat(p.aav).toFixed(2)}M` : '—';
     const ppPct    = p.pp_pct != null ? p.pp_pct + '%' : '—';
     const riskHtml = p.risk && p.risk !== 'Low' ? `<span class='risk risk-${p.risk}'>${p.risk === 'Medium' ? '🟡 Moyen' : '🔴 Élevé'}</span>` : '—';
@@ -1303,7 +1305,7 @@ function buildRowHTML(p, displayRank) {
       <td>${displayRank}</td>
       <td>
         <div class='player-name' onclick='openModal(${p.id})'>${p.name}</div>
-        ${noteEsc ? `<div class='note-icon' onmouseenter='showTooltip(this,"${noteFull}")' onmouseleave='hideTooltip()'>${noteEsc.length > 50 ? noteEsc.slice(0,50) + '…' : noteEsc}</div>` : ''}
+        ${noteEsc ? `<div class='note-icon' onmouseenter='showTooltip(this, this.dataset.note)' onmouseleave='hideTooltip()' data-note="${noteEsc}">${noteFull.length > 50 ? noteFull.slice(0,50) + '…' : noteFull}</div>` : ''}
         ${bustHtml}
       </td>
       <td><span class='team-tag'>${p.team}</span></td>
@@ -1490,7 +1492,7 @@ function renderCategory(category, gridId, icon, color) {
   }
   grid.innerHTML = players.map(p => {
     const aav = p.aav ? `${parseFloat(p.aav).toFixed(2)}M$` : 'CEN';
-    const noteEsc = (p.notes || '').replace(/"/g, '&quot;');
+    const noteEsc = (p.notes || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
     return `<div class='sleeper-card' style='border-color:${color};cursor:pointer' onclick='openModal(${p.id})'>
       <div class='sleeper-rank' style='color:${color}'>${icon} ${category} · Rang #${p.rank}</div>
       <div class='sleeper-name'>${p.name}</div>
