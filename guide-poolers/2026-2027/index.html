@@ -1590,18 +1590,14 @@ async function loadNhlHistory(nhlId, pos, projRow) {
     ? (typeof projRow.season_history === 'string' ? JSON.parse(projRow.season_history) : projRow.season_history)
     : [];
   if (!history || !history.length) return '<div class="modal-history-loading">Aucune saison NHL disponible.</div>';
-  const sorted = [...history].reverse(); // oldest first
   const isG = pos === 'G';
+  // Skaters stored newest-first, goalies oldest-first — normalize to oldest-first for display
+  const sorted = isG ? [...history] : [...history].reverse();
   if (isG) {
-    const gs = getGoalieStats(projRow);
-    // Build rows from season_history, then append 2025-26 from scouting if not already there
     const histRows = sorted.map(s => `<tr><td>${s.season}</td><td>${s.team??'—'}</td><td>${s.gp??'—'}</td><td>${s.w??'—'}</td><td>${s.gaa??'—'}</td><td>${s.svp??'—'}</td><td>${s.so??'—'}</td></tr>`).join('');
-    const lastRow = (gs.w != null || gs.gaa != null)
-      ? `<tr><td>2025-26</td><td>${projRow.team}</td><td>${gs.gp??'—'}</td><td>${gs.w??'—'}</td><td>${gs.gaa??'—'}</td><td>${gs.svp != null ? gs.svp.toFixed(3) : '—'}</td><td>${gs.so??'—'}</td></tr>`
-      : '';
     return `<table class='modal-history-table'>
       <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>V</th><th>GAA</th><th>SV%</th><th>SO</th></tr>
-      ${histRows}${lastRow}
+      ${histRows}
       <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>—</td><td>—</td><td>—</td></tr>
     </table>`;
   }
