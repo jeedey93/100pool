@@ -332,7 +332,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 
 /* ── SLEEPERS ── */
 .sleepers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
-.sleeper-card { background: white; border: 2px solid #34d399; border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: box-shadow 0.2s; }
+.sleeper-card { background: white; border: 2px solid #34d399; border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: box-shadow 0.2s; position: relative; }
 .sleeper-card:hover { box-shadow: 0 4px 12px rgba(52,211,153,0.2); }
 .sleeper-rank { font-size: 0.75em; color: #065f46; font-weight: 700; margin-bottom: 6px; }
 .sleeper-name { font-size: 1.05em; font-weight: 800; color: #1e293b; margin-bottom: 4px; }
@@ -343,6 +343,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 .sleeper-stat .val { font-size: 1.15em; font-weight: 800; color: #1e293b; line-height: 1; }
 .sleeper-stat .lbl { font-size: 0.65em; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 3px; }
 .sleeper-note { font-size: 0.82em; color: #065f46; font-style: italic; }
+.sleeper-aav { position: absolute; top: 12px; right: 14px; font-size: 0.78em; font-weight: 700; color: #0369a1; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 2px 7px; }
 
 /* ── DISCLAIMER ── */
 .disclaimer { margin-top: 28px; padding: 12px 16px; background: #f0fdf4; border-left: 4px solid #2d8a3e; border-radius: 0 10px 10px 0; font-size: 0.78em; color: #15803d; }
@@ -1518,6 +1519,7 @@ function renderCategory(category, gridId, icon, color) {
     const aav = p.aav ? `${parseFloat(p.aav).toFixed(2)}M$` : 'CEN';
     const noteEsc = (p.notes || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
     return `<div class='sleeper-card' style='border-color:${color};cursor:pointer' onclick='openModal(${p.id})'>
+      ${p.aav != null ? `<div class='sleeper-aav'>${aav}</div>` : ''}
       <div class='sleeper-rank' style='color:${color}'>${icon} ${category} · Rang #${p.rank}</div>
       <div class='sleeper-name'>${p.name}</div>
       <div class='sleeper-meta'>${p.team} · ${p.pos} · ${p.age ?? 'N/A'} ans${p.proj_gp ? ' · ' + p.proj_gp + ' PJ' : ''}</div>
@@ -1526,13 +1528,11 @@ function renderCategory(category, gridId, icon, color) {
         <div class='sleeper-stat'><div class='val proj-pts'>${p.proj_g ?? '—'}</div><div class='lbl'>V</div></div>
         <div class='sleeper-stat'><div class='val proj-stat'>${p.proj_a ?? '—'}</div><div class='lbl'>SO</div></div>
         ${p.upside != null ? `<div class='sleeper-stat'><div class='val' style='color:#7c3aed'>↑${p.upside}</div><div class='lbl'>Plafond</div></div>` : ''}
-        ${p.aav != null ? `<div class='sleeper-stat'><div class='val' style='color:#0369a1'>${parseFloat(p.aav).toFixed(2)}M$</div><div class='lbl'>AAV</div></div>` : ''}
         ` : `
         <div class='sleeper-stat'><div class='val proj-stat'>${p.proj_g ?? '—'}</div><div class='lbl'>B</div></div>
         <div class='sleeper-stat'><div class='val proj-stat'>${p.proj_a ?? '—'}</div><div class='lbl'>A</div></div>
         <div class='sleeper-stat'><div class='val proj-pts'>${p.proj_pts ?? '—'}</div><div class='lbl'>PTS</div></div>
         ${p.upside != null ? `<div class='sleeper-stat'><div class='val' style='color:#7c3aed'>↑${p.upside}</div><div class='lbl'>Plafond</div></div>` : ''}
-        ${p.aav != null ? `<div class='sleeper-stat'><div class='val' style='color:#0369a1'>${parseFloat(p.aav).toFixed(2)}M$</div><div class='lbl'>AAV</div></div>` : ''}
         `}
       </div>
       ${noteEsc ? `<div class='sleeper-note' style='color:${color}'>"${noteEsc}"</div>` : ''}
