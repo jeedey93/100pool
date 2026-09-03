@@ -171,17 +171,18 @@ def parse_players():
     #   9=GP-25/26, 10=W-25/26, 12=SO-25/26, 13=GAA-25/26, 14=SV%-25/26,
     #   15=xGP-26/27, 16=xW-26/27, 18=PTS-proj, 19=Salaire, 20=Band-aid,
     #   21=Risqué, 22=Upside, 23=Notes
-    # Block 2 (rows 77-154, 0-based index 76-153): last-season stats + notes
+    # Block 2 (rows 77-155, 0-based index 76-154): last-season stats + notes
+    #   Row 76 (0-based 75) = header
     #   1=Rang, 2=Noms, 3=Âge, 4=Pos, 5=Équipe, 6=GP, 7=W, 8=L, 9=OTL,
     #   10=GAA, 11=SV%, 12=SO, 13=2V+1OTL+3SO, 14=QS%, 17=GSAx, 18=SV%5v5,
-    #   19=Score, 20=Salaire, 21=Band-aid, 22=Risqué, 23=Upside, 24=Notes
+    #   19=Score, 20=Salaire, 24=Notes
     import json as _json
     ws = wb["Gardiens - VF"]
     rows = list(ws.iter_rows(values_only=True))
 
-    # Parse block 2 first → keyed by name for merging
+    # Parse block 2 first → keyed by name for merging (data starts at 0-based index 76)
     block2 = {}
-    for r in rows[76:154]:
+    for r in rows[76:155]:
         name = str(r[2]).strip() if r[2] else None
         if not name or name in ('Noms',):
             continue
