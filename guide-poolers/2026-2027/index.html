@@ -1267,7 +1267,8 @@ function buildGoalieRowHTML(p, displayRank) {
     const noteEsc  = (p.notes || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
     const noteFull = p.notes || '';
     const cat      = p.scouting_category;
-    const catKey   = cat ? cat.toUpperCase().replace(/[^A-Z]/g, '') : null;
+    const catNorm  = cat ? cat.toUpperCase() : null;
+    const catKey   = catNorm === 'À ÉVITER' || catNorm === 'À EVITER' ? 'AEVITER' : catNorm;
 
     return `<tr class='${tierRowClass(p.tier)}'>
       <td>${displayRank}</td>
@@ -1360,7 +1361,7 @@ function buildRowHTML(p, displayRank) {
       </div></td>
       <td class='cg-risk'>${riskHtml}</td>
       <td class='cg-injury' style='text-align:center;font-size:1em;'>${bandaid || '—'}</td>
-      <td class='cg-cat'>${p.scouting_category ? `<span class='cat-badge cat-${p.scouting_category === 'À ÉVITER' ? 'AEVITER' : p.scouting_category}'>${p.scouting_category}</span>` : '—'}</td>
+      <td class='cg-cat'>${p.scouting_category ? `<span class='cat-badge cat-${['À ÉVITER','À EVITER'].includes(p.scouting_category.toUpperCase()) ? 'AEVITER' : p.scouting_category.toUpperCase()}'>${p.scouting_category}</span>` : '—'}</td>
     </tr>`;
 }
 
@@ -1504,7 +1505,7 @@ function renderCards(filtered) {
 // ── RENDER CATEGORY TAB ───────────────────────────────────
 function renderCategory(category, gridId, icon, color) {
   const players = allPlayers
-    .filter(p => p.scouting_category === category)
+    .filter(p => (p.scouting_category || '').toUpperCase() === category.toUpperCase())
     .sort((a, b) => (a.rank || 999) - (b.rank || 999));
   const grid = document.getElementById(gridId);
   if (!players.length) {
