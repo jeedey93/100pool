@@ -88,34 +88,52 @@ def search_nhl_player(name):
         return None
 
 
-def fetch_goalie_seasons(nhl_id):
-    """Fetch last 5 seasons of goalie stats from NHL API."""
+def fetch_goalie_data(nhl_id):
+    """Fetch last 5 seasons of goalie stats + headshot from NHL API.
+    Returns (seasons_list, headshot_url)."""
     try:
         url = f"https://api-web.nhle.com/v1/player/{nhl_id}/landing"
         r = requests.get(url, headers=NHL_HEADERS, timeout=10)
         if r.status_code != 200:
-            return []
+            return [], None
         data = r.json()
-        # seasonTotals contains per-season stats
+        headshot = data.get("headshot", None)
         totals = data.get("seasonTotals", [])
-        # Filter regular season NHL only
         nhl_seasons = [
             s for s in totals
             if s.get("leagueAbbrev") == "NHL" and s.get("gameTypeId") == 2
         ]
-        # Sort by season descending, take last 5
         nhl_seasons.sort(key=lambda s: s.get("season", 0), reverse=True)
         seasons = []
         for s in nhl_seasons[:5]:
             season_code = s.get("season", 0)
             label = SEASON_MAP.get(season_code)
             if not label:
-                # Format unknown season code e.g. 20192020 → "2019-20"
                 sc = str(season_code)
                 label = f"{sc[:4]}-{sc[6:]}" if len(sc) == 8 else str(season_code)
+            # Team: use teamPlaceNameWithPreposition (e.g. "Tampa Bay") → abbreviate
+            team_place = s.get("teamPlaceNameWithPreposition") or {}
+            place = (team_place.get("default", "") if isinstance(team_place, dict) else str(team_place)).strip()
+            place = place.replace("de ", "").replace("of ", "").strip()
+            # Team abbreviation — match skater format (3-letter official)
+            PLACE_TO_ABBREV = {
+                "Tampa Bay": "TBL", "New York": "NYR", "New Jersey": "NJD",
+                "Los Angeles": "LAK", "San Jose": "SJS", "St. Louis": "STL",
+                "Columbus": "CBJ", "Minnesota": "MIN", "Nashville": "NSH",
+                "Carolina": "CAR", "Pittsburgh": "PIT", "Philadelphia": "PHI",
+                "Washington": "WSH", "Boston": "BOS", "Buffalo": "BUF",
+                "Toronto": "TOR", "Montreal": "MTL", "Mon": "MTL",
+                "Ottawa": "OTT", "Winnipeg": "WPG", "Calgary": "CGY",
+                "Edmonton": "EDM", "Vancouver": "VAN", "Seattle": "SEA",
+                "Vegas": "VGK", "Arizona": "ARI", "Utah": "UTA",
+                "Dallas": "DAL", "Colorado": "COL", "Chicago": "CHI",
+                "Detroit": "DET", "Florida": "FLA", "Anaheim": "ANA",
+                "Long Island": "NYI",
+            }
+            team = PLACE_TO_ABBREV.get(place, place[:3].upper() if place else "—")
             seasons.append({
                 "season": label,
-                "team":   s.get("teamAbbrev", {}).get("default", "—") if isinstance(s.get("teamAbbrev"), dict) else s.get("teamAbbrev", "—"),
+                "team":   team,
                 "gp":     s.get("gamesPlayed"),
                 "w":      s.get("wins"),
                 "l":      s.get("losses"),
@@ -124,21 +142,25 @@ def fetch_goalie_seasons(nhl_id):
                 "svp":    round(s["savePctg"], 3) if s.get("savePctg") else None,
                 "so":     s.get("shutouts"),
             })
-        # Return oldest first (for display)
-        return list(reversed(seasons))
+        return list(reversed(seasons)), headshot
     except Exception as e:
         print(f"  History error for nhl_id {nhl_id}: {e}")
-        return []
+        return [], None
+
+
+def fetch_goalie_seasons(nhl_id):
+    seasons, _ = fetch_goalie_data(nhl_id)
+    return seasons
 
 
 def main():
-    # Fetch all goalies without nhl_id
+    # Fetch all goalies (re-run to fix team names and add headshots)
     res = requests.get(
-        f"{SUPABASE_URL}/rest/v1/poolers_players?select=id,name,pos&pos=eq.G&nhl_id=is.null&order=rank.asc",
+        f"{SUPABASE_URL}/rest/v1/poolers_players?select=id,name,pos&pos=eq.G&order=rank.asc",
         headers=HEADERS,
     )
     goalies = res.json()
-    print(f"Found {len(goalies)} goalies without nhl_id")
+    print(f"Found {len(goalies)} goalies")
 
     updated = 0
     not_found = []
@@ -156,13 +178,15 @@ def main():
             continue
 
         nhl_id, matched_name = result
-        seasons = fetch_goalie_seasons(nhl_id)
-        print(f"→ {nhl_id} ({matched_name}), {len(seasons)} seasons")
+        seasons, headshot = fetch_goalie_data(nhl_id)
+        print(f"→ {nhl_id}, {len(seasons)} seasons, headshot={'yes' if headshot else 'no'}")
 
         patch = {
             "nhl_id": nhl_id,
             "season_history": json.dumps(seasons) if seasons else None,
         }
+        if headshot:
+            patch["headshot_url"] = headshot
         r = requests.patch(
             f"{SUPABASE_URL}/rest/v1/poolers_players?id=eq.{pid}",
             headers={**HEADERS, "Prefer": "return=minimal"},
