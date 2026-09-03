@@ -113,6 +113,21 @@ serve(async (req) => {
     console.error('Failed to send email:', err);
   }
 
+  // Notification email to admin
+  await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: 'Guide 100% Pool <guide@100pool.ca>',
+      to: '100pool.podcast@gmail.com',
+      subject: `Nouvel achat — Guide 2026-27 🏒`,
+      html: `<p>Nouvel achat du Guide des poolers 2026-27.</p><p><strong>Email :</strong> ${email}</p>`,
+    }),
+  });
+
   console.log(`Access granted to ${email}, token: ${token}`);
   return new Response('OK', { status: 200 });
 });
