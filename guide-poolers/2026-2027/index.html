@@ -1092,8 +1092,11 @@ function sorted(players) {
 }
 
 function getTrendGoalie(p) {
-  const gs = getGoalieStats(p);
-  const lastW = gs.w;
+  const hist = p.season_history
+    ? (typeof p.season_history === 'string' ? JSON.parse(p.season_history) : p.season_history)
+    : [];
+  const last = hist.find(s => s.season === '2025-26') ?? hist[hist.length - 1];
+  const lastW = last?.w ?? null;
   if (lastW == null || p.proj_g == null) return { trend: 'flat', diff: 0 };
   const diff = p.proj_g - lastW;
   return { trend: diff > 2 ? 'up' : diff < -2 ? 'down' : 'flat', diff };
@@ -1105,6 +1108,7 @@ function sortedGoalies(players) {
     if (goalieSortCol === '_goalie_l')    return gs.l ?? 0;
     if (goalieSortCol === '_goalie_otl')  return gs.otl ?? 0;
     if (goalieSortCol === '_goalie_wpct') { const gp = p.proj_gp ?? gs.gp; const w = p.proj_g ?? gs.w; return (gp && w != null) ? w / gp : 0; }
+    if (goalieSortCol === '_goalie_trend') return getTrendGoalie(p).diff;
     if (goalieSortCol === 'risk')  return p.risk === 'Low' ? 1 : p.risk === 'Medium' ? 2 : 3;
     if (goalieSortCol === 'injury') return p.bandaid ? 1 : 0;
     if (goalieSortCol === 'tier')  return parseInt((p.tier || '').match(/\d+/)?.[0] || '99');
@@ -1186,7 +1190,7 @@ function goalieHeaderHTML() {
   <tr class='group-row'>
     <th colspan='5' style='background:#f1f5f9;'></th>
     <th colspan='6' class='col-group-proj'>🎯 PROJ 2026-27</th>
-    <th colspan='6' style='background:#f1f5f9;'></th>
+    <th colspan='7' style='background:#f1f5f9;'></th>
   </tr>
   <tr class='col-row'>
     <th onclick='sortGoalieBy("rank")'              data-col='rank'>#<span class='sort-icon'></span></th>
@@ -1200,6 +1204,7 @@ function goalieHeaderHTML() {
     <th onclick='sortGoalieBy("_goalie_otl")'       data-col='_goalie_otl' class='col-group-proj'>OTL<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("proj_a")'            data-col='proj_a'   class='col-group-proj'>SO<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("_goalie_wpct")'      data-col='_goalie_wpct' class='col-group-proj' style='border-right:2px solid #bbf7d0;'>W%<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("_goalie_trend")'     data-col='_goalie_trend' class='cg-trend'>Tendance<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("aav")'               data-col='aav'  class='cg-salary'>💰 AAV<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("tier")'              data-col='tier' class='cg-tier'>Tier<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("_pv")'               data-col='_pv'  class='cg-value'>Efficacité<span class='sort-icon'></span></th>
@@ -1280,6 +1285,7 @@ function buildGoalieRowHTML(p, displayRank) {
       <td class='col-proj proj-stat'>${otl}</td>
       <td class='col-proj proj-stat'>${so}</td>
       <td class='col-proj' style='color:#64748b;font-size:0.85em;'>${wpct}</td>
+      ${(() => { const gt = getTrendGoalie(p); const gDiffStr = gt.diff > 0 ? '+' + gt.diff : '' + gt.diff; return `<td class='cg-trend'><span class='trend trend-${gt.trend}'>${gt.trend === 'up' ? '↑' : gt.trend === 'down' ? '↓' : '→'} ${gDiffStr} V</span></td>`; })()}
       <td class='cg-salary'><span class='salary'>${aav}</span></td>
       <td class='cg-tier'><span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span></td>
       <td class='cg-value'><div class='pv-bar ${pc}' onmouseenter='showTooltip(this,"Efficacité = W proj ÷ √AAV(M$)${pv !== null ? ` = ${pv}` : ` — AAV indisponible`}")' onmouseleave='hideTooltip()'>
