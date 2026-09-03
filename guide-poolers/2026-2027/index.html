@@ -1518,7 +1518,7 @@ function renderCategory(category, gridId, icon, color) {
     return `<div class='sleeper-card' style='border-color:${color};cursor:pointer' onclick='openModal(${p.id})'>
       <div class='sleeper-rank' style='color:${color}'>${icon} ${category} · Rang #${p.rank}</div>
       <div class='sleeper-name'>${p.name}</div>
-      <div class='sleeper-meta'>${p.team} · ${p.pos} · ${p.age ?? 'N/A'} ans · ${aav}${p.proj_gp ? ' · ' + p.proj_gp + ' PJ' : ''}</div>
+      <div class='sleeper-meta'>${p.team} · ${p.pos} · ${p.age ?? 'N/A'} ans${p.proj_gp ? ' · ' + p.proj_gp + ' PJ' : ''}</div>
       <div class='sleeper-stats'>
         ${p.pos === 'G' ? `
         <div class='sleeper-stat'><div class='val proj-pts'>${p.proj_g ?? '—'}</div><div class='lbl'>V</div></div>
