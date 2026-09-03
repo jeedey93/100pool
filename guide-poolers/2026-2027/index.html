@@ -1523,7 +1523,7 @@ function renderCategory(category, gridId, icon, color) {
         ${p.pos === 'G' ? `
         <div class='sleeper-stat'><div class='val proj-pts'>${p.proj_g ?? '—'}</div><div class='lbl'>V</div></div>
         <div class='sleeper-stat'><div class='val proj-stat'>${p.proj_a ?? '—'}</div><div class='lbl'>SO</div></div>
-        ${p.aav != null ? `<div class='sleeper-stat'><div class='val' style='color:#7c3aed'>${parseFloat(p.aav).toFixed(2)}M$</div><div class='lbl'>AAV</div></div>` : ''}
+        ${p.upside != null ? `<div class='sleeper-stat'><div class='val' style='color:#7c3aed'>↑${p.upside}</div><div class='lbl'>Plafond</div></div>` : ''}
         ` : `
         <div class='sleeper-stat'><div class='val proj-stat'>${p.proj_g ?? '—'}</div><div class='lbl'>B</div></div>
         <div class='sleeper-stat'><div class='val proj-stat'>${p.proj_a ?? '—'}</div><div class='lbl'>A</div></div>
