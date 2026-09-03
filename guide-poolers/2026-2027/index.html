@@ -337,10 +337,11 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 .sleeper-rank { font-size: 0.75em; color: #065f46; font-weight: 700; margin-bottom: 6px; }
 .sleeper-name { font-size: 1.05em; font-weight: 800; color: #1e293b; margin-bottom: 4px; }
 .sleeper-meta { font-size: 0.82em; color: #64748b; margin-bottom: 10px; }
-.sleeper-stats { display: flex; flex-wrap: wrap; gap: 6px 10px; margin-bottom: 10px; }
-.sleeper-stat { flex: 1 1 48px; min-width: 44px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 8px; text-align: center; }
-.sleeper-stat .val { font-size: 1.1em; font-weight: 800; color: #1e293b; text-align: center; }
-.sleeper-stat .lbl { font-size: 0.68em; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; margin-top: 2px; }
+.sleeper-stats { display: flex; align-items: flex-end; gap: 0; margin-bottom: 10px; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9; padding: 8px 0; }
+.sleeper-stat { flex: 1; text-align: center; }
+.sleeper-stat + .sleeper-stat { border-left: 1px solid #f1f5f9; }
+.sleeper-stat .val { font-size: 1.15em; font-weight: 800; color: #1e293b; line-height: 1; }
+.sleeper-stat .lbl { font-size: 0.65em; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 3px; }
 .sleeper-note { font-size: 0.82em; color: #065f46; font-style: italic; }
 
 /* ── DISCLAIMER ── */
