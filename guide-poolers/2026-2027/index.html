@@ -1274,12 +1274,12 @@ function buildGoalieRowHTML(p, displayRank) {
       <td><span class='team-tag'>${p.team}</span></td>
       <td><span class='pos-tag pos-${p.pos}'>${p.pos}</span></td>
       <td class='${ageClass}'>${p.age ?? 'N/A'}</td>
-      <td class='col-proj col-proj-first proj-stat cg-last'>${gp ?? '—'}</td>
-      <td class='col-proj proj-pts cg-last' style='font-weight:800;color:#15803d;'>${w ?? '—'}</td>
-      <td class='col-proj proj-stat cg-last'>${l}</td>
-      <td class='col-proj proj-stat cg-last'>${otl}</td>
-      <td class='col-proj proj-stat cg-last'>${so}</td>
-      <td class='col-proj cg-last' style='color:#64748b;font-size:0.85em;'>${wpct}</td>
+      <td class='col-proj col-proj-first proj-stat'>${gp ?? '—'}</td>
+      <td class='col-proj proj-pts' style='font-weight:800;color:#15803d;'>${w ?? '—'}</td>
+      <td class='col-proj proj-stat'>${l}</td>
+      <td class='col-proj proj-stat'>${otl}</td>
+      <td class='col-proj proj-stat'>${so}</td>
+      <td class='col-proj' style='color:#64748b;font-size:0.85em;'>${wpct}</td>
       <td class='cg-salary'><span class='salary'>${aav}</span></td>
       <td class='cg-tier'><span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span></td>
       <td class='cg-value'><div class='pv-bar ${pc}' onmouseenter='showTooltip(this,"Efficacité = W proj ÷ √AAV(M$)${pv !== null ? ` = ${pv}` : ` — AAV indisponible`}")' onmouseleave='hideTooltip()'>
