@@ -1185,7 +1185,7 @@ function goalieHeaderHTML() {
   return `
   <tr class='group-row'>
     <th colspan='5' style='background:#f1f5f9;'></th>
-    <th colspan='6' class='col-group-last cg-last'>📅 2025-26</th>
+    <th colspan='6' class='col-group-proj'>🎯 PROJ 2026-27</th>
     <th colspan='6' style='background:#f1f5f9;'></th>
   </tr>
   <tr class='col-row'>
@@ -1194,14 +1194,14 @@ function goalieHeaderHTML() {
     <th onclick='sortGoalieBy("team")'              data-col='team'>Équipe<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("pos")'               data-col='pos'>Pos<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("age")'               data-col='age'>Âge<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("proj_gp")'           data-col='proj_gp'  class='col-group-last cg-last' style='border-left:2px solid #86efac;color:#15803d;'>GP<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("proj_g")'            data-col='proj_g'   class='col-group-last cg-last' style='color:#15803d;font-weight:800;'>W<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("_goalie_l")'         data-col='_goalie_l'  class='col-group-last cg-last'>L<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("_goalie_otl")'       data-col='_goalie_otl' class='col-group-last cg-last'>OTL<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("proj_a")'            data-col='proj_a'   class='col-group-last cg-last'>SO<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("_goalie_wpct")'      data-col='_goalie_wpct' class='col-group-last cg-last' style='border-right:2px solid #86efac;'>W%<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("proj_gp")'           data-col='proj_gp'  class='col-group-proj' style='border-left:2px solid #bbf7d0;color:#15803d;'>GP<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("proj_g")'            data-col='proj_g'   class='col-group-proj' style='color:#15803d;font-weight:800;'>W<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("_goalie_l")'         data-col='_goalie_l'  class='col-group-proj'>L<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("_goalie_otl")'       data-col='_goalie_otl' class='col-group-proj'>OTL<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("proj_a")'            data-col='proj_a'   class='col-group-proj'>SO<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("_goalie_wpct")'      data-col='_goalie_wpct' class='col-group-proj' style='border-right:2px solid #bbf7d0;'>W%<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("aav")'               data-col='aav'  class='cg-salary'>💰 AAV<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("tier")'              data-col='tier' class='cg-tier'>Palier<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("tier")'              data-col='tier' class='cg-tier'>Tier<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("_pv")'               data-col='_pv'  class='cg-value'>Efficacité<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("risk")'              data-col='risk' class='cg-risk'>Risque<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("injury")'            data-col='injury' class='cg-injury'>🩹<span class='sort-icon'></span></th>
@@ -1274,14 +1274,15 @@ function buildGoalieRowHTML(p, displayRank) {
       <td><span class='team-tag'>${p.team}</span></td>
       <td><span class='pos-tag pos-${p.pos}'>${p.pos}</span></td>
       <td class='${ageClass}'>${p.age ?? 'N/A'}</td>
-      <td class='col-last col-last-first last-stat cg-last'>${gp ?? '—'}</td>
-      <td class='col-last last-pts cg-last' style='font-weight:800;color:#15803d;'>${w ?? '—'}</td>
-      <td class='col-last last-stat cg-last'>${l}</td>
-      <td class='col-last last-stat cg-last'>${otl}</td>
-      <td class='col-last col-last-last cg-last'>${so}</td>
-      <td class='col-last cg-last' style='color:#64748b;font-size:0.85em;'>${wpct}</td>
+      <td class='col-proj col-proj-first proj-stat cg-last'>${gp ?? '—'}</td>
+      <td class='col-proj proj-pts cg-last' style='font-weight:800;color:#15803d;'>${w ?? '—'}</td>
+      <td class='col-proj proj-stat cg-last'>${l}</td>
+      <td class='col-proj proj-stat cg-last'>${otl}</td>
+      <td class='col-proj proj-stat cg-last'>${so}</td>
+      <td class='col-proj cg-last' style='color:#64748b;font-size:0.85em;'>${wpct}</td>
       <td class='cg-salary'><span class='salary'>${aav}</span></td>
-      <td class='cg-tier'><span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span></td>${pv !== null ? ` = ${pv}` : ` — AAV indisponible`}")' onmouseleave='hideTooltip()'>
+      <td class='cg-tier'><span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span></td>
+      <td class='cg-value'><div class='pv-bar ${pc}' onmouseenter='showTooltip(this,"Efficacité = W proj ÷ √AAV(M$)${pv !== null ? ` = ${pv}` : ` — AAV indisponible`}")' onmouseleave='hideTooltip()'>
         <span class='pv-num'>${pv !== null ? pv : '—'}</span>
         ${pv !== null ? `<div class='pv-track'><div class='pv-fill' style='width:${Math.min(100, Math.round((pv/_effMax)*100))}%'></div></div>` : ''}
       </div></td>
