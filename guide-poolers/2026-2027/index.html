@@ -1294,10 +1294,11 @@ function buildRowHTML(p, displayRank) {
       <td class='col-proj col-proj-last cg-ppg-proj'><span class='ppg-proj'>${ppgProjHtml}</span></td>
       `}
 
+      ${isGoalie ? (() => { const gt = getTrendGoalie(p); const gDiff = gt.diff; const gDiffStr = gDiff > 0 ? '+' + gDiff : '' + gDiff; return `<td class='cg-trend'><span class='trend trend-${gt.trend}'>${gt.trend === 'up' ? '↑' : gt.trend === 'down' ? '↓' : '→'} ${gDiffStr} V</span></td>`; })() : ''}
       <td class='cg-salary'><span class='salary'>${aav}</span></td>
       ${!isGoalie ? `<td class='cg-pp'><span class='pp-pct'>${ppPct}</span></td>` : ''}
       <td class='cg-tier'><span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span></td>
-      ${isGoalie ? (() => { const gt = getTrendGoalie(p); const gDiff = gt.diff; const gDiffStr = gDiff > 0 ? '+' + gDiff : '' + gDiff; return `<td class='cg-trend'><span class='trend trend-${gt.trend}'>${gt.trend === 'up' ? '↑' : gt.trend === 'down' ? '↓' : '→'} ${gDiffStr} V</span></td>`; })() : `<td class='cg-trend'><span class='trend trend-${trend}'>${trendLbl}</span></td>`}
+      ${!isGoalie ? `<td class='cg-trend'><span class='trend trend-${trend}'>${trendLbl}</span></td>` : ''}
       <td class='cg-value'><div class='pv-bar ${pc}' onmouseenter='showTooltip(this,"Efficacité = Score proj ÷ √AAV(M$)${pv !== null ? ` = ${pv}` : ` — AAV indisponible`}")' onmouseleave='hideTooltip()'>
         <span class='pv-num'>${pv !== null ? pv : '—'}</span>
         ${pv !== null ? `<div class='pv-track'><div class='pv-fill' style='width:${Math.min(100, Math.round((pv/_effMax)*100))}%'></div></div>` : ''}
