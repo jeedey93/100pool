@@ -1127,6 +1127,7 @@ function sorted(players) {
     if (typeof bv === 'string') bv = bv.toLowerCase();
     if (av < bv) return sortDir === 'asc' ? -1 : 1;
     if (av > bv) return sortDir === 'asc' ? 1 : -1;
+    if (sortCol === '_pv') return (b.proj_pts ?? 0) - (a.proj_pts ?? 0);
     return 0;
   });
 }
@@ -1161,6 +1162,7 @@ function sortedGoalies(players) {
     if (typeof bv === 'string') bv = bv.toLowerCase();
     if (av < bv) return goalieSortDir === 'asc' ? -1 : 1;
     if (av > bv) return goalieSortDir === 'asc' ? 1 : -1;
+    if (goalieSortCol === '_pv') return (b.proj_g ?? 0) - (a.proj_g ?? 0);
     return 0;
   });
 }
