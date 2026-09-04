@@ -171,24 +171,79 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 @media (max-width: 768px) {
   .sidebar { display: none; }
   .main { margin-left: 0; padding-bottom: 72px; }
-  .topbar { padding: 0 16px; }
+  .topbar { padding: 0 14px; height: 54px; }
   .topbar-date { display: none; }
-  .content { padding: 16px 14px 80px; }
-  .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .stat-card { padding: 16px 14px; border-radius: 14px; }
-  .stat-card .stat-val { font-size: 1.65em; }
-  .stat-icon-wrap { width: 34px; height: 34px; font-size: 1em; }
-  .chart-wrap { padding: 16px 14px 12px; border-radius: 14px; }
-  .chart-bars { height: 75px; }
-  .section-header { margin-bottom: 16px; }
-  .pw-box { padding: 36px 24px 28px; margin: 16px; border-radius: 22px; }
-  .toolbar { padding: 10px 14px; }
+  .topbar-title { font-size: 0.95em; }
+  .content { padding: 14px 12px 80px; }
+
+  /* stat cards: 2 cols */
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .stat-card { padding: 14px 12px; border-radius: 14px; }
+  .stat-card .stat-val { font-size: 1.55em; }
+  .stat-card .stat-lbl { font-size: 0.7em; }
+  .stat-card .stat-sub { display: none; }
+  .stat-icon-wrap { width: 32px; height: 32px; font-size: 0.95em; border-radius: 9px; }
+  .stat-trend { display: none; }
+  .stat-card-top { margin-bottom: 10px; }
+
+  /* chart */
+  .chart-wrap { padding: 14px 12px 10px; border-radius: 14px; margin-bottom: 16px; }
+  .chart-bars { height: 65px; gap: 3px; }
+  .chart-title { font-size: 0.82em; }
+  .chart-subtitle { font-size: 0.7em; }
+  .bar-lbl { font-size: 0.52em; }
+  .bar-val { font-size: 0.58em; }
+
+  /* cards & tables */
+  .card { border-radius: 14px; margin-bottom: 14px; }
+  .card-header { padding: 12px 14px; }
+  .card-header h3 { font-size: 0.86em; }
+  .card-header .btn { font-size: 0.72em; padding: 5px 10px; }
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { font-size: 0.8em; }
+  thead th { padding: 8px 10px; font-size: 0.66em; }
+  tbody td { padding: 8px 10px; }
+
+  /* recent purchases: stack better */
+  .email-cell { gap: 8px; }
+  .email-text { font-size: 0.84em; word-break: break-all; }
+  .buyer-avatar { width: 30px; height: 30px; font-size: 0.65em; flex-shrink: 0; }
+
+  /* player names in table */
+  .p-avatar { width: 26px; height: 26px; font-size: 0.6em; margin-right: 6px; }
+  .p-name { font-size: 0.9em; }
+
+  /* section header */
+  .section-header { margin-bottom: 14px; }
+  .section-header h2 { font-size: 1.1em; }
+
+  /* password box */
+  .pw-box { padding: 32px 22px 26px; margin: 14px; border-radius: 20px; }
+  .pw-logo { width: 66px; height: 66px; }
+  .pw-box h2 { font-size: 1.25em; }
+
+  /* toolbar */
+  .toolbar { padding: 10px 12px; flex-wrap: wrap; gap: 8px; }
+  .search-wrap { width: 100%; }
   .search-wrap input { width: 100%; }
-  .team-filter { padding: 10px 14px; }
-  .card-header { padding: 12px 16px; }
-  .card { border-radius: 14px; }
+  .status-pill { margin-left: 0; }
+
+  /* team filter: horizontal scroll */
+  .team-filter { padding: 8px 12px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .team-logo-btn { flex-shrink: 0; }
+
+  /* acces table: hide expiration on small screens */
+  .hide-mobile { display: none; }
+
   .mobile-nav { display: flex; }
 }
+
+@media (max-width: 400px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stat-card .stat-val { font-size: 1.35em; }
+  .content { padding: 12px 10px 80px; }
+}
+
 @media (min-width: 769px) {
   .mobile-nav { display: none; }
 }
@@ -416,11 +471,11 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
         <div class='table-wrap'>
           <table>
             <thead><tr>
-              <th>#</th>
+              <th class='hide-mobile'>#</th>
               <th>Acheteur</th>
               <th>Produit</th>
               <th>Date d'achat</th>
-              <th>Expiration</th>
+              <th class='hide-mobile'>Expiration</th>
             </tr></thead>
             <tbody id='tbody-acces'></tbody>
           </table>
@@ -686,7 +741,7 @@ function renderAcces() {
   document.getElementById('tbody-acces').innerHTML = rows.length
     ? rows.map((r, i) => `
       <tr>
-        <td style='color:#94a3b8;font-size:0.8em;font-weight:600'>${i + 1}</td>
+        <td class='hide-mobile' style='color:#94a3b8;font-size:0.8em;font-weight:600'>${i + 1}</td>
         <td>
           <div class='email-cell'>
             <div class='buyer-avatar' style='width:28px;height:28px;font-size:0.65em'>${initials(r.email)}</div>
@@ -695,7 +750,7 @@ function renderAcces() {
         </td>
         <td><span class='product-badge'>${r.product ?? 'Guide'}</span></td>
         <td class='date-cell'>${fmt(r.created_at)}</td>
-        <td class='date-cell'>${fmt(r.expires_at)}</td>
+        <td class='date-cell hide-mobile'>${fmt(r.expires_at)}</td>
       </tr>`).join('')
     : `<tr><td colspan='5'><div class='empty-state'><div class='es-icon'>💳</div><p>Aucun achat pour l'instant</p></div></td></tr>`;
 }
