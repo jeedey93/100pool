@@ -961,11 +961,14 @@ async function init() {
 let _effMax = 1;
 let _pvSorted = [];
 
+const RISK_MULT = { Low: 1.0, Medium: 0.85, High: 0.70 };
+
 function calcEff(p) {
   if (!p.aav || p.aav <= 0) return null;
   const stat = p.pos === 'G' ? (p.proj_g ?? 0) * 2 + (p.proj_a ?? 0) * 3 : p.proj_pts;
   if (!stat) return null;
-  return stat / Math.sqrt(p.aav);
+  const mult = RISK_MULT[p.risk] ?? 1.0;
+  return (stat / Math.sqrt(p.aav)) * mult;
 }
 
 function normalizePVs(players) {
