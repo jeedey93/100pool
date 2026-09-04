@@ -2,110 +2,141 @@
 <html lang='fr'>
 <head>
 <meta charset='UTF-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <title>Admin — 100% Pool</title>
 <link rel='icon' type='image/png' href='../100pool.jpg'>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { overflow-x: hidden; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f4f8; color: #1e293b; min-height: 100vh; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f1a12; color: #1e293b; min-height: 100vh; display: flex; }
 
 /* ── PASSWORD OVERLAY ── */
-#pw-overlay { position: fixed; inset: 0; background: linear-gradient(135deg, #0f1f13, #1a5c28); display: flex; align-items: center; justify-content: center; z-index: 9999; }
-.pw-box { background: white; border-radius: 20px; padding: 40px 36px; width: 100%; max-width: 380px; box-shadow: 0 24px 64px rgba(0,0,0,0.3); text-align: center; }
-.pw-box img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; margin-bottom: 16px; }
-.pw-box h2 { font-size: 1.2em; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
-.pw-box p { color: #64748b; font-size: 0.88em; margin-bottom: 24px; line-height: 1.6; }
-.pw-box input { width: 100%; padding: 13px 16px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 1em; outline: none; color: #0f172a; margin-bottom: 8px; font-family: inherit; }
-.pw-box input:focus { border-color: #2d8a3e; box-shadow: 0 0 0 3px rgba(45,138,62,0.12); }
-.pw-box button { width: 100%; padding: 13px; background: linear-gradient(135deg, #1a5c28, #2d8a3e); color: white; border: none; border-radius: 10px; font-size: 1em; font-weight: 700; cursor: pointer; margin-top: 4px; }
-.pw-error { color: #dc2626; font-size: 0.82em; margin-top: 6px; min-height: 18px; }
+#pw-overlay { position: fixed; inset: 0; background: linear-gradient(135deg, #0a1209 0%, #1a3d22 100%); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+.pw-box { background: white; border-radius: 24px; padding: 44px 40px; width: 100%; max-width: 400px; box-shadow: 0 32px 80px rgba(0,0,0,0.5); text-align: center; }
+.pw-logo { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+.pw-box h2 { font-size: 1.35em; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+.pw-box p { color: #64748b; font-size: 0.88em; margin-bottom: 28px; line-height: 1.6; }
+.pw-box input { width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1em; outline: none; color: #0f172a; margin-bottom: 10px; font-family: inherit; transition: border-color 0.2s; }
+.pw-box input:focus { border-color: #2d8a3e; box-shadow: 0 0 0 4px rgba(45,138,62,0.1); }
+.pw-box button { width: 100%; padding: 14px; background: linear-gradient(135deg, #1a5c28, #2d8a3e); color: white; border: none; border-radius: 12px; font-size: 1em; font-weight: 700; cursor: pointer; letter-spacing: 0.3px; transition: opacity 0.2s; }
+.pw-box button:hover { opacity: 0.9; }
+.pw-error { color: #dc2626; font-size: 0.82em; margin-top: 8px; min-height: 18px; }
 
-/* ── NAV ── */
-nav { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; height: 56px; display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); position: sticky; top: 0; z-index: 200; }
-nav img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
-nav .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-nav .nav-logo span { color: white; font-weight: 800; font-size: 1.05em; }
-nav .nav-links { display: flex; align-items: center; gap: 6px; margin-left: auto; }
-nav a.nav-link { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.85em; font-weight: 600; padding: 7px 14px; border-radius: 8px; transition: all 0.2s; }
-nav a.nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
+/* ── SIDEBAR ── */
+.sidebar { width: 240px; min-height: 100vh; background: linear-gradient(180deg, #0f1f13 0%, #162b1a 100%); display: flex; flex-direction: column; position: fixed; left: 0; top: 0; bottom: 0; z-index: 100; border-right: 1px solid rgba(255,255,255,0.06); }
+.sidebar-logo { display: flex; align-items: center; gap: 12px; padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.07); text-decoration: none; }
+.sidebar-logo img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+.sidebar-logo span { color: white; font-weight: 800; font-size: 1em; line-height: 1.2; }
+.sidebar-logo small { display: block; color: rgba(255,255,255,0.4); font-size: 0.68em; font-weight: 500; letter-spacing: 0.3px; }
+.sidebar-section { padding: 16px 12px 6px; }
+.sidebar-section-label { font-size: 0.62em; font-weight: 700; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 1.2px; padding: 0 8px; margin-bottom: 4px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; cursor: pointer; color: rgba(255,255,255,0.55); font-size: 0.88em; font-weight: 600; transition: all 0.2s; border: none; background: none; width: 100%; text-align: left; }
+.nav-item:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.85); }
+.nav-item.active { background: rgba(45,138,62,0.25); color: #4ade80; }
+.nav-item .nav-icon { font-size: 1.1em; width: 20px; text-align: center; }
+.sidebar-bottom { margin-top: auto; padding: 16px 12px; border-top: 1px solid rgba(255,255,255,0.07); }
+.sidebar-bottom a { display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,0.4); font-size: 0.82em; text-decoration: none; padding: 8px 10px; border-radius: 8px; transition: color 0.2s; }
+.sidebar-bottom a:hover { color: rgba(255,255,255,0.7); }
 
-/* ── LAYOUT ── */
-.wrap { max-width: 1800px; margin: 0 auto; padding: 24px 20px 80px; }
-
-/* ── PAGE HEADER ── */
-.page-header { background: linear-gradient(135deg, #1a5c28 0%, #2d8a3e 100%); padding: 28px 32px; border-radius: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; box-shadow: 0 4px 16px rgba(45,138,62,0.25); }
-.page-header h1 { font-size: 1.4em; font-weight: 800; color: white; }
-.page-header-sub { color: rgba(255,255,255,0.65); font-size: 0.82em; margin-top: 4px; }
-.badge { display: inline-block; background: rgba(255,255,255,0.18); color: white; font-size: 0.68em; font-weight: 700; padding: 3px 10px; border-radius: 99px; border: 1px solid rgba(255,255,255,0.3); letter-spacing: 0.5px; margin-left: 8px; vertical-align: middle; }
-.header-actions { display: flex; gap: 10px; margin-left: auto; flex-wrap: wrap; align-items: center; }
+/* ── MAIN ── */
+.main { margin-left: 240px; flex: 1; min-height: 100vh; background: #f4f7f5; }
+.topbar { background: white; border-bottom: 1px solid #e8edf2; padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+.topbar-title { font-size: 1.05em; font-weight: 700; color: #0f172a; }
+.topbar-actions { display: flex; gap: 10px; align-items: center; }
+.content { padding: 28px 32px 80px; }
 
 /* ── BUTTONS ── */
-.btn { padding: 10px 18px; border-radius: 10px; font-size: 0.88em; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; white-space: nowrap; }
+.btn { padding: 9px 18px; border-radius: 10px; font-size: 0.85em; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; white-space: nowrap; }
 .btn:hover { transform: translateY(-1px); }
 .btn:disabled { opacity: 0.45; cursor: default; transform: none; }
-.btn-green { background: linear-gradient(135deg, #059669, #047857); color: white; box-shadow: 0 2px 8px rgba(5,150,105,0.3); padding: 10px 22px; }
+.btn-green { background: linear-gradient(135deg, #059669, #047857); color: white; box-shadow: 0 2px 8px rgba(5,150,105,0.3); }
+.btn-outline { background: white; border: 1.5px solid #e2e8f0; color: #475569; }
+.btn-outline:hover { border-color: #2d8a3e; color: #2d8a3e; }
 
-/* ── CARDS ── */
-.card { background: white; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); border: 1px solid #e8edf2; }
-.stat-card { padding: 24px 32px; min-width: 180px; text-align: center; }
-.stat-card .stat-val { font-size: 2.5em; font-weight: 800; }
-.stat-card .stat-lbl { color: #64748b; font-size: 0.85em; margin-top: 4px; }
+/* ── SECTION HEADER ── */
+.section-header { margin-bottom: 20px; }
+.section-header h2 { font-size: 1.2em; font-weight: 800; color: #0f172a; }
+.section-header p { color: #64748b; font-size: 0.85em; margin-top: 3px; }
 
-/* ── TOOLBAR ── */
-.toolbar { padding: 14px 18px; margin-bottom: 12px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.search-wrap { position: relative; }
-.search-wrap input { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; color: #1e293b; padding: 9px 12px 9px 34px; font-size: 0.88em; outline: none; width: 230px; transition: border-color 0.2s; }
-.search-wrap input:focus { border-color: #2d8a3e; box-shadow: 0 0 0 3px rgba(45,138,62,0.12); background: white; }
-.search-wrap::before { content: '🔍'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 0.82em; pointer-events: none; }
-.status-pill { margin-left: auto; background: #f1f5f9; border-radius: 99px; padding: 5px 12px; font-size: 0.78em; font-weight: 600; color: #64748b; white-space: nowrap; }
+/* ── STAT CARDS ── */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.stat-card { background: white; border-radius: 16px; padding: 22px 24px; border: 1px solid #e8edf2; box-shadow: 0 1px 4px rgba(0,0,0,0.05); position: relative; overflow: hidden; }
+.stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent, #2d8a3e); border-radius: 16px 16px 0 0; }
+.stat-card .stat-icon { font-size: 1.6em; margin-bottom: 10px; }
+.stat-card .stat-val { font-size: 2em; font-weight: 800; color: var(--accent, #0f172a); line-height: 1; margin-bottom: 6px; }
+.stat-card .stat-lbl { font-size: 0.78em; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-card .stat-sub { font-size: 0.75em; color: #cbd5e1; margin-top: 4px; }
 
-/* ── TEAM FILTER ── */
-.team-filter { padding: 14px 18px; margin-bottom: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.team-filter-label { font-size: 0.7em; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-right: 6px; }
-.team-logo-btn { width: 42px; height: 42px; border-radius: 10px; border: 2px solid #e8edf2; background: #f8fafc; padding: 5px; cursor: pointer; transition: all 0.18s; opacity: 0.55; display: flex; align-items: center; justify-content: center; }
-.team-logo-btn:hover { opacity: 1; border-color: #86efac; background: #f0fdf4; transform: translateY(-2px); }
-.team-logo-btn.active { opacity: 1; border-color: #2d8a3e; background: #f0fdf4; box-shadow: 0 0 0 3px rgba(45,138,62,0.2); transform: translateY(-2px); }
-.team-logo-btn img { width: 100%; height: 100%; object-fit: contain; }
-.team-logo-btn.all-btn { font-size: 0.72em; font-weight: 700; color: #475569; width: auto; padding: 6px 14px; }
+/* ── CHART ── */
+.chart-wrap { background: white; border-radius: 16px; border: 1px solid #e8edf2; box-shadow: 0 1px 4px rgba(0,0,0,0.05); padding: 24px; margin-bottom: 24px; }
+.chart-title { font-size: 0.88em; font-weight: 700; color: #475569; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px; }
+.chart-bars { display: flex; align-items: flex-end; gap: 6px; height: 80px; }
+.bar-col { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+.bar { background: linear-gradient(180deg, #4ade80, #2d8a3e); border-radius: 4px 4px 0 0; width: 100%; min-height: 4px; transition: height 0.4s; }
+.bar-lbl { font-size: 0.62em; color: #94a3b8; text-align: center; }
+.bar-val { font-size: 0.65em; font-weight: 700; color: #2d8a3e; }
 
 /* ── TABLE ── */
-.table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid #e8edf2; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-table { width: 100%; border-collapse: collapse; font-size: 0.84em; background: white; }
-thead th { background: #f8fafc; color: #64748b; font-weight: 700; font-size: 0.72em; letter-spacing: 0.6px; text-transform: uppercase; padding: 10px; text-align: left; white-space: nowrap; position: sticky; top: 0; z-index: 2; border-bottom: 2px solid #e8edf2; }
-thead th.ro-col { color: #94a3b8; font-size: 0.68em; background: #fafbfc; }
-thead th.col-last { background: #f0fdf4; color: #15803d; border-bottom: 2px solid #86efac; }
-thead th.col-proj { background: #f0fdf4; color: #15803d; border-bottom: 2px solid #bbf7d0; }
+.card { background: white; border-radius: 16px; border: 1px solid #e8edf2; box-shadow: 0 1px 4px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 20px; }
+.card-header { padding: 16px 20px; border-bottom: 1px solid #f0f4f8; display: flex; align-items: center; justify-content: space-between; }
+.card-header h3 { font-size: 0.92em; font-weight: 700; color: #1e293b; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.84em; }
+thead th { background: #f8fafc; color: #64748b; font-weight: 700; font-size: 0.72em; letter-spacing: 0.6px; text-transform: uppercase; padding: 10px 12px; text-align: left; white-space: nowrap; border-bottom: 1px solid #e8edf2; }
+thead th.ro-col { color: #94a3b8; }
+thead th.col-last { background: #f0fdf4; color: #15803d; }
+thead th.col-proj { background: #f0fdf4; color: #15803d; }
 tbody tr { border-bottom: 1px solid #f0f4f8; transition: background 0.1s; }
+tbody tr:last-child { border-bottom: none; }
 tbody tr:hover { background: #f8fafc; }
-tbody td { padding: 7px 8px; vertical-align: middle; }
-tbody td.ro-td { padding: 7px 6px; background: #fafbfc; }
+tbody td { padding: 8px 12px; vertical-align: middle; }
+tbody td.ro-td { background: #fafbfc; color: #94a3b8; font-size: 0.82em; }
 tbody td.last-td { background: #f7fbff; }
 tbody td.proj-td { background: #f7fdf9; }
 tbody tr.dirty { background: #fffbeb; }
 tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 
+/* ── TOOLBAR ── */
+.toolbar { padding: 14px 20px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; border-bottom: 1px solid #f0f4f8; }
+.search-wrap { position: relative; }
+.search-wrap input { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; color: #1e293b; padding: 8px 12px 8px 34px; font-size: 0.85em; outline: none; width: 220px; }
+.search-wrap input:focus { border-color: #2d8a3e; box-shadow: 0 0 0 3px rgba(45,138,62,0.1); background: white; }
+.search-wrap::before { content: '🔍'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 0.8em; pointer-events: none; }
+.status-pill { margin-left: auto; background: #f1f5f9; border-radius: 99px; padding: 4px 12px; font-size: 0.76em; font-weight: 600; color: #64748b; }
+
+/* ── TEAM FILTER ── */
+.team-filter { padding: 12px 20px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; border-bottom: 1px solid #f0f4f8; }
+.team-logo-btn { width: 38px; height: 38px; border-radius: 8px; border: 2px solid #e8edf2; background: #f8fafc; padding: 4px; cursor: pointer; transition: all 0.15s; opacity: 0.5; display: flex; align-items: center; justify-content: center; }
+.team-logo-btn:hover { opacity: 1; border-color: #86efac; transform: translateY(-1px); }
+.team-logo-btn.active { opacity: 1; border-color: #2d8a3e; background: #f0fdf4; box-shadow: 0 0 0 2px rgba(45,138,62,0.2); }
+.team-logo-btn img { width: 100%; height: 100%; object-fit: contain; }
+.team-logo-btn.all-btn { font-size: 0.7em; font-weight: 700; color: #475569; width: auto; padding: 5px 12px; }
+
 /* ── INLINE INPUTS ── */
-.ci { background: white; border: 1.5px solid #e2e8f0; border-radius: 7px; color: #1e293b; font-size: 0.88em; outline: none; padding: 5px 8px; transition: border-color 0.15s; }
-.ci:focus { border-color: #2d8a3e; box-shadow: 0 0 0 3px rgba(45,138,62,0.12); }
-.ci.n { text-align: right; width: 60px; }
-.ci.w { width: 170px; }
-.cs { background: white; border: 1.5px solid #e2e8f0; border-radius: 7px; color: #1e293b; padding: 5px 8px; font-size: 0.85em; outline: none; cursor: pointer; }
-.cs:focus { border-color: #2d8a3e; box-shadow: 0 0 0 3px rgba(45,138,62,0.12); }
-.ro { color: #94a3b8; font-size: 0.82em; padding: 0 2px; white-space: nowrap; display: inline-block; }
-.sl { font-size: 0.68em; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; padding: 2px 7px; border-radius: 99px; display: inline-block; }
+.ci { background: white; border: 1.5px solid #e2e8f0; border-radius: 7px; color: #1e293b; font-size: 0.85em; outline: none; padding: 4px 7px; transition: border-color 0.15s; }
+.ci:focus { border-color: #2d8a3e; box-shadow: 0 0 0 2px rgba(45,138,62,0.1); }
+.ci.n { text-align: right; width: 58px; }
+.ci.w { width: 160px; }
+.cs { background: white; border: 1.5px solid #e2e8f0; border-radius: 7px; color: #1e293b; padding: 4px 7px; font-size: 0.82em; outline: none; cursor: pointer; }
+.cs:focus { border-color: #2d8a3e; }
+.ro { color: #94a3b8; font-size: 0.82em; white-space: nowrap; }
+.sl { font-size: 0.66em; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; padding: 2px 6px; border-radius: 99px; display: inline-block; }
 .sl-last { background: #dcfce7; color: #15803d; }
 .sl-proj  { background: #d1fae5; color: #065f46; }
 
-/* ── TABS ── */
-.admin-tabs { display: flex; gap: 4px; margin-bottom: 14px; background: #f1f5f9; border-radius: 10px; padding: 4px; width: fit-content; flex-wrap: wrap; }
-.admin-tab { background: none; border: none; color: #64748b; font-size: 0.88em; font-weight: 600; padding: 8px 20px; cursor: pointer; border-radius: 7px; transition: all 0.2s; }
-.admin-tab:hover { color: #1e293b; }
-.admin-tab.active { background: white; color: #1e293b; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
-
+/* ── TOAST ── */
 #toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: white; border-radius: 12px; padding: 12px 22px; font-size: 0.88em; font-weight: 600; color: #1e293b; box-shadow: 0 8px 32px rgba(0,0,0,0.14); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; z-index: 9999; white-space: nowrap; border-left: 4px solid #e2e8f0; }
 #toast.show    { transform: translateX(-50%) translateY(0); }
 #toast.success { border-left-color: #22c55e; color: #15803d; }
 #toast.error   { border-left-color: #ef4444; color: #dc2626; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .sidebar { width: 60px; }
+  .sidebar-logo span, .sidebar-logo small, .nav-item span, .sidebar-section-label, .sidebar-bottom a span { display: none; }
+  .main { margin-left: 60px; }
+  .content { padding: 16px; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+}
 </style>
 </head>
 <body>
@@ -113,150 +144,222 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 <!-- PASSWORD OVERLAY -->
 <div id='pw-overlay'>
   <div class='pw-box'>
-    <img src='../100pool.jpg' alt='100% Pool'>
+    <img class='pw-logo' src='../100pool.jpg' alt='100% Pool'>
     <h2>100% Pool — Admin</h2>
-    <p>Accès réservé aux administrateurs.</p>
+    <p>Accès réservé aux administrateurs du pool.</p>
     <input id='pw-input' type='password' placeholder='Mot de passe' onkeydown='if(event.key==="Enter")checkPw()'>
-    <button onclick='checkPw()'>Accéder →</button>
+    <button onclick='checkPw()'>Accéder au dashboard →</button>
     <div class='pw-error' id='pw-error'></div>
   </div>
 </div>
 
-<nav>
-  <a class='nav-logo' href='/'>
+<!-- SIDEBAR -->
+<nav class='sidebar'>
+  <a class='sidebar-logo' href='/'>
     <img src='../100pool.jpg' alt='100% Pool'>
-    <span>100% Pool</span>
+    <div>
+      <span>100% Pool</span>
+      <small>Admin Dashboard</small>
+    </div>
   </a>
-  <div class='nav-links'>
-    <a href='/' class='nav-link'>← Accueil</a>
-    <a href='/guide-poolers/2026-2027/' class='nav-link'>Guide 2026-27</a>
+
+  <div class='sidebar-section'>
+    <div class='sidebar-section-label'>Vue d'ensemble</div>
+    <button class='nav-item active' onclick='switchTab("dashboard",this)'>
+      <span class='nav-icon'>📊</span><span>Dashboard</span>
+    </button>
+    <button class='nav-item' onclick='switchTab("acces",this)'>
+      <span class='nav-icon'>💳</span><span>Accès & Achats</span>
+    </button>
+  </div>
+
+  <div class='sidebar-section'>
+    <div class='sidebar-section-label'>Guide 2026-27</div>
+    <button class='nav-item' onclick='switchTab("skaters",this)'>
+      <span class='nav-icon'>⛸</span><span>Patineurs</span>
+    </button>
+    <button class='nav-item' onclick='switchTab("goalies",this)'>
+      <span class='nav-icon'>🥅</span><span>Gardiens</span>
+    </button>
+  </div>
+
+  <div class='sidebar-bottom'>
+    <a href='/guide-poolers/2026-2027/'><span class='nav-icon'>📖</span><span>Voir le guide</span></a>
+    <a href='/'><span class='nav-icon'>🏠</span><span>Accueil</span></a>
   </div>
 </nav>
 
-<div class='wrap'>
-  <div class='page-header'>
-    <div>
-      <h1>⚙️ Admin — 100% Pool</h1>
-      <div class='page-header-sub'>Gestion des accès, des joueurs et des projections</div>
-    </div>
-    <div class='header-actions'>
-      <button class='btn btn-green' id='saveAllBtn' onclick='saveAll()' disabled>💾 Tout sauvegarder</button>
+<!-- MAIN -->
+<div class='main'>
+  <div class='topbar'>
+    <div class='topbar-title' id='topbar-title'>📊 Dashboard</div>
+    <div class='topbar-actions'>
+      <button class='btn btn-green' id='saveAllBtn' onclick='saveAll()' disabled style='display:none'>💾 Sauvegarder</button>
     </div>
   </div>
 
-  <div class='admin-tabs'>
-    <button class='admin-tab active' onclick='switchTab("acces",this)'>💳 Accès</button>
-    <button class='admin-tab' onclick='switchTab("skaters",this)'>⛸ Patineurs 2026-27</button>
-    <button class='admin-tab' onclick='switchTab("goalies",this)'>🥅 Gardiens 2026-27</button>
-  </div>
+  <div class='content'>
 
-  <!-- TAB ACCÈS -->
-  <div id='tab-acces'>
-    <div style='display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap'>
-      <div class='card stat-card'>
-        <div class='stat-val' id='acces-count' style='color:#2d8a3e'>—</div>
-        <div class='stat-lbl'>Achats totaux</div>
+    <!-- TAB DASHBOARD -->
+    <div id='tab-dashboard'>
+      <div class='section-header'>
+        <h2>Vue d'ensemble</h2>
+        <p>Statistiques générales du guide des poolers 2026-27</p>
       </div>
-      <div class='card stat-card'>
-        <div class='stat-val' id='acces-today' style='color:#0369a1'>—</div>
-        <div class='stat-lbl'>Aujourd'hui</div>
-      </div>
-      <div class='card stat-card'>
-        <div class='stat-val' id='acces-week' style='color:#7c3aed'>—</div>
-        <div class='stat-lbl'>Cette semaine</div>
-      </div>
-      <div class='card stat-card' style='min-width:220px'>
-        <div class='stat-val' id='acces-revenue' style='color:#059669'>—</div>
-        <div class='stat-lbl'>Brut (5,00 $ × achats)</div>
-      </div>
-      <div class='card stat-card' style='min-width:260px'>
-        <div class='stat-val' id='acces-net' style='color:#0f766e'>—</div>
-        <div class='stat-lbl'>Net après Stripe (4,55 $ × achats)</div>
-      </div>
-    </div>
-    <div class='table-wrap'>
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Email</th>
-            <th>Produit</th>
-            <th>Date d'achat</th>
-            <th>Expiration</th>
-          </tr>
-        </thead>
-        <tbody id='tbody-acces'></tbody>
-      </table>
-    </div>
-  </div>
 
-  <!-- TAB PATINEURS -->
-  <div id='tab-skaters' style='display:none'>
-    <div class='card toolbar'>
-      <div class='search-wrap'>
-        <input type='text' id='searchInput' placeholder='Rechercher par nom…' oninput='renderTable()'>
+      <div class='stats-grid'>
+        <div class='stat-card' style='--accent:#2d8a3e'>
+          <div class='stat-icon'>💳</div>
+          <div class='stat-val' id='dash-total'>—</div>
+          <div class='stat-lbl'>Achats totaux</div>
+        </div>
+        <div class='stat-card' style='--accent:#0369a1'>
+          <div class='stat-icon'>📅</div>
+          <div class='stat-val' id='dash-today'>—</div>
+          <div class='stat-lbl'>Aujourd'hui</div>
+        </div>
+        <div class='stat-card' style='--accent:#7c3aed'>
+          <div class='stat-icon'>📆</div>
+          <div class='stat-val' id='dash-week'>—</div>
+          <div class='stat-lbl'>Cette semaine</div>
+        </div>
+        <div class='stat-card' style='--accent:#059669'>
+          <div class='stat-icon'>💵</div>
+          <div class='stat-val' id='dash-gross'>—</div>
+          <div class='stat-lbl'>Brut (5,00 $)</div>
+        </div>
+        <div class='stat-card' style='--accent:#0f766e'>
+          <div class='stat-icon'>🏦</div>
+          <div class='stat-val' id='dash-net'>—</div>
+          <div class='stat-lbl'>Net Stripe (4,55 $)</div>
+        </div>
+        <div class='stat-card' style='--accent:#d97706'>
+          <div class='stat-icon'>⛸</div>
+          <div class='stat-val' id='dash-players'>—</div>
+          <div class='stat-lbl'>Joueurs dans le guide</div>
+        </div>
       </div>
-      <span class='status-pill' id='statusMsg'>Chargement…</span>
-    </div>
-    <div class='card team-filter' id='teamFilter'>
-      <span class='team-filter-label'>Filtrer par équipe</span>
-      <button class='team-logo-btn all-btn active' onclick='setTeam("", this)'>Toutes</button>
-    </div>
-    <div class='table-wrap'>
-      <table>
-        <thead>
-          <tr>
-            <th class='ro-col'>#</th>
-            <th class='ro-col'>Joueur</th>
-            <th>Équipe</th>
-            <th class='ro-col'>Pos</th>
-            <th class='ro-col'>Âge</th>
-            <th>AAV ($M)</th>
-            <th class='ro-col col-last'><span class='sl sl-last'>25-26</span> G</th>
-            <th class='ro-col col-last'><span class='sl sl-last'>25-26</span> A</th>
-            <th class='ro-col col-last'><span class='sl sl-last'>25-26</span> PTS</th>
-            <th class='ro-col col-last'><span class='sl sl-last'>25-26</span> PP%</th>
-            <th class='col-proj'><span class='sl sl-proj'>Proj</span> G</th>
-            <th class='col-proj'><span class='sl sl-proj'>Proj</span> A</th>
-            <th class='col-proj'><span class='sl sl-proj'>Proj</span> PTS</th>
-            <th>Palier</th>
-            <th>Risque</th>
-            <th>💣 Bust</th>
-            <th>Notes</th>
-          </tr>
-        </thead>
-        <tbody id='tbody-skaters'></tbody>
-      </table>
-    </div>
-  </div>
 
-  <!-- TAB GARDIENS -->
-  <div id='tab-goalies' style='display:none'>
-    <div class='table-wrap'>
-      <table>
-        <thead>
-          <tr>
-            <th class='ro-col'>#</th>
-            <th class='ro-col'>Joueur</th>
-            <th>Équipe</th>
-            <th class='ro-col'>Âge</th>
-            <th>AAV ($M)</th>
-            <th class='col-proj'><span class='sl sl-proj'>Proj</span> V</th>
-            <th class='col-proj'><span class='sl sl-proj'>Proj</span> D</th>
-            <th class='col-proj'><span class='sl sl-proj'>Proj</span> DP</th>
-            <th class='col-proj'><span class='sl sl-proj'>Proj</span> GAA</th>
-            <th class='col-proj'><span class='sl sl-proj'>Proj</span> SV%</th>
-            <th class='col-proj'><span class='sl sl-proj'>Proj</span> BL</th>
-            <th>Palier</th>
-            <th>Risque</th>
-            <th>Notes</th>
-          </tr>
-        </thead>
-        <tbody id='tbody-goalies'></tbody>
-      </table>
+      <div class='chart-wrap'>
+        <div class='chart-title'>Achats des 14 derniers jours</div>
+        <div class='chart-bars' id='chart-bars'></div>
+      </div>
+
+      <div class='card'>
+        <div class='card-header'>
+          <h3>🕒 Derniers achats</h3>
+        </div>
+        <div class='table-wrap'>
+          <table>
+            <thead><tr><th>#</th><th>Email</th><th>Produit</th><th>Date</th></tr></thead>
+            <tbody id='tbody-recent'></tbody>
+          </table>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+
+    <!-- TAB ACCÈS -->
+    <div id='tab-acces' style='display:none'>
+      <div class='section-header'>
+        <h2>💳 Accès & Achats</h2>
+        <p>Liste complète des accès au guide des poolers</p>
+      </div>
+      <div class='stats-grid'>
+        <div class='stat-card' style='--accent:#2d8a3e'>
+          <div class='stat-val' id='acces-count' style='color:#2d8a3e'>—</div>
+          <div class='stat-lbl'>Achats totaux</div>
+        </div>
+        <div class='stat-card' style='--accent:#0369a1'>
+          <div class='stat-val' id='acces-today' style='color:#0369a1'>—</div>
+          <div class='stat-lbl'>Aujourd'hui</div>
+        </div>
+        <div class='stat-card' style='--accent:#7c3aed'>
+          <div class='stat-val' id='acces-week' style='color:#7c3aed'>—</div>
+          <div class='stat-lbl'>Cette semaine</div>
+        </div>
+        <div class='stat-card' style='--accent:#059669'>
+          <div class='stat-val' id='acces-revenue' style='color:#059669'>—</div>
+          <div class='stat-lbl'>Brut (5,00 $)</div>
+        </div>
+        <div class='stat-card' style='--accent:#0f766e'>
+          <div class='stat-val' id='acces-net' style='color:#0f766e'>—</div>
+          <div class='stat-lbl'>Net Stripe (4,55 $)</div>
+        </div>
+      </div>
+      <div class='card'>
+        <div class='card-header'><h3>Tous les accès</h3></div>
+        <div class='table-wrap'>
+          <table>
+            <thead><tr><th>#</th><th>Email</th><th>Produit</th><th>Date d'achat</th><th>Expiration</th></tr></thead>
+            <tbody id='tbody-acces'></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB PATINEURS -->
+    <div id='tab-skaters' style='display:none'>
+      <div class='section-header'>
+        <h2>⛸ Patineurs 2026-27</h2>
+        <p>Modifier les projections, paliers, risques et notes</p>
+      </div>
+      <div class='card'>
+        <div class='toolbar'>
+          <div class='search-wrap'>
+            <input type='text' id='searchInput' placeholder='Rechercher un joueur…' oninput='renderTable()'>
+          </div>
+          <span class='status-pill' id='statusMsg'>Chargement…</span>
+        </div>
+        <div class='team-filter' id='teamFilter'>
+          <button class='team-logo-btn all-btn active' onclick='setTeam("", this)'>Toutes</button>
+        </div>
+        <div class='table-wrap'>
+          <table>
+            <thead><tr>
+              <th class='ro-col'>#</th><th class='ro-col'>Joueur</th><th>Équipe</th>
+              <th class='ro-col'>Pos</th><th class='ro-col'>Âge</th><th>AAV ($M)</th>
+              <th class='ro-col col-last'><span class='sl sl-last'>25-26</span> G</th>
+              <th class='ro-col col-last'><span class='sl sl-last'>25-26</span> A</th>
+              <th class='ro-col col-last'><span class='sl sl-last'>25-26</span> PTS</th>
+              <th class='col-proj'><span class='sl sl-proj'>Proj</span> G</th>
+              <th class='col-proj'><span class='sl sl-proj'>Proj</span> A</th>
+              <th class='col-proj'><span class='sl sl-proj'>Proj</span> PTS</th>
+              <th>Palier</th><th>Risque</th><th>💣 Bust</th><th>Notes</th>
+            </tr></thead>
+            <tbody id='tbody-skaters'></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB GARDIENS -->
+    <div id='tab-goalies' style='display:none'>
+      <div class='section-header'>
+        <h2>🥅 Gardiens 2026-27</h2>
+        <p>Modifier les projections et paliers des gardiens</p>
+      </div>
+      <div class='card'>
+        <div class='table-wrap'>
+          <table>
+            <thead><tr>
+              <th class='ro-col'>#</th><th class='ro-col'>Joueur</th><th>Équipe</th>
+              <th class='ro-col'>Âge</th><th>AAV ($M)</th>
+              <th class='col-proj'><span class='sl sl-proj'>Proj</span> V</th>
+              <th class='col-proj'><span class='sl sl-proj'>Proj</span> D</th>
+              <th class='col-proj'><span class='sl sl-proj'>Proj</span> DP</th>
+              <th class='col-proj'><span class='sl sl-proj'>Proj</span> GAA</th>
+              <th class='col-proj'><span class='sl sl-proj'>Proj</span> SV%</th>
+              <th class='col-proj'><span class='sl sl-proj'>Proj</span> BL</th>
+              <th>Palier</th><th>Risque</th><th>Notes</th>
+            </tr></thead>
+            <tbody id='tbody-goalies'></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
 
 <div id='toast'></div>
 
@@ -264,16 +367,19 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 // ── AUTH ─────────────────────────────────────────────────
 function checkPw() {
   const input = document.getElementById('pw-input');
-  const err   = document.getElementById('pw-error');
   if (input.value === '100%poolpodcast') {
     document.getElementById('pw-overlay').style.display = 'none';
-    loadPlayers();
-    loadAcces();
+    init();
   } else {
-    err.textContent = 'Mot de passe incorrect.';
-    input.value = '';
-    input.focus();
+    document.getElementById('pw-error').textContent = 'Mot de passe incorrect.';
+    input.value = ''; input.focus();
   }
+}
+
+function init() {
+  loadAcces();
+  loadPlayers();
+  buildTeamStrip();
 }
 
 // ── SUPABASE ─────────────────────────────────────────────
@@ -282,67 +388,99 @@ const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
 const HEADERS = { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' };
 const TABLE   = `${SB_URL}/rest/v1/poolers_players`;
 
-let players = [], dirty = new Set(), activeTeam = '', activeTab = 'acces';
+let players = [], dirty = new Set(), activeTeam = '';
 
 const ALL_TEAMS = ['ANA','BOS','BUF','CAR','CBJ','CGY','CHI','COL','DAL','DET','EDM','FLA','LAK','MIN','MTL','NJD','NSH','NYI','NYR','OTT','PHI','PIT','SEA','SJS','STL','TBL','TOR','UTA','VAN','VGK','WPG','WSH'];
 const TIERS = ['Elite','Top','Mid','Sleeper'];
-
-// Build logo strip
-(function() {
-  const strip = document.getElementById('teamFilter');
-  ALL_TEAMS.forEach(t => {
-    const btn = document.createElement('button');
-    btn.className = 'team-logo-btn';
-    btn.title = t;
-    btn.innerHTML = `<img src='https://assets.nhle.com/logos/nhl/svg/${t}_light.svg' alt='${t}'>`;
-    btn.onclick = () => setTeam(t, btn);
-    strip.appendChild(btn);
-  });
-})();
+const TIER_COLORS = { Elite: '#92400e', Top: '#1e40af', Mid: '#475569', Sleeper: '#065f46' };
 
 // ── TABS ─────────────────────────────────────────────────
+const TAB_TITLES = { dashboard: '📊 Dashboard', acces: '💳 Accès & Achats', skaters: '⛸ Patineurs 2026-27', goalies: '🥅 Gardiens 2026-27' };
+
 function switchTab(tab, btn) {
-  activeTab = tab;
-  document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('tab-acces').style.display   = tab === 'acces'   ? '' : 'none';
-  document.getElementById('tab-skaters').style.display = tab === 'skaters' ? '' : 'none';
-  document.getElementById('tab-goalies').style.display = tab === 'goalies' ? '' : 'none';
-  document.getElementById('saveAllBtn').style.display  = tab === 'acces'   ? 'none' : '';
+  ['dashboard','acces','skaters','goalies'].forEach(t => {
+    document.getElementById(`tab-${t}`).style.display = t === tab ? '' : 'none';
+  });
+  document.getElementById('topbar-title').textContent = TAB_TITLES[tab];
+  document.getElementById('saveAllBtn').style.display = ['skaters','goalies'].includes(tab) ? '' : 'none';
 }
 
 // ── ACCÈS ─────────────────────────────────────────────────
+let accesData = [];
 async function loadAcces() {
   try {
     const res = await fetch(`${SB_URL}/rest/v1/poolers_access?select=*&order=created_at.desc`, { headers: HEADERS });
     if (!res.ok) throw new Error(await res.text());
-    const rows = await res.json();
-
-    const now = new Date();
-    const todayStr = now.toISOString().slice(0, 10);
-    const weekAgo  = new Date(now - 7 * 86400000);
-    const today    = rows.filter(r => r.created_at?.slice(0, 10) === todayStr).length;
-    const week     = rows.filter(r => new Date(r.created_at) >= weekAgo).length;
-
-    document.getElementById('acces-count').textContent   = rows.length;
-    document.getElementById('acces-today').textContent   = today;
-    document.getElementById('acces-week').textContent    = week;
-    document.getElementById('acces-revenue').textContent = `${(rows.length * 5).toFixed(2)} $`;
-    document.getElementById('acces-net').textContent     = `${(rows.length * 4.55).toFixed(2)} $`;
-
-    const fmt = d => d ? new Date(d).toLocaleString('fr-CA', { dateStyle: 'short', timeStyle: 'short' }) : '—';
-    document.getElementById('tbody-acces').innerHTML = rows.length
-      ? rows.map((r, i) => `<tr>
-          <td style='color:#94a3b8;font-size:0.82em'>${i + 1}</td>
-          <td style='font-weight:600'>${r.email ?? '—'}</td>
-          <td><span style='font-size:0.78em;background:#f1f5f9;padding:2px 8px;border-radius:99px;color:#475569'>${r.product ?? '—'}</span></td>
-          <td style='color:#475569;font-size:0.88em'>${fmt(r.created_at)}</td>
-          <td style='color:#475569;font-size:0.88em'>${fmt(r.expires_at)}</td>
-        </tr>`).join('')
-      : `<tr><td colspan='5' style='color:#94a3b8;padding:20px;text-align:center'>Aucun achat pour l'instant</td></tr>`;
+    accesData = await res.json();
+    renderAcces();
   } catch (e) {
-    document.getElementById('tbody-acces').innerHTML = `<tr><td colspan='5' style='color:#dc2626;padding:16px'>Erreur: ${e.message}</td></tr>`;
+    console.error('Accès load failed:', e.message);
   }
+}
+
+function renderAcces() {
+  const rows = accesData;
+  const now = new Date();
+  const todayStr = now.toISOString().slice(0, 10);
+  const weekAgo  = new Date(now - 7 * 86400000);
+  const today    = rows.filter(r => r.created_at?.slice(0, 10) === todayStr).length;
+  const week     = rows.filter(r => new Date(r.created_at) >= weekAgo).length;
+  const gross    = (rows.length * 5).toFixed(2) + ' $';
+  const net      = (rows.length * 4.55).toFixed(2) + ' $';
+
+  // Dashboard cards
+  setText('dash-total', rows.length);
+  setText('dash-today', today);
+  setText('dash-week', week);
+  setText('dash-gross', gross);
+  setText('dash-net', net);
+
+  // Accès tab cards
+  setText('acces-count', rows.length);
+  setText('acces-today', today);
+  setText('acces-week', week);
+  setText('acces-revenue', gross);
+  setText('acces-net', net);
+
+  // Chart — last 14 days
+  const days = [];
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(now - i * 86400000);
+    const key = d.toISOString().slice(0, 10);
+    const count = rows.filter(r => r.created_at?.slice(0, 10) === key).length;
+    days.push({ label: d.toLocaleDateString('fr-CA', { month: 'short', day: 'numeric' }), count });
+  }
+  const maxCount = Math.max(...days.map(d => d.count), 1);
+  document.getElementById('chart-bars').innerHTML = days.map(d => `
+    <div class='bar-col'>
+      <div class='bar-val'>${d.count || ''}</div>
+      <div class='bar' style='height:${Math.max(d.count / maxCount * 72, d.count > 0 ? 8 : 4)}px'></div>
+      <div class='bar-lbl'>${d.label}</div>
+    </div>`).join('');
+
+  // Recent table (dashboard — last 5)
+  const fmt = d => d ? new Date(d).toLocaleString('fr-CA', { dateStyle: 'short', timeStyle: 'short' }) : '—';
+  document.getElementById('tbody-recent').innerHTML = rows.slice(0, 5).map((r, i) => `
+    <tr>
+      <td style='color:#94a3b8;font-size:0.8em'>${i + 1}</td>
+      <td style='font-weight:600'>${r.email ?? '—'}</td>
+      <td><span style='font-size:0.75em;background:#f1f5f9;padding:2px 8px;border-radius:99px;color:#475569'>${r.product ?? '—'}</span></td>
+      <td style='color:#64748b;font-size:0.85em'>${fmt(r.created_at)}</td>
+    </tr>`).join('') || `<tr><td colspan='4' style='color:#94a3b8;padding:20px;text-align:center'>Aucun achat pour l'instant</td></tr>`;
+
+  // Full accès table
+  document.getElementById('tbody-acces').innerHTML = rows.length
+    ? rows.map((r, i) => `
+      <tr>
+        <td style='color:#94a3b8;font-size:0.8em'>${i + 1}</td>
+        <td style='font-weight:600'>${r.email ?? '—'}</td>
+        <td><span style='font-size:0.75em;background:#f1f5f9;padding:2px 8px;border-radius:99px;color:#475569'>${r.product ?? '—'}</span></td>
+        <td style='color:#64748b;font-size:0.85em'>${fmt(r.created_at)}</td>
+        <td style='color:#64748b;font-size:0.85em'>${fmt(r.expires_at)}</td>
+      </tr>`).join('')
+    : `<tr><td colspan='5' style='color:#94a3b8;padding:20px;text-align:center'>Aucun achat pour l'instant</td></tr>`;
 }
 
 // ── JOUEURS ───────────────────────────────────────────────
@@ -353,11 +491,20 @@ async function loadPlayers() {
     if (!res.ok) throw new Error(await res.text());
     players = await res.json();
     setStatus(`${players.length} joueurs`);
+    setText('dash-players', players.length);
     renderTable();
-  } catch (e) {
-    setStatus('Chargement échoué');
-    toast('Échec : ' + e.message, 'error');
-  }
+  } catch (e) { setStatus('Échec'); toast('Erreur: ' + e.message, 'error'); }
+}
+
+function buildTeamStrip() {
+  const strip = document.getElementById('teamFilter');
+  ALL_TEAMS.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'team-logo-btn'; btn.title = t;
+    btn.innerHTML = `<img src='https://assets.nhle.com/logos/nhl/svg/${t}_light.svg' alt='${t}'>`;
+    btn.onclick = () => setTeam(t, btn);
+    strip.appendChild(btn);
+  });
 }
 
 function setTeam(team, btn) {
@@ -369,36 +516,28 @@ function setTeam(team, btn) {
 
 function renderTable() {
   const q = (document.getElementById('searchInput')?.value || '').toLowerCase();
-  const visible = players.filter(p =>
-    (!q          || p.name.toLowerCase().includes(q)) &&
-    (!activeTeam || p.team === activeTeam)
-  );
-  document.getElementById('tbody-skaters').innerHTML = visible.filter(p => p.pos !== 'G').map(rowHTML).join('');
-  document.getElementById('tbody-goalies').innerHTML  = visible.filter(p => p.pos === 'G').map(goalieRowHTML).join('');
-  updateStatus(visible.length);
+  const vis = players.filter(p => (!q || p.name.toLowerCase().includes(q)) && (!activeTeam || p.team === activeTeam));
+  document.getElementById('tbody-skaters').innerHTML = vis.filter(p => p.pos !== 'G').map(rowHTML).join('');
+  document.getElementById('tbody-goalies').innerHTML  = vis.filter(p => p.pos === 'G').map(goalieRowHTML).join('');
+  updateStatus(vis.length);
 }
 
-const TIER_COLORS = { Elite: '#92400e', Top: '#1e40af', Mid: '#475569', Sleeper: '#065f46' };
-
 function rowHTML(p) {
-  const id = p.id;
-  const ro = v => `<span class='ro'>${v ?? '—'}</span>`;
-  const tierColor = TIER_COLORS[p.tier] || '#475569';
+  const id = p.id, ro = v => `<span class='ro'>${v ?? '—'}</span>`;
+  const tc = TIER_COLORS[p.tier] || '#475569';
   return `<tr id='row-${id}'>
     <td class='ro-td'>${ro(p.rank)}</td>
-    <td class='ro-td' style='min-width:150px;font-weight:600;color:#1e293b;font-size:0.9em'>${p.name}</td>
-    <td><select class='cs' id='${id}-team' style='width:72px;font-weight:700' onchange='markDirty(${id})'>${ALL_TEAMS.map(t=>`<option value='${t}'${p.team===t?' selected':''}>${t}</option>`).join('')}</select></td>
-    <td class='ro-td'>${ro(p.pos)}</td>
-    <td class='ro-td'>${ro(p.age)}</td>
-    <td><input class='ci n' id='${id}-aav' type='number' step='0.01' value='${p.aav??''}' oninput='markDirty(${id})' placeholder='—'></td>
+    <td class='ro-td' style='font-weight:600;color:#1e293b;min-width:140px'>${p.name}</td>
+    <td><select class='cs' id='${id}-team' style='width:70px;font-weight:700' onchange='markDirty(${id})'>${ALL_TEAMS.map(t=>`<option value='${t}'${p.team===t?' selected':''}>${t}</option>`).join('')}</select></td>
+    <td class='ro-td'>${ro(p.pos)}</td><td class='ro-td'>${ro(p.age)}</td>
+    <td><input class='ci n' id='${id}-aav' type='number' step='0.01' value='${p.aav??''}' oninput='markDirty(${id})'></td>
     <td class='ro-td last-td'>${ro(p.last_g)}</td>
     <td class='ro-td last-td'>${ro(p.last_a)}</td>
     <td class='ro-td last-td' style='font-weight:700;color:#1d4ed8'>${ro(p.last_pts)}</td>
-    <td class='ro-td last-td'>${ro(p.pp_pct != null ? p.pp_pct + '%' : '—')}</td>
     <td class='proj-td'><input class='ci n' id='${id}-proj_g'   type='number' value='${p.proj_g??''}' oninput='markDirty(${id})'></td>
     <td class='proj-td'><input class='ci n' id='${id}-proj_a'   type='number' value='${p.proj_a??''}' oninput='markDirty(${id})'></td>
     <td class='proj-td'><input class='ci n' id='${id}-proj_pts' type='number' value='${p.proj_pts??''}' style='font-weight:700' oninput='markDirty(${id})'></td>
-    <td><select class='cs' id='${id}-tier' style='color:${tierColor};font-weight:700' onchange='markDirty(${id})'>${TIERS.map(v=>`<option value='${v}'${p.tier===v?' selected':''}>${v}</option>`).join('')}</select></td>
+    <td><select class='cs' id='${id}-tier' style='color:${tc};font-weight:700' onchange='markDirty(${id})'>${TIERS.map(v=>`<option value='${v}'${p.tier===v?' selected':''}>${v}</option>`).join('')}</select></td>
     <td><select class='cs' id='${id}-risk' onchange='markDirty(${id})'>
       <option value=''>—</option>
       <option value='Low'${p.risk==='Low'?' selected':''}>🟢 Faible</option>
@@ -406,36 +545,34 @@ function rowHTML(p) {
       <option value='High'${p.risk==='High'?' selected':''}>🔴 Élevé</option>
     </select></td>
     <td style='text-align:center'><input type='checkbox' id='${id}-bust_alert' ${p.bust_alert?'checked':''} onchange='markDirty(${id})' style='width:16px;height:16px;accent-color:#be123c;cursor:pointer'></td>
-    <td><input class='ci w' id='${id}-notes' type='text' value='${esc(p.notes||'')}' style='width:180px;color:#64748b;font-style:italic' oninput='markDirty(${id})'></td>
+    <td><input class='ci w' id='${id}-notes' type='text' value='${esc(p.notes||'')}' style='color:#64748b;font-style:italic' oninput='markDirty(${id})'></td>
   </tr>`;
 }
 
 function goalieRowHTML(p) {
-  const id = p.id;
-  const ro = v => `<span class='ro'>${v ?? '—'}</span>`;
-  const tierColor = TIER_COLORS[p.tier] || '#475569';
-  let gs = {};
-  try { gs = JSON.parse(p.scouting || '{}'); } catch(e) {}
+  const id = p.id, ro = v => `<span class='ro'>${v ?? '—'}</span>`;
+  const tc = TIER_COLORS[p.tier] || '#475569';
+  let gs = {}; try { gs = JSON.parse(p.scouting || '{}'); } catch(e) {}
   return `<tr id='row-${id}'>
     <td class='ro-td'>${ro(p.rank)}</td>
-    <td class='ro-td' style='min-width:150px;font-weight:600;color:#1e293b;font-size:0.9em'>${p.name}</td>
-    <td><select class='cs' id='${id}-team' style='width:72px;font-weight:700' onchange='markDirty(${id})'>${ALL_TEAMS.map(t=>`<option value='${t}'${p.team===t?' selected':''}>${t}</option>`).join('')}</select></td>
+    <td class='ro-td' style='font-weight:600;color:#1e293b;min-width:140px'>${p.name}</td>
+    <td><select class='cs' id='${id}-team' style='width:70px;font-weight:700' onchange='markDirty(${id})'>${ALL_TEAMS.map(t=>`<option value='${t}'${p.team===t?' selected':''}>${t}</option>`).join('')}</select></td>
     <td class='ro-td'>${ro(p.age)}</td>
-    <td><input class='ci n' id='${id}-aav' type='number' step='0.01' value='${p.aav??''}' oninput='markDirty(${id})' placeholder='—'></td>
-    <td class='proj-td'><input class='ci n' id='${id}-proj_g'   type='number' value='${p.proj_g??''}' oninput='markDirty(${id})' placeholder='V'></td>
-    <td class='proj-td'><input class='ci n' id='${id}-gs_l'     type='number' value='${gs.l??''}' oninput='markDirty(${id})' placeholder='D'></td>
-    <td class='proj-td'><input class='ci n' id='${id}-gs_otl'   type='number' value='${gs.otl??''}' oninput='markDirty(${id})' placeholder='DP'></td>
-    <td class='proj-td'><input class='ci n' id='${id}-gs_gaa'   type='number' step='0.01' value='${gs.gaa??''}' oninput='markDirty(${id})' placeholder='GAA'></td>
-    <td class='proj-td'><input class='ci n' id='${id}-gs_svp'   type='number' step='0.001' value='${gs.svp??''}' oninput='markDirty(${id})' placeholder='SV%'></td>
-    <td class='proj-td'><input class='ci n' id='${id}-proj_a'   type='number' value='${p.proj_a??''}' oninput='markDirty(${id})' placeholder='BL'></td>
-    <td><select class='cs' id='${id}-tier' style='color:${tierColor};font-weight:700' onchange='markDirty(${id})'>${TIERS.map(v=>`<option value='${v}'${p.tier===v?' selected':''}>${v}</option>`).join('')}</select></td>
+    <td><input class='ci n' id='${id}-aav' type='number' step='0.01' value='${p.aav??''}' oninput='markDirty(${id})'></td>
+    <td class='proj-td'><input class='ci n' id='${id}-proj_g'   type='number' value='${p.proj_g??''}' oninput='markDirty(${id})'></td>
+    <td class='proj-td'><input class='ci n' id='${id}-gs_l'     type='number' value='${gs.l??''}' oninput='markDirty(${id})'></td>
+    <td class='proj-td'><input class='ci n' id='${id}-gs_otl'   type='number' value='${gs.otl??''}' oninput='markDirty(${id})'></td>
+    <td class='proj-td'><input class='ci n' id='${id}-gs_gaa'   type='number' step='0.01' value='${gs.gaa??''}' oninput='markDirty(${id})'></td>
+    <td class='proj-td'><input class='ci n' id='${id}-gs_svp'   type='number' step='0.001' value='${gs.svp??''}' oninput='markDirty(${id})'></td>
+    <td class='proj-td'><input class='ci n' id='${id}-proj_a'   type='number' value='${p.proj_a??''}' oninput='markDirty(${id})'></td>
+    <td><select class='cs' id='${id}-tier' style='color:${tc};font-weight:700' onchange='markDirty(${id})'>${TIERS.map(v=>`<option value='${v}'${p.tier===v?' selected':''}>${v}</option>`).join('')}</select></td>
     <td><select class='cs' id='${id}-risk' onchange='markDirty(${id})'>
       <option value=''>—</option>
       <option value='Low'${p.risk==='Low'?' selected':''}>🟢 Faible</option>
       <option value='Medium'${p.risk==='Medium'?' selected':''}>🟡 Moyen</option>
       <option value='High'${p.risk==='High'?' selected':''}>🔴 Élevé</option>
     </select></td>
-    <td><input class='ci w' id='${id}-notes' type='text' value='${esc(p.notes||'')}' style='width:180px;color:#64748b;font-style:italic' oninput='markDirty(${id})'></td>
+    <td><input class='ci w' id='${id}-notes' type='text' value='${esc(p.notes||'')}' style='color:#64748b;font-style:italic' oninput='markDirty(${id})'></td>
   </tr>`;
 }
 
@@ -444,28 +581,25 @@ function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').re
 function markDirty(id) {
   dirty.add(id);
   document.getElementById(`row-${id}`)?.classList.add('dirty');
-  document.getElementById('saveAllBtn').disabled = false;
+  const btn = document.getElementById('saveAllBtn');
+  btn.disabled = false; btn.style.display = '';
   updateStatus();
 }
 
-// ── SAVE ALL ─────────────────────────────────────────────
 async function saveAll() {
   if (!dirty.size) return;
   const btn = document.getElementById('saveAllBtn');
   btn.disabled = true; btn.textContent = '⏳ Sauvegarde…';
   const ids = [...dirty]; let failed = 0;
   await Promise.all(ids.map(async id => {
-    const num = (f, isFloat) => { const v = document.getElementById(`${id}-${f}`)?.value; if (v===''||v==null) return null; return isFloat ? parseFloat(v) : parseInt(v); };
+    const num = (f, fl) => { const v = document.getElementById(`${id}-${f}`)?.value; if (v===''||v==null) return null; return fl ? parseFloat(v) : parseInt(v); };
     const data = {
-      team:       document.getElementById(`${id}-team`)?.value,
-      aav:        num('aav', true),
-      proj_g:     num('proj_g'),
-      proj_a:     num('proj_a'),
-      proj_pts:   num('proj_pts'),
-      tier:       document.getElementById(`${id}-tier`)?.value,
-      risk:       document.getElementById(`${id}-risk`)?.value || null,
+      team: document.getElementById(`${id}-team`)?.value,
+      aav: num('aav', true), proj_g: num('proj_g'), proj_a: num('proj_a'), proj_pts: num('proj_pts'),
+      tier: document.getElementById(`${id}-tier`)?.value,
+      risk: document.getElementById(`${id}-risk`)?.value || null,
       bust_alert: document.getElementById(`${id}-bust_alert`)?.checked ?? false,
-      notes:      document.getElementById(`${id}-notes`)?.value?.trim(),
+      notes: document.getElementById(`${id}-notes`)?.value?.trim(),
     };
     const p = players.find(p => p.id === id);
     if (p?.pos === 'G') {
@@ -474,41 +608,32 @@ async function saveAll() {
     }
     try {
       const res = await fetch(`${TABLE}?id=eq.${id}`, { method: 'PATCH', headers: { ...HEADERS, 'Prefer': 'return=minimal' }, body: JSON.stringify(data) });
-      if (!res.ok) throw new Error((await res.json().catch(()=>({}))).message || res.status);
+      if (!res.ok) throw new Error(res.status);
       document.getElementById(`row-${id}`)?.classList.remove('dirty');
       dirty.delete(id);
       const i = players.findIndex(p => p.id === id);
       if (i >= 0) players[i] = { ...players[i], ...data };
-    } catch (e) { failed++; console.error('Save failed', id, e.message); }
+    } catch (e) { failed++; }
   }));
-  btn.textContent = '💾 Tout sauvegarder';
-  btn.disabled = dirty.size === 0;
+  btn.textContent = '💾 Sauvegarder'; btn.disabled = dirty.size === 0;
   updateStatus();
-  if (failed) toast('Échec — vérifiez la console', 'error');
-  else toast(`${ids.length} joueur${ids.length>1?'s':''} sauvegardé${ids.length>1?'s':''} ✓`, 'success');
+  toast(failed ? 'Échec — console' : `${ids.length} sauvegardé${ids.length>1?'s':''} ✓`, failed ? 'error' : 'success');
 }
 
 // ── HELPERS ──────────────────────────────────────────────
-function updateStatus(visibleCount) {
-  const count = visibleCount ?? players.length;
+function setText(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
+function updateStatus(n) {
+  const count = n ?? players.length;
   const unsaved = dirty.size ? ` · <strong style="color:#f59e0b">${dirty.size} non sauvegardé${dirty.size>1?'s':''}</strong>` : '';
   const el = document.getElementById('statusMsg');
-  if (el) el.innerHTML = `${count} sur ${players.length} joueurs${unsaved}`;
+  if (el) el.innerHTML = `${count} / ${players.length}${unsaved}`;
 }
-function setStatus(msg) { const el = document.getElementById('statusMsg'); if (el) el.textContent = msg; }
+function setStatus(msg) { setText('statusMsg', msg); }
 function toast(msg, type='') {
   const el = document.getElementById('toast');
   el.textContent = msg; el.className = 'show ' + type;
   clearTimeout(el._t); el._t = setTimeout(() => el.className = '', 3000);
 }
 </script>
-
-<footer style="background:#0f1f13;padding:32px 24px;text-align:center;margin-top:40px;">
-  <div style="display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:12px;">
-    <img src='../100pool.jpg' alt='100% Pool' style="width:24px;height:24px;border-radius:50%;object-fit:cover;">
-    <span style="color:white;font-weight:800;font-size:0.9em;">100% Pool</span>
-  </div>
-  <p style="color:rgba(255,255,255,0.22);font-size:0.72em;">© 2026 100% Pool · Admin</p>
-</footer>
 </body>
 </html>
