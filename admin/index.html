@@ -579,14 +579,41 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 
 <script>
 // ── AUTH ─────────────────────────────────────────────────
-function checkPw() {
-  const input = document.getElementById('pw-input');
-  if (input.value === '100%poolpodcast') {
+const EDGE_BASE = 'https://fifurqlitkywtmhgtzeu.supabase.co/functions/v1';
+let adminToken = sessionStorage.getItem('admin_token') ?? '';
+
+// On page load: if we already have a token, skip the password overlay
+window.addEventListener('DOMContentLoaded', () => {
+  if (adminToken) {
     document.getElementById('pw-overlay').style.display = 'none';
     init();
-  } else {
-    document.getElementById('pw-error').textContent = 'Mot de passe incorrect.';
+  }
+});
+
+async function checkPw() {
+  const input = document.getElementById('pw-input');
+  const btn   = document.querySelector('#pw-overlay button');
+  const pw    = input.value.trim();
+  if (!pw) return;
+
+  btn.disabled = true; btn.textContent = 'Vérification…';
+  try {
+    const res = await fetch(`${EDGE_BASE}/admin-auth`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw }),
+    });
+    const data = await res.json();
+    if (!res.ok || !data.token) throw new Error(data.error || 'Échec');
+    adminToken = data.token;
+    sessionStorage.setItem('admin_token', adminToken);
+    document.getElementById('pw-overlay').style.display = 'none';
+    init();
+  } catch (e) {
+    document.getElementById('pw-error').textContent = e.message === 'Invalid password' ? 'Mot de passe incorrect.' : `Erreur: ${e.message}`;
     input.value = ''; input.focus();
+  } finally {
+    btn.disabled = false; btn.textContent = 'Accéder au dashboard →';
   }
 }
 
@@ -603,11 +630,26 @@ function updateTopbarDate() {
   el.textContent = new Date().toLocaleDateString('fr-CA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
 
-// ── SUPABASE ─────────────────────────────────────────────
-const SB_URL  = 'https://fifurqlitkywtmhgtzeu.supabase.co';
-const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpZnVycWxpdGt5d3RtaGd0emV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDIyMjQsImV4cCI6MjA5MjI3ODIyNH0.KPVPj1qwbSJJMyLR_-AhDcRs0vi2sUU6qbFQ-kH53C0';
-const HEADERS = { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' };
-const TABLE   = `${SB_URL}/rest/v1/poolers_players`;
+// ── API via Edge Function proxy ───────────────────────────
+// All DB requests go through admin-data which holds the service_role key server-side
+const PROXY = `${EDGE_BASE}/admin-data`;
+
+function authHeaders(extra = {}) {
+  return { 'Content-Type': 'application/json', 'x-admin-token': adminToken, ...extra };
+}
+
+async function dbFetch(path, opts = {}) {
+  const res = await fetch(`${PROXY}${path}`, { ...opts, headers: authHeaders(opts.headers ?? {}) });
+  if (res.status === 401) {
+    // Token expired — force re-login
+    sessionStorage.removeItem('admin_token');
+    adminToken = '';
+    document.getElementById('pw-overlay').style.display = '';
+    document.getElementById('pw-error').textContent = 'Session expirée, veuillez vous reconnecter.';
+    throw new Error('Session expirée');
+  }
+  return res;
+}
 
 let players = [], dirty = new Set(), activeTeam = '';
 
@@ -635,7 +677,7 @@ function switchTab(tab, btn) {
 let accesData = [];
 async function loadAcces() {
   try {
-    const res = await fetch(`${SB_URL}/rest/v1/poolers_access?select=*&order=created_at.desc`, { headers: HEADERS });
+    const res = await dbFetch('/rest/v1/poolers_access?select=*&order=created_at.desc');
     if (!res.ok) throw new Error(await res.text());
     accesData = await res.json();
     renderAcces();
@@ -759,7 +801,7 @@ function renderAcces() {
 async function loadPlayers() {
   setStatus('Chargement…');
   try {
-    const res = await fetch(`${TABLE}?order=rank.asc&select=*`, { headers: HEADERS });
+    const res = await dbFetch('/rest/v1/poolers_players?order=rank.asc&select=*');
     if (!res.ok) throw new Error(await res.text());
     players = await res.json();
     setStatus(`${players.length} joueurs`);
@@ -898,7 +940,11 @@ async function saveAll() {
       delete data.bust_alert;
     }
     try {
-      const res = await fetch(`${TABLE}?id=eq.${id}`, { method: 'PATCH', headers: { ...HEADERS, 'Prefer': 'return=minimal' }, body: JSON.stringify(data) });
+      const res = await dbFetch(`/rest/v1/poolers_players?id=eq.${id}`, {
+        method: 'PATCH',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify(data),
+      });
       if (!res.ok) throw new Error(res.status);
       document.getElementById(`row-${id}`)?.classList.remove('dirty');
       dirty.delete(id);
