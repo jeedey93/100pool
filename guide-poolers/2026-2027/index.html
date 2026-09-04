@@ -321,6 +321,11 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 .pv-70 { color: #2d8a3e; } .pv-70 .pv-fill { background: linear-gradient(90deg,#2d8a3e,#52c76e); } .pv-70 .pv-num { background: #dcfce7; color: #15803d; }
 .pv-50 { color: #64748b; } .pv-50 .pv-fill { background: #94a3b8; } .pv-50 .pv-num { background: #f1f5f9; color: #475569; }
 .pv-lo { color: #94a3b8; } .pv-lo .pv-fill { background: #cbd5e1; } .pv-lo .pv-num { background: #f1f5f9; color: #94a3b8; }
+.grade-badge { display:inline-block; font-size:0.78em; font-weight:800; padding:1px 6px; border-radius:5px; letter-spacing:0.3px; vertical-align:middle; }
+.grade-a { background:#dcfce7; color:#15803d; }
+.grade-b { background:#dbeafe; color:#1d4ed8; }
+.grade-c { background:#fef9c3; color:#a16207; }
+.grade-d { background:#fee2e2; color:#dc2626; }
 
 /* ── BY TEAM ── */
 .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
@@ -953,16 +958,20 @@ async function init() {
 // ── POOL VALUE SCORE ──────────────────────────────────────
 // ── EFFICIENCY SCORE: (Proj PTS ÷ √AAV) scaled to 0–10 ───
 // Higher = more points per cap dollar. Players with no AAV get null.
-let _effMax = 1; // used to scale the bar width
+let _effMax = 1;
+let _pvSorted = [];
 
 function calcEff(p) {
-  if (!p.aav || p.aav <= 0 || !p.proj_pts) return null;
-  return p.proj_pts / Math.sqrt(p.aav);
+  if (!p.aav || p.aav <= 0) return null;
+  const stat = p.pos === 'G' ? p.proj_g : p.proj_pts;
+  if (!stat) return null;
+  return stat / Math.sqrt(p.aav);
 }
 
 function normalizePVs(players) {
   const vals = players.map(calcEff).filter(v => v !== null);
   _effMax = Math.max(...vals, 1);
+  _pvSorted = [...vals].sort((a, b) => a - b);
 }
 
 function getPV(p) {
@@ -978,6 +987,31 @@ function pvClass(score) {
   if (score >= 6.0) return 'pv-70';
   if (score >= 4.0) return 'pv-50';
   return 'pv-lo';
+}
+
+function calcGrade(p) {
+  const v = calcEff(p);
+  if (v === null || _pvSorted.length === 0) return null;
+  const pct = _pvSorted.filter(x => x <= v).length / _pvSorted.length;
+  if (pct >= 0.95) return 'A+';
+  if (pct >= 0.85) return 'A';
+  if (pct >= 0.75) return 'A-';
+  if (pct >= 0.62) return 'B+';
+  if (pct >= 0.50) return 'B';
+  if (pct >= 0.38) return 'B-';
+  if (pct >= 0.27) return 'C+';
+  if (pct >= 0.17) return 'C';
+  if (pct >= 0.09) return 'C-';
+  if (pct >= 0.04) return 'D';
+  return 'F';
+}
+
+function gradeClass(grade) {
+  if (!grade) return 'grade-d';
+  if (grade.startsWith('A')) return 'grade-a';
+  if (grade.startsWith('B')) return 'grade-b';
+  if (grade.startsWith('C')) return 'grade-c';
+  return 'grade-d';
 }
 
 // ── TREND ─────────────────────────────────────────────────
@@ -1275,6 +1309,7 @@ function buildGoalieRowHTML(p, displayRank) {
     const cat      = p.scouting_category;
     const catNorm  = cat ? cat.toUpperCase() : null;
     const catKey   = catNorm === 'À ÉVITER' || catNorm === 'À EVITER' ? 'AEVITER' : catNorm;
+    const grade    = calcGrade(p);
 
     return `<tr class='${tierRowClass(p.tier)}'>
       <td>${displayRank}</td>
@@ -1298,7 +1333,7 @@ function buildGoalieRowHTML(p, displayRank) {
       <td class='cg-value'><div class='pv-bar ${pc}' onmouseenter='showTooltip(this,"Efficacité = W proj ÷ √AAV(M$)${pv !== null ? ` = ${pv}` : ` — AAV indisponible`}")' onmouseleave='hideTooltip()'>
         <span class='pv-num'>${pv !== null ? pv : '—'}</span>
         ${pv !== null ? `<div class='pv-track'><div class='pv-fill' style='width:${Math.min(100, Math.round((pv/_effMax)*100))}%'></div></div>` : ''}
-      </div></td>
+      </div>${grade ? `<span class='grade-badge ${gradeClass(grade)}'>${grade}</span>` : ''}</td>
       <td class='cg-risk'>${riskHtml}</td>
       <td class='cg-injury' style='text-align:center;font-size:1em;'>${bandaid || '—'}</td>
       <td class='cg-cat'>${cat ? `<span class='cat-badge cat-${catKey}'>${cat}</span>` : '—'}</td>
@@ -1328,6 +1363,7 @@ function buildRowHTML(p, displayRank) {
     const ppgLastHtml = ppg(p.last_pts, p.last_gp);
     const ppgProjHtml = ppg(p.proj_pts, p.proj_gp);
     const projPtsDisplay = p.proj_pts ?? '—';
+    const grade = calcGrade(p);
 
     return `<tr class='${tierRowClass(p.tier)}'>
       <td>${displayRank}</td>
@@ -1364,7 +1400,7 @@ function buildRowHTML(p, displayRank) {
       <td class='cg-value'><div class='pv-bar ${pc}' onmouseenter='showTooltip(this,"Efficacité = Score proj ÷ √AAV(M$)${pv !== null ? ` = ${pv}` : ` — AAV indisponible`}")' onmouseleave='hideTooltip()'>
         <span class='pv-num'>${pv !== null ? pv : '—'}</span>
         ${pv !== null ? `<div class='pv-track'><div class='pv-fill' style='width:${Math.min(100, Math.round((pv/_effMax)*100))}%'></div></div>` : ''}
-      </div></td>
+      </div>${grade ? `<span class='grade-badge ${gradeClass(grade)}'>${grade}</span>` : ''}</td>
       <td class='cg-risk'>${riskHtml}</td>
       <td class='cg-injury' style='text-align:center;font-size:1em;'>${bandaid || '—'}</td>
       <td class='cg-cat'>${p.scouting_category ? `<span class='cat-badge cat-${['À ÉVITER','À EVITER'].includes(p.scouting_category.toUpperCase()) ? 'AEVITER' : p.scouting_category.toUpperCase()}'>${p.scouting_category}</span>` : '—'}</td>
@@ -1738,8 +1774,7 @@ function openModal(id) {
   const trendLabel = trend === 'up' ? `↑ +${trendDiff}` : trend === 'down' ? `↓ ${trendDiff}` : `→ ${trendDiff}`;
   const trendClass = `trend trend-${trend}`;
   const pv = getPV(p);
-
-  // Stat cards — history table already shows pts/ppg, so show contextual info only
+  const grade = calcGrade(p);
   const cards = [];
   if (!isG) {
     cards.push(`<div class='modal-stat-card'><div class='sc-val'><span class='${trendClass}' style='font-size:0.85em'>${trendLabel}</span></div><div class='sc-lbl'>Tendance</div></div>`);
@@ -1750,7 +1785,7 @@ function openModal(id) {
     if (gs.svp) cards.push(`<div class='modal-stat-card'><div class='sc-val'>${gs.svp.toFixed(3)}</div><div class='sc-lbl'>SV%</div></div>`);
   }
   if (p.upside) cards.push(`<div class='modal-stat-card purple'><div class='sc-val'>${p.upside}</div><div class='sc-lbl'>Plafond</div></div>`);
-  if (pv)       cards.push(`<div class='modal-stat-card'><div class='sc-val'>${pv.toFixed(1)}</div><div class='sc-lbl'>Valeur</div></div>`);
+  if (pv)       cards.push(`<div class='modal-stat-card'><div class='sc-val'>${grade ? `<span class='grade-badge ${gradeClass(grade)}'>${grade}</span> ` : ''}${pv.toFixed(1)}</div><div class='sc-lbl'>Valeur</div></div>`);
   if (p.pp_pct != null) cards.push(`<div class='modal-stat-card'><div class='sc-val'>${p.pp_pct}%</div><div class='sc-lbl'>PP%</div></div>`);
   if (p.aav)    cards.push(`<div class='modal-stat-card'><div class='sc-val'>${p.aav}M$</div><div class='sc-lbl'>AAV</div></div>`);
   document.getElementById('modalStatsRow').innerHTML = cards.length
