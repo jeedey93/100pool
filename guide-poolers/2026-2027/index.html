@@ -806,8 +806,17 @@ async function validateToken(token) {
 
 async function checkAccess() {
   if (IS_DEMO) return;
-  // Mot de passe maître
-  if (localStorage.getItem('pool_pw') === '1') return;
+  // Mot de passe maître — valider le JWT stocké (expiry côté client suffit, signature vérifiée par l'Edge Function à l'émission)
+  const pwToken = localStorage.getItem('pool_pw_token');
+  if (pwToken) {
+    try {
+      const payload = JSON.parse(atob(pwToken.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+      if (payload.role === 'guide' && payload.exp > Math.floor(Date.now() / 1000)) return;
+    } catch(e) {}
+    localStorage.removeItem('pool_pw_token');
+  }
+  // Ancien flag (migration) — supprimer et forcer re-login
+  localStorage.removeItem('pool_pw');
   const urlToken = new URLSearchParams(location.search).get('token');
   if (urlToken) {
     const valid = await validateToken(urlToken);
@@ -853,17 +862,29 @@ async function checkAccess() {
     const err = overlay.querySelector('#pw-error');
     btn.onmouseover = () => btn.style.background = '#f9d55a';
     btn.onmouseout = () => btn.style.background = '#f5c842';
+    const EDGE_AUTH = 'https://fifurqlitkywtmhgtzeu.supabase.co/functions/v1/guide-auth';
     input.focus();
-    function attempt() {
-      if (input.value === 'guidepool2027') {
-        localStorage.setItem('pool_pw', '1');
+    async function attempt() {
+      const pw = input.value.trim();
+      if (!pw) return;
+      btn.disabled = true; btn.textContent = 'Vérification…';
+      try {
+        const res = await fetch(EDGE_AUTH, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pw }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.token) throw new Error(data.error || 'Échec');
+        localStorage.setItem('pool_pw_token', data.token);
         overlay.remove();
         resolve();
-      } else {
-        err.textContent = 'Mot de passe incorrect.';
+      } catch (e) {
+        err.textContent = e.message === 'Invalid password' ? 'Mot de passe incorrect.' : 'Erreur — réessaie plus tard.';
         input.style.borderColor = '#e11d48';
-        input.value = '';
-        input.focus();
+        input.value = ''; input.focus();
+      } finally {
+        btn.disabled = false; btn.textContent = 'Accéder au guide';
       }
     }
     btn.onclick = attempt;
