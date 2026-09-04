@@ -2,7 +2,7 @@
 <html lang='fr'>
 <head>
 <meta charset='UTF-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'>
 <title>Admin — 100% Pool</title>
 <link rel='icon' type='image/png' href='../100pool.jpg'>
 <style>
@@ -10,145 +10,183 @@
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f1a12; color: #1e293b; min-height: 100vh; display: flex; }
 
 /* ── PASSWORD OVERLAY ── */
-#pw-overlay { position: fixed; inset: 0; background: linear-gradient(135deg, #0a1209 0%, #1a3d22 100%); display: flex; align-items: center; justify-content: center; z-index: 9999; }
-.pw-box { background: white; border-radius: 24px; padding: 44px 40px; width: 100%; max-width: 400px; box-shadow: 0 32px 80px rgba(0,0,0,0.5); text-align: center; }
-.pw-logo { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
-.pw-box h2 { font-size: 1.35em; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
-.pw-box p { color: #64748b; font-size: 0.88em; margin-bottom: 28px; line-height: 1.6; }
-.pw-box input { width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1em; outline: none; color: #0f172a; margin-bottom: 10px; font-family: inherit; transition: border-color 0.2s; }
-.pw-box input:focus { border-color: #2d8a3e; box-shadow: 0 0 0 4px rgba(45,138,62,0.1); }
-.pw-box button { width: 100%; padding: 14px; background: linear-gradient(135deg, #1a5c28, #2d8a3e); color: white; border: none; border-radius: 12px; font-size: 1em; font-weight: 700; cursor: pointer; letter-spacing: 0.3px; transition: opacity 0.2s; }
-.pw-box button:hover { opacity: 0.9; }
-.pw-error { color: #dc2626; font-size: 0.82em; margin-top: 8px; min-height: 18px; }
+#pw-overlay { position: fixed; inset: 0; background: linear-gradient(135deg, #060e08 0%, #0f1f13 50%, #162c1b 100%); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+.pw-box { background: white; border-radius: 28px; padding: 48px 44px 40px; width: 100%; max-width: 420px; box-shadow: 0 40px 100px rgba(0,0,0,0.6); text-align: center; position: relative; overflow: hidden; }
+.pw-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #059669, #2d8a3e, #4ade80); }
+.pw-logo { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; box-shadow: 0 6px 24px rgba(45,138,62,0.25); border: 3px solid #f0fdf4; }
+.pw-box h2 { font-size: 1.45em; font-weight: 900; color: #0f172a; margin-bottom: 6px; letter-spacing: -0.3px; }
+.pw-box p { color: #64748b; font-size: 0.88em; margin-bottom: 32px; line-height: 1.6; }
+.pw-box input { width: 100%; padding: 14px 18px; border: 2px solid #e2e8f0; border-radius: 14px; font-size: 1em; outline: none; color: #0f172a; margin-bottom: 12px; font-family: inherit; transition: border-color 0.2s; background: #f8fafc; }
+.pw-box input:focus { border-color: #2d8a3e; box-shadow: 0 0 0 4px rgba(45,138,62,0.1); background: white; }
+.pw-box button { width: 100%; padding: 15px; background: linear-gradient(135deg, #0f5c23, #1a7a32, #2d8a3e); color: white; border: none; border-radius: 14px; font-size: 1em; font-weight: 800; cursor: pointer; letter-spacing: 0.3px; transition: all 0.2s; box-shadow: 0 4px 16px rgba(45,138,62,0.35); }
+.pw-box button:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(45,138,62,0.45); }
+.pw-error { color: #dc2626; font-size: 0.82em; margin-top: 10px; min-height: 18px; font-weight: 600; }
 
 /* ── SIDEBAR ── */
-.sidebar { width: 240px; min-height: 100vh; background: linear-gradient(180deg, #0f1f13 0%, #162b1a 100%); display: flex; flex-direction: column; position: fixed; left: 0; top: 0; bottom: 0; z-index: 100; border-right: 1px solid rgba(255,255,255,0.06); }
-.sidebar-logo { display: flex; align-items: center; gap: 12px; padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.07); text-decoration: none; }
-.sidebar-logo img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
-.sidebar-logo span { color: white; font-weight: 800; font-size: 1em; line-height: 1.2; }
-.sidebar-logo small { display: block; color: rgba(255,255,255,0.4); font-size: 0.68em; font-weight: 500; letter-spacing: 0.3px; }
-.sidebar-section { padding: 16px 12px 6px; }
-.sidebar-section-label { font-size: 0.62em; font-weight: 700; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 1.2px; padding: 0 8px; margin-bottom: 4px; }
-.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; cursor: pointer; color: rgba(255,255,255,0.55); font-size: 0.88em; font-weight: 600; transition: all 0.2s; border: none; background: none; width: 100%; text-align: left; }
-.nav-item:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.85); }
-.nav-item.active { background: rgba(45,138,62,0.25); color: #4ade80; }
-.nav-item .nav-icon { font-size: 1.1em; width: 20px; text-align: center; }
-.sidebar-bottom { margin-top: auto; padding: 16px 12px; border-top: 1px solid rgba(255,255,255,0.07); }
-.sidebar-bottom a { display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,0.4); font-size: 0.82em; text-decoration: none; padding: 8px 10px; border-radius: 8px; transition: color 0.2s; }
-.sidebar-bottom a:hover { color: rgba(255,255,255,0.7); }
+.sidebar { width: 250px; min-height: 100vh; background: linear-gradient(180deg, #080f09 0%, #0f1f13 40%, #111e14 100%); display: flex; flex-direction: column; position: fixed; left: 0; top: 0; bottom: 0; z-index: 100; border-right: 1px solid rgba(255,255,255,0.05); }
+.sidebar-logo { display: flex; align-items: center; gap: 13px; padding: 26px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); text-decoration: none; }
+.sidebar-logo img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(74,222,128,0.3); }
+.sidebar-logo-text { line-height: 1; }
+.sidebar-logo span { display: block; color: white; font-weight: 800; font-size: 1em; letter-spacing: -0.2px; }
+.sidebar-logo small { display: block; color: rgba(255,255,255,0.35); font-size: 0.65em; font-weight: 500; letter-spacing: 0.4px; margin-top: 2px; }
+.sidebar-section { padding: 18px 10px 4px; }
+.sidebar-section-label { font-size: 0.58em; font-weight: 700; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 1.4px; padding: 0 10px; margin-bottom: 6px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; cursor: pointer; color: rgba(255,255,255,0.5); font-size: 0.87em; font-weight: 600; transition: all 0.18s; border: none; background: none; width: 100%; text-align: left; letter-spacing: 0.1px; }
+.nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); }
+.nav-item.active { background: linear-gradient(135deg, rgba(45,138,62,0.22), rgba(74,222,128,0.1)); color: #4ade80; box-shadow: inset 0 0 0 1px rgba(74,222,128,0.15); }
+.nav-item .nav-icon { font-size: 1.05em; width: 20px; text-align: center; flex-shrink: 0; }
+.nav-badge { margin-left: auto; background: rgba(74,222,128,0.18); color: #4ade80; font-size: 0.68em; font-weight: 800; padding: 2px 7px; border-radius: 99px; letter-spacing: 0.3px; }
+.sidebar-bottom { margin-top: auto; padding: 12px 10px 14px; border-top: 1px solid rgba(255,255,255,0.06); }
+.sidebar-bottom a { display: flex; align-items: center; gap: 9px; color: rgba(255,255,255,0.35); font-size: 0.82em; text-decoration: none; padding: 8px 12px; border-radius: 9px; transition: all 0.18s; }
+.sidebar-bottom a:hover { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.05); }
+.sidebar-version { text-align: center; font-size: 0.58em; color: rgba(255,255,255,0.15); padding: 8px 0 4px; letter-spacing: 0.5px; }
 
 /* ── MAIN ── */
-.main { margin-left: 240px; flex: 1; min-height: 100vh; background: #f4f7f5; }
-.topbar { background: white; border-bottom: 1px solid #e8edf2; padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
-.topbar-title { font-size: 1.05em; font-weight: 700; color: #0f172a; }
+.main { margin-left: 250px; flex: 1; min-height: 100vh; background: #f0f4f2; }
+.topbar { background: white; border-bottom: 1px solid #e2e8e4; padding: 0 32px; height: 62px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; box-shadow: 0 1px 6px rgba(0,0,0,0.06); }
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.topbar-title { font-size: 1.05em; font-weight: 800; color: #0f172a; letter-spacing: -0.2px; }
+.topbar-date { font-size: 0.78em; color: #94a3b8; font-weight: 500; }
 .topbar-actions { display: flex; gap: 10px; align-items: center; }
 .content { padding: 28px 32px 80px; }
 
 /* ── BUTTONS ── */
-.btn { padding: 9px 18px; border-radius: 10px; font-size: 0.85em; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; white-space: nowrap; }
+.btn { padding: 9px 20px; border-radius: 10px; font-size: 0.84em; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
 .btn:hover { transform: translateY(-1px); }
-.btn:disabled { opacity: 0.45; cursor: default; transform: none; }
-.btn-green { background: linear-gradient(135deg, #059669, #047857); color: white; box-shadow: 0 2px 8px rgba(5,150,105,0.3); }
+.btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+.btn-green { background: linear-gradient(135deg, #059669, #047857); color: white; box-shadow: 0 2px 10px rgba(5,150,105,0.3); }
+.btn-green:hover:not(:disabled) { box-shadow: 0 4px 16px rgba(5,150,105,0.4); }
 .btn-outline { background: white; border: 1.5px solid #e2e8f0; color: #475569; }
 .btn-outline:hover { border-color: #2d8a3e; color: #2d8a3e; }
 
 /* ── SECTION HEADER ── */
-.section-header { margin-bottom: 20px; }
-.section-header h2 { font-size: 1.2em; font-weight: 800; color: #0f172a; }
-.section-header p { color: #64748b; font-size: 0.85em; margin-top: 3px; }
+.section-header { margin-bottom: 22px; }
+.section-header h2 { font-size: 1.25em; font-weight: 900; color: #0f172a; letter-spacing: -0.3px; }
+.section-header p { color: #64748b; font-size: 0.85em; margin-top: 4px; }
 
 /* ── STAT CARDS ── */
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-.stat-card { background: white; border-radius: 16px; padding: 22px 24px; border: 1px solid #e8edf2; box-shadow: 0 1px 4px rgba(0,0,0,0.05); position: relative; overflow: hidden; }
-.stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent, #2d8a3e); border-radius: 16px 16px 0 0; }
-.stat-card .stat-icon { font-size: 1.6em; margin-bottom: 10px; }
-.stat-card .stat-val { font-size: 2em; font-weight: 800; color: var(--accent, #0f172a); line-height: 1; margin-bottom: 6px; }
-.stat-card .stat-lbl { font-size: 0.78em; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
-.stat-card .stat-sub { font-size: 0.75em; color: #cbd5e1; margin-top: 4px; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.stat-card { background: white; border-radius: 18px; padding: 22px 22px 18px; border: 1px solid #e2eae5; box-shadow: 0 1px 6px rgba(0,0,0,0.05); position: relative; overflow: hidden; transition: box-shadow 0.2s; }
+.stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.09); }
+.stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent, #2d8a3e); }
+.stat-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+.stat-icon-wrap { width: 40px; height: 40px; border-radius: 12px; background: var(--accent-bg, #f0fdf4); display: flex; align-items: center; justify-content: center; font-size: 1.2em; }
+.stat-trend { font-size: 0.72em; font-weight: 700; padding: 3px 8px; border-radius: 99px; }
+.stat-trend.up { background: #f0fdf4; color: #15803d; }
+.stat-trend.neutral { background: #f8fafc; color: #94a3b8; }
+.stat-card .stat-val { font-size: 1.9em; font-weight: 900; color: #0f172a; line-height: 1; margin-bottom: 5px; letter-spacing: -0.5px; }
+.stat-card .stat-lbl { font-size: 0.74em; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-card .stat-sub { font-size: 0.74em; color: #b8c4bb; margin-top: 5px; }
 
 /* ── CHART ── */
-.chart-wrap { background: white; border-radius: 16px; border: 1px solid #e8edf2; box-shadow: 0 1px 4px rgba(0,0,0,0.05); padding: 24px; margin-bottom: 24px; }
-.chart-title { font-size: 0.88em; font-weight: 700; color: #475569; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px; }
-.chart-bars { display: flex; align-items: flex-end; gap: 6px; height: 80px; }
-.bar-col { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
-.bar { background: linear-gradient(180deg, #4ade80, #2d8a3e); border-radius: 4px 4px 0 0; width: 100%; min-height: 4px; transition: height 0.4s; }
-.bar-lbl { font-size: 0.62em; color: #94a3b8; text-align: center; }
-.bar-val { font-size: 0.65em; font-weight: 700; color: #2d8a3e; }
+.chart-wrap { background: white; border-radius: 18px; border: 1px solid #e2eae5; box-shadow: 0 1px 6px rgba(0,0,0,0.05); padding: 24px 24px 18px; margin-bottom: 24px; }
+.chart-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.chart-title { font-size: 0.9em; font-weight: 800; color: #1e293b; }
+.chart-subtitle { font-size: 0.75em; color: #94a3b8; font-weight: 500; }
+.chart-bars { display: flex; align-items: flex-end; gap: 5px; height: 100px; }
+.bar-col { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; cursor: default; }
+.bar-col:hover .bar { filter: brightness(1.15); }
+.bar { background: linear-gradient(180deg, #6ee7b7, #2d8a3e); border-radius: 5px 5px 0 0; width: 100%; min-height: 3px; transition: all 0.4s cubic-bezier(0.34,1.1,0.64,1); }
+.bar.today { background: linear-gradient(180deg, #fde68a, #f59e0b); }
+.bar.zero { background: #e8eeeb; }
+.bar-lbl { font-size: 0.58em; color: #b0bec5; text-align: center; white-space: nowrap; }
+.bar-val { font-size: 0.63em; font-weight: 800; color: #2d8a3e; min-height: 12px; }
+.bar-val.today-val { color: #d97706; }
 
-/* ── TABLE ── */
-.card { background: white; border-radius: 16px; border: 1px solid #e8edf2; box-shadow: 0 1px 4px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 20px; }
-.card-header { padding: 16px 20px; border-bottom: 1px solid #f0f4f8; display: flex; align-items: center; justify-content: space-between; }
-.card-header h3 { font-size: 0.92em; font-weight: 700; color: #1e293b; }
-.table-wrap { overflow-x: auto; }
+/* ── CARD / TABLE ── */
+.card { background: white; border-radius: 18px; border: 1px solid #e2eae5; box-shadow: 0 1px 6px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 20px; }
+.card-header { padding: 16px 22px; border-bottom: 1px solid #f0f5f2; display: flex; align-items: center; justify-content: space-between; }
+.card-header h3 { font-size: 0.93em; font-weight: 800; color: #1e293b; }
+.card-header-right { display: flex; align-items: center; gap: 8px; }
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 table { width: 100%; border-collapse: collapse; font-size: 0.84em; }
-thead th { background: #f8fafc; color: #64748b; font-weight: 700; font-size: 0.72em; letter-spacing: 0.6px; text-transform: uppercase; padding: 10px 12px; text-align: left; white-space: nowrap; border-bottom: 1px solid #e8edf2; }
-thead th.ro-col { color: #94a3b8; }
-thead th.col-last { background: #f0fdf4; color: #15803d; }
-thead th.col-proj { background: #f0fdf4; color: #15803d; }
-tbody tr { border-bottom: 1px solid #f0f4f8; transition: background 0.1s; }
+thead th { background: #f7faf8; color: #64748b; font-weight: 700; font-size: 0.71em; letter-spacing: 0.6px; text-transform: uppercase; padding: 10px 14px; text-align: left; white-space: nowrap; border-bottom: 1px solid #eef3f0; }
+thead th.ro-col { color: #9fb4a8; }
+thead th.col-last { background: #f5fbf7; color: #15803d; }
+thead th.col-proj { background: #edfbf2; color: #059669; }
+tbody tr { border-bottom: 1px solid #f3f7f4; transition: background 0.12s; }
 tbody tr:last-child { border-bottom: none; }
-tbody tr:hover { background: #f8fafc; }
-tbody td { padding: 8px 12px; vertical-align: middle; }
-tbody td.ro-td { background: #fafbfc; color: #94a3b8; font-size: 0.82em; }
-tbody td.last-td { background: #f7fbff; }
-tbody td.proj-td { background: #f7fdf9; }
-tbody tr.dirty { background: #fffbeb; }
+tbody tr:hover { background: #f8fcf9; }
+tbody td { padding: 9px 14px; vertical-align: middle; }
+tbody td.ro-td { color: #9fb4a8; font-size: 0.85em; }
+tbody td.last-td { background: #fafffe; }
+tbody td.proj-td { background: #f6fdf9; }
+tbody tr.dirty { background: #fffcf0; }
 tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 
+/* ── PLAYER AVATAR ── */
+.p-avatar { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #dbeafe, #bfdbfe); display: inline-flex; align-items: center; justify-content: center; font-size: 0.65em; font-weight: 800; color: #1d4ed8; flex-shrink: 0; margin-right: 8px; }
+.p-name-cell { display: flex; align-items: center; }
+.p-name { font-weight: 700; color: #1e293b; }
+
+/* ── RECENT PURCHASE ROW ── */
+.buyer-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #d1fae5, #a7f3d0); display: flex; align-items: center; justify-content: center; font-size: 0.78em; font-weight: 800; color: #065f46; flex-shrink: 0; }
+.email-cell { display: flex; align-items: center; gap: 10px; }
+.email-text { font-weight: 600; color: #1e293b; font-size: 0.92em; }
+.email-sub { font-size: 0.74em; color: #94a3b8; font-weight: 400; }
+.product-badge { font-size: 0.72em; background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; padding: 3px 10px; border-radius: 99px; font-weight: 700; white-space: nowrap; }
+.date-cell { font-size: 0.82em; color: #64748b; white-space: nowrap; }
+.new-badge { font-size: 0.65em; background: #fef3c7; color: #d97706; border: 1px solid #fde68a; padding: 2px 7px; border-radius: 99px; font-weight: 700; margin-left: 6px; }
+
 /* ── TOOLBAR ── */
-.toolbar { padding: 14px 20px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; border-bottom: 1px solid #f0f4f8; }
+.toolbar { padding: 14px 20px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; border-bottom: 1px solid #f0f5f2; }
 .search-wrap { position: relative; }
-.search-wrap input { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; color: #1e293b; padding: 8px 12px 8px 34px; font-size: 0.85em; outline: none; width: 220px; }
+.search-wrap input { background: #f4f8f5; border: 1.5px solid #e2eae5; border-radius: 10px; color: #1e293b; padding: 8px 12px 8px 36px; font-size: 0.85em; outline: none; width: 230px; font-family: inherit; }
 .search-wrap input:focus { border-color: #2d8a3e; box-shadow: 0 0 0 3px rgba(45,138,62,0.1); background: white; }
-.search-wrap::before { content: '🔍'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 0.8em; pointer-events: none; }
-.status-pill { margin-left: auto; background: #f1f5f9; border-radius: 99px; padding: 4px 12px; font-size: 0.76em; font-weight: 600; color: #64748b; }
+.search-wrap::before { content: '🔍'; position: absolute; left: 11px; top: 50%; transform: translateY(-50%); font-size: 0.78em; pointer-events: none; }
+.status-pill { margin-left: auto; background: #f0f5f2; border-radius: 99px; padding: 5px 14px; font-size: 0.75em; font-weight: 600; color: #64748b; }
 
 /* ── TEAM FILTER ── */
-.team-filter { padding: 12px 20px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; border-bottom: 1px solid #f0f4f8; }
-.team-logo-btn { width: 38px; height: 38px; border-radius: 8px; border: 2px solid #e8edf2; background: #f8fafc; padding: 4px; cursor: pointer; transition: all 0.15s; opacity: 0.5; display: flex; align-items: center; justify-content: center; }
+.team-filter { padding: 12px 20px; display: flex; flex-wrap: wrap; gap: 5px; align-items: center; border-bottom: 1px solid #f0f5f2; }
+.team-logo-btn { width: 36px; height: 36px; border-radius: 8px; border: 2px solid #e2eae5; background: #f8fbf9; padding: 4px; cursor: pointer; transition: all 0.15s; opacity: 0.45; display: flex; align-items: center; justify-content: center; }
 .team-logo-btn:hover { opacity: 1; border-color: #86efac; transform: translateY(-1px); }
-.team-logo-btn.active { opacity: 1; border-color: #2d8a3e; background: #f0fdf4; box-shadow: 0 0 0 2px rgba(45,138,62,0.2); }
+.team-logo-btn.active { opacity: 1; border-color: #2d8a3e; background: #f0fdf4; box-shadow: 0 0 0 2px rgba(45,138,62,0.18); }
 .team-logo-btn img { width: 100%; height: 100%; object-fit: contain; }
-.team-logo-btn.all-btn { font-size: 0.7em; font-weight: 700; color: #475569; width: auto; padding: 5px 12px; }
+.team-logo-btn.all-btn { font-size: 0.68em; font-weight: 800; color: #475569; width: auto; padding: 5px 12px; }
 
 /* ── INLINE INPUTS ── */
-.ci { background: white; border: 1.5px solid #e2e8f0; border-radius: 7px; color: #1e293b; font-size: 0.85em; outline: none; padding: 4px 7px; transition: border-color 0.15s; }
-.ci:focus { border-color: #2d8a3e; box-shadow: 0 0 0 2px rgba(45,138,62,0.1); }
-.ci.n { text-align: right; width: 58px; }
-.ci.w { width: 160px; }
-.cs { background: white; border: 1.5px solid #e2e8f0; border-radius: 7px; color: #1e293b; padding: 4px 7px; font-size: 0.82em; outline: none; cursor: pointer; }
-.cs:focus { border-color: #2d8a3e; }
-.ro { color: #94a3b8; font-size: 0.82em; white-space: nowrap; }
-.sl { font-size: 0.66em; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; padding: 2px 6px; border-radius: 99px; display: inline-block; }
+.ci { background: #f8fbf9; border: 1.5px solid #e2eae5; border-radius: 8px; color: #1e293b; font-size: 0.84em; outline: none; padding: 5px 8px; transition: all 0.15s; font-family: inherit; }
+.ci:focus { border-color: #2d8a3e; box-shadow: 0 0 0 3px rgba(45,138,62,0.1); background: white; }
+.ci.n { text-align: right; width: 60px; }
+.ci.w { width: 165px; }
+.cs { background: #f8fbf9; border: 1.5px solid #e2eae5; border-radius: 8px; color: #1e293b; padding: 5px 8px; font-size: 0.82em; outline: none; cursor: pointer; font-family: inherit; }
+.cs:focus { border-color: #2d8a3e; box-shadow: 0 0 0 3px rgba(45,138,62,0.1); }
+.ro { color: #9fb4a8; font-size: 0.84em; white-space: nowrap; }
+.sl { font-size: 0.64em; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; padding: 2px 7px; border-radius: 99px; display: inline-block; }
 .sl-last { background: #dcfce7; color: #15803d; }
 .sl-proj  { background: #d1fae5; color: #065f46; }
 
+/* ── EMPTY STATE ── */
+.empty-state { text-align: center; padding: 48px 24px; color: #94a3b8; }
+.empty-state .es-icon { font-size: 2.5em; margin-bottom: 12px; opacity: 0.5; }
+.empty-state p { font-size: 0.88em; font-weight: 600; }
+
 /* ── TOAST ── */
-#toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: white; border-radius: 12px; padding: 12px 22px; font-size: 0.88em; font-weight: 600; color: #1e293b; box-shadow: 0 8px 32px rgba(0,0,0,0.14); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; z-index: 9999; white-space: nowrap; border-left: 4px solid #e2e8f0; }
+#toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: white; border-radius: 14px; padding: 13px 24px; font-size: 0.88em; font-weight: 700; color: #1e293b; box-shadow: 0 10px 40px rgba(0,0,0,0.16); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; z-index: 9999; white-space: nowrap; border-left: 4px solid #e2e8f0; display: flex; align-items: center; gap: 8px; }
 #toast.show    { transform: translateX(-50%) translateY(0); }
 #toast.success { border-left-color: #22c55e; color: #15803d; }
 #toast.error   { border-left-color: #ef4444; color: #dc2626; }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
-  /* Hide sidebar on mobile — use bottom nav instead */
   .sidebar { display: none; }
   .main { margin-left: 0; padding-bottom: 72px; }
   .topbar { padding: 0 16px; }
-  .content { padding: 14px 14px 80px; }
+  .topbar-date { display: none; }
+  .content { padding: 16px 14px 80px; }
   .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .stat-card { padding: 16px; }
-  .stat-card .stat-val { font-size: 1.6em; }
-  .chart-wrap { padding: 16px; }
-  .chart-bars { height: 60px; }
-  .section-header { margin-bottom: 14px; }
-  .pw-box { padding: 32px 24px; margin: 16px; }
+  .stat-card { padding: 16px 14px; border-radius: 14px; }
+  .stat-card .stat-val { font-size: 1.65em; }
+  .stat-icon-wrap { width: 34px; height: 34px; font-size: 1em; }
+  .chart-wrap { padding: 16px 14px 12px; border-radius: 14px; }
+  .chart-bars { height: 75px; }
+  .section-header { margin-bottom: 16px; }
+  .pw-box { padding: 36px 24px 28px; margin: 16px; border-radius: 22px; }
   .toolbar { padding: 10px 14px; }
   .search-wrap input { width: 100%; }
   .team-filter { padding: 10px 14px; }
   .card-header { padding: 12px 16px; }
-
-  /* Bottom navigation bar */
+  .card { border-radius: 14px; }
   .mobile-nav { display: flex; }
 }
 @media (min-width: 769px) {
@@ -158,18 +196,19 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 /* ── MOBILE BOTTOM NAV ── */
 .mobile-nav {
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
-  background: #0f1f13; border-top: 1px solid rgba(255,255,255,0.1);
+  background: #080f09; border-top: 1px solid rgba(255,255,255,0.08);
   height: 64px; align-items: stretch;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 .mobile-nav-item {
   flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 3px; background: none; border: none; cursor: pointer;
-  color: rgba(255,255,255,0.45); font-size: 0.62em; font-weight: 600;
-  transition: color 0.2s; padding: 8px 4px;
+  color: rgba(255,255,255,0.38); font-size: 0.6em; font-weight: 700; letter-spacing: 0.2px;
+  transition: color 0.18s; padding: 8px 4px;
 }
-.mobile-nav-item .mn-icon { font-size: 1.4em; line-height: 1; }
+.mobile-nav-item .mn-icon { font-size: 1.45em; line-height: 1; }
 .mobile-nav-item.active { color: #4ade80; }
-.mobile-nav-item:hover { color: rgba(255,255,255,0.8); }
+.mobile-nav-item:hover { color: rgba(255,255,255,0.75); }
 </style>
 </head>
 <body>
@@ -190,7 +229,7 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 <nav class='sidebar'>
   <a class='sidebar-logo' href='/'>
     <img src='../100pool.jpg' alt='100% Pool'>
-    <div>
+    <div class='sidebar-logo-text'>
       <span>100% Pool</span>
       <small>Admin Dashboard</small>
     </div>
@@ -203,6 +242,7 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
     </button>
     <button class='nav-item' onclick='switchTab("acces",this)'>
       <span class='nav-icon'>💳</span><span>Accès & Achats</span>
+      <span class='nav-badge' id='sidebar-count'></span>
     </button>
   </div>
 
@@ -217,15 +257,23 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
   </div>
 
   <div class='sidebar-bottom'>
-    <a href='/guide-poolers/2026-2027/'><span class='nav-icon'>📖</span><span>Voir le guide</span></a>
-    <a href='/'><span class='nav-icon'>🏠</span><span>Accueil</span></a>
+    <a href='/guide-poolers/2026-2027/'>
+      <span class='nav-icon'>📖</span><span>Voir le guide</span>
+    </a>
+    <a href='/'>
+      <span class='nav-icon'>🏠</span><span>Accueil</span>
+    </a>
   </div>
+  <div class='sidebar-version'>Guide 2026-27</div>
 </nav>
 
 <!-- MAIN -->
 <div class='main'>
   <div class='topbar'>
-    <div class='topbar-title' id='topbar-title'>📊 Dashboard</div>
+    <div class='topbar-left'>
+      <div class='topbar-title' id='topbar-title'>📊 Dashboard</div>
+      <div class='topbar-date' id='topbar-date'></div>
+    </div>
     <div class='topbar-actions'>
       <button class='btn btn-green' id='saveAllBtn' onclick='saveAll()' disabled style='display:none'>💾 Sauvegarder</button>
     </div>
@@ -237,54 +285,88 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
     <div id='tab-dashboard'>
       <div class='section-header'>
         <h2>Vue d'ensemble</h2>
-        <p>Statistiques générales du guide des poolers 2026-27</p>
+        <p>Statistiques du guide des poolers 2026-27</p>
       </div>
 
       <div class='stats-grid'>
-        <div class='stat-card' style='--accent:#2d8a3e'>
-          <div class='stat-icon'>💳</div>
+        <div class='stat-card' style='--accent:#2d8a3e;--accent-bg:#f0fdf4'>
+          <div class='stat-card-top'>
+            <div class='stat-icon-wrap'>💳</div>
+            <span class='stat-trend neutral' id='dash-trend-total'>—</span>
+          </div>
           <div class='stat-val' id='dash-total'>—</div>
           <div class='stat-lbl'>Achats totaux</div>
+          <div class='stat-sub' id='dash-sub-total'>&nbsp;</div>
         </div>
-        <div class='stat-card' style='--accent:#0369a1'>
-          <div class='stat-icon'>📅</div>
+        <div class='stat-card' style='--accent:#0369a1;--accent-bg:#eff6ff'>
+          <div class='stat-card-top'>
+            <div class='stat-icon-wrap'>📅</div>
+            <span class='stat-trend neutral' id='dash-trend-today'>aujourd'hui</span>
+          </div>
           <div class='stat-val' id='dash-today'>—</div>
           <div class='stat-lbl'>Aujourd'hui</div>
+          <div class='stat-sub' id='dash-sub-today'>&nbsp;</div>
         </div>
-        <div class='stat-card' style='--accent:#7c3aed'>
-          <div class='stat-icon'>📆</div>
+        <div class='stat-card' style='--accent:#7c3aed;--accent-bg:#faf5ff'>
+          <div class='stat-card-top'>
+            <div class='stat-icon-wrap'>📆</div>
+            <span class='stat-trend neutral'>7 jours</span>
+          </div>
           <div class='stat-val' id='dash-week'>—</div>
           <div class='stat-lbl'>Cette semaine</div>
+          <div class='stat-sub'>&nbsp;</div>
         </div>
-        <div class='stat-card' style='--accent:#059669'>
-          <div class='stat-icon'>💵</div>
+        <div class='stat-card' style='--accent:#059669;--accent-bg:#f0fdf4'>
+          <div class='stat-card-top'>
+            <div class='stat-icon-wrap'>💵</div>
+            <span class='stat-trend neutral'>5,00 $ / achat</span>
+          </div>
           <div class='stat-val' id='dash-gross'>—</div>
-          <div class='stat-lbl'>Brut (5,00 $)</div>
+          <div class='stat-lbl'>Revenu brut</div>
+          <div class='stat-sub'>&nbsp;</div>
         </div>
-        <div class='stat-card' style='--accent:#0f766e'>
-          <div class='stat-icon'>🏦</div>
+        <div class='stat-card' style='--accent:#0f766e;--accent-bg:#f0fdfa'>
+          <div class='stat-card-top'>
+            <div class='stat-icon-wrap'>🏦</div>
+            <span class='stat-trend neutral'>4,55 $ / achat</span>
+          </div>
           <div class='stat-val' id='dash-net'>—</div>
-          <div class='stat-lbl'>Net Stripe (4,55 $)</div>
+          <div class='stat-lbl'>Net (Après frais)</div>
+          <div class='stat-sub' style='color:#94a3b8'>Après frais Stripe</div>
         </div>
-        <div class='stat-card' style='--accent:#d97706'>
-          <div class='stat-icon'>⛸</div>
+        <div class='stat-card' style='--accent:#d97706;--accent-bg:#fffbeb'>
+          <div class='stat-card-top'>
+            <div class='stat-icon-wrap'>⛸</div>
+            <span class='stat-trend neutral'>guide</span>
+          </div>
           <div class='stat-val' id='dash-players'>—</div>
           <div class='stat-lbl'>Joueurs dans le guide</div>
+          <div class='stat-sub'>&nbsp;</div>
         </div>
       </div>
 
       <div class='chart-wrap'>
-        <div class='chart-title'>Achats des 14 derniers jours</div>
+        <div class='chart-head'>
+          <div>
+            <div class='chart-title'>Achats — 14 derniers jours</div>
+            <div class='chart-subtitle' id='chart-total-label'>&nbsp;</div>
+          </div>
+        </div>
         <div class='chart-bars' id='chart-bars'></div>
       </div>
 
       <div class='card'>
         <div class='card-header'>
           <h3>🕒 Derniers achats</h3>
+          <button class='btn btn-outline' onclick='switchTab("acces", null)' style='font-size:0.78em;padding:6px 14px'>Voir tout →</button>
         </div>
         <div class='table-wrap'>
           <table>
-            <thead><tr><th>#</th><th>Email</th><th>Produit</th><th>Date</th></tr></thead>
+            <thead><tr>
+              <th>Acheteur</th>
+              <th>Produit</th>
+              <th>Date</th>
+            </tr></thead>
             <tbody id='tbody-recent'></tbody>
           </table>
         </div>
@@ -298,32 +380,48 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
         <p>Liste complète des accès au guide des poolers</p>
       </div>
       <div class='stats-grid'>
-        <div class='stat-card' style='--accent:#2d8a3e'>
-          <div class='stat-val' id='acces-count' style='color:#2d8a3e'>—</div>
+        <div class='stat-card' style='--accent:#2d8a3e;--accent-bg:#f0fdf4'>
+          <div class='stat-card-top'><div class='stat-icon-wrap'>💳</div></div>
+          <div class='stat-val' id='acces-count'>—</div>
           <div class='stat-lbl'>Achats totaux</div>
         </div>
-        <div class='stat-card' style='--accent:#0369a1'>
-          <div class='stat-val' id='acces-today' style='color:#0369a1'>—</div>
+        <div class='stat-card' style='--accent:#0369a1;--accent-bg:#eff6ff'>
+          <div class='stat-card-top'><div class='stat-icon-wrap'>📅</div></div>
+          <div class='stat-val' id='acces-today'>—</div>
           <div class='stat-lbl'>Aujourd'hui</div>
         </div>
-        <div class='stat-card' style='--accent:#7c3aed'>
-          <div class='stat-val' id='acces-week' style='color:#7c3aed'>—</div>
+        <div class='stat-card' style='--accent:#7c3aed;--accent-bg:#faf5ff'>
+          <div class='stat-card-top'><div class='stat-icon-wrap'>📆</div></div>
+          <div class='stat-val' id='acces-week'>—</div>
           <div class='stat-lbl'>Cette semaine</div>
         </div>
-        <div class='stat-card' style='--accent:#059669'>
-          <div class='stat-val' id='acces-revenue' style='color:#059669'>—</div>
-          <div class='stat-lbl'>Brut (5,00 $)</div>
+        <div class='stat-card' style='--accent:#059669;--accent-bg:#f0fdf4'>
+          <div class='stat-card-top'><div class='stat-icon-wrap'>💵</div></div>
+          <div class='stat-val' id='acces-revenue'>—</div>
+          <div class='stat-lbl'>Revenu brut</div>
         </div>
-        <div class='stat-card' style='--accent:#0f766e'>
-          <div class='stat-val' id='acces-net' style='color:#0f766e'>—</div>
-          <div class='stat-lbl'>Net Stripe (4,55 $)</div>
+        <div class='stat-card' style='--accent:#0f766e;--accent-bg:#f0fdfa'>
+          <div class='stat-card-top'><div class='stat-icon-wrap'>🏦</div></div>
+          <div class='stat-val' id='acces-net'>—</div>
+          <div class='stat-lbl'>Net (Après frais)</div>
         </div>
       </div>
       <div class='card'>
-        <div class='card-header'><h3>Tous les accès</h3></div>
+        <div class='card-header'>
+          <h3>Tous les accès</h3>
+          <div class='card-header-right'>
+            <span class='status-pill' id='acces-pill'>Chargement…</span>
+          </div>
+        </div>
         <div class='table-wrap'>
           <table>
-            <thead><tr><th>#</th><th>Email</th><th>Produit</th><th>Date d'achat</th><th>Expiration</th></tr></thead>
+            <thead><tr>
+              <th>#</th>
+              <th>Acheteur</th>
+              <th>Produit</th>
+              <th>Date d'achat</th>
+              <th>Expiration</th>
+            </tr></thead>
             <tbody id='tbody-acces'></tbody>
           </table>
         </div>
@@ -349,15 +447,22 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
         <div class='table-wrap'>
           <table>
             <thead><tr>
-              <th class='ro-col'>#</th><th class='ro-col'>Joueur</th><th>Équipe</th>
-              <th class='ro-col'>Pos</th><th class='ro-col'>Âge</th><th>AAV ($M)</th>
+              <th class='ro-col'>#</th>
+              <th class='ro-col'>Joueur</th>
+              <th>Équipe</th>
+              <th class='ro-col'>Pos</th>
+              <th class='ro-col'>Âge</th>
+              <th>AAV ($M)</th>
               <th class='ro-col col-last'><span class='sl sl-last'>25-26</span> G</th>
               <th class='ro-col col-last'><span class='sl sl-last'>25-26</span> A</th>
               <th class='ro-col col-last'><span class='sl sl-last'>25-26</span> PTS</th>
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> G</th>
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> A</th>
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> PTS</th>
-              <th>Palier</th><th>Risque</th><th>💣 Bust</th><th>Notes</th>
+              <th>Palier</th>
+              <th>Risque</th>
+              <th>💣 Bust</th>
+              <th>Notes</th>
             </tr></thead>
             <tbody id='tbody-skaters'></tbody>
           </table>
@@ -375,15 +480,20 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
         <div class='table-wrap'>
           <table>
             <thead><tr>
-              <th class='ro-col'>#</th><th class='ro-col'>Joueur</th><th>Équipe</th>
-              <th class='ro-col'>Âge</th><th>AAV ($M)</th>
+              <th class='ro-col'>#</th>
+              <th class='ro-col'>Joueur</th>
+              <th>Équipe</th>
+              <th class='ro-col'>Âge</th>
+              <th>AAV ($M)</th>
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> V</th>
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> D</th>
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> DP</th>
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> GAA</th>
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> SV%</th>
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> BL</th>
-              <th>Palier</th><th>Risque</th><th>Notes</th>
+              <th>Palier</th>
+              <th>Risque</th>
+              <th>Notes</th>
             </tr></thead>
             <tbody id='tbody-goalies'></tbody>
           </table>
@@ -426,9 +536,16 @@ function checkPw() {
 }
 
 function init() {
+  updateTopbarDate();
   loadAcces();
   loadPlayers();
   buildTeamStrip();
+}
+
+function updateTopbarDate() {
+  const el = document.getElementById('topbar-date');
+  if (!el) return;
+  el.textContent = new Date().toLocaleDateString('fr-CA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
 
 // ── SUPABASE ─────────────────────────────────────────────
@@ -448,7 +565,6 @@ const TAB_TITLES = { dashboard: '📊 Dashboard', acces: '💳 Accès & Achats',
 
 function switchTab(tab, btn) {
   document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(b => b.classList.remove('active'));
-  // activate matching buttons in both sidebar and mobile nav
   document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(b => {
     if (b.getAttribute('onclick')?.includes(`"${tab}"`)) b.classList.add('active');
   });
@@ -456,7 +572,8 @@ function switchTab(tab, btn) {
     document.getElementById(`tab-${t}`).style.display = t === tab ? '' : 'none';
   });
   document.getElementById('topbar-title').textContent = TAB_TITLES[tab];
-  document.getElementById('saveAllBtn').style.display = ['skaters','goalies'].includes(tab) ? '' : 'none';
+  const saveBtn = document.getElementById('saveAllBtn');
+  saveBtn.style.display = ['skaters','goalies'].includes(tab) ? '' : 'none';
 }
 
 // ── ACCÈS ─────────────────────────────────────────────────
@@ -477,10 +594,33 @@ function renderAcces() {
   const now = new Date();
   const todayStr = now.toISOString().slice(0, 10);
   const weekAgo  = new Date(now - 7 * 86400000);
+  const yesterAgo = new Date(now - 86400000);
+  const yesterStr = yesterAgo.toISOString().slice(0, 10);
+
   const today    = rows.filter(r => r.created_at?.slice(0, 10) === todayStr).length;
+  const yesterday = rows.filter(r => r.created_at?.slice(0, 10) === yesterStr).length;
   const week     = rows.filter(r => new Date(r.created_at) >= weekAgo).length;
-  const gross    = (rows.length * 5).toFixed(2) + ' $';
-  const net      = (rows.length * 4.55).toFixed(2) + ' $';
+  const gross    = (rows.length * 5).toFixed(2).replace('.', ',') + ' $';
+  const net      = (rows.length * 4.55).toFixed(2).replace('.', ',') + ' $';
+
+  // Sidebar badge
+  const sbl = document.getElementById('sidebar-count');
+  if (sbl) sbl.textContent = rows.length || '';
+
+  // Trend vs yesterday
+  const trendEl = document.getElementById('dash-trend-total');
+  if (trendEl) {
+    const prev = rows.filter(r => r.created_at?.slice(0,10) <= yesterStr).length;
+    const diff = rows.length - prev;
+    if (diff > 0) { trendEl.textContent = `+${diff} hier`; trendEl.className = 'stat-trend up'; }
+    else { trendEl.textContent = '—'; trendEl.className = 'stat-trend neutral'; }
+  }
+
+  const todayTrendEl = document.getElementById('dash-trend-today');
+  if (todayTrendEl) {
+    if (today > 0) { todayTrendEl.textContent = `+${today}`; todayTrendEl.className = 'stat-trend up'; }
+    else { todayTrendEl.textContent = 'aujourd\'hui'; todayTrendEl.className = 'stat-trend neutral'; }
+  }
 
   // Dashboard cards
   setText('dash-total', rows.length);
@@ -488,6 +628,8 @@ function renderAcces() {
   setText('dash-week', week);
   setText('dash-gross', gross);
   setText('dash-net', net);
+  setText('dash-sub-total', `${week} cette semaine`);
+  setText('dash-sub-today', yesterday > 0 ? `${yesterday} hier` : '');
 
   // Accès tab cards
   setText('acces-count', rows.length);
@@ -495,44 +637,67 @@ function renderAcces() {
   setText('acces-week', week);
   setText('acces-revenue', gross);
   setText('acces-net', net);
+  setText('acces-pill', `${rows.length} acheteurs`);
 
   // Chart — last 14 days
   const days = [];
   for (let i = 13; i >= 0; i--) {
-    const d = new Date(now - i * 86400000);
+    const d = new Date(now); d.setDate(d.getDate() - i);
     const key = d.toISOString().slice(0, 10);
     const count = rows.filter(r => r.created_at?.slice(0, 10) === key).length;
-    days.push({ label: d.toLocaleDateString('fr-CA', { month: 'short', day: 'numeric' }), count });
+    const isToday = key === todayStr;
+    days.push({ label: d.toLocaleDateString('fr-CA', { month: 'short', day: 'numeric' }), count, isToday, key });
   }
   const maxCount = Math.max(...days.map(d => d.count), 1);
+  const periodTotal = days.reduce((s, d) => s + d.count, 0);
+  setText('chart-total-label', `${periodTotal} achat${periodTotal !== 1 ? 's' : ''} sur la période`);
+
   document.getElementById('chart-bars').innerHTML = days.map(d => `
-    <div class='bar-col'>
-      <div class='bar-val'>${d.count || ''}</div>
-      <div class='bar' style='height:${Math.max(d.count / maxCount * 72, d.count > 0 ? 8 : 4)}px'></div>
-      <div class='bar-lbl'>${d.label}</div>
+    <div class='bar-col' title='${d.key}: ${d.count} achat${d.count !== 1 ? "s" : ""}'>
+      <div class='bar-val ${d.isToday ? "today-val" : ""}'>${d.count > 0 ? d.count : ''}</div>
+      <div class='bar ${d.isToday ? "today" : d.count === 0 ? "zero" : ""}'
+           style='height:${d.count > 0 ? Math.max(d.count / maxCount * 90, 8) : 3}px'></div>
+      <div class='bar-lbl'>${d.isToday ? '📍' : d.label}</div>
     </div>`).join('');
 
-  // Recent table (dashboard — last 5)
+  // Helpers
   const fmt = d => d ? new Date(d).toLocaleString('fr-CA', { dateStyle: 'short', timeStyle: 'short' }) : '—';
-  document.getElementById('tbody-recent').innerHTML = rows.slice(0, 5).map((r, i) => `
+  const initials = email => (email || '?').slice(0, 2).toUpperCase();
+  const isNew = d => d && new Date(d) >= weekAgo;
+
+  // Recent table (last 8)
+  document.getElementById('tbody-recent').innerHTML = rows.slice(0, 8).map((r, i) => `
     <tr>
-      <td style='color:#94a3b8;font-size:0.8em'>${i + 1}</td>
-      <td style='font-weight:600'>${r.email ?? '—'}</td>
-      <td><span style='font-size:0.75em;background:#f1f5f9;padding:2px 8px;border-radius:99px;color:#475569'>${r.product ?? '—'}</span></td>
-      <td style='color:#64748b;font-size:0.85em'>${fmt(r.created_at)}</td>
-    </tr>`).join('') || `<tr><td colspan='4' style='color:#94a3b8;padding:20px;text-align:center'>Aucun achat pour l'instant</td></tr>`;
+      <td>
+        <div class='email-cell'>
+          <div class='buyer-avatar'>${initials(r.email)}</div>
+          <div>
+            <div class='email-text'>${r.email ?? '—'}${isNew(r.created_at) ? "<span class='new-badge'>Nouveau</span>" : ''}</div>
+            <div class='email-sub'>${fmt(r.created_at)}</div>
+          </div>
+        </div>
+      </td>
+      <td><span class='product-badge'>${r.product ?? 'Guide'}</span></td>
+      <td class='date-cell'>${fmt(r.created_at)}</td>
+    </tr>`).join('') ||
+    `<tr><td colspan='3'><div class='empty-state'><div class='es-icon'>💳</div><p>Aucun achat pour l'instant</p></div></td></tr>`;
 
   // Full accès table
   document.getElementById('tbody-acces').innerHTML = rows.length
     ? rows.map((r, i) => `
       <tr>
-        <td style='color:#94a3b8;font-size:0.8em'>${i + 1}</td>
-        <td style='font-weight:600'>${r.email ?? '—'}</td>
-        <td><span style='font-size:0.75em;background:#f1f5f9;padding:2px 8px;border-radius:99px;color:#475569'>${r.product ?? '—'}</span></td>
-        <td style='color:#64748b;font-size:0.85em'>${fmt(r.created_at)}</td>
-        <td style='color:#64748b;font-size:0.85em'>${fmt(r.expires_at)}</td>
+        <td style='color:#94a3b8;font-size:0.8em;font-weight:600'>${i + 1}</td>
+        <td>
+          <div class='email-cell'>
+            <div class='buyer-avatar' style='width:28px;height:28px;font-size:0.65em'>${initials(r.email)}</div>
+            <span style='font-weight:600;color:#1e293b'>${r.email ?? '—'}</span>
+          </div>
+        </td>
+        <td><span class='product-badge'>${r.product ?? 'Guide'}</span></td>
+        <td class='date-cell'>${fmt(r.created_at)}</td>
+        <td class='date-cell'>${fmt(r.expires_at)}</td>
       </tr>`).join('')
-    : `<tr><td colspan='5' style='color:#94a3b8;padding:20px;text-align:center'>Aucun achat pour l'instant</td></tr>`;
+    : `<tr><td colspan='5'><div class='empty-state'><div class='es-icon'>💳</div><p>Aucun achat pour l'instant</p></div></td></tr>`;
 }
 
 // ── JOUEURS ───────────────────────────────────────────────
@@ -569,26 +734,40 @@ function setTeam(team, btn) {
 function renderTable() {
   const q = (document.getElementById('searchInput')?.value || '').toLowerCase();
   const vis = players.filter(p => (!q || p.name.toLowerCase().includes(q)) && (!activeTeam || p.team === activeTeam));
-  document.getElementById('tbody-skaters').innerHTML = vis.filter(p => p.pos !== 'G').map(rowHTML).join('');
-  document.getElementById('tbody-goalies').innerHTML  = vis.filter(p => p.pos === 'G').map(goalieRowHTML).join('');
+  document.getElementById('tbody-skaters').innerHTML = vis.filter(p => p.pos !== 'G').map(rowHTML).join('') ||
+    `<tr><td colspan='16'><div class='empty-state'><div class='es-icon'>🔍</div><p>Aucun joueur trouvé</p></div></td></tr>`;
+  document.getElementById('tbody-goalies').innerHTML = vis.filter(p => p.pos === 'G').map(goalieRowHTML).join('') ||
+    `<tr><td colspan='14'><div class='empty-state'><div class='es-icon'>🥅</div><p>Aucun gardien trouvé</p></div></td></tr>`;
   updateStatus(vis.length);
+}
+
+function initials(name) {
+  if (!name) return '?';
+  const parts = name.trim().split(' ');
+  return (parts[0][0] + (parts[1]?.[0] || '')).toUpperCase();
 }
 
 function rowHTML(p) {
   const id = p.id, ro = v => `<span class='ro'>${v ?? '—'}</span>`;
   const tc = TIER_COLORS[p.tier] || '#475569';
   return `<tr id='row-${id}'>
-    <td class='ro-td'>${ro(p.rank)}</td>
-    <td class='ro-td' style='font-weight:600;color:#1e293b;min-width:140px'>${p.name}</td>
-    <td><select class='cs' id='${id}-team' style='width:70px;font-weight:700' onchange='markDirty(${id})'>${ALL_TEAMS.map(t=>`<option value='${t}'${p.team===t?' selected':''}>${t}</option>`).join('')}</select></td>
-    <td class='ro-td'>${ro(p.pos)}</td><td class='ro-td'>${ro(p.age)}</td>
+    <td class='ro-td' style='font-weight:700'>${ro(p.rank)}</td>
+    <td class='ro-td' style='min-width:160px'>
+      <div class='p-name-cell'>
+        <div class='p-avatar'>${initials(p.name)}</div>
+        <span class='p-name'>${p.name}</span>
+      </div>
+    </td>
+    <td><select class='cs' id='${id}-team' style='width:68px;font-weight:700' onchange='markDirty(${id})'>${ALL_TEAMS.map(t=>`<option value='${t}'${p.team===t?' selected':''}>${t}</option>`).join('')}</select></td>
+    <td class='ro-td'>${ro(p.pos)}</td>
+    <td class='ro-td'>${ro(p.age)}</td>
     <td><input class='ci n' id='${id}-aav' type='number' step='0.01' value='${p.aav??''}' oninput='markDirty(${id})'></td>
     <td class='ro-td last-td'>${ro(p.last_g)}</td>
     <td class='ro-td last-td'>${ro(p.last_a)}</td>
     <td class='ro-td last-td' style='font-weight:700;color:#1d4ed8'>${ro(p.last_pts)}</td>
     <td class='proj-td'><input class='ci n' id='${id}-proj_g'   type='number' value='${p.proj_g??''}' oninput='markDirty(${id})'></td>
     <td class='proj-td'><input class='ci n' id='${id}-proj_a'   type='number' value='${p.proj_a??''}' oninput='markDirty(${id})'></td>
-    <td class='proj-td'><input class='ci n' id='${id}-proj_pts' type='number' value='${p.proj_pts??''}' style='font-weight:700' oninput='markDirty(${id})'></td>
+    <td class='proj-td'><input class='ci n' id='${id}-proj_pts' type='number' value='${p.proj_pts??''}' style='font-weight:700;color:#059669' oninput='markDirty(${id})'></td>
     <td><select class='cs' id='${id}-tier' style='color:${tc};font-weight:700' onchange='markDirty(${id})'>${TIERS.map(v=>`<option value='${v}'${p.tier===v?' selected':''}>${v}</option>`).join('')}</select></td>
     <td><select class='cs' id='${id}-risk' onchange='markDirty(${id})'>
       <option value=''>—</option>
@@ -596,7 +775,7 @@ function rowHTML(p) {
       <option value='Medium'${p.risk==='Medium'?' selected':''}>🟡 Moyen</option>
       <option value='High'${p.risk==='High'?' selected':''}>🔴 Élevé</option>
     </select></td>
-    <td style='text-align:center'><input type='checkbox' id='${id}-bust_alert' ${p.bust_alert?'checked':''} onchange='markDirty(${id})' style='width:16px;height:16px;accent-color:#be123c;cursor:pointer'></td>
+    <td style='text-align:center'><input type='checkbox' id='${id}-bust_alert' ${p.bust_alert?'checked':''} onchange='markDirty(${id})' style='width:17px;height:17px;accent-color:#be123c;cursor:pointer'></td>
     <td><input class='ci w' id='${id}-notes' type='text' value='${esc(p.notes||'')}' style='color:#64748b;font-style:italic' oninput='markDirty(${id})'></td>
   </tr>`;
 }
@@ -606,9 +785,14 @@ function goalieRowHTML(p) {
   const tc = TIER_COLORS[p.tier] || '#475569';
   let gs = {}; try { gs = JSON.parse(p.scouting || '{}'); } catch(e) {}
   return `<tr id='row-${id}'>
-    <td class='ro-td'>${ro(p.rank)}</td>
-    <td class='ro-td' style='font-weight:600;color:#1e293b;min-width:140px'>${p.name}</td>
-    <td><select class='cs' id='${id}-team' style='width:70px;font-weight:700' onchange='markDirty(${id})'>${ALL_TEAMS.map(t=>`<option value='${t}'${p.team===t?' selected':''}>${t}</option>`).join('')}</select></td>
+    <td class='ro-td' style='font-weight:700'>${ro(p.rank)}</td>
+    <td class='ro-td' style='min-width:160px'>
+      <div class='p-name-cell'>
+        <div class='p-avatar' style='background:linear-gradient(135deg,#fce7f3,#fbcfe8);color:#be185d'>${initials(p.name)}</div>
+        <span class='p-name'>${p.name}</span>
+      </div>
+    </td>
+    <td><select class='cs' id='${id}-team' style='width:68px;font-weight:700' onchange='markDirty(${id})'>${ALL_TEAMS.map(t=>`<option value='${t}'${p.team===t?' selected':''}>${t}</option>`).join('')}</select></td>
     <td class='ro-td'>${ro(p.age)}</td>
     <td><input class='ci n' id='${id}-aav' type='number' step='0.01' value='${p.aav??''}' oninput='markDirty(${id})'></td>
     <td class='proj-td'><input class='ci n' id='${id}-proj_g'   type='number' value='${p.proj_g??''}' oninput='markDirty(${id})'></td>
@@ -641,7 +825,7 @@ function markDirty(id) {
 async function saveAll() {
   if (!dirty.size) return;
   const btn = document.getElementById('saveAllBtn');
-  btn.disabled = true; btn.textContent = '⏳ Sauvegarde…';
+  btn.disabled = true; btn.innerHTML = '⏳ Sauvegarde…';
   const ids = [...dirty]; let failed = 0;
   await Promise.all(ids.map(async id => {
     const num = (f, fl) => { const v = document.getElementById(`${id}-${f}`)?.value; if (v===''||v==null) return null; return fl ? parseFloat(v) : parseInt(v); };
@@ -667,9 +851,9 @@ async function saveAll() {
       if (i >= 0) players[i] = { ...players[i], ...data };
     } catch (e) { failed++; }
   }));
-  btn.textContent = '💾 Sauvegarder'; btn.disabled = dirty.size === 0;
+  btn.innerHTML = '💾 Sauvegarder'; btn.disabled = dirty.size === 0;
   updateStatus();
-  toast(failed ? 'Échec — console' : `${ids.length} sauvegardé${ids.length>1?'s':''} ✓`, failed ? 'error' : 'success');
+  toast(failed ? 'Échec — voir console' : `${ids.length} joueur${ids.length>1?'s':''} sauvegardé${ids.length>1?'s':''} ✓`, failed ? 'error' : 'success');
 }
 
 // ── HELPERS ──────────────────────────────────────────────
@@ -684,7 +868,7 @@ function setStatus(msg) { setText('statusMsg', msg); }
 function toast(msg, type='') {
   const el = document.getElementById('toast');
   el.textContent = msg; el.className = 'show ' + type;
-  clearTimeout(el._t); el._t = setTimeout(() => el.className = '', 3000);
+  clearTimeout(el._t); el._t = setTimeout(() => el.className = '', 3200);
 }
 </script>
 </body>
