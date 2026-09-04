@@ -963,7 +963,7 @@ let _pvSorted = [];
 
 function calcEff(p) {
   if (!p.aav || p.aav <= 0) return null;
-  const stat = p.pos === 'G' ? p.proj_g : p.proj_pts;
+  const stat = p.pos === 'G' ? (p.proj_g ?? 0) * 2 : p.proj_pts;
   if (!stat) return null;
   return stat / Math.sqrt(p.aav);
 }
