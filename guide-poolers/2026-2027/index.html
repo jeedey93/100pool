@@ -389,7 +389,9 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 .card-stat-item { text-align: center; }
 .card-stat-item .v { font-size: 1.05em; font-weight: 800; }
 .card-stat-item .l { font-size: 0.62em; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
-.card-footer { display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: #fafafa; border-top: 1px solid #f1f5f9; flex-wrap: wrap; }
+.card-footer { padding: 8px 14px; background: #fafafa; border-top: 1px solid #f1f5f9; }
+.card-footer-row1 { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.card-footer-row2 { display: flex; align-items: center; gap: 8px; }
 
 @media (max-width: 768px) {
   .table-wrap { display: none; }
@@ -418,6 +420,15 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   .sleepers-grid { grid-template-columns: 1fr; }
   /* column toggle menu */
   .col-toggle-menu { max-width: calc(100vw - 32px); }
+  /* tier pill: truncate long names on mobile */
+  .tier { max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
+  /* card footer: already split into 2 rows */
+  .card-footer-row1, .card-footer-row2 { flex-wrap: wrap; }
+  /* sleeper cards */
+  .sleeper-card { padding: 14px; }
+  .sleeper-name { font-size: 1em; }
+  /* goalie table group header */
+  .group-row th { font-size: 0.65em; padding: 4px 6px; }
 }
 
 @media (max-width: 480px) {
@@ -1517,10 +1528,11 @@ function renderCards(filtered) {
           <div class='card-stat-item'><div class='v ppg-proj'>${ppg(p.proj_pts, p.proj_gp)}</div><div class='l'>PPG</div></div>
         </div>
       </div>`;
-    return `<div class='player-card ${tierClass(p.tier)}'>
+    const grade = calcGrade(p);
+    return `<div class='player-card ${tierClass(p.tier)}' onclick='openModal(${p.id})' style='cursor:pointer'>
       <div class='card-header'>
         <span class='card-rank'>${i + 1}</span>
-        <div>
+        <div style='flex:1;min-width:0'>
           <div class='card-name'>${p.name}</div>
           ${p.notes ? `<div class='card-note'>${p.notes}</div>` : ''}
         </div>
@@ -1531,13 +1543,16 @@ function renderCards(filtered) {
       </div>
       <div class='card-body'><div class='card-stats'>${statBlock}</div></div>
       <div class='card-footer'>
-        <span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span>
-        <span class='trend trend-${trend}'>${trendLbl}</span>
-        <div class='pv-bar ${pc}' style='flex:1;min-width:60px' onmouseenter='showTooltip(this,"Valeur : ${pv !== null ? pv : `—`}")' onmouseleave='hideTooltip()'>
-          <span class='pv-num'>${pv !== null ? pv : '—'}</span>
-          <div class='pv-track'><div class='pv-fill' style='width:${pv !== null ? Math.min(100, Math.round((pv/_effMax)*100)) : 0}%'></div></div>
+        <div class='card-footer-row1'>
+          <span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span>
+          <span class='trend trend-${trend}'>${trendLbl}</span>
+          ${p.bandaid ? `<span style='font-size:0.9em'>🩹</span>` : ''}
+          ${p.risk && p.risk !== 'Low' ? `<span class='risk risk-${p.risk}' style='font-size:0.75em;padding:2px 6px'>${p.risk === 'Medium' ? '🟡' : '🔴'}</span>` : ''}
         </div>
-        <span class='salary'>${aav}</span>
+        <div class='card-footer-row2'>
+          <span class='salary'>${aav}</span>
+          ${grade ? `<span class='grade-badge ${gradeClass(grade)}'>${grade}</span>` : ''}
+        </div>
       </div>
     </div>`;
   }).join('');
