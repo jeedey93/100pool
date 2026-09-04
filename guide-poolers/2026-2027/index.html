@@ -1330,10 +1330,7 @@ function buildGoalieRowHTML(p, displayRank) {
       ${(() => { const gt = getTrendGoalie(p); const gDiffStr = gt.diff > 0 ? '+' + gt.diff : '' + gt.diff; return `<td class='cg-trend'><span class='trend trend-${gt.trend}'>${gt.trend === 'up' ? '↑' : gt.trend === 'down' ? '↓' : '→'} ${gDiffStr} V</span></td>`; })()}
       <td class='cg-salary'><span class='salary'>${aav}</span></td>
       <td class='cg-tier'><span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span></td>
-      <td class='cg-value'><div class='pv-bar ${pc}' onmouseenter='showTooltip(this,"Valeur = V proj ÷ √AAV(M$)${pv !== null ? ` = ${pv}` : ` — AAV indisponible`}")' onmouseleave='hideTooltip()'>
-        <span class='pv-num'>${pv !== null ? pv : '—'}</span>
-        ${pv !== null ? `<div class='pv-track'><div class='pv-fill' style='width:${Math.min(100, Math.round((pv/_effMax)*100))}%'></div></div>` : ''}
-      </div>${grade ? `<span class='grade-badge ${gradeClass(grade)}'>${grade}</span>` : ''}</td>
+      <td class='cg-value'>${grade ? `<span class='grade-badge ${gradeClass(grade)}'>${grade}</span>` : '—'}</td>
       <td class='cg-risk'>${riskHtml}</td>
       <td class='cg-injury' style='text-align:center;font-size:1em;'>${bandaid || '—'}</td>
       <td class='cg-cat'>${cat ? `<span class='cat-badge cat-${catKey}'>${cat}</span>` : '—'}</td>
@@ -1397,10 +1394,7 @@ function buildRowHTML(p, displayRank) {
       ${!isGoalie ? `<td class='cg-pp'><span class='pp-pct'>${ppPct}</span></td>` : ''}
       <td class='cg-tier'><span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span></td>
       ${isGoalie ? (() => { const gt = getTrendGoalie(p); const gDiff = gt.diff; const gDiffStr = gDiff > 0 ? '+' + gDiff : '' + gDiff; return `<td class='cg-trend'><span class='trend trend-${gt.trend}'>${gt.trend === 'up' ? '↑' : gt.trend === 'down' ? '↓' : '→'} ${gDiffStr} V</span></td>`; })() : `<td class='cg-trend'><span class='trend trend-${trend}'>${trendLbl}</span></td>`}
-      <td class='cg-value'><div class='pv-bar ${pc}' onmouseenter='showTooltip(this,"Valeur = PTS proj ÷ √AAV(M$)${pv !== null ? ` = ${pv}` : ` — AAV indisponible`}")' onmouseleave='hideTooltip()'>
-        <span class='pv-num'>${pv !== null ? pv : '—'}</span>
-        ${pv !== null ? `<div class='pv-track'><div class='pv-fill' style='width:${Math.min(100, Math.round((pv/_effMax)*100))}%'></div></div>` : ''}
-      </div>${grade ? `<span class='grade-badge ${gradeClass(grade)}'>${grade}</span>` : ''}</td>
+      <td class='cg-value'>${grade ? `<span class='grade-badge ${gradeClass(grade)}'>${grade}</span>` : '—'}</td>
       <td class='cg-risk'>${riskHtml}</td>
       <td class='cg-injury' style='text-align:center;font-size:1em;'>${bandaid || '—'}</td>
       <td class='cg-cat'>${p.scouting_category ? `<span class='cat-badge cat-${['À ÉVITER','À EVITER'].includes(p.scouting_category.toUpperCase()) ? 'AEVITER' : p.scouting_category.toUpperCase()}'>${p.scouting_category}</span>` : '—'}</td>
@@ -1785,7 +1779,7 @@ function openModal(id) {
     if (gs.svp) cards.push(`<div class='modal-stat-card'><div class='sc-val'>${gs.svp.toFixed(3)}</div><div class='sc-lbl'>SV%</div></div>`);
   }
   if (p.upside) cards.push(`<div class='modal-stat-card purple'><div class='sc-val'>${p.upside}</div><div class='sc-lbl'>Plafond</div></div>`);
-  if (pv)       cards.push(`<div class='modal-stat-card'><div class='sc-val'>${grade ? `<span class='grade-badge ${gradeClass(grade)}'>${grade}</span> ` : ''}${pv.toFixed(1)}</div><div class='sc-lbl'>Valeur</div></div>`);
+  if (grade)    cards.push(`<div class='modal-stat-card'><div class='sc-val'><span class='grade-badge ${gradeClass(grade)}' style='font-size:1.1em;padding:3px 10px'>${grade}</span></div><div class='sc-lbl'>Valeur</div></div>`);
   if (p.pp_pct != null) cards.push(`<div class='modal-stat-card'><div class='sc-val'>${p.pp_pct}%</div><div class='sc-lbl'>PP%</div></div>`);
   if (p.aav)    cards.push(`<div class='modal-stat-card'><div class='sc-val'>${p.aav}M$</div><div class='sc-lbl'>AAV</div></div>`);
   document.getElementById('modalStatsRow').innerHTML = cards.length
