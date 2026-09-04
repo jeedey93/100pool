@@ -1149,6 +1149,7 @@ function sortedGoalies(players) {
     if (goalieSortCol === '_goalie_otl')  return gs.otl ?? 0;
     if (goalieSortCol === '_goalie_wpct') { const gp = p.proj_gp ?? gs.gp; const w = p.proj_g ?? gs.w; return (gp && w != null) ? w / gp : 0; }
     if (goalieSortCol === '_goalie_trend') return getTrendGoalie(p).diff;
+    if (goalieSortCol === '_pv') return calcEff(p) ?? -1;
     if (goalieSortCol === 'risk')  return p.risk === 'Low' ? 1 : p.risk === 'Medium' ? 2 : 3;
     if (goalieSortCol === 'injury') return p.bandaid ? 1 : 0;
     if (goalieSortCol === 'tier')  return parseInt((p.tier || '').match(/\d+/)?.[0] || '99');
