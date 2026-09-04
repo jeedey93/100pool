@@ -321,11 +321,11 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 .pv-70 { color: #2d8a3e; } .pv-70 .pv-fill { background: linear-gradient(90deg,#2d8a3e,#52c76e); } .pv-70 .pv-num { background: #dcfce7; color: #15803d; }
 .pv-50 { color: #64748b; } .pv-50 .pv-fill { background: #94a3b8; } .pv-50 .pv-num { background: #f1f5f9; color: #475569; }
 .pv-lo { color: #94a3b8; } .pv-lo .pv-fill { background: #cbd5e1; } .pv-lo .pv-num { background: #f1f5f9; color: #94a3b8; }
-.grade-badge { display:inline-block; font-size:0.78em; font-weight:800; padding:1px 6px; border-radius:5px; letter-spacing:0.3px; vertical-align:middle; }
-.grade-a { background:#dcfce7; color:#15803d; }
-.grade-b { background:#dbeafe; color:#1d4ed8; }
-.grade-c { background:#fef9c3; color:#a16207; }
-.grade-d { background:#fee2e2; color:#dc2626; }
+.grade-badge { display: inline-block; font-size: 0.75em; font-weight: 700; padding: 4px 10px; border-radius: 99px; white-space: nowrap; letter-spacing: 0.3px; }
+.grade-a { background: #d1fae5; color: #065f46; border: 1px solid #34d399; }
+.grade-b { background: #dbeafe; color: #1e3a8a; border: 1px solid #3b82f6; }
+.grade-c { background: #fef9c3; color: #713f12; border: 1px solid #fbbf24; }
+.grade-d { background: #fee2e2; color: #991b1b; border: 1px solid #f87171; }
 
 /* ── BY TEAM ── */
 .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
@@ -627,7 +627,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
               <label><input type='checkbox' id='col-pp' onchange='applyColVis()'> PP% (points avantage numérique)</label>
               <label><input type='checkbox' id='col-tier' checked onchange='applyColVis()'> Palier</label>
               <label><input type='checkbox' id='col-trend' checked onchange='applyColVis()'> Tendance</label>
-              <label><input type='checkbox' id='col-value' onchange='applyColVis()'> Valeur (PTS÷√AAV)</label>
+              <label><input type='checkbox' id='col-value' checked onchange='applyColVis()'> Valeur (PTS÷√AAV)</label>
               <label><input type='checkbox' id='col-risk' checked onchange='applyColVis()'> 🔴 Niveau de risque</label>
               <label><input type='checkbox' id='col-injury' checked onchange='applyColVis()'> 🩹 Blessures / Risque santé</label>
               <label><input type='checkbox' id='col-cat' checked onchange='applyColVis()'> 🏷️ Catégorie (Gamble/Sleeper…)</label>
