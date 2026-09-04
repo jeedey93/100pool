@@ -422,6 +422,9 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   .col-toggle-menu { max-width: calc(100vw - 32px); }
   /* tier pill: truncate long names on mobile */
   .tier { max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
+  /* tier/risk filter row: scroll horizontally instead of overflowing */
+  .controls-row-pills { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
+  .controls-row-pills .filter-group { flex-shrink: 0; }
   /* card footer: already split into 2 rows */
   .card-footer-row1, .card-footer-row2 { flex-wrap: wrap; }
   /* sleeper cards */
@@ -649,10 +652,10 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
       </div>
 
       <!-- Row 2: Tier + Risk -->
-      <div class='controls-row'>
+      <div class='controls-row controls-row-pills'>
         <!-- Tier -->
         <div class='filter-group' id='tierPills'>
-          <span class='filter-label'>Palier</span>
+          <span class='filter-label'>Tier</span>
           <button class='pill active' data-filter='tier' data-value='' onclick='setPill(this,"tier")'>Tous</button>
         </div>
         <div class='filter-divider'></div>
