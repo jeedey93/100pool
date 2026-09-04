@@ -1659,7 +1659,19 @@ async function loadNhlHistory(nhlId, pos, projRow) {
   const history = projRow.season_history
     ? (typeof projRow.season_history === 'string' ? JSON.parse(projRow.season_history) : projRow.season_history)
     : [];
-  if (!history || !history.length) return '<div class="modal-history-loading">Aucune saison NHL disponible.</div>';
+  if (!history || !history.length) {
+    const isG = pos === 'G';
+    if (isG) {
+      return `<table class='modal-history-table'>
+        <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>V</th><th>GAA</th><th>SV%</th><th>SO</th></tr>
+        <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>—</td><td>—</td><td>—</td></tr>
+      </table>`;
+    }
+    return `<table class='modal-history-table'>
+      <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>B</th><th>A</th><th>PTS</th><th>PPG</th></tr>
+      <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>${projRow.proj_a??'—'}</td><td>${projRow.proj_pts??'—'}</td><td>${ppg(projRow.proj_pts,projRow.proj_gp)}</td></tr>
+    </table>`;
+  }
   const isG = pos === 'G';
   // Skaters stored newest-first, goalies oldest-first — normalize to oldest-first for display
   const sorted = isG ? [...history] : [...history].reverse();
