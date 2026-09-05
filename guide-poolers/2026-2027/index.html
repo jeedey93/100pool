@@ -900,7 +900,7 @@ async function checkAccess() {
 function exportExcel() {
   const filtered = getFiltered();
   const skaters  = filtered.filter(p => p.pos !== 'G');
-  const goalies  = filtered.filter(p => p.pos === 'G');
+  const goalies  = filtered.filter(p => p.pos === 'G').sort((a, b) => (b.proj_g ?? 0) - (a.proj_g ?? 0));
 
   const esc = v => {
     if (v == null || v === '') return '';
