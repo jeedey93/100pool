@@ -832,85 +832,65 @@ async function checkAccess() {
     if (valid) return;
     localStorage.removeItem('pool_token');
   }
-  // Afficher l'overlay mot de passe
+  // Afficher l'overlay email
   return new Promise(resolve => {
     const overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#163d1c 0%,#1e6b2e 40%,#2d8a3e 100%);display:flex;align-items:center;justify-content:center;padding:24px;';
     overlay.innerHTML = `
-      <div style='background:white;border-radius:20px;padding:40px 36px;max-width:380px;width:100%;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,0.3);'>
+      <div style='background:white;border-radius:22px;padding:40px 36px;max-width:380px;width:100%;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,0.3);'>
         <img src='../../100pool.jpg' alt='100% Pool' style='width:72px;height:72px;border-radius:18px;object-fit:cover;margin:0 auto 20px;display:block;box-shadow:0 8px 24px rgba(0,0,0,0.15);'>
         <h2 style='font-size:1.3em;font-weight:900;color:#0f172a;margin-bottom:8px;'>Guide des poolers 2026-27</h2>
-        <p style='color:#64748b;font-size:0.88em;margin-bottom:28px;line-height:1.6;'>Entre ton mot de passe ou ton lien d'accès<br>reçu par courriel après ton achat.</p>
-        <input id='pw-input' type='password' placeholder='Mot de passe' style='width:100%;padding:13px 16px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:1em;outline:none;color:#0f172a;margin-bottom:8px;font-family:inherit;'>
+        <p style='color:#64748b;font-size:0.88em;margin-bottom:24px;line-height:1.6;'>Entre l'adresse courriel utilisée lors de ton achat pour accéder au guide.</p>
+        <input id='pw-input' type='email' inputmode='email' autocomplete='email' placeholder='ton@email.com'
+          style='width:100%;padding:13px 16px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:1em;outline:none;color:#0f172a;margin-bottom:8px;font-family:inherit;'>
         <div id='pw-error' style='color:#e11d48;font-size:0.8em;margin-bottom:12px;min-height:18px;'></div>
-        <button id='pw-btn' style='width:100%;background:#f5c842;color:#1a3d10;font-weight:800;font-size:1em;padding:14px;border-radius:10px;border:none;cursor:pointer;transition:background 0.2s;'>Accéder au guide</button>
+        <button id='pw-btn' style='width:100%;background:#f5c842;color:#1a3d10;font-weight:800;font-size:1em;padding:14px;border-radius:10px;border:none;cursor:pointer;transition:background 0.2s;'>Accéder au guide →</button>
         <div style='margin-top:20px;border-top:1px solid #f1f5f9;padding-top:16px;'>
           <a href='/guide-poolers/' style='color:#64748b;font-size:0.8em;text-decoration:none;'>Pas encore de guide? <span style='color:#2d8a3e;font-weight:700;text-decoration:underline;'>Obtenir le guide — 5 $</span></a>
-        </div>
-        <div style='margin-top:12px;'>
-          <button id='resend-toggle' style='background:none;border:none;cursor:pointer;color:#94a3b8;font-size:0.78em;text-decoration:underline;padding:0;'>Perdu ton lien d'accès?</button>
-        </div>
-        <div id='resend-form' style='display:none;margin-top:14px;border-top:1px solid #f1f5f9;padding-top:14px;'>
-          <input id='resend-email' type='email' placeholder='ton@email.com' style='width:100%;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:0.9em;outline:none;color:#0f172a;margin-bottom:8px;font-family:inherit;box-sizing:border-box;'>
-          <button id='resend-btn' style='width:100%;background:#2d8a3e;color:white;font-weight:700;font-size:0.9em;padding:11px;border-radius:10px;border:none;cursor:pointer;'>Renvoyer mon lien</button>
-          <div id='resend-msg' style='font-size:0.78em;margin-top:8px;min-height:16px;color:#64748b;'></div>
         </div>
       </div>`;
     document.body.appendChild(overlay);
     const input = overlay.querySelector('#pw-input');
-    const btn = overlay.querySelector('#pw-btn');
-    const err = overlay.querySelector('#pw-error');
+    const btn   = overlay.querySelector('#pw-btn');
+    const err   = overlay.querySelector('#pw-error');
     btn.onmouseover = () => btn.style.background = '#f9d55a';
-    btn.onmouseout = () => btn.style.background = '#f5c842';
+    btn.onmouseout  = () => btn.style.background = '#f5c842';
     const EDGE_AUTH = 'https://fifurqlitkywtmhgtzeu.supabase.co/functions/v1/guide-auth';
     input.focus();
     async function attempt() {
-      const pw = input.value.trim();
-      if (!pw) return;
+      const email = input.value.trim().toLowerCase();
+      if (!email) return;
       btn.disabled = true; btn.textContent = 'Vérification…';
+      err.textContent = ''; input.style.borderColor = '#e2e8f0';
       try {
         const res = await fetch(EDGE_AUTH, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password: pw }),
+          body: JSON.stringify({ email }),
         });
         const data = await res.json();
-        if (!res.ok || !data.token) throw new Error(data.error || 'Échec');
-        localStorage.setItem('pool_pw_token', data.token);
-        overlay.remove();
-        resolve();
+        if (res.ok && data.token) {
+          localStorage.setItem('pool_pw_token', data.token);
+          overlay.remove();
+          resolve();
+        } else if (data.error === 'expired') {
+          err.textContent = 'Ton accès est expiré. Contacte-nous à guide@100pool.ca';
+          input.style.borderColor = '#e11d48';
+        } else {
+          err.textContent = 'Aucun achat trouvé pour cet email.';
+          input.style.borderColor = '#e11d48';
+          input.select();
+        }
       } catch (e) {
-        err.textContent = e.message === 'Invalid password' ? 'Mot de passe incorrect.' : 'Erreur — réessaie plus tard.';
-        input.style.borderColor = '#e11d48';
-        input.value = ''; input.focus();
+        err.textContent = 'Erreur de connexion — réessaie plus tard.';
       } finally {
-        btn.disabled = false; btn.textContent = 'Accéder au guide';
+        btn.disabled = false; btn.textContent = 'Accéder au guide →';
       }
     }
     btn.onclick = attempt;
-    input.onkeydown = e => { if (e.key === 'Enter') attempt(); if (e.key !== 'Enter') { err.textContent = ''; input.style.borderColor = '#e2e8f0'; } };
-    overlay.querySelector('#resend-toggle').onclick = () => {
-      const f = overlay.querySelector('#resend-form');
-      f.style.display = f.style.display === 'none' ? 'block' : 'none';
-    };
-    overlay.querySelector('#resend-btn').onclick = async () => {
-      const emailVal = overlay.querySelector('#resend-email').value.trim();
-      const msg = overlay.querySelector('#resend-msg');
-      const rbtn = overlay.querySelector('#resend-btn');
-      if (!emailVal) { msg.style.color = '#e11d48'; msg.textContent = 'Entre ton adresse courriel.'; return; }
-      rbtn.disabled = true; rbtn.textContent = 'Envoi…';
-      try {
-        const res = await fetch('https://fifurqlitkywtmhgtzeu.supabase.co/functions/v1/resend-access', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
-          body: JSON.stringify({ email: emailVal }),
-        });
-        msg.style.color = '#15803d';
-        msg.textContent = 'Si un accès existe pour cet email, le lien a été renvoyé.';
-      } catch(e) {
-        msg.style.color = '#e11d48'; msg.textContent = 'Erreur — réessaie plus tard.';
-      }
-      rbtn.disabled = false; rbtn.textContent = 'Renvoyer mon lien';
+    input.onkeydown = e => {
+      if (e.key === 'Enter') attempt();
+      else { err.textContent = ''; input.style.borderColor = '#e2e8f0'; }
     };
   });
 }
