@@ -580,7 +580,7 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 <script>
 // ── AUTH ─────────────────────────────────────────────────
 const EDGE_BASE = 'https://fifurqlitkywtmhgtzeu.supabase.co/functions/v1';
-let adminToken = sessionStorage.getItem('admin_token') ?? '';
+let adminToken = localStorage.getItem('admin_token') ?? '';
 
 // On page load: if we already have a token, skip the password overlay
 window.addEventListener('DOMContentLoaded', () => {
@@ -606,7 +606,7 @@ async function checkPw() {
     const data = await res.json();
     if (!res.ok || !data.token) throw new Error(data.error || 'Échec');
     adminToken = data.token;
-    sessionStorage.setItem('admin_token', adminToken);
+    localStorage.setItem('admin_token', adminToken);
     document.getElementById('pw-overlay').style.display = 'none';
     init();
   } catch (e) {
@@ -642,7 +642,7 @@ async function dbFetch(path, opts = {}) {
   const res = await fetch(`${PROXY}${path}`, { ...opts, headers: authHeaders(opts.headers ?? {}) });
   if (res.status === 401) {
     // Token expired — force re-login
-    sessionStorage.removeItem('admin_token');
+    localStorage.removeItem('admin_token');
     adminToken = '';
     document.getElementById('pw-overlay').style.display = '';
     document.getElementById('pw-error').textContent = 'Session expirée, veuillez vous reconnecter.';
