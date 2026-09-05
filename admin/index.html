@@ -686,8 +686,10 @@ async function loadAcces() {
   }
 }
 
+const TEST_EMAILS = ['justin.do@hotmail.com', '100pool.podcast@gmail.com'];
+
 function renderAcces() {
-  const rows = accesData;
+  const rows = accesData.filter(r => !TEST_EMAILS.includes((r.email ?? '').toLowerCase()));
   const now = new Date();
   const todayStr = now.toISOString().slice(0, 10);
   const weekAgo  = new Date(now - 7 * 86400000);
