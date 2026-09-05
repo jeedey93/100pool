@@ -167,103 +167,131 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 #toast.success { border-left-color: #22c55e; color: #15803d; }
 #toast.error   { border-left-color: #ef4444; color: #dc2626; }
 
+/* ── MOBILE BOTTOM NAV ── */
+.mobile-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(8,15,9,0.97);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  display: none;
+  align-items: stretch;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.mobile-nav-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,0.35); font-size: 0.68em; font-weight: 700; letter-spacing: 0.2px;
+  transition: all 0.18s; padding: 10px 4px 8px; min-height: 60px;
+}
+.mobile-nav-item .mn-icon {
+  font-size: 1.6em; line-height: 1;
+  transition: transform 0.18s;
+}
+.mobile-nav-item.active {
+  color: #4ade80;
+}
+.mobile-nav-item.active .mn-icon {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 0 6px rgba(74,222,128,0.5));
+}
+.mobile-nav-item:active { opacity: 0.7; }
+.mn-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: #4ade80; opacity: 0;
+  transition: opacity 0.18s;
+  margin-top: -2px;
+}
+.mobile-nav-item.active .mn-dot { opacity: 1; }
+
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .sidebar { display: none; }
-  .main { margin-left: 0; padding-bottom: 72px; }
-  .topbar { padding: 0 14px; height: 54px; }
-  .topbar-date { display: none; }
-  .topbar-title { font-size: 0.95em; }
-  .content { padding: 14px 12px 80px; }
+  .main { margin-left: 0; }
+  .topbar {
+    padding: 0 16px;
+    height: 58px;
+    background: linear-gradient(135deg, #080f09 0%, #0f1f13 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    box-shadow: none;
+  }
+  .topbar-title { font-size: 1em; font-weight: 900; color: white; }
+  .topbar-date { display: block; font-size: 0.72em; color: rgba(255,255,255,0.4); }
+  .topbar-left { gap: 10px; }
+  .topbar-actions .btn { font-size: 0.78em; padding: 7px 14px; }
+  .content { padding: 16px 14px; padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
 
   /* stat cards: 2 cols */
-  .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-  .stat-card { padding: 14px 12px; border-radius: 14px; }
-  .stat-card .stat-val { font-size: 1.55em; }
-  .stat-card .stat-lbl { font-size: 0.7em; }
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .stat-card { padding: 16px 14px 14px; border-radius: 16px; }
+  .stat-card .stat-val { font-size: 1.8em; }
+  .stat-card .stat-lbl { font-size: 0.72em; }
   .stat-card .stat-sub { display: none; }
-  .stat-icon-wrap { width: 32px; height: 32px; font-size: 0.95em; border-radius: 9px; }
-  .stat-trend { display: none; }
-  .stat-card-top { margin-bottom: 10px; }
+  .stat-icon-wrap { width: 36px; height: 36px; font-size: 1.05em; border-radius: 10px; }
+  .stat-trend { font-size: 0.68em; padding: 2px 7px; }
+  .stat-card-top { margin-bottom: 12px; }
 
   /* chart */
-  .chart-wrap { padding: 14px 12px 10px; border-radius: 14px; margin-bottom: 16px; }
-  .chart-bars { height: 65px; gap: 3px; }
-  .chart-title { font-size: 0.82em; }
-  .chart-subtitle { font-size: 0.7em; }
-  .bar-lbl { font-size: 0.52em; }
-  .bar-val { font-size: 0.58em; }
+  .chart-wrap { padding: 16px 14px 12px; border-radius: 16px; margin-bottom: 16px; }
+  .chart-bars { height: 72px; gap: 3px; }
+  .chart-title { font-size: 0.86em; }
+  .chart-subtitle { font-size: 0.72em; }
+  .bar-lbl { font-size: 0.54em; }
+  .bar-val { font-size: 0.62em; }
 
   /* cards & tables */
-  .card { border-radius: 14px; margin-bottom: 14px; }
-  .card-header { padding: 12px 14px; }
-  .card-header h3 { font-size: 0.86em; }
-  .card-header .btn { font-size: 0.72em; padding: 5px 10px; }
+  .card { border-radius: 16px; margin-bottom: 14px; }
+  .card-header { padding: 14px 16px; }
+  .card-header h3 { font-size: 0.9em; }
+  .card-header .btn { font-size: 0.74em; padding: 6px 12px; }
   .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  table { font-size: 0.8em; }
-  thead th { padding: 8px 10px; font-size: 0.66em; }
-  tbody td { padding: 8px 10px; }
+  table { font-size: 0.82em; }
+  thead th { padding: 9px 12px; font-size: 0.68em; }
+  tbody td { padding: 10px 12px; }
 
-  /* recent purchases: stack better */
-  .email-cell { gap: 8px; }
-  .email-text { font-size: 0.84em; word-break: break-all; }
-  .buyer-avatar { width: 30px; height: 30px; font-size: 0.65em; flex-shrink: 0; }
+  /* recent purchases */
+  .email-cell { gap: 10px; }
+  .email-text { font-size: 0.86em; word-break: break-all; }
+  .buyer-avatar { width: 34px; height: 34px; font-size: 0.7em; flex-shrink: 0; }
 
-  /* player names in table */
-  .p-avatar { width: 26px; height: 26px; font-size: 0.6em; margin-right: 6px; }
-  .p-name { font-size: 0.9em; }
+  /* player names */
+  .p-avatar { width: 28px; height: 28px; font-size: 0.62em; margin-right: 8px; }
+  .p-name { font-size: 0.92em; }
 
   /* section header */
-  .section-header { margin-bottom: 14px; }
-  .section-header h2 { font-size: 1.1em; }
+  .section-header { margin-bottom: 16px; }
+  .section-header h2 { font-size: 1.2em; }
 
   /* password box */
-  .pw-box { padding: 32px 22px 26px; margin: 14px; border-radius: 20px; }
-  .pw-logo { width: 66px; height: 66px; }
-  .pw-box h2 { font-size: 1.25em; }
+  .pw-box { padding: 36px 24px 28px; margin: 16px; border-radius: 22px; }
+  .pw-logo { width: 70px; height: 70px; }
+  .pw-box h2 { font-size: 1.3em; }
 
   /* toolbar */
-  .toolbar { padding: 10px 12px; flex-wrap: wrap; gap: 8px; }
+  .toolbar { padding: 12px 14px; flex-wrap: wrap; gap: 8px; }
   .search-wrap { width: 100%; }
   .search-wrap input { width: 100%; }
   .status-pill { margin-left: 0; }
 
-  /* team filter: horizontal scroll */
-  .team-filter { padding: 8px 12px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  /* team filter */
+  .team-filter { padding: 10px 14px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .team-logo-btn { flex-shrink: 0; }
 
-  /* acces table: hide expiration on small screens */
+  /* acces table: hide less important cols */
   .hide-mobile { display: none; }
 
   .mobile-nav { display: flex; }
 }
 
 @media (max-width: 400px) {
-  .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-  .stat-card .stat-val { font-size: 1.35em; }
-  .content { padding: 12px 10px 80px; }
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat-card .stat-val { font-size: 1.6em; }
+  .content { padding: 12px 12px; padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
 }
 
 @media (min-width: 769px) {
-  .mobile-nav { display: none; }
+  .mobile-nav { display: none !important; }
 }
-
-/* ── MOBILE BOTTOM NAV ── */
-.mobile-nav {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
-  background: #080f09; border-top: 1px solid rgba(255,255,255,0.08);
-  height: 64px; align-items: stretch;
-  padding-bottom: env(safe-area-inset-bottom);
-}
-.mobile-nav-item {
-  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 3px; background: none; border: none; cursor: pointer;
-  color: rgba(255,255,255,0.38); font-size: 0.6em; font-weight: 700; letter-spacing: 0.2px;
-  transition: color 0.18s; padding: 8px 4px;
-}
-.mobile-nav-item .mn-icon { font-size: 1.45em; line-height: 1; }
-.mobile-nav-item.active { color: #4ade80; }
-.mobile-nav-item:hover { color: rgba(255,255,255,0.75); }
 </style>
 </head>
 <body>
@@ -371,6 +399,15 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
           <div class='stat-lbl'>Cette semaine</div>
           <div class='stat-sub'>&nbsp;</div>
         </div>
+        <div class='stat-card' style='--accent:#e11d48;--accent-bg:#fff1f2'>
+          <div class='stat-card-top'>
+            <div class='stat-icon-wrap'>🛒</div>
+            <span class='stat-trend neutral' id='dash-last-when'>—</span>
+          </div>
+          <div class='stat-val' style='font-size:1.1em;letter-spacing:-0.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis' id='dash-last-email'>—</div>
+          <div class='stat-lbl'>Dernier achat</div>
+          <div class='stat-sub' id='dash-last-sub'>&nbsp;</div>
+        </div>
         <div class='stat-card' style='--accent:#059669;--accent-bg:#f0fdf4'>
           <div class='stat-card-top'>
             <div class='stat-icon-wrap'>💵</div>
@@ -388,15 +425,6 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
           <div class='stat-val' id='dash-net'>—</div>
           <div class='stat-lbl'>Net (Après frais)</div>
           <div class='stat-sub' style='color:#94a3b8'>Après frais Stripe</div>
-        </div>
-        <div class='stat-card' style='--accent:#d97706;--accent-bg:#fffbeb'>
-          <div class='stat-card-top'>
-            <div class='stat-icon-wrap'>⛸</div>
-            <span class='stat-trend neutral'>guide</span>
-          </div>
-          <div class='stat-val' id='dash-players'>—</div>
-          <div class='stat-lbl'>Joueurs dans le guide</div>
-          <div class='stat-sub'>&nbsp;</div>
         </div>
       </div>
 
@@ -562,16 +590,16 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 <!-- MOBILE BOTTOM NAV -->
 <nav class='mobile-nav' id='mobile-nav'>
   <button class='mobile-nav-item active' onclick='switchTab("dashboard",this)'>
-    <span class='mn-icon'>📊</span>Dashboard
+    <span class='mn-icon'>📊</span>Dashboard<span class='mn-dot'></span>
   </button>
   <button class='mobile-nav-item' onclick='switchTab("acces",this)'>
-    <span class='mn-icon'>💳</span>Accès
+    <span class='mn-icon'>💳</span>Accès<span class='mn-dot'></span>
   </button>
   <button class='mobile-nav-item' onclick='switchTab("skaters",this)'>
-    <span class='mn-icon'>⛸</span>Patineurs
+    <span class='mn-icon'>⛸</span>Patineurs<span class='mn-dot'></span>
   </button>
   <button class='mobile-nav-item' onclick='switchTab("goalies",this)'>
-    <span class='mn-icon'>🥅</span>Gardiens
+    <span class='mn-icon'>🥅</span>Gardiens<span class='mn-dot'></span>
   </button>
 </nav>
 
@@ -730,6 +758,22 @@ function renderAcces() {
   setText('dash-sub-total', `${week} cette semaine`);
   setText('dash-sub-today', yesterday > 0 ? `${yesterday} hier` : '');
 
+  // Dernier achat
+  const sorted = [...rows].filter(r => r.created_at).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  if (sorted.length) {
+    const last = sorted[0];
+    const email = last.email ?? '—';
+    const short = email.length > 22 ? email.slice(0, 20) + '…' : email;
+    const diffMs = now - new Date(last.created_at);
+    const diffMin = Math.floor(diffMs / 60000);
+    const diffH = Math.floor(diffMin / 60);
+    const diffD = Math.floor(diffH / 24);
+    const when = diffD >= 1 ? `il y a ${diffD}j` : diffH >= 1 ? `il y a ${diffH}h` : diffMin <= 1 ? 'à l\'instant' : `il y a ${diffMin} min`;
+    setText('dash-last-email', short);
+    setText('dash-last-when', when);
+    setText('dash-last-sub', last.created_at ? new Date(last.created_at).toLocaleDateString('fr-CA') : '');
+  }
+
   // Accès tab cards
   setText('acces-count', rows.length);
   setText('acces-today', today);
@@ -807,7 +851,6 @@ async function loadPlayers() {
     if (!res.ok) throw new Error(await res.text());
     players = await res.json();
     setStatus(`${players.length} joueurs`);
-    setText('dash-players', players.length);
     renderTable();
   } catch (e) { setStatus('Échec'); toast('Erreur: ' + e.message, 'error'); }
 }
