@@ -9,10 +9,10 @@ const CORS = {
 const ADMIN_PASSWORD = Deno.env.get('ADMIN_PASSWORD')!;
 const JWT_SECRET     = Deno.env.get('ADMIN_JWT_SECRET')!;
 
-// Sign a minimal JWT (HS256) valid for 8 hours
+// Sign a minimal JWT (HS256) valid for 90 days
 async function signJwt(secret: string): Promise<string> {
   const header  = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
-  const exp     = Math.floor(Date.now() / 1000) + 8 * 3600;
+  const exp     = Math.floor(Date.now() / 1000) + 90 * 24 * 3600;
   const payload = btoa(JSON.stringify({ role: 'admin', exp })).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
 
   const key = await crypto.subtle.importKey(
