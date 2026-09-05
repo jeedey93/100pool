@@ -168,6 +168,17 @@ tbody tr.tier-row-11 { border-left: 3px solid #fda4af; }
 /* Bust alert badge */
 .bust { display: inline-flex; align-items: center; gap: 3px; font-size: 0.72em; font-weight: 800; padding: 3px 8px; border-radius: 99px; background: #fff1f2; color: #be123c; border: 1px solid #fda4af; white-space: nowrap; }
 
+/* ── DRAFT MODE ── */
+tr.drafted td { opacity: 0.35; text-decoration: line-through; }
+tr.drafted td .player-name { text-decoration: line-through; color: #94a3b8; }
+tr.drafted { background: #f8f9fa !important; cursor: pointer; }
+tr:not(.drafted) { cursor: pointer; }
+.card-list .drafted-card { opacity: 0.4; }
+.card-list .drafted-card .card-name { text-decoration: line-through; color: #94a3b8; }
+.draft-badge { font-size: 0.65em; font-weight: 800; background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 1px 6px; border-radius: 99px; margin-left: 5px; }
+.btn-reset-draft { background: #fff1f2; border: 1.5px solid #fca5a5; color: #dc2626; }
+.btn-reset-draft:hover { background: #fee2e2; border-color: #f87171; }
+
 /* ── SCOUTING MODAL ── */
 .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.65); z-index: 8000; display: flex; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(8px); height: 100dvh; }
 .modal-overlay.hidden { display: none; }
@@ -481,6 +492,10 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   nav, .controls, .tabs, .disclaimer, .tooltip, .col-toggle-menu,
   .card-list { display: none !important; }
 
+  /* Drafted players: keep strikethrough in print */
+  tr.drafted td { opacity: 0.3 !important; text-decoration: line-through !important; }
+  .btn-reset-draft { display: none !important; }
+
   /* Force table visible (hidden on mobile) */
   .table-wrap { display: block !important; overflow: visible !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; }
 
@@ -649,6 +664,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
           </div>
           <button class='ctrl-btn btn-primary' onclick='window.print()'>🖨 Imprimer</button>
           <button class='ctrl-btn' onclick='exportExcel()'>📥 Exporter</button>
+          <button class='ctrl-btn btn-reset-draft' id='resetDraftBtn' onclick='resetDraft()' style='display:none'>✕ Reset draft</button>
         </div>
       </div>
 
@@ -767,6 +783,22 @@ document.addEventListener('click', function(e) {
 });
 let allPlayers = [];
 let sortCol = 'proj_pts';
+let draftedIds = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]'));
+
+function toggleDraft(id, event) {
+  if (event) { event.stopPropagation(); }
+  if (draftedIds.has(id)) draftedIds.delete(id);
+  else draftedIds.add(id);
+  localStorage.setItem('pool_drafted', JSON.stringify([...draftedIds]));
+  renderAll();
+}
+
+function resetDraft() {
+  if (!draftedIds.size) return;
+  draftedIds.clear();
+  localStorage.removeItem('pool_drafted');
+  renderAll();
+}
 let sortDir = 'desc';
 let goalieSortCol = 'proj_g';
 let goalieSortDir = 'desc';
@@ -912,7 +944,7 @@ function exportExcel() {
   const rows = [];
 
   // Skaters
-  rows.push(['# Rang','Nom','Pos','Équipe','Âge','AAV ($M)','Proj G','Proj A','Proj PTS','PPG','Tier','Tendance','Risque','Band-aid','Catégorie','Notes'].map(esc).join(','));
+  rows.push(['# Rang','Nom','Pos','Équipe','Âge','AAV ($M)','Proj G','Proj A','Proj PTS','PPG','Tier','Tendance','Risque','Band-aid','Catégorie','Notes','Disponible'].map(esc).join(','));
   skaters.forEach(p => rows.push([
     p.rank, p.name, p.pos, p.team, p.age,
     p.aav ?? '',
@@ -921,17 +953,19 @@ function exportExcel() {
     p.tier ?? '', p.trend ?? '', p.risk ?? '',
     p.bandaid ? 'Oui' : '',
     p.scouting_category ?? '', p.notes ?? '',
+    draftedIds.has(p.id) ? 'Non' : 'Oui',
   ].map(esc).join(',')));
 
   // Goalies
   rows.push('');
-  rows.push(['# Rang','Nom','Équipe','Âge','AAV ($M)','Proj V','Proj BL','Tier','Risque','Catégorie','Notes'].map(esc).join(','));
+  rows.push(['# Rang','Nom','Équipe','Âge','AAV ($M)','Proj V','Proj BL','Tier','Risque','Catégorie','Notes','Disponible'].map(esc).join(','));
   goalies.forEach(p => rows.push([
     p.rank, p.name, p.team, p.age,
     p.aav ?? '',
     p.proj_g ?? '', p.proj_a ?? '',
     p.tier ?? '', p.risk ?? '',
     p.scouting_category ?? '', p.notes ?? '',
+    draftedIds.has(p.id) ? 'Non' : 'Oui',
   ].map(esc).join(',')));
 
   // UTF-8 BOM so Excel opens accents correctly
@@ -1379,9 +1413,10 @@ function buildGoalieRowHTML(p, displayRank) {
     const catNorm  = cat ? cat.toUpperCase() : null;
     const catKey   = catNorm === 'À ÉVITER' || catNorm === 'À EVITER' ? 'AEVITER' : catNorm;
     const grade    = calcGrade(p);
+    const isDrafted = draftedIds.has(p.id);
 
-    return `<tr class='${tierRowClass(p.tier)}'>
-      <td>${displayRank}</td>
+    return `<tr class='${tierRowClass(p.tier)}${isDrafted ? ' drafted' : ''}' onclick='toggleDraft(${p.id}, event)' title='Cliquer pour ${isDrafted ? "remettre disponible" : "marquer comme repêché"}'>
+      <td>${displayRank}${isDrafted ? '<span class="draft-badge">✓</span>' : ''}</td>
       <td>
         <div class='player-name' onclick='openModal(${p.id})'>${p.name}</div>
         ${noteEsc ? `<div class='note-icon' onmouseenter='showTooltip(this, this.dataset.note)' onmouseleave='hideTooltip()' data-note="${noteEsc}">${noteFull.length > 50 ? noteFull.slice(0,50) + '…' : noteFull}</div>` : ''}
@@ -1430,11 +1465,12 @@ function buildRowHTML(p, displayRank) {
     const ppgProjHtml = ppg(p.proj_pts, p.proj_gp);
     const projPtsDisplay = p.proj_pts ?? '—';
     const grade = calcGrade(p);
+    const isDrafted = draftedIds.has(p.id);
 
-    return `<tr class='${tierRowClass(p.tier)}'>
-      <td>${displayRank}</td>
+    return `<tr class='${tierRowClass(p.tier)}${isDrafted ? ' drafted' : ''}' onclick='toggleDraft(${p.id}, event)' title='Cliquer pour ${isDrafted ? "remettre disponible" : "marquer comme repêché"}'>
+      <td>${displayRank}${isDrafted ? '<span class="draft-badge">✓</span>' : ''}</td>
       <td>
-        <div class='player-name' onclick='openModal(${p.id})'>${p.name}</div>
+        <div class='player-name' onclick='event.stopPropagation();openModal(${p.id})'>${p.name}</div>
         ${noteEsc ? `<div class='note-icon' onmouseenter='showTooltip(this, this.dataset.note)' onmouseleave='hideTooltip()' data-note="${noteEsc}">${noteFull.length > 50 ? noteFull.slice(0,50) + '…' : noteFull}</div>` : ''}
         ${bustHtml}
       </td>
@@ -1475,7 +1511,9 @@ function renderAll() {
   const posFilter = activeFilters.pos;
   const goalieWrap = document.getElementById('goalieTableWrap');
 
-  // Decide which tables to show
+  // Show/hide reset draft button
+  const resetBtn = document.getElementById('resetDraftBtn');
+  if (resetBtn) resetBtn.style.display = draftedIds.size ? '' : 'none';
   const showGoalieTable = !posFilter || posFilter === 'G';
   const showSkaterTable = posFilter !== 'G';
 
@@ -1581,11 +1619,12 @@ function renderCards(filtered) {
         </div>
       </div>`;
     const grade = calcGrade(p);
-    return `<div class='player-card ${tierClass(p.tier)}' onclick='openModal(${p.id})' style='cursor:pointer'>
+    const isDrafted = draftedIds.has(p.id);
+    return `<div class='player-card ${tierClass(p.tier)}${isDrafted ? ' drafted-card' : ''}' style='cursor:pointer;${isDrafted ? 'opacity:0.4;' : ''}' onclick='toggleDraft(${p.id}, event)'>
       <div class='card-header'>
-        <span class='card-rank'>${i + 1}</span>
+        <span class='card-rank'>${i + 1}${isDrafted ? '<span class="draft-badge">✓</span>' : ''}</span>
         <div style='flex:1;min-width:0'>
-          <div class='card-name'>${p.name}</div>
+          <div class='card-name' style='${isDrafted ? "text-decoration:line-through;color:#94a3b8;" : ""}' onclick='event.stopPropagation();openModal(${p.id})'>${p.name}</div>
           ${p.notes ? `<div class='card-note'>${p.notes}</div>` : ''}
         </div>
         <div class='card-badges'>
