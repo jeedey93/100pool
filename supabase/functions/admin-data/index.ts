@@ -47,9 +47,9 @@ serve(async (req) => {
 
   // Proxy the request to Supabase REST API using service_role key
   const url = new URL(req.url);
-  // Path after /admin-data becomes the Supabase REST path
-  // e.g. /admin-data/rest/v1/poolers_access?select=* → SUPABASE_URL/rest/v1/poolers_access?select=*
-  const targetPath = url.pathname.replace(/^\/functions\/v1\/admin-data/, '');
+  // Strip everything up to and including "admin-data", keep the rest as the target path
+  // Handles both /functions/v1/admin-data/... and /admin-data/...
+  const targetPath = url.pathname.replace(/^.*\/admin-data/, '');
   const targetUrl  = `${SUPABASE_URL}${targetPath}${url.search}`;
 
   const upstreamHeaders: Record<string, string> = {
