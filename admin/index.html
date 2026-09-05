@@ -800,7 +800,7 @@ function renderAcces() {
   setText('acces-net', net);
   setText('acces-pill', `${rows.length} acheteurs`);
 
-  // Chart — last 14 days
+  // Chart — last 14 days, only show days with purchases (+ today always)
   const days = [];
   for (let i = 13; i >= 0; i--) {
     const d = new Date(now); d.setDate(d.getDate() - i);
@@ -809,11 +809,12 @@ function renderAcces() {
     const isToday = key === todayStr;
     days.push({ label: d.toLocaleDateString('fr-CA', { month: 'short', day: 'numeric' }), count, isToday, key });
   }
-  const maxCount = Math.max(...days.map(d => d.count), 1);
+  const activeDays = days.filter(d => d.count > 0 || d.isToday);
+  const maxCount = Math.max(...activeDays.map(d => d.count), 1);
   const periodTotal = days.reduce((s, d) => s + d.count, 0);
   setText('chart-total-label', `${periodTotal} achat${periodTotal !== 1 ? 's' : ''} sur la période`);
 
-  document.getElementById('chart-bars').innerHTML = days.map(d => `
+  document.getElementById('chart-bars').innerHTML = activeDays.map(d => `
     <div class='bar-col' title='${d.key}: ${d.count} achat${d.count !== 1 ? "s" : ""}'>
       <div class='bar-val ${d.isToday ? "today-val" : ""}'>${d.count > 0 ? d.count : ''}</div>
       <div class='bar ${d.isToday ? "today" : d.count === 0 ? "zero" : ""}'
