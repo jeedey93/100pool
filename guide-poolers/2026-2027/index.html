@@ -625,6 +625,51 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 .help-footer button:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(26,92,40,0.3); }
 .btn-help { background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3); color: white; padding: 6px 12px; border-radius: 8px; font-size: 0.82em; font-weight: 700; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 5px; white-space: nowrap; }
 .btn-help:hover { background: rgba(255,255,255,0.25); }
+
+/* ── WATCHLIST ── */
+.btn-watchlist { background: #fffbeb; border: 1.5px solid #fcd34d; color: #92400e; padding: 5px 11px; border-radius: 8px; font-size: 0.82em; font-weight: 700; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.btn-watchlist:hover { background: #fef3c7; border-color: #f59e0b; }
+.btn-watchlist.has-items { background: #f59e0b; border-color: #d97706; color: white; }
+.star-btn { background: none; border: none; cursor: pointer; font-size: 1em; padding: 0 4px; line-height: 1; color: #cbd5e1; transition: color 0.15s, transform 0.1s; flex-shrink: 0; }
+.star-btn:hover { color: #f59e0b; transform: scale(1.2); }
+.star-btn.watchlisted { color: #f59e0b; }
+/* Watchlist side panel (desktop) */
+.watchlist-panel { position: fixed; top: 56px; right: 0; width: 320px; bottom: 0; background: white; border-left: 1.5px solid #e2e8f0; box-shadow: -4px 0 24px rgba(0,0,0,0.1); z-index: 7000; display: flex; flex-direction: column; transform: translateX(100%); transition: transform 0.25s cubic-bezier(0.4,0,0.2,1); }
+.watchlist-panel.open { transform: translateX(0); }
+.watchlist-panel-header { background: linear-gradient(135deg, #92400e, #b45309); color: white; padding: 16px 16px 14px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.watchlist-panel-header h3 { flex: 1; font-size: 0.95em; font-weight: 900; }
+.watchlist-panel-close { background: rgba(255,255,255,0.2); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 0.9em; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.watchlist-panel-close:hover { background: rgba(255,255,255,0.35); }
+.watchlist-panel-body { overflow-y: auto; flex: 1; padding: 10px 8px; }
+.watchlist-empty { text-align: center; padding: 40px 20px; color: #94a3b8; font-size: 0.85em; line-height: 1.6; }
+.watchlist-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; background: #f8fafc; border: 1.5px solid #e2e8f0; margin-bottom: 6px; cursor: grab; transition: background 0.15s, opacity 0.15s; user-select: none; }
+.watchlist-item:active { cursor: grabbing; }
+.watchlist-item.dragging { opacity: 0.4; }
+.watchlist-item.drag-over { border-color: #f59e0b; background: #fffbeb; }
+.watchlist-item.drafted-item { opacity: 0.4; }
+.watchlist-item.drafted-item .wl-name { text-decoration: line-through; color: #94a3b8; }
+.wl-rank { font-size: 0.72em; font-weight: 800; color: #94a3b8; min-width: 18px; text-align: center; }
+.wl-info { flex: 1; min-width: 0; }
+.wl-name { font-size: 0.85em; font-weight: 700; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wl-meta { font-size: 0.72em; color: #64748b; margin-top: 2px; }
+.wl-pts { font-size: 0.78em; font-weight: 800; color: #15803d; margin-left: auto; flex-shrink: 0; }
+.wl-remove { background: none; border: none; cursor: pointer; font-size: 1em; color: #f59e0b; padding: 2px 4px; flex-shrink: 0; }
+.wl-remove:hover { color: #d97706; transform: scale(1.15); }
+.wl-drag-handle { color: #cbd5e1; font-size: 0.85em; cursor: grab; flex-shrink: 0; }
+/* Watchlist overlay (mobile) */
+.watchlist-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.65); z-index: 8500; display: flex; align-items: flex-end; justify-content: center; backdrop-filter: blur(6px); animation: fadeIn 0.15s ease; }
+.watchlist-overlay.hidden { display: none; }
+.watchlist-sheet { background: white; border-radius: 20px 20px 0 0; width: 100%; max-height: 90dvh; display: flex; flex-direction: column; animation: slideUp 0.22s cubic-bezier(0.4,0,0.2,1); }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.watchlist-sheet-header { background: linear-gradient(135deg, #92400e, #b45309); color: white; padding: 16px 18px 14px; display: flex; align-items: center; gap: 10px; border-radius: 20px 20px 0 0; flex-shrink: 0; }
+.watchlist-sheet-header h3 { flex: 1; font-size: 1em; font-weight: 900; }
+.watchlist-sheet-body { overflow-y: auto; flex: 1; padding: 10px 12px 20px; }
+/* Star td in table */
+td.star-cell { padding: 0 2px 0 6px; width: 28px; }
+@media (max-width: 768px) {
+  .watchlist-panel { display: none; }
+  td.star-cell { padding: 0 2px 0 4px; width: 24px; }
+}
 </style>
 </head>
 <body>
@@ -738,7 +783,11 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
           <button class='ctrl-btn btn-draft-toggle' id='draftToggleBtn' onclick='toggleDraftMode()' style='margin:0'>⚾ Mode draft</button>
           <button class='ctrl-btn btn-reset-draft' id='resetDraftBtn' onclick='resetDraft()' style='display:none;margin:0'>✕ Reset draft</button>
         </div>
-      </div>
+        <div class='filter-divider'></div>
+        <!-- Watchlist -->
+        <div class='filter-group' style='flex-shrink:0'>
+          <button class='btn-watchlist' id='watchlistBtn' onclick='toggleWatchlistPanel()'>⭐ Ma liste</button>
+        </div>
     </div>
     <div class='table-wrap'>
       <table id='playerTable'>
@@ -840,6 +889,188 @@ let sortCol = 'proj_pts';
 let draftedIds = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]'));
 let draftMode = false;
 let userNotes = JSON.parse(localStorage.getItem('pool_user_notes') || '{}');
+let watchlist = JSON.parse(localStorage.getItem('pool_watchlist') || '[]');
+
+function saveWatchlist() {
+  localStorage.setItem('pool_watchlist', JSON.stringify(watchlist));
+  updateWatchlistBtn();
+}
+function updateWatchlistBtn() {
+  const btn = document.getElementById('watchlistBtn');
+  if (!btn) return;
+  const n = watchlist.length;
+  btn.textContent = n ? `⭐ Ma liste (${n})` : '⭐ Ma liste';
+  btn.classList.toggle('has-items', n > 0);
+}
+function toggleWatchlist(id) {
+  const idx = watchlist.indexOf(id);
+  if (idx === -1) watchlist.push(id);
+  else watchlist.splice(idx, 1);
+  saveWatchlist();
+  // Update star buttons in DOM without full re-render
+  document.querySelectorAll(`.star-btn`).forEach(btn => {
+    const pid = parseInt(btn.getAttribute('onclick').match(/\d+/)[0]);
+    if (pid === id) {
+      btn.classList.toggle('watchlisted', watchlist.includes(id));
+      btn.title = watchlist.includes(id) ? 'Retirer de ma liste' : 'Ajouter à ma liste';
+    }
+  });
+  renderWatchlist();
+}
+
+let watchlistOpen = false;
+function toggleWatchlistPanel() {
+  if (watchlistOpen) closeWatchlistPanel();
+  else openWatchlistPanel();
+}
+function openWatchlistPanel() {
+  watchlistOpen = true;
+  renderWatchlist();
+  if (window.innerWidth <= 768) {
+    document.getElementById('watchlistOverlay').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.getElementById('watchlistPanel').classList.add('open');
+  }
+}
+function closeWatchlistPanel() {
+  watchlistOpen = false;
+  document.getElementById('watchlistPanel').classList.remove('open');
+  document.getElementById('watchlistOverlay').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function renderWatchlist() {
+  const items = watchlist.map(id => allPlayers.find(p => p.id === id)).filter(Boolean);
+
+  const buildItem = (p, idx) => {
+    const isDrafted = draftedIds.has(p.id);
+    const pts = p.proj_pts ?? p.proj_g ?? '—';
+    return `<div class='watchlist-item${isDrafted ? ' drafted-item' : ''}' data-id='${p.id}' draggable='true'
+      ondragstart='wlDragStart(event,${p.id})'
+      ondragover='wlDragOver(event)'
+      ondragleave='wlDragLeave(event)'
+      ondrop='wlDrop(event,${p.id})'
+      ondragend='wlDragEnd(event)'>
+      <span class='wl-drag-handle'>⠿</span>
+      <span class='wl-rank'>${idx + 1}</span>
+      <div class='wl-info'>
+        <div class='wl-name'>${p.name}</div>
+        <div class='wl-meta'>${p.team} · ${p.pos}</div>
+      </div>
+      <span class='wl-pts'>${pts} pts</span>
+      <button class='wl-remove' onclick='toggleWatchlist(${p.id})' title='Retirer'>★</button>
+    </div>`;
+  };
+
+  const emptyHTML = `<div class='watchlist-empty'>⭐<br><br>Ta liste est vide.<br>Clique sur ★ dans le tableau pour ajouter des joueurs.</div>`;
+  const html = items.length ? items.map(buildItem).join('') : emptyHTML;
+
+  const panelBody = document.getElementById('watchlistPanelBody');
+  const sheetBody = document.getElementById('watchlistSheetBody');
+  const panelTitle = document.getElementById('watchlistPanelTitle');
+  const sheetTitle = document.getElementById('watchlistSheetTitle');
+  const titleTxt = items.length ? `⭐ Ma liste (${items.length})` : '⭐ Ma liste';
+  if (panelBody) panelBody.innerHTML = html;
+  if (sheetBody) sheetBody.innerHTML = html;
+  if (panelTitle) panelTitle.textContent = titleTxt;
+  if (sheetTitle) sheetTitle.textContent = titleTxt;
+  setupWatchlistTouchDrag();
+}
+
+// ── Drag & drop (desktop HTML5) ────────────────────────────
+let wlDragId = null;
+function wlDragStart(e, id) {
+  wlDragId = id;
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+function wlDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  e.currentTarget.classList.add('drag-over');
+}
+function wlDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+function wlDrop(e, targetId) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (wlDragId === null || wlDragId === targetId) return;
+  const fromIdx = watchlist.indexOf(wlDragId);
+  const toIdx   = watchlist.indexOf(targetId);
+  if (fromIdx === -1 || toIdx === -1) return;
+  watchlist.splice(fromIdx, 1);
+  watchlist.splice(toIdx, 0, wlDragId);
+  saveWatchlist();
+  renderWatchlist();
+}
+function wlDragEnd(e) { e.currentTarget.classList.remove('dragging'); wlDragId = null; }
+
+// ── Touch drag (mobile long-press) ────────────────────────
+function setupWatchlistTouchDrag() {
+  const containers = ['watchlistPanelBody', 'watchlistSheetBody'];
+  containers.forEach(cid => {
+    const container = document.getElementById(cid);
+    if (!container) return;
+    let pressTimer = null, dragItem = null, dragId = null, startY = 0, offsetY = 0, ghost = null;
+
+    container.querySelectorAll('.watchlist-item').forEach(item => {
+      item.addEventListener('touchstart', e => {
+        pressTimer = setTimeout(() => {
+          dragItem = item;
+          dragId = parseInt(item.dataset.id);
+          startY = e.touches[0].clientY;
+          ghost = item.cloneNode(true);
+          ghost.style.cssText = `position:fixed;width:${item.offsetWidth}px;opacity:0.85;z-index:99999;pointer-events:none;left:${item.getBoundingClientRect().left}px;top:${item.getBoundingClientRect().top}px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.2);`;
+          document.body.appendChild(ghost);
+          item.style.opacity = '0.3';
+        }, 480);
+      }, { passive: true });
+
+      item.addEventListener('touchmove', e => {
+        if (!dragItem) { clearTimeout(pressTimer); return; }
+        e.preventDefault();
+        const y = e.touches[0].clientY;
+        offsetY = y - startY;
+        if (ghost) ghost.style.top = (ghost.getBoundingClientRect().top + offsetY - (ghost.getBoundingClientRect().top - (parseFloat(ghost.style.top) || 0))) + 'px';
+        if (ghost) ghost.style.top = (parseFloat(ghost.style.top || 0) + (y - startY - offsetY + (y - startY))) + 'px';
+        // simpler: just track absolute position
+        ghost.style.top = (y - item.offsetHeight / 2) + 'px';
+        startY = y;
+        // find item under touch
+        ghost.style.display = 'none';
+        const el = document.elementFromPoint(e.touches[0].clientX, y);
+        ghost.style.display = '';
+        const target = el ? el.closest('.watchlist-item') : null;
+        container.querySelectorAll('.watchlist-item').forEach(i => i.classList.remove('drag-over'));
+        if (target && target !== dragItem) target.classList.add('drag-over');
+      }, { passive: false });
+
+      item.addEventListener('touchend', e => {
+        clearTimeout(pressTimer);
+        if (!dragItem) return;
+        const y = e.changedTouches[0].clientY;
+        if (ghost) { ghost.remove(); ghost = null; }
+        dragItem.style.opacity = '';
+        if (ghost) ghost.remove();
+        container.querySelectorAll('.watchlist-item').forEach(i => i.classList.remove('drag-over'));
+        const el = document.elementFromPoint(e.changedTouches[0].clientX, y);
+        const target = el ? el.closest('.watchlist-item') : null;
+        if (target && target !== dragItem) {
+          const targetId = parseInt(target.dataset.id);
+          const fromIdx = watchlist.indexOf(dragId);
+          const toIdx   = watchlist.indexOf(targetId);
+          if (fromIdx !== -1 && toIdx !== -1) {
+            watchlist.splice(fromIdx, 1);
+            watchlist.splice(toIdx, 0, dragId);
+            saveWatchlist();
+            renderWatchlist();
+          }
+        }
+        dragItem = null; dragId = null;
+      });
+    });
+  });
+}
 function saveUserNote(id, val) {
   if (val.trim()) userNotes[id] = val.trim();
   else delete userNotes[id];
@@ -1439,11 +1670,12 @@ function applyFilters() { renderAll(); }
 function goalieHeaderHTML() {
   return `
   <tr class='group-row'>
-    <th colspan='5' style='background:#f1f5f9;'></th>
+    <th colspan='6' style='background:#f1f5f9;'></th>
     <th colspan='6' class='col-group-proj'>🎯 PROJ 2026-27</th>
     <th colspan='7' style='background:#f1f5f9;'></th>
   </tr>
   <tr class='col-row'>
+    <th style='cursor:default;width:28px;' title='Watchlist'></th>
     <th onclick='sortGoalieBy("rank")'              data-col='rank'>#<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("name")'              data-col='name'>Joueur<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("team")'              data-col='team'>Équipe<span class='sort-icon'></span></th>
@@ -1465,12 +1697,13 @@ function goalieHeaderHTML() {
 function skaterHeaderHTML() {
   return `
   <tr class='group-row'>
-    <th colspan='5' style='background:#f1f5f9;'></th>
+    <th colspan='6' style='background:#f1f5f9;'></th>
     <th id='gh-last' colspan='5' class='col-group-last cg-last'>📅 2025-26</th>
     <th colspan='4' class='col-group-proj'>🎯 PROJECTION 2026-27</th>
     <th colspan='7' style='background:#f1f5f9;'></th>
   </tr>
   <tr class='col-row'>
+    <th style='cursor:default;width:28px;' title='Watchlist'></th>
     <th onclick='sortBy("rank")'    data-col='rank'>#<span class='sort-icon'></span></th>
     <th onclick='sortBy("name")'    data-col='name'>Joueur<span class='sort-icon'></span></th>
     <th onclick='sortBy("team")'    data-col='team'>Équipe<span class='sort-icon'></span></th>
@@ -1524,6 +1757,7 @@ function buildGoalieRowHTML(p, displayRank) {
     const userNote = userNotes[p.id] || '';
 
     return `<tr class='${tierRowClass(p.tier)}${isDrafted ? ' drafted' : ''}' onclick='draftMode ? toggleDraft(${p.id}, event) : openModal(${p.id})' style='cursor:pointer' title='${draftMode ? (isDrafted ? "Remettre disponible" : "Marquer comme repêché") : "Voir la fiche"}'>
+      <td class='star-cell' onclick='event.stopPropagation()'><button class='star-btn${watchlist.includes(p.id) ? ' watchlisted' : ''}' onclick='toggleWatchlist(${p.id})' title='${watchlist.includes(p.id) ? "Retirer de ma liste" : "Ajouter à ma liste"}'>★</button></td>
       <td>${displayRank}${isDrafted ? '<span class="draft-badge">✓</span>' : ''}</td>
       <td>
         <div class='player-name' onclick='event.stopPropagation();openModal(${p.id})'>${p.name}</div>
@@ -1582,6 +1816,7 @@ function buildRowHTML(p, displayRank) {
     const userNote = userNotes[p.id] || '';
 
     return `<tr class='${tierRowClass(p.tier)}${isDrafted ? ' drafted' : ''}' onclick='draftMode ? toggleDraft(${p.id}, event) : openModal(${p.id})' style='cursor:pointer' title='${draftMode ? (isDrafted ? "Remettre disponible" : "Marquer comme repêché") : "Voir la fiche"}'>
+      <td class='star-cell' onclick='event.stopPropagation()'><button class='star-btn${watchlist.includes(p.id) ? ' watchlisted' : ''}' onclick='toggleWatchlist(${p.id})' title='${watchlist.includes(p.id) ? "Retirer de ma liste" : "Ajouter à ma liste"}'>★</button></td>
       <td>${displayRank}${isDrafted ? '<span class="draft-badge">✓</span>' : ''}</td>
       <td>
         <div class='player-name' onclick='event.stopPropagation();openModal(${p.id})'>${p.name}</div>
@@ -1628,6 +1863,8 @@ function renderAll() {
   if (resetBtn) resetBtn.style.display = (draftMode && draftedIds.size) ? '' : 'none';
   const notesBtn = document.getElementById('resetNotesBtn');
   if (notesBtn) notesBtn.style.display = Object.keys(userNotes).length ? '' : 'none';
+  updateWatchlistBtn();
+  if (watchlistOpen) renderWatchlist();
   const showGoalieTable = !posFilter || posFilter === 'G';
   const showSkaterTable = posFilter !== 'G';
 
@@ -2039,6 +2276,7 @@ document.addEventListener('keydown', e => {
     closeModalDirect();
     closeHelp();
     closeConfirm();
+    closeWatchlistPanel();
   }
 });
 
@@ -2089,6 +2327,26 @@ checkAccess().then(init);
   <p>© 2026 100% Pool</p>
 </footer>
 <!-- CONFIRM DIALOG -->
+<!-- WATCHLIST SIDE PANEL (desktop) -->
+<div class='watchlist-panel' id='watchlistPanel'>
+  <div class='watchlist-panel-header'>
+    <h3 id='watchlistPanelTitle'>⭐ Ma liste</h3>
+    <button class='watchlist-panel-close' onclick='closeWatchlistPanel()'>✕</button>
+  </div>
+  <div class='watchlist-panel-body' id='watchlistPanelBody'></div>
+</div>
+
+<!-- WATCHLIST OVERLAY (mobile) -->
+<div class='watchlist-overlay hidden' id='watchlistOverlay' onclick='if(event.target===this)closeWatchlistPanel()'>
+  <div class='watchlist-sheet'>
+    <div class='watchlist-sheet-header'>
+      <h3 id='watchlistSheetTitle'>⭐ Ma liste</h3>
+      <button class='watchlist-panel-close' onclick='closeWatchlistPanel()'>✕</button>
+    </div>
+    <div class='watchlist-sheet-body' id='watchlistSheetBody'></div>
+  </div>
+</div>
+
 <div class='help-overlay hidden' id='helpOverlay' onclick='if(event.target===this)closeHelp()'>
   <div class='help-box'>
     <div class='help-header'>
@@ -2146,6 +2404,17 @@ checkAccess().then(init);
           <li>Clique à nouveau pour inverser l'ordre (↑ ascendant / ↓ descendant)</li>
           <li>Le menu "Trier par" offre aussi le tri par catégorie, risque ou band-aid</li>
           <li>Les onglets "Joueurs" et "Gardiens" ont chacun leur propre tableau</li>
+        </ul>
+      </div>
+      <div class='help-section'>
+        <div class='help-section-title'>⭐ Ma liste (Watchlist)</div>
+        <ul>
+          <li>Clique sur ★ dans n'importe quelle rangée pour ajouter un joueur à ta liste de priorité</li>
+          <li>Clique sur "⭐ Ma liste" dans les filtres pour ouvrir ta liste</li>
+          <li>Réordonne les joueurs par glisser-déposer — ton ordre de priorité est sauvegardé automatiquement</li>
+          <li>Sur mobile, maintiens le doigt appuyé sur un joueur pour activer le glisser-déposer</li>
+          <li>Les joueurs déjà repêchés (mode draft) apparaissent barrés dans ta liste</li>
+          <li>Ta liste est sauvegardée dans ton navigateur — elle persiste entre les sessions</li>
         </ul>
       </div>
       <div class='help-section'>
