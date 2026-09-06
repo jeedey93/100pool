@@ -30,8 +30,8 @@ self.addEventListener('fetch', e => {
     e.respondWith(
       fetch(e.request).then(res => {
         if (res.ok) {
-          // Store response keyed by URL only (no auth headers in cache key)
-          caches.open(PLAYERS_CACHE).then(cache => cache.put(url.href, res.clone()));
+          const toCache = res.clone();
+          caches.open(PLAYERS_CACHE).then(cache => cache.put(url.href, toCache));
         }
         return res;
       }).catch(async () => {
@@ -57,7 +57,8 @@ self.addEventListener('fetch', e => {
   e.respondWith(
     caches.match(e.request).then(cached => cached || fetch(e.request).then(res => {
       if (res.ok && e.request.method === 'GET') {
-        caches.open(CACHE).then(c => c.put(e.request, res.clone()));
+        const toCache = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, toCache));
       }
       return res;
     }))
