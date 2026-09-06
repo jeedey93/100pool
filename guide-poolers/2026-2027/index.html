@@ -21,13 +21,8 @@
 <link rel='manifest' href='/guide-poolers/2026-2027/manifest.json'>
 <script>
 if ('serviceWorker' in navigator) {
-  // Unregister any stale SW first, then register the new one
-  navigator.serviceWorker.getRegistrations().then(regs => {
-    Promise.all(regs.map(r => r.unregister())).then(() => {
-      navigator.serviceWorker.register('/guide-poolers/2026-2027/sw.js', { scope: '/guide-poolers/2026-2027/' })
-        .catch(() => {});
-    });
-  });
+  navigator.serviceWorker.register('/guide-poolers/2026-2027/sw.js', { scope: '/guide-poolers/2026-2027/' })
+    .catch(() => {});
   navigator.serviceWorker.addEventListener('message', e => {
     if (e.data?.type === 'PLAYERS_UPDATED') {
       const banner = document.getElementById('offlineBanner');
@@ -98,7 +93,7 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
 .tab-btn:hover { color: #1e293b; }
 .tab-btn.active { background: white; color: #1e293b; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
 .tab-pane { display: none; }
-.tab-pane.active { display: block; }
+.tab-pane.active { display: block; min-height: calc(100vh - 200px); }
 
 /* ── CONTROLS ── */
 .controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; background: white; border-radius: 14px; padding: 14px 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); border: 1px solid #e8edf2; }
