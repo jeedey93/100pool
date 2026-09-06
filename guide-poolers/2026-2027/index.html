@@ -84,6 +84,7 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
 .ctrl-btn.btn-primary:hover { background: #1a5c28; }
 .filter-divider { width: 1px; height: 20px; background: #e2e8f0; flex-shrink: 0; }
 .pills-row1, .pills-row2 { display: contents; }
+.tier-select-mobile { display: none; }
 
 /* ── FILTER PILLS ── */
 .filter-group { display: flex; gap: 4px; flex-wrap: nowrap; align-items: center; }
@@ -449,9 +450,11 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   /* tier/risk filter row: scroll horizontally instead of overflowing */
   .controls-row-pills { flex-wrap: wrap; gap: 6px; overflow-x: visible; padding-bottom: 0; }
   .controls-row-pills .filter-group { flex-shrink: 0; }
-  .controls-row-pills .pills-row1 { display: flex; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; gap: 6px; width: 100%; }
+  .controls-row-pills .pills-row1 { display: flex; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; gap: 6px; width: 100%; align-items: center; }
   .controls-row-pills .pills-row2 { display: flex; flex-wrap: nowrap; gap: 6px; width: 100%; }
   .controls-row-pills .filter-divider { display: none; }
+  #tierPills { display: none; }
+  .tier-select-mobile { display: block; font-size: 15px; padding: 7px 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; background: white; color: #1e293b; font-weight: 600; flex-shrink: 0; }
   /* card footer: already split into 2 rows */
   .card-footer-row1, .card-footer-row2 { flex-wrap: wrap; }
   /* sleeper cards */
@@ -774,6 +777,10 @@ td.star-cell { padding: 0 2px 0 6px; width: 28px; }
             <span class='filter-label'>Tier</span>
             <button class='pill active' data-filter='tier' data-value='' onclick='setPill(this,"tier")'>Tous</button>
           </div>
+          <!-- Tier select (mobile only) -->
+          <select class='filter-select tier-select-mobile' id='tierSelect' onchange='setTierFromSelect(this)'>
+            <option value=''>Tier — Tous</option>
+          </select>
           <div class='filter-divider'></div>
           <!-- Risk -->
           <div class='filter-group'>
@@ -1382,6 +1389,7 @@ async function init() {
   allPlayers.forEach(p => { if (p.tier) { const n = tierNum(p.tier); if (n && !tierLabelMap[n]) tierLabelMap[n] = p.tier; } });
   const tierNumsSeen = Object.keys(tierLabelMap).sort((a, b) => parseInt(a) - parseInt(b));
   const tierPills = document.getElementById('tierPills');
+  const tierSelect = document.getElementById('tierSelect');
   tierNumsSeen.forEach(n => {
     const btn = document.createElement('button');
     btn.className = 'pill';
@@ -1389,8 +1397,12 @@ async function init() {
     btn.dataset.value = n;
     btn.textContent = 'Tier ' + n;
     btn.title = tierLabelMap[n] || ('Tier ' + n);
-    btn.onclick = function() { setPill(this, 'tier'); };
+    btn.onclick = function() { setPill(this, 'tier'); tierSelect.value = n; };
     tierPills.appendChild(btn);
+    const opt = document.createElement('option');
+    opt.value = n;
+    opt.textContent = 'Tier ' + n + (tierLabelMap[n] ? ' — ' + tierLabelMap[n] : '');
+    tierSelect.appendChild(opt);
   });
 
   renderAll();
@@ -1623,6 +1635,18 @@ function sortGoalieBy(col) {
 // ── FILTERS ───────────────────────────────────────────────
 const activeFilters = { pos: '', tier: '', team: '', risk: '' };
 
+function setTierFromSelect(sel) {
+  const val = sel.value;
+  activeFilters.tier = val;
+  // Sync pills active state
+  document.querySelectorAll('.pill[data-filter="tier"]').forEach(b => {
+    b.classList.remove('active');
+    if (b.dataset.value === val) b.classList.add('active');
+  });
+  if (!val) document.querySelector('.pill[data-filter="tier"][data-value=""]')?.classList.add('active');
+  applyFilters();
+}
+
 function setPill(btn, filterKey) {
   // Deactivate siblings
   document.querySelectorAll(`.pill[data-filter="${filterKey}"]`).forEach(b => {
@@ -1640,6 +1664,11 @@ function setPill(btn, filterKey) {
       Low: 'active-low', Medium: 'active-medium', High: 'active-high',
     };
     btn.classList.add(colorMap[val] || 'active');
+  }
+  // Sync tier select on mobile
+  if (filterKey === 'tier') {
+    const sel = document.getElementById('tierSelect');
+    if (sel) sel.value = val;
   }
   renderAll();
 }
