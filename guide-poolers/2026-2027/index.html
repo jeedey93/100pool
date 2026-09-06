@@ -638,23 +638,28 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 /* ── HELP MODAL ── */
-.help-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.55); z-index: 9600; display: flex; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(8px); animation: fadeIn 0.15s ease; }
+.help-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.6); z-index: 9600; display: flex; align-items: center; justify-content: center; padding: 12px; backdrop-filter: blur(10px); animation: fadeIn 0.15s ease; }
 .help-overlay.hidden { display: none; }
-.help-box { background: white; border-radius: 24px; padding: 0; max-width: 520px; width: 100%; max-height: 90dvh; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 24px 64px rgba(0,0,0,0.25); animation: modalIn 0.18s ease; }
-.help-header { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 22px 24px 18px; color: white; flex-shrink: 0; display: flex; align-items: center; gap: 12px; }
-.help-header h2 { font-size: 1.1em; font-weight: 900; flex: 1; }
-.help-header p { font-size: 0.8em; color: rgba(255,255,255,0.75); margin-top: 3px; }
-.help-close { background: rgba(255,255,255,0.15); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1em; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.15s; }
-.help-close:hover { background: rgba(255,255,255,0.25); }
-.help-body { overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
-.help-section { background: #f8fafc; border-radius: 14px; padding: 16px; border: 1.5px solid #e2e8f0; }
-.help-section-title { font-size: 0.92em; font-weight: 800; color: #1e293b; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-.help-section ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
-.help-section ul li { font-size: 0.82em; color: #475569; line-height: 1.5; display: flex; gap: 8px; align-items: flex-start; }
-.help-section ul li::before { content: '→'; color: #2d8a3e; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
-.help-footer { padding: 14px 24px; border-top: 1.5px solid #f1f5f9; flex-shrink: 0; text-align: center; }
-.help-footer button { background: linear-gradient(135deg, #1a5c28, #2d8a3e); color: white; border: none; padding: 11px 28px; border-radius: 10px; font-weight: 700; font-size: 0.9em; cursor: pointer; transition: all 0.15s; }
+.help-box { background: #f8fafc; border-radius: 24px; padding: 0; max-width: 720px; width: 100%; max-height: 92dvh; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 32px 80px rgba(0,0,0,0.3); animation: modalIn 0.2s ease; }
+.help-header { background: linear-gradient(135deg, #1a5c28 0%, #2d8a3e 100%); padding: 20px 22px 16px; color: white; flex-shrink: 0; display: flex; align-items: center; gap: 12px; }
+.help-header-text { flex: 1; }
+.help-header h2 { font-size: 1.05em; font-weight: 900; letter-spacing: -0.2px; }
+.help-header p { font-size: 0.75em; color: rgba(255,255,255,0.7); margin-top: 2px; }
+.help-close { background: rgba(255,255,255,0.15); border: none; color: white; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 0.9em; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.15s; }
+.help-close:hover { background: rgba(255,255,255,0.28); }
+.help-body { overflow-y: auto; padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.help-card { background: white; border-radius: 14px; padding: 14px 16px; border: 1.5px solid #e8edf3; box-shadow: 0 1px 4px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 10px; }
+.help-card-head { display: flex; align-items: center; gap: 9px; }
+.help-card-icon { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1em; flex-shrink: 0; }
+.help-card-title { font-size: 0.88em; font-weight: 800; color: #0f172a; }
+.help-card ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.help-card ul li { font-size: 0.77em; color: #64748b; line-height: 1.5; padding-left: 12px; position: relative; }
+.help-card ul li::before { content: '·'; position: absolute; left: 0; color: #94a3b8; font-weight: 900; }
+.help-card .help-tag { display: inline-flex; align-items: center; gap: 3px; background: #f1f5f9; border-radius: 5px; padding: 1px 6px; font-size: 0.72em; font-weight: 700; color: #475569; white-space: nowrap; }
+.help-footer { padding: 12px 16px; border-top: 1.5px solid #e8edf3; flex-shrink: 0; text-align: center; background: white; }
+.help-footer button { background: linear-gradient(135deg, #1a5c28, #2d8a3e); color: white; border: none; padding: 10px 32px; border-radius: 10px; font-weight: 800; font-size: 0.88em; cursor: pointer; transition: all 0.15s; }
 .help-footer button:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(26,92,40,0.3); }
+@media (max-width: 500px) { .help-body { grid-template-columns: 1fr; } .help-box { max-height: 94dvh; border-radius: 20px; } }
 .btn-help { background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3); color: white; padding: 6px 12px; border-radius: 8px; font-size: 0.82em; font-weight: 700; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 5px; white-space: nowrap; }
 .btn-help:hover { background: rgba(255,255,255,0.25); }
 
@@ -2459,81 +2464,134 @@ checkAccess().then(init);
 <div class='help-overlay hidden' id='helpOverlay' onclick='if(event.target===this)closeHelp()'>
   <div class='help-box'>
     <div class='help-header'>
-      <div style='flex:1'>
-        <h2>❓ Guide des fonctionnalités</h2>
-        <p>Tout ce que tu peux faire dans le guide des poolers</p>
+      <div class='help-header-text'>
+        <h2>Guide des fonctionnalités</h2>
+        <p>Tout ce que tu peux faire dans le guide des poolers 2026-27</p>
       </div>
       <button class='help-close' onclick='closeHelp()'>✕</button>
     </div>
     <div class='help-body'>
-      <div class='help-section'>
-        <div class='help-section-title'>🔍 Filtres</div>
+
+      <!-- Filtres -->
+      <div class='help-card'>
+        <div class='help-card-head'>
+          <div class='help-card-icon' style='background:#eff6ff'>🔍</div>
+          <div class='help-card-title'>Filtres</div>
+        </div>
         <ul>
-          <li>Filtre par palier (Élite, Top 6/4/9, etc.) pour cibler les joueurs de ta ligue</li>
-          <li>Filtre par équipe NHL — clique sur une ou plusieurs équipes pour affiner</li>
-          <li>Filtre par position (C, LW, RW, D, G) pour les joueurs qui te manquent</li>
-          <li>Filtre par tendance (Hausse, Baisse, Stable) selon la direction de la saison</li>
-          <li>Clique sur "✕ Effacer filtres" pour tout réinitialiser d'un coup</li>
+          <li>Filtre par <strong>tier</strong> pour cibler les joueurs de ton format de ligue</li>
+          <li>Filtre par <strong>équipe</strong> — clique sur le bouton Équipe pour choisir</li>
+          <li>Filtre par <strong>position</strong> : F, D ou G</li>
+          <li>Filtre par <strong>risque</strong> : 🟢 Faible · 🟡 Moyen · 🔴 Élevé</li>
+          <li>La barre de <strong>recherche</strong> cherche par nom de joueur</li>
         </ul>
       </div>
-      <div class='help-section'>
-        <div class='help-section-title'>⚾ Mode draft</div>
+
+      <!-- Watchlist -->
+      <div class='help-card'>
+        <div class='help-card-head'>
+          <div class='help-card-icon' style='background:#fffbeb'>⭐</div>
+          <div class='help-card-title'>Ma liste de priorité</div>
+        </div>
         <ul>
-          <li>Active "⚾ Mode draft" dans la barre de filtres pour entrer en mode sélection</li>
-          <li>Clique sur un joueur pour le barrer — il apparaît rayé (déjà pris dans le pool)</li>
-          <li>Clique à nouveau sur un joueur barré pour le remettre disponible</li>
-          <li>Le bouton "✕ Reset draft" efface tous les barrés en même temps</li>
-          <li>Les sélections sont sauvegardées dans ton navigateur entre les sessions</li>
-          <li>Exporte en CSV pour voir la colonne "Disponible" (Oui/Non)</li>
+          <li>Clique sur <span class='help-tag'>★</span> dans n'importe quelle rangée pour ajouter un joueur</li>
+          <li>Ouvre ta liste avec <span class='help-tag'>⭐ Ma liste</span> dans la barre de filtres</li>
+          <li>Réordonne par <strong>glisser-déposer</strong> — ton ordre de priorité est sauvegardé</li>
+          <li>Sur mobile, <strong>maintiens le doigt</strong> sur un joueur pour activer le drag</li>
+          <li>Les joueurs draftés apparaissent <s>barrés</s> dans ta liste</li>
+          <li>Idéal pour préparer un live draft au chalet</li>
         </ul>
       </div>
-      <div class='help-section'>
-        <div class='help-section-title'>📝 Mes notes perso</div>
+
+      <!-- Mode draft -->
+      <div class='help-card'>
+        <div class='help-card-head'>
+          <div class='help-card-icon' style='background:#fef3c7'>⚾</div>
+          <div class='help-card-title'>Mode draft</div>
+        </div>
         <ul>
-          <li>Chaque joueur a un champ "Mes notes" dans la colonne de droite — clique pour écrire</li>
-          <li>Tes notes sont privées et sauvegardées dans ton navigateur (localStorage)</li>
-          <li>Elles restent là indéfiniment, jusqu'à ce que tu vides ton navigateur ou cliques "Effacer mes notes"</li>
-          <li>Le bouton "🗑 Effacer mes notes" apparaît dans la barre de contrôles quand tu as des notes</li>
-          <li>Les notes sont propres à chaque appareil/navigateur — elles ne se synchronisent pas</li>
+          <li>Active <span class='help-tag'>⚾ Mode draft</span> dans la barre de filtres</li>
+          <li>Clique sur un joueur pour le <strong>barrer</strong> (déjà repêché)</li>
+          <li>Reclique sur un joueur barré pour le <strong>remettre disponible</strong></li>
+          <li><span class='help-tag'>✕ Reset draft</span> efface tous les barrés d'un coup</li>
+          <li>Les sélections survivent entre les sessions (localStorage)</li>
+          <li>Le CSV exporté inclut une colonne <strong>Disponible</strong> (Oui/Non)</li>
         </ul>
       </div>
-      <div class='help-section'>
-        <div class='help-section-title'>🏷️ Badges et indicateurs</div>
+
+      <!-- Notes perso -->
+      <div class='help-card'>
+        <div class='help-card-head'>
+          <div class='help-card-icon' style='background:#f0fdf4'>📝</div>
+          <div class='help-card-title'>Mes notes perso</div>
+        </div>
         <ul>
-          <li><strong>Catégorie</strong> (Sleeper, Gamble, Breakout, À éviter…) — affiché sous le nom du joueur</li>
-          <li><strong>🟡 Moyen / 🔴 Élevé</strong> — niveau de risque (blessure passée, situation incertaine)</li>
-          <li><strong>🩹 Blessé</strong> — joueur présentement blessé ou à surveiller</li>
-          <li>Tu peux trier par risque ou catégorie via le menu "Trier par" en haut du tableau</li>
+          <li>Colonne <strong>Mes notes</strong> dans le tableau — clique pour écrire</li>
+          <li>Privées et sauvegardées dans <strong>ton navigateur uniquement</strong></li>
+          <li>Persistent indéfiniment jusqu'à ce que tu les effaces</li>
+          <li><span class='help-tag'>🗑 Effacer mes notes</span> apparaît dans les contrôles quand tu as des notes</li>
+          <li>Propres à chaque appareil — ne se synchronisent pas entre tes appareils</li>
         </ul>
       </div>
-      <div class='help-section'>
-        <div class='help-section-title'>📊 Colonnes et tri</div>
+
+      <!-- Badges -->
+      <div class='help-card'>
+        <div class='help-card-head'>
+          <div class='help-card-icon' style='background:#fdf4ff'>🏷️</div>
+          <div class='help-card-title'>Badges et indicateurs</div>
+        </div>
         <ul>
-          <li>Clique sur un en-tête de colonne pour trier (PTS, BTS, PJ, AAV, Palier, etc.)</li>
-          <li>Clique à nouveau pour inverser l'ordre (↑ ascendant / ↓ descendant)</li>
-          <li>Le menu "Trier par" offre aussi le tri par catégorie, risque ou band-aid</li>
-          <li>Les onglets "Joueurs" et "Gardiens" ont chacun leur propre tableau</li>
+          <li><span class='help-tag'>Sleeper</span> <span class='help-tag'>Gamble</span> <span class='help-tag'>Breakout</span> <span class='help-tag'>À éviter</span> — catégorie sous le nom</li>
+          <li><strong>🟡 Moyen / 🔴 Élevé</strong> — niveau de risque du joueur</li>
+          <li><strong>🩹 Blessé</strong> — joueur blessé ou à surveiller</li>
+          <li>Les onglets <strong>Gamble, Sleeper, Breakout, À éviter</strong> regroupent les joueurs par catégorie avec des fiches détaillées</li>
+          <li>L'onglet <strong>Rareté</strong> montre la distribution par position/tier</li>
         </ul>
       </div>
-      <div class='help-section'>
-        <div class='help-section-title'>⭐ Ma liste (Watchlist)</div>
+
+      <!-- Tri et colonnes -->
+      <div class='help-card'>
+        <div class='help-card-head'>
+          <div class='help-card-icon' style='background:#f0f9ff'>📊</div>
+          <div class='help-card-title'>Tri et colonnes</div>
+        </div>
         <ul>
-          <li>Clique sur ★ dans n'importe quelle rangée pour ajouter un joueur à ta liste de priorité</li>
-          <li>Clique sur "⭐ Ma liste" dans les filtres pour ouvrir ta liste</li>
-          <li>Réordonne les joueurs par glisser-déposer — ton ordre de priorité est sauvegardé automatiquement</li>
-          <li>Sur mobile, maintiens le doigt appuyé sur un joueur pour activer le glisser-déposer</li>
-          <li>Les joueurs déjà repêchés (mode draft) apparaissent barrés dans ta liste</li>
-          <li>Ta liste est sauvegardée dans ton navigateur — elle persiste entre les sessions</li>
+          <li>Clique sur un <strong>en-tête de colonne</strong> pour trier ↑↓</li>
+          <li>Menu <span class='help-tag'>⚙ Colonnes</span> pour afficher/masquer : Stats 2025-26, PPG, AAV, Palier, Tendance, Valeur</li>
+          <li>Tri spécial par <strong>risque</strong> ou <strong>catégorie</strong> via ce même menu</li>
+          <li>Onglets séparés pour <strong>Joueurs</strong> et <strong>Gardiens</strong></li>
         </ul>
       </div>
-      <div class='help-section'>
-        <div class='help-section-title'>🖨️ Imprimer &amp; Exporter</div>
+
+      <!-- Imprimer / Exporter -->
+      <div class='help-card'>
+        <div class='help-card-head'>
+          <div class='help-card-icon' style='background:#f8fafc'>🖨️</div>
+          <div class='help-card-title'>Imprimer &amp; Exporter</div>
+        </div>
         <ul>
-          <li>"🖨 Imprimer" ouvre la fenêtre d'impression — le tableau s'adapte automatiquement</li>
-          <li>"📥 Exporter CSV" télécharge tous les joueurs visibles avec tes filtres actuels</li>
-          <li>Le CSV inclut la colonne "Disponible" si tu utilises le mode draft</li>
+          <li><span class='help-tag'>🖨 Imprimer</span> — le tableau s'adapte automatiquement à la page</li>
+          <li><span class='help-tag'>📥 Exporter CSV</span> — télécharge les joueurs visibles selon tes filtres</li>
+          <li>Le CSV inclut la colonne <strong>Disponible</strong> si le mode draft est utilisé</li>
+          <li>Tes notes perso sont incluses dans l'export</li>
         </ul>
       </div>
+
+      <!-- Hors ligne -->
+      <div class='help-card'>
+        <div class='help-card-head'>
+          <div class='help-card-icon' style='background:#f1f5f9'>📶</div>
+          <div class='help-card-title'>Mode hors ligne</div>
+        </div>
+        <ul>
+          <li>Après une première visite avec connexion, le guide est <strong>disponible hors ligne</strong></li>
+          <li>Parfait pour un draft au chalet sans Wi-Fi</li>
+          <li>Filtres, draft, watchlist et notes fonctionnent tous hors ligne</li>
+          <li>Une bannière indique la date du dernier sync quand tu es hors ligne</li>
+          <li>Sur mobile, tu peux <strong>installer le guide</strong> sur ton écran d'accueil comme une app</li>
+        </ul>
+      </div>
+
     </div>
     <div class='help-footer'>
       <button onclick='closeHelp()'>C'est compris !</button>
