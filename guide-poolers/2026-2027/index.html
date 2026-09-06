@@ -116,6 +116,8 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
 .col-toggle-menu.open { display: block; }
 .col-toggle-menu label { display: flex; align-items: center; gap: 8px; padding: 6px 8px; font-size: 0.85em; color: #1e293b; cursor: pointer; border-radius: 6px; transition: background 0.15s; }
 .col-toggle-menu label:hover { background: #f1f5f9; }
+.col-sort-btn { display: block; width: 100%; text-align: left; background: none; border: none; padding: 6px 8px; font-size: 0.85em; color: #1e293b; cursor: pointer; border-radius: 6px; transition: background 0.15s; }
+.col-sort-btn:hover { background: #f1f5f9; }
 .col-toggle-menu input[type=checkbox] { accent-color: #2d8a3e; width: 14px; height: 14px; cursor: pointer; }
 .col-toggle-menu .menu-title { font-size: 0.72em; font-weight: 700; color: #64748b; letter-spacing: 0.8px; text-transform: uppercase; padding: 4px 8px 8px; border-bottom: 1px solid #e2e8f0; margin-bottom: 4px; }
 
@@ -183,6 +185,11 @@ tr.drafted { background: #f8f9fa !important; }
 @keyframes draft-pulse { 0%,100% { box-shadow: 0 0 0 3px rgba(245,158,11,0.15); } 50% { box-shadow: 0 0 0 5px rgba(245,158,11,0.28); } }
 .btn-reset-draft { background: #fff1f2; border: 1.5px solid #fca5a5; color: #dc2626; }
 .btn-reset-draft:hover { background: #fee2e2; border-color: #f87171; }
+.player-inline-badges { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; align-items: center; }
+.bandaid-inline { font-size: 0.9em; }
+.user-note-cell { min-width: 120px; max-width: 200px; }
+.user-note-input { width: 100%; min-width: 100px; border: 1.5px solid #e2e8f0; border-radius: 6px; padding: 4px 7px; font-size: 0.8em; font-family: inherit; color: #1e293b; background: #f8fafc; resize: none; outline: none; line-height: 1.4; }
+.user-note-input:focus { border-color: #2d8a3e; background: white; box-shadow: 0 0 0 2px rgba(45,138,62,0.12); }
 
 /* ── SCOUTING MODAL ── */
 .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.65); z-index: 8000; display: flex; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(8px); height: 100dvh; }
@@ -500,6 +507,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   /* Drafted players: keep strikethrough in print */
   tr.drafted td { opacity: 0.3 !important; text-decoration: line-through !important; }
   .btn-reset-draft { display: none !important; }
+  .user-note-input { border: none !important; background: transparent !important; resize: none !important; }
 
   /* Force table visible (hidden on mobile) */
   .table-wrap { display: block !important; overflow: visible !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; }
@@ -658,13 +666,12 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
               <label><input type='checkbox' id='col-last' onchange='applyColVis()'> 📅 Stats 2025-26</label>
               <label><input type='checkbox' id='col-ppg' checked onchange='applyColVis()'> PPG (pts/partie)</label>
               <label><input type='checkbox' id='col-salary' checked onchange='applyColVis()'> 💰 Salaire (AAV)</label>
-              <label><input type='checkbox' id='col-pp' onchange='applyColVis()'> PP% (points avantage numérique)</label>
               <label><input type='checkbox' id='col-tier' checked onchange='applyColVis()'> Palier</label>
               <label><input type='checkbox' id='col-trend' checked onchange='applyColVis()'> Tendance</label>
               <label><input type='checkbox' id='col-value' checked onchange='applyColVis()'> Valeur (PTS÷√AAV)</label>
-              <label><input type='checkbox' id='col-risk' checked onchange='applyColVis()'> 🔴 Niveau de risque</label>
-              <label><input type='checkbox' id='col-injury' checked onchange='applyColVis()'> 🩹 Blessures / Risque santé</label>
-              <label><input type='checkbox' id='col-cat' checked onchange='applyColVis()'> 🏷️ Catégorie (Gamble/Sleeper…)</label>
+              <div class='menu-title' style='margin-top:8px;'>Trier par</div>
+              <button class='col-sort-btn' onclick='sortBy("risk");this.closest(".col-toggle-menu").classList.remove("open")'>⚠️ Risque (Low → High)</button>
+              <button class='col-sort-btn' onclick='sortBy("scouting_category");this.closest(".col-toggle-menu").classList.remove("open")'>🏷 Catégorie (A→Z)</button>
             </div>
           </div>
           <button class='ctrl-btn btn-primary' onclick='window.print()'>🖨 Imprimer</button>
@@ -791,6 +798,12 @@ let allPlayers = [];
 let sortCol = 'proj_pts';
 let draftedIds = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]'));
 let draftMode = false;
+let userNotes = JSON.parse(localStorage.getItem('pool_user_notes') || '{}');
+function saveUserNote(id, val) {
+  if (val.trim()) userNotes[id] = val.trim();
+  else delete userNotes[id];
+  localStorage.setItem('pool_user_notes', JSON.stringify(userNotes));
+}
 
 function toggleDraftMode() {
   draftMode = !draftMode;
@@ -966,7 +979,7 @@ function exportExcel() {
   const rows = [];
 
   // Skaters
-  rows.push(['# Rang','Nom','Pos','Équipe','Âge','AAV ($M)','Proj G','Proj A','Proj PTS','PPG','Tier','Tendance','Risque','Band-aid','Catégorie','Notes','Disponible'].map(esc).join(','));
+  rows.push(['# Rang','Nom','Pos','Équipe','Âge','AAV ($M)','Proj G','Proj A','Proj PTS','PPG','Tier','Tendance','Risque','Band-aid','Catégorie','Notes','Disponible','Mes notes'].map(esc).join(','));
   skaters.forEach(p => rows.push([
     p.rank, p.name, p.pos, p.team, p.age,
     p.aav ?? '',
@@ -976,11 +989,12 @@ function exportExcel() {
     p.bandaid ? 'Oui' : '',
     p.scouting_category ?? '', p.notes ?? '',
     draftedIds.has(p.id) ? 'Non' : 'Oui',
+    userNotes[p.id] ?? '',
   ].map(esc).join(',')));
 
   // Goalies
   rows.push('');
-  rows.push(['# Rang','Nom','Équipe','Âge','AAV ($M)','Proj V','Proj BL','Tier','Risque','Catégorie','Notes','Disponible'].map(esc).join(','));
+  rows.push(['# Rang','Nom','Équipe','Âge','AAV ($M)','Proj V','Proj BL','Tier','Risque','Catégorie','Notes','Disponible','Mes notes'].map(esc).join(','));
   goalies.forEach(p => rows.push([
     p.rank, p.name, p.team, p.age,
     p.aav ?? '',
@@ -988,6 +1002,7 @@ function exportExcel() {
     p.tier ?? '', p.risk ?? '',
     p.scouting_category ?? '', p.notes ?? '',
     draftedIds.has(p.id) ? 'Non' : 'Oui',
+    userNotes[p.id] ?? '',
   ].map(esc).join(',')));
 
   // UTF-8 BOM so Excel opens accents correctly
@@ -1165,13 +1180,9 @@ const COL_GROUPS = {
   'col-last':    ['cg-last', 'cg-ppg-last'],
   'col-ppg':     ['cg-ppg-proj'],
   'col-salary':  ['cg-salary'],
-  'col-pp':      ['cg-pp'],
   'col-tier':    ['cg-tier'],
   'col-trend':   ['cg-trend'],
   'col-value':   ['cg-value'],
-  'col-risk':    ['cg-risk'],
-  'col-injury':  ['cg-injury'],
-  'col-cat':     ['cg-cat'],
 };
 
 function applyColVis() {
@@ -1239,8 +1250,9 @@ function sorted(players) {
     if (sortCol === '_goalie_gaa') return getGoalieStats(p).gaa ?? 99;
     if (sortCol === '_goalie_svp') return getGoalieStats(p).svp ?? 0;
     if (sortCol === 'tier') return parseInt(tierNum(p.tier)) || 99;
-    if (sortCol === 'risk') return p.risk === 'Low' ? 1 : p.risk === 'Medium' ? 2 : 3;
+    if (sortCol === 'risk') return p.risk === 'Low' ? 1 : p.risk === 'Medium' ? 2 : p.risk === 'High' ? 3 : 0;
     if (sortCol === 'injury') return p.bandaid ? 1 : 0;
+    if (sortCol === 'scouting_category') return (p.scouting_category || 'zzz').toLowerCase();
     return p[sortCol];
   };
   return [...players].sort((a, b) => {
@@ -1373,9 +1385,7 @@ function goalieHeaderHTML() {
     <th onclick='sortGoalieBy("aav")'               data-col='aav'  class='cg-salary'>💰 AAV<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("tier")'              data-col='tier' class='cg-tier'>Tier<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("_pv")'               data-col='_pv'  class='cg-value'>Valeur<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("risk")'              data-col='risk' class='cg-risk'>Risque<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("injury")'            data-col='injury' class='cg-injury'>🩹<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("scouting_category")' data-col='scouting_category' class='cg-cat'>Cat.<span class='sort-icon'></span></th>
+    <th class='cg-user-note'>Mes notes</th>
   </tr>`;}
 
 function skaterHeaderHTML() {
@@ -1403,13 +1413,10 @@ function skaterHeaderHTML() {
     <th onclick='sortBy("proj_pts")' data-col='proj_pts' class='col-group-proj' style='color:#15803d;font-weight:800;'>PTS<span class='sort-icon'></span></th>
     <th onclick='sortBy("_ppg_proj")' data-col='_ppg_proj' class='col-group-proj cg-ppg-proj' style='border-right:2px solid #bbf7d0;color:#15803d;'>PPG<span class='sort-icon'></span></th>
     <th onclick='sortBy("aav")'     data-col='aav'     class='cg-salary'>💰 AAV<span class='sort-icon'></span></th>
-    <th onclick='sortBy("pp_pct")' data-col='pp_pct' class='cg-pp' onmouseenter='showTooltip(this,"PP% = points en avantage numérique ÷ points totaux × 100")' onmouseleave='hideTooltip()'>PP%<span class='sort-icon'></span></th>
     <th onclick='sortBy("tier")'    data-col='tier'     class='cg-tier'>Tier<span class='sort-icon'></span></th>
     <th onclick='sortBy("_trend")'  data-col='_trend'   class='cg-trend'>Tendance<span class='sort-icon'></span></th>
     <th onclick='sortBy("_pv")'     data-col='_pv'      class='cg-value'>Valeur<span class='sort-icon'></span></th>
-    <th onclick='sortBy("risk")'    data-col='risk'     class='cg-risk'>Risque<span class='sort-icon'></span></th>
-    <th onclick='sortBy("injury")'    data-col='injury'   class='cg-injury'>🩹<span class='sort-icon'></span></th>
-    <th onclick='sortBy("scouting_category")' data-col='scouting_category' class='cg-cat'>Cat.<span class='sort-icon'></span></th>
+    <th class='cg-user-note'>Mes notes</th>
   </tr>`;
 }
 
@@ -1425,7 +1432,6 @@ function buildGoalieRowHTML(p, displayRank) {
     const pv       = getPV(p);
     const pc       = pvClass(pv);
     const aav      = p.aav ? `$${parseFloat(p.aav).toFixed(2)}M` : '—';
-    const riskHtml = p.risk && p.risk !== 'Low' ? `<span class='risk risk-${p.risk}'>${p.risk === 'Medium' ? '🟡 Moyen' : '🔴 Élevé'}</span>` : '—';
     const bandaid  = p.bandaid ? '🩹' : '';
     const bustHtml = p.bust_alert ? `<span class='bust'>💣 Déception</span>` : '';
     const ageClass = p.age <= 22 ? 'age-young' : p.age >= 32 ? 'age-old' : '';
@@ -1436,6 +1442,12 @@ function buildGoalieRowHTML(p, displayRank) {
     const catKey   = catNorm === 'À ÉVITER' || catNorm === 'À EVITER' ? 'AEVITER' : catNorm;
     const grade    = calcGrade(p);
     const isDrafted = draftedIds.has(p.id);
+    const inlineBadges = [
+      cat ? `<span class='cat-badge cat-${catKey}'>${cat}</span>` : '',
+      p.risk && p.risk !== 'Low' ? `<span class='risk risk-${p.risk}'>${p.risk === 'Medium' ? '🟡' : '🔴'}</span>` : '',
+      bandaid ? `<span class='bandaid-inline'>${bandaid}</span>` : '',
+    ].filter(Boolean).join(' ');
+    const userNote = userNotes[p.id] || '';
 
     return `<tr class='${tierRowClass(p.tier)}${isDrafted ? ' drafted' : ''}' onclick='draftMode ? toggleDraft(${p.id}, event) : openModal(${p.id})' style='cursor:pointer' title='${draftMode ? (isDrafted ? "Remettre disponible" : "Marquer comme repêché") : "Voir la fiche"}'>
       <td>${displayRank}${isDrafted ? '<span class="draft-badge">✓</span>' : ''}</td>
@@ -1443,6 +1455,7 @@ function buildGoalieRowHTML(p, displayRank) {
         <div class='player-name' onclick='event.stopPropagation();openModal(${p.id})'>${p.name}</div>
         ${noteEsc ? `<div class='note-icon' onmouseenter='showTooltip(this, this.dataset.note)' onmouseleave='hideTooltip()' data-note="${noteEsc}">${noteFull.length > 50 ? noteFull.slice(0,50) + '…' : noteFull}</div>` : ''}
         ${bustHtml}
+        ${inlineBadges ? `<div class='player-inline-badges'>${inlineBadges}</div>` : ''}
       </td>
       <td><span class='team-tag'>${p.team}</span></td>
       <td><span class='pos-tag pos-${p.pos}'>${p.pos}</span></td>
@@ -1457,9 +1470,7 @@ function buildGoalieRowHTML(p, displayRank) {
       <td class='cg-salary'><span class='salary'>${aav}</span></td>
       <td class='cg-tier'><span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span></td>
       <td class='cg-value'>${grade ? `<span class='grade-badge ${gradeClass(grade)}'>${grade}</span>` : '—'}</td>
-      <td class='cg-risk'>${riskHtml}</td>
-      <td class='cg-injury' style='text-align:center;font-size:1em;'>${bandaid || '—'}</td>
-      <td class='cg-cat'>${cat ? `<span class='cat-badge cat-${catKey}'>${cat}</span>` : '—'}</td>
+      <td class='user-note-cell' onclick='event.stopPropagation()'><textarea class='user-note-input' rows='2' placeholder='Ta note…' onclick='event.stopPropagation()' onchange='saveUserNote(${p.id}, this.value)'>${userNote.replace(/</g,'&lt;')}</textarea></td>
     </tr>`;
 }
 
@@ -1473,8 +1484,6 @@ function buildRowHTML(p, displayRank) {
     const noteEsc  = (p.notes || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
     const noteFull = p.notes || '';
     const aav      = p.aav ? `$${parseFloat(p.aav).toFixed(2)}M` : '—';
-    const ppPct    = p.pp_pct != null ? p.pp_pct + '%' : '—';
-    const riskHtml = p.risk && p.risk !== 'Low' ? `<span class='risk risk-${p.risk}'>${p.risk === 'Medium' ? '🟡 Moyen' : '🔴 Élevé'}</span>` : '—';
     const bustHtml = p.bust_alert ? `<span class='bust'>💣 Déception</span>` : '';
     const bandaid  = p.bandaid ? '🩹' : '';
     const ageClass = p.age <= 22 ? 'age-young' : p.age >= 32 ? 'age-old' : '';
@@ -1488,6 +1497,15 @@ function buildRowHTML(p, displayRank) {
     const projPtsDisplay = p.proj_pts ?? '—';
     const grade = calcGrade(p);
     const isDrafted = draftedIds.has(p.id);
+    const cat      = p.scouting_category;
+    const catNorm  = cat ? cat.toUpperCase() : null;
+    const catKey   = catNorm === 'À ÉVITER' || catNorm === 'À EVITER' ? 'AEVITER' : catNorm;
+    const inlineBadges = [
+      cat ? `<span class='cat-badge cat-${catKey}'>${cat}</span>` : '',
+      p.risk && p.risk !== 'Low' ? `<span class='risk risk-${p.risk}'>${p.risk === 'Medium' ? '🟡' : '🔴'}</span>` : '',
+      bandaid ? `<span class='bandaid-inline'>${bandaid}</span>` : '',
+    ].filter(Boolean).join(' ');
+    const userNote = userNotes[p.id] || '';
 
     return `<tr class='${tierRowClass(p.tier)}${isDrafted ? ' drafted' : ''}' onclick='draftMode ? toggleDraft(${p.id}, event) : openModal(${p.id})' style='cursor:pointer' title='${draftMode ? (isDrafted ? "Remettre disponible" : "Marquer comme repêché") : "Voir la fiche"}'>
       <td>${displayRank}${isDrafted ? '<span class="draft-badge">✓</span>' : ''}</td>
@@ -1495,6 +1513,7 @@ function buildRowHTML(p, displayRank) {
         <div class='player-name' onclick='event.stopPropagation();openModal(${p.id})'>${p.name}</div>
         ${noteEsc ? `<div class='note-icon' onmouseenter='showTooltip(this, this.dataset.note)' onmouseleave='hideTooltip()' data-note="${noteEsc}">${noteFull.length > 50 ? noteFull.slice(0,50) + '…' : noteFull}</div>` : ''}
         ${bustHtml}
+        ${inlineBadges ? `<div class='player-inline-badges'>${inlineBadges}</div>` : ''}
       </td>
       <td><span class='team-tag'>${p.team}</span></td>
       <td><span class='pos-tag pos-${p.pos}'>${p.pos}</span></td>
@@ -1518,13 +1537,10 @@ function buildRowHTML(p, displayRank) {
       `}
 
       <td class='cg-salary'><span class='salary'>${aav}</span></td>
-      ${!isGoalie ? `<td class='cg-pp'><span class='pp-pct'>${ppPct}</span></td>` : ''}
       <td class='cg-tier'><span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span></td>
       ${isGoalie ? (() => { const gt = getTrendGoalie(p); const gDiff = gt.diff; const gDiffStr = gDiff > 0 ? '+' + gDiff : '' + gDiff; return `<td class='cg-trend'><span class='trend trend-${gt.trend}'>${gt.trend === 'up' ? '↑' : gt.trend === 'down' ? '↓' : '→'} ${gDiffStr} V</span></td>`; })() : `<td class='cg-trend'><span class='trend trend-${trend}'>${trendLbl}</span></td>`}
       <td class='cg-value'>${grade ? `<span class='grade-badge ${gradeClass(grade)}'>${grade}</span>` : '—'}</td>
-      <td class='cg-risk'>${riskHtml}</td>
-      <td class='cg-injury' style='text-align:center;font-size:1em;'>${bandaid || '—'}</td>
-      <td class='cg-cat'>${p.scouting_category ? `<span class='cat-badge cat-${['À ÉVITER','À EVITER'].includes(p.scouting_category.toUpperCase()) ? 'AEVITER' : p.scouting_category.toUpperCase()}'>${p.scouting_category}</span>` : '—'}</td>
+      <td class='user-note-cell' onclick='event.stopPropagation()'><textarea class='user-note-input' rows='2' placeholder='Ta note…' onclick='event.stopPropagation()' onchange='saveUserNote(${p.id}, this.value)'>${userNote.replace(/</g,'&lt;')}</textarea></td>
     </tr>`;
 }
 
@@ -1954,7 +1970,7 @@ function switchTab(name, btn) {
 
 // ── CSV EXPORT ────────────────────────────────────────────
 function downloadCSV() {
-  const headers = ['Rang','Joueur','Équipe','Pos','Âge','MJ Dern.','B Dern.','A Dern.','PTS Dern.','PPM Dern.','MJ Proj.','B Proj.','A Proj.','PTS Proj.','PPM Proj.','Plafond','AAV','PP%','Palier','Tendance','Valeur','Notes'];
+  const headers = ['Rang','Joueur','Équipe','Pos','Âge','MJ Dern.','B Dern.','A Dern.','PTS Dern.','PPM Dern.','MJ Proj.','B Proj.','A Proj.','PTS Proj.','PPM Proj.','Plafond','AAV','Palier','Tendance','Valeur','Notes'];
   const rows = sorted(getFiltered()).map((p, i) => {
     const trend = getTrend(p);
     const diff  = p.proj_pts - (p.last_pts || p.proj_pts);
@@ -1962,7 +1978,7 @@ function downloadCSV() {
       p.last_gp??'', p.last_g??'', p.last_a??'', p.last_pts??'', ppg(p.last_pts, p.last_gp),
       p.proj_gp, p.proj_g, p.proj_a, p.proj_pts, ppg(p.proj_pts, p.proj_gp),
       p.upside ?? '',
-      p.aav ? '$'+p.aav+'M' : '', p.pp_pct != null ? p.pp_pct+'%' : '',
+      p.aav ? '$'+p.aav+'M' : '',
       p.tier, (trend==='up'?'+':'')+diff, getPV(p), p.notes||''];
   });
   const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n');
