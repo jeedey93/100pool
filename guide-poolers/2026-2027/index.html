@@ -676,7 +676,6 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
           </div>
           <button class='ctrl-btn btn-primary' onclick='window.print()'>🖨 Imprimer</button>
           <button class='ctrl-btn' onclick='exportExcel()'>📥 Exporter</button>
-          <button class='ctrl-btn btn-reset-draft' id='resetDraftBtn' onclick='resetDraft()' style='display:none'>✕ Reset draft</button>
           <button class='ctrl-btn btn-reset-draft' id='resetNotesBtn' onclick='resetUserNotes()' style='display:none'>🗑 Effacer mes notes</button>
         </div>
       </div>
@@ -701,6 +700,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
         <!-- Draft mode -->
         <div class='filter-group' style='flex-shrink:0'>
           <button class='ctrl-btn btn-draft-toggle' id='draftToggleBtn' onclick='toggleDraftMode()' style='margin:0'>⚾ Mode draft</button>
+          <button class='ctrl-btn btn-reset-draft' id='resetDraftBtn' onclick='resetDraft()' style='display:none;margin:0'>✕ Reset draft</button>
         </div>
       </div>
     </div>
