@@ -678,6 +678,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
           <button class='ctrl-btn' onclick='exportExcel()'>📥 Exporter</button>
           <button class='ctrl-btn btn-draft-toggle' id='draftToggleBtn' onclick='toggleDraftMode()'>⚾ Mode draft</button>
           <button class='ctrl-btn btn-reset-draft' id='resetDraftBtn' onclick='resetDraft()' style='display:none'>✕ Reset draft</button>
+          <button class='ctrl-btn btn-reset-draft' id='resetNotesBtn' onclick='resetUserNotes()' style='display:none'>🗑 Effacer mes notes</button>
         </div>
       </div>
 
@@ -803,6 +804,16 @@ function saveUserNote(id, val) {
   if (val.trim()) userNotes[id] = val.trim();
   else delete userNotes[id];
   localStorage.setItem('pool_user_notes', JSON.stringify(userNotes));
+  const notesBtn = document.getElementById('resetNotesBtn');
+  if (notesBtn) notesBtn.style.display = Object.keys(userNotes).length ? '' : 'none';
+}
+
+function resetUserNotes() {
+  if (!Object.keys(userNotes).length) return;
+  if (!confirm('Effacer toutes tes notes personnelles ?')) return;
+  userNotes = {};
+  localStorage.removeItem('pool_user_notes');
+  renderAll();
 }
 
 function toggleDraftMode() {
@@ -1552,6 +1563,8 @@ function renderAll() {
   // Show/hide reset draft button — only when mode is ON and players are drafted
   const resetBtn = document.getElementById('resetDraftBtn');
   if (resetBtn) resetBtn.style.display = (draftMode && draftedIds.size) ? '' : 'none';
+  const notesBtn = document.getElementById('resetNotesBtn');
+  if (notesBtn) notesBtn.style.display = Object.keys(userNotes).length ? '' : 'none';
   const showGoalieTable = !posFilter || posFilter === 'G';
   const showSkaterTable = posFilter !== 'G';
 
