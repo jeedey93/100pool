@@ -171,13 +171,19 @@ tbody tr.tier-row-11 { border-left: 3px solid #fda4af; }
 /* ── DRAFT MODE ── */
 tr.drafted td { opacity: 0.35; text-decoration: line-through; }
 tr.drafted td .player-name { text-decoration: line-through; color: #94a3b8; }
-tr.drafted { background: #f8f9fa !important; cursor: pointer; }
-tr:not(.drafted) { cursor: pointer; }
+tr.drafted { background: #f8f9fa !important; }
+.draft-mode-active tr:not(.drafted) { cursor: crosshair; }
+.draft-mode-active tr.drafted { cursor: pointer; }
 .card-list .drafted-card { opacity: 0.4; }
 .card-list .drafted-card .card-name { text-decoration: line-through; color: #94a3b8; }
 .draft-badge { font-size: 0.65em; font-weight: 800; background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 1px 6px; border-radius: 99px; margin-left: 5px; }
 .btn-reset-draft { background: #fff1f2; border: 1.5px solid #fca5a5; color: #dc2626; }
 .btn-reset-draft:hover { background: #fee2e2; border-color: #f87171; }
+.btn-draft-toggle { background: #f1f5f9; border: 1.5px solid #cbd5e1; color: #475569; }
+.btn-draft-toggle:hover { background: #e2e8f0; border-color: #94a3b8; }
+.btn-draft-toggle.active { background: #fef3c7; border: 1.5px solid #fbbf24; color: #92400e; }
+.draft-banner { display: none; background: linear-gradient(90deg, #fef3c7, #fffbeb); border-bottom: 2px solid #fbbf24; padding: 7px 16px; font-size: 0.82em; font-weight: 700; color: #92400e; text-align: center; letter-spacing: 0.2px; }
+.draft-banner.show { display: block; }
 
 /* ── SCOUTING MODAL ── */
 .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.65); z-index: 8000; display: flex; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(8px); height: 100dvh; }
@@ -664,6 +670,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
           </div>
           <button class='ctrl-btn btn-primary' onclick='window.print()'>🖨 Imprimer</button>
           <button class='ctrl-btn' onclick='exportExcel()'>📥 Exporter</button>
+          <button class='ctrl-btn btn-draft-toggle' id='draftToggleBtn' onclick='toggleDraftMode()'>✏️ Mode draft</button>
           <button class='ctrl-btn btn-reset-draft' id='resetDraftBtn' onclick='resetDraft()' style='display:none'>✕ Reset draft</button>
         </div>
       </div>
@@ -686,6 +693,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
         </div>
       </div>
     </div>
+    <div class='draft-banner' id='draftBanner'>✏️ Mode draft actif — clique sur un joueur pour le marquer comme repêché</div>
     <div class='table-wrap'>
       <table id='playerTable'>
         <thead id='playerThead'></thead>
@@ -784,8 +792,20 @@ document.addEventListener('click', function(e) {
 let allPlayers = [];
 let sortCol = 'proj_pts';
 let draftedIds = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]'));
+let draftMode = false;
+
+function toggleDraftMode() {
+  draftMode = !draftMode;
+  const btn = document.getElementById('draftToggleBtn');
+  const banner = document.getElementById('draftBanner');
+  const tableWrap = document.querySelector('.table-wrap');
+  if (btn) { btn.classList.toggle('active', draftMode); btn.textContent = draftMode ? '✏️ Mode draft ON' : '✏️ Mode draft'; }
+  if (banner) banner.classList.toggle('show', draftMode);
+  if (tableWrap) tableWrap.classList.toggle('draft-mode-active', draftMode);
+}
 
 function toggleDraft(id, event) {
+  if (!draftMode) return;
   if (event) { event.stopPropagation(); }
   if (draftedIds.has(id)) draftedIds.delete(id);
   else draftedIds.add(id);
@@ -1415,10 +1435,10 @@ function buildGoalieRowHTML(p, displayRank) {
     const grade    = calcGrade(p);
     const isDrafted = draftedIds.has(p.id);
 
-    return `<tr class='${tierRowClass(p.tier)}${isDrafted ? ' drafted' : ''}' onclick='toggleDraft(${p.id}, event)' title='Cliquer pour ${isDrafted ? "remettre disponible" : "marquer comme repêché"}'>
+    return `<tr class='${tierRowClass(p.tier)}${isDrafted ? ' drafted' : ''}' onclick='draftMode ? toggleDraft(${p.id}, event) : openModal(${p.id})' style='cursor:pointer' title='${draftMode ? (isDrafted ? "Remettre disponible" : "Marquer comme repêché") : "Voir la fiche"}'>
       <td>${displayRank}${isDrafted ? '<span class="draft-badge">✓</span>' : ''}</td>
       <td>
-        <div class='player-name' onclick='openModal(${p.id})'>${p.name}</div>
+        <div class='player-name' onclick='event.stopPropagation();openModal(${p.id})'>${p.name}</div>
         ${noteEsc ? `<div class='note-icon' onmouseenter='showTooltip(this, this.dataset.note)' onmouseleave='hideTooltip()' data-note="${noteEsc}">${noteFull.length > 50 ? noteFull.slice(0,50) + '…' : noteFull}</div>` : ''}
         ${bustHtml}
       </td>
@@ -1467,7 +1487,7 @@ function buildRowHTML(p, displayRank) {
     const grade = calcGrade(p);
     const isDrafted = draftedIds.has(p.id);
 
-    return `<tr class='${tierRowClass(p.tier)}${isDrafted ? ' drafted' : ''}' onclick='toggleDraft(${p.id}, event)' title='Cliquer pour ${isDrafted ? "remettre disponible" : "marquer comme repêché"}'>
+    return `<tr class='${tierRowClass(p.tier)}${isDrafted ? ' drafted' : ''}' onclick='draftMode ? toggleDraft(${p.id}, event) : openModal(${p.id})' style='cursor:pointer' title='${draftMode ? (isDrafted ? "Remettre disponible" : "Marquer comme repêché") : "Voir la fiche"}'>
       <td>${displayRank}${isDrafted ? '<span class="draft-badge">✓</span>' : ''}</td>
       <td>
         <div class='player-name' onclick='event.stopPropagation();openModal(${p.id})'>${p.name}</div>
@@ -1620,7 +1640,7 @@ function renderCards(filtered) {
       </div>`;
     const grade = calcGrade(p);
     const isDrafted = draftedIds.has(p.id);
-    return `<div class='player-card ${tierClass(p.tier)}${isDrafted ? ' drafted-card' : ''}' style='cursor:pointer;${isDrafted ? 'opacity:0.4;' : ''}' onclick='toggleDraft(${p.id}, event)'>
+    return `<div class='player-card ${tierClass(p.tier)}${isDrafted ? ' drafted-card' : ''}' style='cursor:pointer;${isDrafted ? 'opacity:0.4;' : ''}' onclick='draftMode ? toggleDraft(${p.id}, event) : openModal(${p.id})'>
       <div class='card-header'>
         <span class='card-rank'>${i + 1}${isDrafted ? '<span class="draft-badge">✓</span>' : ''}</span>
         <div style='flex:1;min-width:0'>
