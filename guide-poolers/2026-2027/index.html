@@ -21,13 +21,17 @@
 <link rel='manifest' href='/guide-poolers/2026-2027/manifest.json'>
 <script>
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/guide-poolers/2026-2027/sw.js', { scope: '/guide-poolers/2026-2027/' })
-    .catch(() => {});
+  // Unregister any stale SW first, then register the new one
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    Promise.all(regs.map(r => r.unregister())).then(() => {
+      navigator.serviceWorker.register('/guide-poolers/2026-2027/sw.js', { scope: '/guide-poolers/2026-2027/' })
+        .catch(() => {});
+    });
+  });
   navigator.serviceWorker.addEventListener('message', e => {
     if (e.data?.type === 'PLAYERS_UPDATED') {
       const banner = document.getElementById('offlineBanner');
       if (banner && !banner.classList.contains('hidden')) {
-        // Fresh data arrived while offline banner was showing — hide it
         banner.classList.add('hidden');
         document.body.style.paddingBottom = '';
       }
@@ -1387,22 +1391,12 @@ async function init() {
     players = await res.json();
     localStorage.setItem('pool_cache_date', new Date().toISOString());
   } catch {
-    // Network failed — SW may have served a cached response already,
-    // or we need to try the cache directly as fallback
+    // Network failed — SW serves from cache automatically on retry
     fromCache = true;
     try {
-      // Try fetching again — SW will serve from cache if available
       const res = await fetch(PLAYERS_URL, { headers: SB_HEADERS });
       if (res.ok) players = await res.json();
     } catch {}
-    // Last resort: manual cache lookup
-    if (!players) {
-      try {
-        const cache = await caches.open('100pool-players-v2');
-        const cached = await cache.match(PLAYERS_URL);
-        if (cached && cached.ok) players = await cached.json();
-      } catch {}
-    }
   }
 
   if (!players || !players.length) {
