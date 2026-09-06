@@ -83,6 +83,7 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
 .ctrl-btn.btn-primary { background: #2d8a3e; color: white; border-color: #2d8a3e; }
 .ctrl-btn.btn-primary:hover { background: #1a5c28; }
 .filter-divider { width: 1px; height: 20px; background: #e2e8f0; flex-shrink: 0; }
+.pills-row1, .pills-row2 { display: contents; }
 
 /* ── FILTER PILLS ── */
 .filter-group { display: flex; gap: 4px; flex-wrap: nowrap; align-items: center; }
@@ -446,8 +447,11 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   /* tier pill: truncate long names on mobile */
   .tier { max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
   /* tier/risk filter row: scroll horizontally instead of overflowing */
-  .controls-row-pills { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
+  .controls-row-pills { flex-wrap: wrap; gap: 6px; overflow-x: visible; padding-bottom: 0; }
   .controls-row-pills .filter-group { flex-shrink: 0; }
+  .controls-row-pills .pills-row1 { display: flex; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; gap: 6px; width: 100%; }
+  .controls-row-pills .pills-row2 { display: flex; flex-wrap: nowrap; gap: 6px; width: 100%; }
+  .controls-row-pills .filter-divider { display: none; }
   /* card footer: already split into 2 rows */
   .card-footer-row1, .card-footer-row2 { flex-wrap: wrap; }
   /* sleeper cards */
@@ -764,30 +768,33 @@ td.star-cell { padding: 0 2px 0 6px; width: 28px; }
 
       <!-- Row 2: Tier + Risk + Draft mode -->
       <div class='controls-row controls-row-pills'>
-        <!-- Tier -->
-        <div class='filter-group' id='tierPills'>
-          <span class='filter-label'>Tier</span>
-          <button class='pill active' data-filter='tier' data-value='' onclick='setPill(this,"tier")'>Tous</button>
+        <div class='pills-row1'>
+          <!-- Tier -->
+          <div class='filter-group' id='tierPills'>
+            <span class='filter-label'>Tier</span>
+            <button class='pill active' data-filter='tier' data-value='' onclick='setPill(this,"tier")'>Tous</button>
+          </div>
+          <div class='filter-divider'></div>
+          <!-- Risk -->
+          <div class='filter-group'>
+            <span class='filter-label'>Risque</span>
+            <button class='pill active' data-filter='risk' data-value='' onclick='setPill(this,"risk")'>Tous</button>
+            <button class='pill' data-filter='risk' data-value='Low' onclick='setPill(this,"risk")'>🟢 Faible</button>
+            <button class='pill' data-filter='risk' data-value='Medium' onclick='setPill(this,"risk")'>🟡 Moyen</button>
+            <button class='pill' data-filter='risk' data-value='High' onclick='setPill(this,"risk")'>🔴 Élevé</button>
+          </div>
         </div>
-        <div class='filter-divider'></div>
-        <!-- Risk -->
-        <div class='filter-group'>
-          <span class='filter-label'>Risque</span>
-          <button class='pill active' data-filter='risk' data-value='' onclick='setPill(this,"risk")'>Tous</button>
-          <button class='pill' data-filter='risk' data-value='Low' onclick='setPill(this,"risk")'>🟢 Faible</button>
-          <button class='pill' data-filter='risk' data-value='Medium' onclick='setPill(this,"risk")'>🟡 Moyen</button>
-          <button class='pill' data-filter='risk' data-value='High' onclick='setPill(this,"risk")'>🔴 Élevé</button>
-        </div>
-        <div class='filter-divider'></div>
-        <!-- Draft mode -->
-        <div class='filter-group' style='flex-shrink:0'>
-          <button class='ctrl-btn btn-draft-toggle' id='draftToggleBtn' onclick='toggleDraftMode()' style='margin:0'>⚾ Mode draft</button>
-          <button class='ctrl-btn btn-reset-draft' id='resetDraftBtn' onclick='resetDraft()' style='display:none;margin:0'>✕ Reset draft</button>
-        </div>
-        <div class='filter-divider'></div>
-        <!-- Watchlist -->
-        <div class='filter-group' style='flex-shrink:0'>
-          <button class='btn-watchlist' id='watchlistBtn' onclick='toggleWatchlistPanel()'>⭐ Ma liste</button>
+        <div class='pills-row2'>
+          <!-- Draft mode -->
+          <div class='filter-group' style='flex-shrink:0'>
+            <button class='ctrl-btn btn-draft-toggle' id='draftToggleBtn' onclick='toggleDraftMode()' style='margin:0'>⚾ Mode draft</button>
+            <button class='ctrl-btn btn-reset-draft' id='resetDraftBtn' onclick='resetDraft()' style='display:none;margin:0'>✕ Reset draft</button>
+          </div>
+          <div class='filter-divider'></div>
+          <!-- Watchlist -->
+          <div class='filter-group' style='flex-shrink:0'>
+            <button class='btn-watchlist' id='watchlistBtn' onclick='toggleWatchlistPanel()'>⭐ Ma liste</button>
+          </div>
         </div>
     </div>
     <div class='table-wrap'>
