@@ -633,6 +633,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 .star-btn { background: none; border: none; cursor: pointer; font-size: 1em; padding: 0 4px; line-height: 1; color: #cbd5e1; transition: color 0.15s, transform 0.1s; flex-shrink: 0; }
 .star-btn:hover { color: #f59e0b; transform: scale(1.2); }
 .star-btn.watchlisted { color: #f59e0b; }
+.star-btn.card-star { font-size: 1.2em; padding: 4px 6px; }
 /* Watchlist side panel (desktop) */
 .watchlist-panel { position: fixed; top: 56px; right: 0; width: 320px; bottom: 0; background: white; border-left: 1.5px solid #e2e8f0; box-shadow: -4px 0 24px rgba(0,0,0,0.1); z-index: 7000; display: flex; flex-direction: column; transform: translateX(100%); transition: transform 0.25s cubic-bezier(0.4,0,0.2,1); }
 .watchlist-panel.open { transform: translateX(0); }
@@ -1973,6 +1974,7 @@ function renderCards(filtered) {
     const isDrafted = draftedIds.has(p.id);
     return `<div class='player-card ${tierClass(p.tier)}${isDrafted ? ' drafted-card' : ''}' style='cursor:pointer;${isDrafted ? 'opacity:0.4;' : ''}' onclick='draftMode ? toggleDraft(${p.id}, event) : openModal(${p.id})'>
       <div class='card-header'>
+        <button class='star-btn card-star${watchlist.includes(p.id) ? ' watchlisted' : ''}' onclick='event.stopPropagation();toggleWatchlist(${p.id})' title='${watchlist.includes(p.id) ? "Retirer de ma liste" : "Ajouter à ma liste"}'>★</button>
         <span class='card-rank'>${i + 1}${isDrafted ? '<span class="draft-badge">✓</span>' : ''}</span>
         <div style='flex:1;min-width:0'>
           <div class='card-name' style='${isDrafted ? "text-decoration:line-through;color:#94a3b8;" : ""}' onclick='event.stopPropagation();openModal(${p.id})'>${p.name}</div>
