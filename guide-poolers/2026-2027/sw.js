@@ -1,5 +1,5 @@
-const CACHE = '100pool-guide-v2';
-const PLAYERS_CACHE = '100pool-players-v2';
+const CACHE = '100pool-guide-v3';
+const PLAYERS_CACHE = '100pool-players-v3';
 
 const SHELL = [
   '/guide-poolers/2026-2027/',
