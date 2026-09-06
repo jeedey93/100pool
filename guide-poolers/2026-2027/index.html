@@ -698,13 +698,6 @@ td.star-cell { padding: 0 2px 0 6px; width: 28px; }
 </style>
 </head>
 <body>
-<div class='offline-banner hidden' id='offlineBanner'>
-  📶 Mode hors ligne — données mises en cache · <span id='offlineCacheDate'></span>
-</div>
-<script>
-  if (!navigator.onLine) updateOfflineBanner(true);
-</script>
-
 <!-- NAV -->
 <nav>
   <a class='nav-logo' href='/'>
@@ -1360,20 +1353,13 @@ function exportExcel() {
 async function init() {
   const PLAYERS_URL = `${SUPABASE_URL}/rest/v1/poolers_players?order=proj_pts.desc&select=*`;
   let players;
-  let fromCache = false;
 
   try {
     const res = await fetch(PLAYERS_URL, { headers: SB_HEADERS });
     if (!res.ok) throw new Error('fetch failed');
     players = await res.json();
-    localStorage.setItem('pool_cache_date', new Date().toISOString());
   } catch {
-    // Network failed — SW serves from cache automatically on retry
-    fromCache = true;
-    try {
-      const res = await fetch(PLAYERS_URL, { headers: SB_HEADERS });
-      if (res.ok) players = await res.json();
-    } catch {}
+    // Network failed
   }
 
   if (!players || !players.length) {
@@ -1383,14 +1369,6 @@ async function init() {
     err.innerHTML = '📶 Impossible de charger les données.<br>Connecte-toi à Internet et recharge la page.';
     document.querySelector('.page-wrap')?.prepend(err);
     return;
-  }
-
-  if (fromCache) {
-    const dateStr = localStorage.getItem('pool_cache_date');
-    const label = dateStr ? new Date(dateStr).toLocaleDateString('fr-CA', { day: 'numeric', month: 'long' }) : 'date inconnue';
-    const span = document.getElementById('offlineCacheDate');
-    if (span) span.textContent = label;
-    updateOfflineBanner(true);
   }
 
   if (IS_DEMO) {
