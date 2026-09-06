@@ -25,6 +25,9 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
 
+  // Ignore non-http requests (chrome-extension, etc.)
+  if (!url.protocol.startsWith('http')) return;
+
   // Supabase players API — network-first, cache by URL only (headers stripped for cache key)
   if (url.hostname.includes('supabase.co') && url.pathname.includes('poolers_players')) {
     e.respondWith(
