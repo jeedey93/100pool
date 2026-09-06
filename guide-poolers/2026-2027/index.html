@@ -1387,15 +1387,22 @@ async function init() {
     players = await res.json();
     localStorage.setItem('pool_cache_date', new Date().toISOString());
   } catch {
-    // Network failed — try cache
+    // Network failed — SW may have served a cached response already,
+    // or we need to try the cache directly as fallback
     fromCache = true;
     try {
-      const cache = await caches.open('100pool-players-v1');
-      const cached = await cache.match(new Request(PLAYERS_URL, { headers: SB_HEADERS }));
-      if (cached) {
-        players = await cached.json();
-      }
+      // Try fetching again — SW will serve from cache if available
+      const res = await fetch(PLAYERS_URL, { headers: SB_HEADERS });
+      if (res.ok) players = await res.json();
     } catch {}
+    // Last resort: manual cache lookup
+    if (!players) {
+      try {
+        const cache = await caches.open('100pool-players-v2');
+        const cached = await cache.match(PLAYERS_URL);
+        if (cached && cached.ok) players = await cached.json();
+      } catch {}
+    }
   }
 
   if (!players || !players.length) {
