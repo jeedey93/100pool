@@ -676,13 +676,12 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
           </div>
           <button class='ctrl-btn btn-primary' onclick='window.print()'>🖨 Imprimer</button>
           <button class='ctrl-btn' onclick='exportExcel()'>📥 Exporter</button>
-          <button class='ctrl-btn btn-draft-toggle' id='draftToggleBtn' onclick='toggleDraftMode()'>⚾ Mode draft</button>
           <button class='ctrl-btn btn-reset-draft' id='resetDraftBtn' onclick='resetDraft()' style='display:none'>✕ Reset draft</button>
           <button class='ctrl-btn btn-reset-draft' id='resetNotesBtn' onclick='resetUserNotes()' style='display:none'>🗑 Effacer mes notes</button>
         </div>
       </div>
 
-      <!-- Row 2: Tier + Risk -->
+      <!-- Row 2: Tier + Risk + Draft mode -->
       <div class='controls-row controls-row-pills'>
         <!-- Tier -->
         <div class='filter-group' id='tierPills'>
@@ -697,6 +696,11 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
           <button class='pill' data-filter='risk' data-value='Low' onclick='setPill(this,"risk")'>🟢 Faible</button>
           <button class='pill' data-filter='risk' data-value='Medium' onclick='setPill(this,"risk")'>🟡 Moyen</button>
           <button class='pill' data-filter='risk' data-value='High' onclick='setPill(this,"risk")'>🔴 Élevé</button>
+        </div>
+        <div class='filter-divider'></div>
+        <!-- Draft mode -->
+        <div class='filter-group' style='flex-shrink:0'>
+          <button class='ctrl-btn btn-draft-toggle' id='draftToggleBtn' onclick='toggleDraftMode()' style='margin:0'>⚾ Mode draft</button>
         </div>
       </div>
     </div>
