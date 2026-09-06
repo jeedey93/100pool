@@ -1444,8 +1444,8 @@ function buildGoalieRowHTML(p, displayRank) {
     const isDrafted = draftedIds.has(p.id);
     const inlineBadges = [
       cat ? `<span class='cat-badge cat-${catKey}'>${cat}</span>` : '',
-      p.risk && p.risk !== 'Low' ? `<span class='risk risk-${p.risk}'>${p.risk === 'Medium' ? '🟡' : '🔴'}</span>` : '',
-      bandaid ? `<span class='bandaid-inline'>${bandaid}</span>` : '',
+      p.risk && p.risk !== 'Low' ? `<span class='risk risk-${p.risk}'>${p.risk === 'Medium' ? '🟡 Moyen' : '🔴 Élevé'}</span>` : '',
+      bandaid ? `<span class='bandaid-inline'>🩹 Blessé</span>` : '',
     ].filter(Boolean).join(' ');
     const userNote = userNotes[p.id] || '';
 
@@ -1502,8 +1502,8 @@ function buildRowHTML(p, displayRank) {
     const catKey   = catNorm === 'À ÉVITER' || catNorm === 'À EVITER' ? 'AEVITER' : catNorm;
     const inlineBadges = [
       cat ? `<span class='cat-badge cat-${catKey}'>${cat}</span>` : '',
-      p.risk && p.risk !== 'Low' ? `<span class='risk risk-${p.risk}'>${p.risk === 'Medium' ? '🟡' : '🔴'}</span>` : '',
-      bandaid ? `<span class='bandaid-inline'>${bandaid}</span>` : '',
+      p.risk && p.risk !== 'Low' ? `<span class='risk risk-${p.risk}'>${p.risk === 'Medium' ? '🟡 Moyen' : '🔴 Élevé'}</span>` : '',
+      bandaid ? `<span class='bandaid-inline'>🩹 Blessé</span>` : '',
     ].filter(Boolean).join(' ');
     const userNote = userNotes[p.id] || '';
 
