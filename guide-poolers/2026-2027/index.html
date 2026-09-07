@@ -648,6 +648,8 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 .help-card ul li { font-size: 0.77em; color: #64748b; line-height: 1.5; padding-left: 12px; position: relative; }
 .help-card ul li::before { content: '·'; position: absolute; left: 0; color: #94a3b8; font-weight: 900; }
 .help-card .help-tag { display: inline-flex; align-items: center; gap: 3px; background: #f1f5f9; border-radius: 5px; padding: 1px 6px; font-size: 0.72em; font-weight: 700; color: #475569; white-space: nowrap; }
+.help-section-label { grid-column: 1 / -1; font-size: 0.72em; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; padding: 4px 2px 0; border-top: 1.5px solid #e8edf3; margin-top: 4px; }
+.help-section-label:first-child { border-top: none; margin-top: 0; }
 .help-footer { padding: 12px 16px; border-top: 1.5px solid #e8edf3; flex-shrink: 0; text-align: center; background: white; }
 .help-footer button { background: linear-gradient(135deg, #1a5c28, #2d8a3e); color: white; border: none; padding: 10px 32px; border-radius: 10px; font-weight: 800; font-size: 0.88em; cursor: pointer; transition: all 0.15s; }
 .help-footer button:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(26,92,40,0.3); }
@@ -2459,6 +2461,8 @@ checkAccess().then(init);
     </div>
     <div class='help-body'>
 
+      <div class='help-section-label'>🔎 Filtres &amp; affichage</div>
+
       <!-- Filtres -->
       <div class='help-card'>
         <div class='help-card-head'>
@@ -2473,6 +2477,37 @@ checkAccess().then(init);
           <li>La barre de <strong>recherche</strong> cherche par nom de joueur</li>
         </ul>
       </div>
+
+      <!-- Tri et colonnes -->
+      <div class='help-card'>
+        <div class='help-card-head'>
+          <div class='help-card-icon' style='background:#f0f9ff'>📊</div>
+          <div class='help-card-title'>Tri et colonnes</div>
+        </div>
+        <ul>
+          <li>Clique sur un <strong>en-tête de colonne</strong> pour trier ↑↓</li>
+          <li>Menu <span class='help-tag'>⚙ Colonnes</span> pour afficher/masquer : Stats 2025-26, PPG, AAV, Palier, Tendance, Valeur</li>
+          <li>Tri spécial par <strong>risque</strong> ou <strong>catégorie</strong> via ce même menu</li>
+          <li>Onglets séparés pour <strong>Joueurs</strong> et <strong>Gardiens</strong></li>
+        </ul>
+      </div>
+
+      <!-- Badges -->
+      <div class='help-card'>
+        <div class='help-card-head'>
+          <div class='help-card-icon' style='background:#fdf4ff'>🏷️</div>
+          <div class='help-card-title'>Badges et indicateurs</div>
+        </div>
+        <ul>
+          <li><span class='help-tag'>Sleeper</span> <span class='help-tag'>Gamble</span> <span class='help-tag'>Breakout</span> <span class='help-tag'>À éviter</span> — catégorie sous le nom</li>
+          <li><strong>🟡 Moyen / 🔴 Élevé</strong> — niveau de risque du joueur</li>
+          <li><strong>🩹 Blessé</strong> — joueur blessé ou à surveiller</li>
+          <li>Les onglets <strong>Gamble, Sleeper, Breakout, À éviter</strong> regroupent les joueurs par catégorie avec des fiches détaillées</li>
+          <li>L'onglet <strong>Rareté</strong> montre la distribution par position/tier</li>
+        </ul>
+      </div>
+
+      <div class='help-section-label'>⚡ Fonctionnalités</div>
 
       <!-- Watchlist -->
       <div class='help-card'>
@@ -2521,34 +2556,7 @@ checkAccess().then(init);
         </ul>
       </div>
 
-      <!-- Badges -->
-      <div class='help-card'>
-        <div class='help-card-head'>
-          <div class='help-card-icon' style='background:#fdf4ff'>🏷️</div>
-          <div class='help-card-title'>Badges et indicateurs</div>
-        </div>
-        <ul>
-          <li><span class='help-tag'>Sleeper</span> <span class='help-tag'>Gamble</span> <span class='help-tag'>Breakout</span> <span class='help-tag'>À éviter</span> — catégorie sous le nom</li>
-          <li><strong>🟡 Moyen / 🔴 Élevé</strong> — niveau de risque du joueur</li>
-          <li><strong>🩹 Blessé</strong> — joueur blessé ou à surveiller</li>
-          <li>Les onglets <strong>Gamble, Sleeper, Breakout, À éviter</strong> regroupent les joueurs par catégorie avec des fiches détaillées</li>
-          <li>L'onglet <strong>Rareté</strong> montre la distribution par position/tier</li>
-        </ul>
-      </div>
-
-      <!-- Tri et colonnes -->
-      <div class='help-card'>
-        <div class='help-card-head'>
-          <div class='help-card-icon' style='background:#f0f9ff'>📊</div>
-          <div class='help-card-title'>Tri et colonnes</div>
-        </div>
-        <ul>
-          <li>Clique sur un <strong>en-tête de colonne</strong> pour trier ↑↓</li>
-          <li>Menu <span class='help-tag'>⚙ Colonnes</span> pour afficher/masquer : Stats 2025-26, PPG, AAV, Palier, Tendance, Valeur</li>
-          <li>Tri spécial par <strong>risque</strong> ou <strong>catégorie</strong> via ce même menu</li>
-          <li>Onglets séparés pour <strong>Joueurs</strong> et <strong>Gardiens</strong></li>
-        </ul>
-      </div>
+      <div class='help-section-label'>📦 Autres</div>
 
       <!-- Imprimer / Exporter -->
       <div class='help-card'>
@@ -2579,6 +2587,7 @@ checkAccess().then(init);
         </ul>
       </div>
 
+      <!-- Valeur Pool -->
       <div class='help-card'>
         <div class='help-card-head'>
           <div class='help-card-icon' style='background:#fdf4ff'>💎</div>
