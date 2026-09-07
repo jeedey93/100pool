@@ -725,6 +725,7 @@ td.star-cell { padding: 0 2px 0 6px; width: 28px; }
     <a href='/guide-poolers/' class='nav-link'>Guide des poolers</a>
     <a href='/podcast/' class='nav-link'>Podcast</a>
     <a href='/faq/' class='nav-link'>FAQ</a>
+    <a href='/mon-equipe/' class='nav-link' id='navBtnEquipe' style='display:none'>🏒 Mon équipe</a>
     <a href='https://buy.stripe.com/6oUeVc26M6aM67JdwYeZ201' class='nav-link nav-btn' target='_blank'>Obtenir le guide — 5 $</a>
   </div>
   <button class='btn-help' onclick='openHelp()' aria-label='Aide'>❓ Aide</button>
@@ -734,6 +735,7 @@ td.star-cell { padding: 0 2px 0 6px; width: 28px; }
   <div class='nav-mobile' id='navMobile'>
     <a href='/guide-poolers/' class='nav-link'>Guide des poolers</a>
     <a href='/podcast/' class='nav-link'>Podcast</a>
+    <a href='/mon-equipe/' class='nav-link' id='navBtnEquipeMobile' style='display:none'>🏒 Mon équipe</a>
     <a href='https://buy.stripe.com/6oUeVc26M6aM67JdwYeZ201' class='nav-link' style='color:#f5c842;font-weight:800;' target='_blank'>Obtenir le guide — 5 $</a>
   </div>
 </nav>
@@ -757,7 +759,6 @@ td.star-cell { padding: 0 2px 0 6px; width: 28px; }
     <button class='tab-btn' onclick='switchTab("breakout", this)'>🚀 Breakout</button>
     <button class='tab-btn' onclick='switchTab("aeviter", this)'>⚠️ À Éviter</button>
     <button class='tab-btn' onclick='switchTab("scarcity", this)'>📊 Rareté</button>
-    <button class='tab-btn' id='tabBtnEquipe' style='display:none' onclick='switchTab("equipe", this)'>🏒 Mon équipe</button>
   </div>
 
   <!-- TAB: ALL PLAYERS -->
@@ -896,10 +897,7 @@ td.star-cell { padding: 0 2px 0 6px; width: 28px; }
   <div id='tab-scarcity' class='tab-pane'>    <div id='scarcityChart'></div>
   </div>
 
-  <!-- TAB: MON ÉQUIPE -->
-  <div id='tab-equipe' class='tab-pane'>
-    <iframe src='/mon-equipe/' id='equipeFrame' style='width:100%;border:none;border-radius:12px;height:calc(100vh - 120px);min-height:600px;display:block;' loading='lazy' title='Mon équipe'></iframe>
-  </div>
+  <!-- TAB: MON ÉQUIPE removed — now a nav link -->
 
   <div class='disclaimer'>
     ⚠️ Les projections sont des estimations basées sur les saisons précédentes, les trios et le contexte d'équipe. Mis à jour manuellement — dernière mise à jour le <span id='lastUpdated'></span>.
@@ -2424,7 +2422,8 @@ function downloadCSV() {
 }
 
 checkAccess().then(() => {
-  document.getElementById('tabBtnEquipe')?.style.removeProperty('display');
+  document.getElementById('navBtnEquipe')?.style.removeProperty('display');
+  document.getElementById('navBtnEquipeMobile')?.style.removeProperty('display');
   init();
 });
 </script>
