@@ -187,6 +187,17 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading p { color: #94a3b8; font-size: 0.88em; }
 </style>
+<script>
+if (window.self !== window.top) {
+  document.documentElement.classList.add('in-iframe');
+}
+</script>
+<style>
+.in-iframe nav,
+.in-iframe .page-header,
+.in-iframe footer { display: none !important; }
+.in-iframe body { padding-top: 0 !important; }
+</style>
 </head>
 <body>
 
