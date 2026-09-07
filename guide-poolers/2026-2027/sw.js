@@ -56,7 +56,21 @@ self.addEventListener('fetch', e => {
   // Other Supabase calls (auth/validate) — network only
   if (url.hostname.includes('supabase.co')) return;
 
-  // App shell — cache-first
+  // HTML pages — network-first so updates are always fresh
+  if (e.request.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname.endsWith('/')) {
+    e.respondWith(
+      fetch(e.request).then(res => {
+        if (res.ok) {
+          const toCache = res.clone();
+          caches.open(CACHE).then(c => c.put(e.request, toCache));
+        }
+        return res;
+      }).catch(() => caches.match(e.request))
+    );
+    return;
+  }
+
+  // Static assets (images, etc.) — cache-first
   e.respondWith(
     caches.match(e.request).then(cached => cached || fetch(e.request).then(res => {
       if (res.ok && e.request.method === 'GET') {
