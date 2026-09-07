@@ -725,7 +725,6 @@ td.star-cell { padding: 0 2px 0 6px; width: 28px; }
     <a href='/guide-poolers/' class='nav-link'>Guide des poolers</a>
     <a href='/podcast/' class='nav-link'>Podcast</a>
     <a href='/faq/' class='nav-link'>FAQ</a>
-    <a href='/mon-equipe/' class='nav-link nav-link-equipe' id='navEquipeLink' style='display:none'>🏒 Mon équipe</a>
     <a href='https://buy.stripe.com/6oUeVc26M6aM67JdwYeZ201' class='nav-link nav-btn' target='_blank'>Obtenir le guide — 5 $</a>
   </div>
   <button class='btn-help' onclick='openHelp()' aria-label='Aide'>❓ Aide</button>
@@ -735,7 +734,6 @@ td.star-cell { padding: 0 2px 0 6px; width: 28px; }
   <div class='nav-mobile' id='navMobile'>
     <a href='/guide-poolers/' class='nav-link'>Guide des poolers</a>
     <a href='/podcast/' class='nav-link'>Podcast</a>
-    <a href='/mon-equipe/' class='nav-link nav-link-equipe' id='navEquipeMobile' style='display:none'>🏒 Mon équipe</a>
     <a href='https://buy.stripe.com/6oUeVc26M6aM67JdwYeZ201' class='nav-link' style='color:#f5c842;font-weight:800;' target='_blank'>Obtenir le guide — 5 $</a>
   </div>
 </nav>
@@ -759,6 +757,7 @@ td.star-cell { padding: 0 2px 0 6px; width: 28px; }
     <button class='tab-btn' onclick='switchTab("breakout", this)'>🚀 Breakout</button>
     <button class='tab-btn' onclick='switchTab("aeviter", this)'>⚠️ À Éviter</button>
     <button class='tab-btn' onclick='switchTab("scarcity", this)'>📊 Rareté</button>
+    <button class='tab-btn' id='tabBtnEquipe' style='display:none' onclick='switchTab("equipe", this)'>🏒 Mon équipe</button>
   </div>
 
   <!-- TAB: ALL PLAYERS -->
@@ -895,6 +894,11 @@ td.star-cell { padding: 0 2px 0 6px; width: 28px; }
 
   <!-- TAB: SCARCITY -->
   <div id='tab-scarcity' class='tab-pane'>    <div id='scarcityChart'></div>
+  </div>
+
+  <!-- TAB: MON ÉQUIPE -->
+  <div id='tab-equipe' class='tab-pane'>
+    <iframe src='/mon-equipe/' id='equipeFrame' style='width:100%;border:none;border-radius:12px;min-height:80vh;display:block;' loading='lazy' title='Mon équipe'></iframe>
   </div>
 
   <div class='disclaimer'>
@@ -2420,8 +2424,7 @@ function downloadCSV() {
 }
 
 checkAccess().then(() => {
-  document.getElementById('navEquipeLink')?.style.removeProperty('display');
-  document.getElementById('navEquipeMobile')?.style.removeProperty('display');
+  document.getElementById('tabBtnEquipe')?.style.removeProperty('display');
   init();
 });
 </script>
