@@ -25,20 +25,22 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
 
-  // Ignore non-http requests (chrome-extension, etc.)
+  // Ignore non-http (chrome-extension, etc.)
   if (!url.protocol.startsWith('http')) return;
 
-  // Supabase players API — network-first, cache by URL only (headers stripped for cache key)
+  // Supabase players — network-first, cache by URL (no auth headers in key)
   if (url.hostname.includes('supabase.co') && url.pathname.includes('poolers_players')) {
     e.respondWith(
       fetch(e.request).then(res => {
         if (res.ok) {
           const toCache = res.clone();
           caches.open(PLAYERS_CACHE).then(cache => cache.put(url.href, toCache));
+          self.clients.matchAll().then(clients =>
+            clients.forEach(c => c.postMessage({ type: 'PLAYERS_UPDATED' }))
+          );
         }
         return res;
       }).catch(async () => {
-        // Offline fallback — serve cached players
         const cache = await caches.open(PLAYERS_CACHE);
         const cached = await cache.match(url.href);
         if (cached) return cached;
@@ -51,10 +53,8 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // All other Supabase calls (auth, validate) — network only, no interference
-  if (url.hostname.includes('supabase.co')) {
-    return; // Let browser handle it normally
-  }
+  // Other Supabase calls (auth/validate) — network only
+  if (url.hostname.includes('supabase.co')) return;
 
   // App shell — cache-first
   e.respondWith(
