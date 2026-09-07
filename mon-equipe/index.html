@@ -209,7 +209,9 @@ if (window.self !== window.top) {
 .in-iframe .nav-mobile,
 .in-iframe .page-header,
 .in-iframe footer { display: none !important; }
-.in-iframe body { padding-top: 0 !important; }
+.in-iframe body { padding-top: 0 !important; overflow-x: hidden; }
+.in-iframe ::-webkit-scrollbar { display: none; }
+.in-iframe { scrollbar-width: none; }
 .in-iframe .cap-bar-wrap { top: 0 !important; border-radius: 0; }
 </style>
 </head>
