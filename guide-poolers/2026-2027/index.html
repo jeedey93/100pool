@@ -626,6 +626,14 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 /* ── CONFIRM DIALOG ── */
 .confirm-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.5); z-index: 9500; display: flex; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(6px); animation: fadeIn 0.15s ease; }
 .confirm-overlay.hidden { display: none; }
+.feedback-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.5); z-index: 9500; display: flex; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(6px); animation: fadeIn 0.15s ease; }
+.feedback-overlay.hidden { display: none; }
+.feedback-box { background: white; border-radius: 20px; padding: 28px 28px 22px; max-width: 420px; width: 100%; box-shadow: 0 24px 64px rgba(0,0,0,0.25); animation: modalIn 0.18s ease; }
+.feedback-box h3 { font-size: 1.05em; font-weight: 900; color: #0f172a; margin-bottom: 6px; }
+.feedback-box p { font-size: 0.83em; color: #64748b; margin-bottom: 16px; line-height: 1.5; }
+.feedback-textarea { width: 100%; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; font-size: 0.88em; font-family: inherit; resize: vertical; min-height: 100px; outline: none; transition: border 0.15s; color: #1e293b; }
+.feedback-textarea:focus { border-color: #2d8a3e; }
+.feedback-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }
 .confirm-box { background: white; border-radius: 20px; padding: 28px 28px 22px; max-width: 340px; width: 100%; box-shadow: 0 24px 64px rgba(0,0,0,0.25); text-align: center; animation: modalIn 0.18s ease; }
 .confirm-icon { font-size: 2em; margin-bottom: 12px; }
 .confirm-title { font-size: 1.05em; font-weight: 900; color: #0f172a; margin-bottom: 8px; }
@@ -737,6 +745,7 @@ td.star-cell { padding: 0 2px 0 6px; width: 28px; }
     <a href='https://buy.stripe.com/6oUeVc26M6aM67JdwYeZ201' class='nav-link nav-btn' target='_blank'>Obtenir le guide — 5 $</a>
   </div>
   <button class='btn-help' onclick='openHelp()' aria-label='Aide'>❓ Aide</button>
+  <button class='btn-help' id='btnFeedback' onclick='openFeedback()' style='display:none' aria-label='Feedback'>💬 Feedback</button>
   <button class='nav-hamburger' onclick='toggleNav()' aria-label='Menu'>
     <span></span><span></span><span></span>
   </button>
@@ -1156,6 +1165,38 @@ function showConfirm(icon, title, desc, onOk) {
 }
 function closeConfirm() {
   document.getElementById('confirmOverlay').classList.add('hidden');
+}
+
+function openFeedback() {
+  document.getElementById('feedbackMsg').value = '';
+  document.getElementById('feedbackSubmitBtn').textContent = 'Envoyer';
+  document.getElementById('feedbackSubmitBtn').disabled = false;
+  document.getElementById('feedbackOverlay').classList.remove('hidden');
+  document.body.classList.add('modal-open');
+}
+function closeFeedback() {
+  document.getElementById('feedbackOverlay').classList.add('hidden');
+  document.body.classList.remove('modal-open');
+}
+async function submitFeedback() {
+  const msg = document.getElementById('feedbackMsg').value.trim();
+  if (!msg) return;
+  const btn = document.getElementById('feedbackSubmitBtn');
+  btn.disabled = true; btn.textContent = 'Envoi…';
+  try {
+    const userEmail = localStorage.getItem('pool_user_email') || null;
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/feedback`, {
+      method: 'POST',
+      headers: { ...SB_HEADERS, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ message: msg, email: userEmail })
+    });
+    if (!res.ok) throw new Error();
+    btn.textContent = '✓ Envoyé !';
+    setTimeout(closeFeedback, 1200);
+  } catch {
+    btn.disabled = false; btn.textContent = 'Envoyer';
+    alert('Erreur lors de l\'envoi. Réessaie.');
+  }
 }
 
 function openHelp() {
@@ -2434,6 +2475,7 @@ function downloadCSV() {
 checkAccess().then(() => {
   document.getElementById('navBtnEquipe')?.style.removeProperty('display');
   document.getElementById('navBtnEquipeMobile')?.style.removeProperty('display');
+  document.getElementById('btnFeedback')?.style.removeProperty('display');
   init();
 });
 </script>
@@ -2641,6 +2683,18 @@ checkAccess().then(() => {
     <div class='confirm-actions'>
       <button class='confirm-btn confirm-btn-cancel' onclick='closeConfirm()'>Annuler</button>
       <button class='confirm-btn confirm-btn-danger' id='confirmOkBtn'>Effacer</button>
+    </div>
+  </div>
+</div>
+
+<div class='feedback-overlay hidden' id='feedbackOverlay' onclick='if(event.target===this)closeFeedback()'>
+  <div class='feedback-box'>
+    <h3>💬 Suggérer une amélioration</h3>
+    <p>Tu as une idée, une correction ou une demande ? Écris-nous — on lit tous les messages.</p>
+    <textarea class='feedback-textarea' id='feedbackMsg' placeholder='Ton message…' maxlength='1000'></textarea>
+    <div class='feedback-actions'>
+      <button class='confirm-btn confirm-btn-cancel' onclick='closeFeedback()'>Annuler</button>
+      <button class='confirm-btn confirm-btn-ok' id='feedbackSubmitBtn' onclick='submitFeedback()'>Envoyer</button>
     </div>
   </div>
 </div>
