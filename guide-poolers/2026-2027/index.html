@@ -863,7 +863,7 @@ td.star-cell { padding: 0; width: 36px; }
         <div class='pills-row2'>
           <!-- Draft mode -->
           <div class='filter-group' style='flex-shrink:0'>
-            <button class='ctrl-btn btn-draft-toggle' id='draftToggleBtn' onclick='toggleDraftMode()' style='margin:0'>⚾ Mode draft</button>
+            <button class='ctrl-btn btn-draft-toggle' id='draftToggleBtn' onclick='toggleDraftMode()' style='margin:0'>🏒 Mode draft</button>
             <button class='ctrl-btn btn-reset-draft' id='resetDraftBtn' onclick='resetDraft()' style='display:none;margin:0'>✕ Reset draft</button>
           </div>
           <div class='filter-divider'></div>
@@ -1296,7 +1296,7 @@ function toggleDraftMode() {
   const tableWrap = document.querySelector('.table-wrap');
   if (btn) {
     btn.classList.toggle('active', draftMode);
-    btn.textContent = draftMode ? '⚾ Mode draft actif' : '⚾ Mode draft';
+    btn.textContent = draftMode ? '🏒 Mode draft actif' : '🏒 Mode draft';
   }
   if (tableWrap) tableWrap.classList.toggle('draft-mode-active', draftMode);
   // Show reset only if mode is ON and there are drafted players
@@ -2719,11 +2719,11 @@ checkAccess().then(async () => {
       <!-- Mode draft -->
       <div class='help-card'>
         <div class='help-card-head'>
-          <div class='help-card-icon' style='background:#fef3c7'>⚾</div>
+          <div class='help-card-icon' style='background:#fef3c7'>🏒</div>
           <div class='help-card-title'>Mode draft</div>
         </div>
         <ul>
-          <li>Active <span class='help-tag'>⚾ Mode draft</span> dans la barre de filtres</li>
+          <li>Active <span class='help-tag'>🏒 Mode draft</span> dans la barre de filtres</li>
           <li>Clique sur un joueur pour le <strong>barrer</strong> (déjà repêché)</li>
           <li>Reclique sur un joueur barré pour le <strong>remettre disponible</strong></li>
           <li><span class='help-tag'>✕ Reset draft</span> efface tous les barrés d'un coup</li>
