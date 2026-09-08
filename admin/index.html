@@ -407,6 +407,15 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 @media (min-width: 769px) {
   .mobile-nav { display: none !important; }
 }
+/* pull-to-refresh indicator */
+#ptr-indicator {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9000;
+  display: flex; align-items: center; justify-content: center;
+  height: 0; overflow: hidden; background: #f0fdf4;
+  transition: height 0.2s; font-size: 0.82em; font-weight: 700; color: #15803d;
+}
+#ptr-indicator.ptr-ready { background: #dcfce7; }
+#ptr-indicator.ptr-loading { height: 48px; }
 </style>
 </head>
 <body>
@@ -728,6 +737,7 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 </div><!-- /main -->
 
 <!-- MOBILE BOTTOM NAV -->
+<div id='ptr-indicator'>↓ Relâcher pour rafraîchir</div>
 <nav class='mobile-nav' id='mobile-nav'>
   <button class='mobile-nav-item active' onclick='switchTab("dashboard",this)'>
     <span class='mn-icon'>📊</span>Dashboard<span class='mn-dot'></span>
@@ -743,6 +753,9 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
   </button>
   <button class='mobile-nav-item' onclick='switchTab("feedback",this)'>
     <span class='mn-icon'>💬</span>Commentaires<span class='mn-dot'></span><span class='nav-badge' id='mobile-feedback-count' style='margin-left:4px'></span>
+  </button>
+  <button class='mobile-nav-item' onclick='refreshAdmin(this)'>
+    <span class='mn-icon'>🔄</span>Refresh<span class='mn-dot'></span>
   </button>
 </nav>
 
@@ -1253,6 +1266,60 @@ function toast(msg, type='') {
   el.textContent = msg; el.className = 'show ' + type;
   clearTimeout(el._t); el._t = setTimeout(() => el.className = '', 3200);
 }
+
+// ── REFRESH ───────────────────────────────────────────────
+function refreshAdmin(btn) {
+  if (btn) { btn.disabled = true; btn.querySelector('.mn-icon').textContent = '⏳'; }
+  init();
+  setTimeout(() => {
+    if (btn) { btn.disabled = false; btn.querySelector('.mn-icon').textContent = '🔄'; }
+    toast('✅ Dashboard rafraîchi');
+  }, 1200);
+}
+
+// ── PULL-TO-REFRESH ───────────────────────────────────────
+(function() {
+  let startY = 0, pulling = false;
+  const THRESHOLD = 72;
+  const ind = document.getElementById('ptr-indicator');
+
+  document.addEventListener('touchstart', e => {
+    if (window.scrollY !== 0) return;
+    startY = e.touches[0].clientY;
+    pulling = true;
+  }, { passive: true });
+
+  document.addEventListener('touchmove', e => {
+    if (!pulling) return;
+    const dy = e.touches[0].clientY - startY;
+    if (dy <= 0) { pulling = false; return; }
+    const pct = Math.min(dy / THRESHOLD, 1);
+    ind.style.height = Math.min(dy * 0.5, 48) + 'px';
+    ind.classList.toggle('ptr-ready', pct >= 1);
+  }, { passive: true });
+
+  document.addEventListener('touchend', e => {
+    if (!pulling) return;
+    pulling = false;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (dy >= THRESHOLD) {
+      ind.classList.add('ptr-loading');
+      ind.classList.remove('ptr-ready');
+      ind.style.height = '48px';
+      ind.textContent = '⏳ Rafraîchissement…';
+      init();
+      setTimeout(() => {
+        ind.style.height = '0';
+        ind.classList.remove('ptr-loading');
+        ind.textContent = '↓ Relâcher pour rafraîchir';
+        toast('✅ Dashboard rafraîchi');
+      }, 1200);
+    } else {
+      ind.style.height = '0';
+      ind.classList.remove('ptr-ready');
+    }
+  }, { passive: true });
+})();
 </script>
 <div class='confirm-overlay hidden' id='confirmOverlay'>
   <div class='confirm-box'>
