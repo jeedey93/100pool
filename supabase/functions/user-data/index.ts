@@ -51,27 +51,33 @@ serve(async (req) => {
     'Content-Type': 'application/json',
   };
 
-  // GET — charger le draft
+  // GET — charger toutes les données utilisateur
   if (req.method === 'GET') {
     const res = await fetch(
-      `${SB_URL}/rest/v1/user_drafts?email=eq.${encodeURIComponent(email)}&select=drafted_ids&limit=1`,
+      `${SB_URL}/rest/v1/user_drafts?email=eq.${encodeURIComponent(email)}&select=drafted_ids,watchlist,notes&limit=1`,
       { headers: sbHeaders }
     );
     const rows = await res.json();
-    const drafted_ids = rows[0]?.drafted_ids ?? [];
-    return new Response(JSON.stringify({ drafted_ids }), { status: 200, headers: { ...CORS, 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify({
+      drafted_ids: rows[0]?.drafted_ids ?? [],
+      watchlist:   rows[0]?.watchlist   ?? [],
+      notes:       rows[0]?.notes       ?? {},
+    }), { status: 200, headers: { ...CORS, 'Content-Type': 'application/json' } });
   }
 
-  // POST — sauvegarder le draft (upsert)
+  // POST — sauvegarder (upsert partiel — on envoie seulement les champs fournis)
   if (req.method === 'POST') {
     const body = await req.json();
-    const drafted_ids = body.drafted_ids ?? [];
+    const payload: Record<string, unknown> = { email, updated_at: new Date().toISOString() };
+    if ('drafted_ids' in body) payload.drafted_ids = body.drafted_ids;
+    if ('watchlist'   in body) payload.watchlist   = body.watchlist;
+    if ('notes'       in body) payload.notes       = body.notes;
     const res = await fetch(
       `${SB_URL}/rest/v1/user_drafts?on_conflict=email`,
       {
         method: 'POST',
         headers: { ...sbHeaders, 'Prefer': 'resolution=merge-duplicates,return=minimal' },
-        body: JSON.stringify({ email, drafted_ids, updated_at: new Date().toISOString() }),
+        body: JSON.stringify(payload),
       }
     );
     const status = (res.ok || res.status === 204 || res.status === 201) ? 200 : res.status;

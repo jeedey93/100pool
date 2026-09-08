@@ -984,19 +984,32 @@ let sortCol = 'proj_pts';
 let draftedIds = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]'));
 let draftMode = false;
 
-// ── DRAFT CLOUD SYNC ─────────────────────────────────────
+// ── CLOUD SYNC (fire-and-forget) ─────────────────────────
 const USER_DATA_URL = 'https://fifurqlitkywtmhgtzeu.supabase.co/functions/v1/user-data';
-let _draftSaveTimer = null;
 
 function getUserToken() {
   return localStorage.getItem('pool_pw_token') ?? '';
 }
 
-async function loadDraftFromCloud() {
+function syncToCloud(payload) {
+  const token = getUserToken();
+  if (!token) return;
+  fetch(USER_DATA_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-user-token': token },
+    body: JSON.stringify(payload)
+  }).then(res => {
+    if (res.ok) showToast('☁️ Sauvegardé');
+  }).catch(() => {
+    showToast('⚠️ Hors ligne — sauvegardé localement');
+  });
+}
+
+async function loadFromCloud() {
   const token = getUserToken();
   if (!token) return;
   try {
-    const res = await fetch(USER_DATA_URL + '/draft', {
+    const res = await fetch(USER_DATA_URL, {
       headers: { 'x-user-token': token }
     });
     if (!res.ok) return;
@@ -1005,32 +1018,22 @@ async function loadDraftFromCloud() {
       draftedIds = new Set(data.drafted_ids);
       localStorage.setItem('pool_drafted', JSON.stringify([...draftedIds]));
     }
-  } catch {}
-}
-
-function saveDraftToCloud() {
-  clearTimeout(_draftSaveTimer);
-  _draftSaveTimer = setTimeout(async () => {
-    const token = getUserToken();
-    if (!token) return;
-    try {
-      const res = await fetch(USER_DATA_URL + '/draft', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-user-token': token },
-        body: JSON.stringify({ drafted_ids: [...draftedIds] })
-      });
-      if (res.ok) showToast('☁️ Draft sauvegardé');
-      else showToast('⚠️ Erreur de sauvegarde');
-    } catch {
-      showToast('⚠️ Hors ligne — sauvegardé localement');
+    if (Array.isArray(data.watchlist) && data.watchlist.length > 0) {
+      watchlist = data.watchlist;
+      localStorage.setItem('pool_watchlist', JSON.stringify(watchlist));
     }
-  }, 800);
+    if (data.notes && Object.keys(data.notes).length > 0) {
+      userNotes = data.notes;
+      localStorage.setItem('pool_user_notes', JSON.stringify(userNotes));
+    }
+  } catch {}
 }
 let userNotes = JSON.parse(localStorage.getItem('pool_user_notes') || '{}');
 let watchlist = JSON.parse(localStorage.getItem('pool_watchlist') || '[]');
 
 function saveWatchlist() {
   localStorage.setItem('pool_watchlist', JSON.stringify(watchlist));
+  syncToCloud({ watchlist });
   updateWatchlistBtn();
 }
 function updateWatchlistBtn() {
@@ -1213,6 +1216,7 @@ function saveUserNote(id, val) {
   if (val.trim()) userNotes[id] = val.trim();
   else delete userNotes[id];
   localStorage.setItem('pool_user_notes', JSON.stringify(userNotes));
+  syncToCloud({ notes: userNotes });
   const notesBtn = document.getElementById('resetNotesBtn');
   if (notesBtn) notesBtn.style.display = Object.keys(userNotes).length ? '' : 'none';
 }
@@ -1281,6 +1285,7 @@ function resetUserNotes() {
   showConfirm('🗑', 'Effacer mes notes', 'Toutes tes notes personnelles seront supprimées. Cette action est irréversible.', () => {
     userNotes = {};
     localStorage.removeItem('pool_user_notes');
+    syncToCloud({ notes: {} });
     renderAll();
   });
 }
@@ -1305,7 +1310,7 @@ function toggleDraft(id, event) {
   if (draftedIds.has(id)) draftedIds.delete(id);
   else draftedIds.add(id);
   localStorage.setItem('pool_drafted', JSON.stringify([...draftedIds]));
-  saveDraftToCloud();
+  syncToCloud({ drafted_ids: [...draftedIds] });
   renderAll();
 }
 
@@ -1313,7 +1318,7 @@ function resetDraft() {
   if (!draftedIds.size) return;
   draftedIds.clear();
   localStorage.removeItem('pool_drafted');
-  saveDraftToCloud();
+  syncToCloud({ drafted_ids: [] });
   renderAll();
 }
 let sortDir = 'desc';
@@ -2594,7 +2599,7 @@ checkAccess().then(async () => {
     if (avatar) avatar.textContent = email.slice(0, 2).toUpperCase();
     if (emailEl) emailEl.textContent = email;
   }
-  await loadDraftFromCloud();
+  await loadFromCloud();
   init();
 });
 </script>
