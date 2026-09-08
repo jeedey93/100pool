@@ -66,6 +66,7 @@ nav { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; he
   nav { padding: 0 16px; }
   .nav-links { display: none; }
   .nav-hamburger { display: flex; }
+  .btn-help .btn-help-label { display: none; }
 }
 
 /* ── FOOTER ── */
@@ -747,8 +748,8 @@ td.star-cell { padding: 0 2px 0 6px; width: 28px; }
     <a href='/faq/' class='nav-link'>FAQ</a>
     <a href='https://buy.stripe.com/6oUeVc26M6aM67JdwYeZ201' class='nav-link nav-btn' target='_blank'>Obtenir le guide — 5 $</a>
   </div>
-  <button class='btn-help' onclick='openHelp()' aria-label='Aide'>❓ Aide</button>
-  <button class='btn-help' id='btnFeedback' onclick='openFeedback()' style='display:none' aria-label='Commentaires'>💬 Commentaires</button>
+  <button class='btn-help' onclick='openHelp()' aria-label='Aide'>❓ <span class='btn-help-label'>Aide</span></button>
+  <button class='btn-help' id='btnFeedback' onclick='openFeedback()' style='display:none' aria-label='Commentaires'>💬 <span class='btn-help-label'>Commentaires</span></button>
   <button class='nav-hamburger' onclick='toggleNav()' aria-label='Menu'>
     <span></span><span></span><span></span>
   </button>
