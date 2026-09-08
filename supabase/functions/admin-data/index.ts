@@ -70,7 +70,7 @@ serve(async (req) => {
     body,
   });
 
-  const resBody = await upstream.text();
+  const resBody = upstream.status === 204 ? null : await upstream.text();
   return new Response(resBody, {
     status:  upstream.status,
     headers: { ...CORS, 'Content-Type': upstream.headers.get('Content-Type') ?? 'application/json' },
