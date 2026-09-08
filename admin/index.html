@@ -1050,7 +1050,7 @@ async function resolveFeedback(id) {
       toast(`Erreur ${res.status}: ${errText.slice(0, 80)}`, 'error');
     }
   } catch(e) {
-    toast('Erreur: ' + e.message, 'error');
+    alert('catch: ' + e.name + ': ' + e.message);
   }
 }
 
