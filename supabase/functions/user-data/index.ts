@@ -67,14 +67,14 @@ serve(async (req) => {
     const body = await req.json();
     const drafted_ids = body.drafted_ids ?? [];
     const res = await fetch(
-      `${SB_URL}/rest/v1/user_drafts`,
+      `${SB_URL}/rest/v1/user_drafts?on_conflict=email`,
       {
         method: 'POST',
-        headers: { ...sbHeaders, 'Prefer': 'resolution=merge-duplicates' },
+        headers: { ...sbHeaders, 'Prefer': 'resolution=merge-duplicates,return=minimal' },
         body: JSON.stringify({ email, drafted_ids, updated_at: new Date().toISOString() }),
       }
     );
-    const status = res.ok || res.status === 204 ? 200 : res.status;
+    const status = (res.ok || res.status === 204 || res.status === 201) ? 200 : res.status;
     return new Response(null, { status, headers: CORS });
   }
 
