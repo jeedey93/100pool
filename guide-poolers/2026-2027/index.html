@@ -290,6 +290,9 @@ tr.drafted { background: #f8f9fa !important; }
 .modal-risks { display: flex; flex-direction: column; gap: 6px; }
 .modal-risk-item { display: flex; align-items: flex-start; gap: 8px; font-size: 0.84em; color: #475569; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 7px 10px; }
 .modal-risk-item::before { content: '⚠️'; flex-shrink: 0; }
+.modal-note-area { width: 100%; box-sizing: border-box; border: 1px solid #e2eae5; border-radius: 10px; padding: 10px 12px; font-size: 0.87em; color: #1e293b; line-height: 1.6; resize: vertical; min-height: 72px; font-family: inherit; background: #f8fafc; transition: border-color 0.15s; outline: none; }
+.modal-note-area:focus { border-color: #4ade80; background: white; }
+.modal-note-area::placeholder { color: #cbd5e1; }
 
 /* Team / pos badges */
 .team-tag { display: inline-block; background: #dbeafe; color: #1e40af; font-size: 0.78em; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
@@ -2535,6 +2538,8 @@ function openModal(id) {
   if (grade)    cards.push(`<div class='modal-stat-card'><div class='sc-val'><span class='grade-badge ${gradeClass(grade)}' style='font-size:1.1em;padding:3px 10px'>${grade}</span></div><div class='sc-lbl'>Valeur</div></div>`);
   if (p.pp_pct != null) cards.push(`<div class='modal-stat-card'><div class='sc-val'>${p.pp_pct}%</div><div class='sc-lbl'>PP%</div></div>`);
   if (p.aav)    cards.push(`<div class='modal-stat-card'><div class='sc-val'>${p.aav}M$</div><div class='sc-lbl'>AAV</div></div>`);
+  const ctcYrs = p.contract_yrs != null ? `${p.contract_yrs} an${p.contract_yrs > 1 ? 's' : ''}` : null;
+  cards.push(`<div class='modal-stat-card'><div class='sc-val' style='font-size:0.85em;color:${ctcYrs ? '#1e293b' : '#94a3b8'}'>${ctcYrs ?? 'À venir'}</div><div class='sc-lbl'>Contrat</div></div>`);
   document.getElementById('modalStatsRow').innerHTML = cards.length
     ? `<div class='modal-stat-cards'>${cards.join('')}</div>` : '';
 
@@ -2547,6 +2552,19 @@ function openModal(id) {
     body += `<div><div class='modal-section-title'>Risques principaux</div><div class='modal-risks'>${risks.map(r => `<div class='modal-risk-item'>${r}</div>`).join('')}</div></div>`;
   }
   document.getElementById('modalBody').innerHTML = body || `<div class='modal-scouting' style='color:#94a3b8;font-style:italic'>Aucun rapport de dépistage disponible.</div>`;
+
+  // Note personnelle
+  const noteVal = userNotes[p.id] || '';
+  const noteHtml = `<div><div class='modal-section-title'>Ma note</div><textarea class='modal-note-area' id='modalNoteArea' placeholder='Ajouter une note personnelle…'>${noteVal}</textarea></div>`;
+  document.getElementById('modalBody').innerHTML += noteHtml;
+  document.getElementById('modalNoteArea').addEventListener('input', function() {
+    const val = this.value.trim();
+    if (val) userNotes[p.id] = val; else delete userNotes[p.id];
+    localStorage.setItem('pool_user_notes', JSON.stringify(userNotes));
+  });
+  document.getElementById('modalNoteArea').addEventListener('blur', function() {
+    syncToCloud({ notes: userNotes });
+  });
 
   const nhlId = p.nhl_id;
   loadNhlHistory(nhlId, p.pos, p).then(html => {
