@@ -858,7 +858,6 @@ td.star-cell { padding: 0; width: 36px; }
           <div class='filter-group' style='flex-shrink:0'>
             <button class='ctrl-btn btn-draft-toggle' id='draftToggleBtn' onclick='toggleDraftMode()' style='margin:0'>⚾ Mode draft</button>
             <button class='ctrl-btn btn-reset-draft' id='resetDraftBtn' onclick='resetDraft()' style='display:none;margin:0'>✕ Reset draft</button>
-            <span id='draft-sync-indicator' style='font-size:0.75em;color:#64748b;font-weight:600;opacity:0;transition:opacity 0.3s;white-space:nowrap'></span>
           </div>
           <div class='filter-divider'></div>
           <!-- Watchlist -->
@@ -1007,17 +1006,16 @@ function saveDraftToCloud() {
   _draftSaveTimer = setTimeout(async () => {
     const token = getUserToken();
     if (!token) return;
-    const indicator = document.getElementById('draft-sync-indicator');
     try {
-      if (indicator) { indicator.textContent = '☁️ Sauvegarde…'; indicator.style.opacity = '1'; }
-      await fetch(USER_DATA_URL + '/draft', {
+      const res = await fetch(USER_DATA_URL + '/draft', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-user-token': token },
         body: JSON.stringify({ drafted_ids: [...draftedIds] })
       });
-      if (indicator) { indicator.textContent = '✓ Sauvegardé'; setTimeout(() => { indicator.style.opacity = '0'; }, 1500); }
+      if (res.ok) showToast('☁️ Draft sauvegardé');
+      else showToast('⚠️ Erreur de sauvegarde');
     } catch {
-      if (indicator) { indicator.textContent = '⚠️ Hors ligne'; setTimeout(() => { indicator.style.opacity = '0'; }, 2000); }
+      showToast('⚠️ Hors ligne — sauvegardé localement');
     }
   }, 800);
 }
