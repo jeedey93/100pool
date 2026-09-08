@@ -919,7 +919,7 @@ async function loadFeedback() {
           <td style='max-width:340px;white-space:pre-wrap;word-break:break-word;font-size:0.88em'>${r.message ?? ''}</td>
           <td style='font-size:0.82em;color:#64748b'>${r.email ?? '—'}</td>
           <td class='date-cell'>${fmt(r.created_at)}</td>
-          <td><button onclick='deleteFeedback("${r.id}", this)' style='background:none;border:none;cursor:pointer;color:#e11d48;font-size:1em;padding:4px 8px;border-radius:6px;transition:background 0.15s' title='Supprimer' onmouseover='this.style.background="#fff1f2"' onmouseout='this.style.background="none"'>🗑</button></td>
+          <td><button onclick='deleteFeedback("${r.id}", this)' data-feedback-id='${r.id}' style='background:none;border:none;cursor:pointer;color:#e11d48;font-size:1em;padding:4px 8px;border-radius:6px;transition:background 0.15s' title='Supprimer' onmouseover='this.style.background="#fff1f2"' onmouseout='this.style.background="none"'>🗑</button></td>
         </tr>`).join('')
       : `<tr><td colspan='4'><div class='empty-state'><div class='es-icon'>💬</div><p>Aucun feedback pour l'instant</p></div></td></tr>`;
   } catch {}
@@ -928,15 +928,15 @@ async function loadFeedback() {
 async function deleteFeedback(id, btn) {
   document.getElementById('confirmDeleteBtn').onclick = async () => {
     closeAdminConfirm();
-    btn.disabled = true; btn.textContent = '…';
+    const row = document.querySelector(`[data-feedback-id="${id}"]`)?.closest('tr');
     try {
       const res = await dbFetch(`/rest/v1/feedback?id=eq.${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        btn.closest('tr').remove();
+      if (res.ok || res.status === 204) {
+        row?.remove();
         const badge = document.getElementById('sidebar-feedback-count');
         if (badge) { const n = parseInt(badge.textContent || '0') - 1; badge.textContent = n > 0 ? n : ''; }
-      } else { btn.disabled = false; btn.textContent = '🗑'; }
-    } catch { btn.disabled = false; btn.textContent = '🗑'; }
+      }
+    } catch {}
   };
   document.getElementById('confirmOverlay').classList.remove('hidden');
 }
