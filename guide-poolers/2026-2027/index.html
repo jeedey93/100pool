@@ -1296,12 +1296,20 @@ function toggleDraftMode() {
   const tableWrap = document.querySelector('.table-wrap');
   if (btn) {
     btn.classList.toggle('active', draftMode);
-    btn.textContent = draftMode ? '🏒 Mode draft actif' : '🏒 Mode draft';
+    updateDraftBtn();
   }
   if (tableWrap) tableWrap.classList.toggle('draft-mode-active', draftMode);
   // Show reset only if mode is ON and there are drafted players
   const resetBtn = document.getElementById('resetDraftBtn');
   if (resetBtn) resetBtn.style.display = (draftMode && draftedIds.size) ? '' : 'none';
+}
+
+function updateDraftBtn() {
+  const btn = document.getElementById('draftToggleBtn');
+  if (!btn) return;
+  const n = draftedIds.size;
+  if (!draftMode) { btn.textContent = n ? `🏒 Mode draft (${n})` : '🏒 Mode draft'; return; }
+  btn.textContent = n ? `🏒 Mode draft actif (${n} rayés)` : '🏒 Mode draft actif';
 }
 
 function toggleDraft(id, event) {
@@ -1311,6 +1319,9 @@ function toggleDraft(id, event) {
   else draftedIds.add(id);
   localStorage.setItem('pool_drafted', JSON.stringify([...draftedIds]));
   syncToCloud({ drafted_ids: [...draftedIds] });
+  updateDraftBtn();
+  const resetBtn = document.getElementById('resetDraftBtn');
+  if (resetBtn) resetBtn.style.display = (draftMode && draftedIds.size) ? '' : 'none';
   renderAll();
 }
 
@@ -1319,6 +1330,9 @@ function resetDraft() {
   draftedIds.clear();
   localStorage.removeItem('pool_drafted');
   syncToCloud({ drafted_ids: [] });
+  updateDraftBtn();
+  const resetBtn = document.getElementById('resetDraftBtn');
+  if (resetBtn) resetBtn.style.display = 'none';
   renderAll();
 }
 let sortDir = 'desc';
@@ -2600,6 +2614,7 @@ checkAccess().then(async () => {
     if (emailEl) emailEl.textContent = email;
   }
   await loadFromCloud();
+  updateDraftBtn();
   init();
 });
 </script>
