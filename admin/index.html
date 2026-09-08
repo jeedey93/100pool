@@ -832,8 +832,7 @@ function renderAcces() {
         <div class='email-cell'>
           <div class='buyer-avatar'>${initials(r.email)}</div>
           <div style='min-width:0;flex:1'>
-            <div class='email-text'>${r.email ?? '—'}${isNew(r.created_at) ? "<span class='new-badge'>Nouveau</span>" : ''}</div>
-            <div class='email-sub'>${fmt(r.created_at)}</div>
+            <div class='email-text'>${r.email ?? '—'}</div>
           </div>
         </div>
       </td>
