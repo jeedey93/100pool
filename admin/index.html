@@ -927,16 +927,23 @@ async function loadFeedback() {
 
 async function deleteFeedback(id, btn) {
   document.getElementById('confirmDeleteBtn').onclick = async () => {
-    closeAdminConfirm();
     const row = document.querySelector(`[data-feedback-id="${id}"]`)?.closest('tr');
     try {
       const res = await dbFetch(`/rest/v1/feedback?id=eq.${id}`, { method: 'DELETE' });
       if (res.ok || res.status === 204) {
+        closeAdminConfirm();
         row?.remove();
         const badge = document.getElementById('sidebar-feedback-count');
         if (badge) { const n = parseInt(badge.textContent || '0') - 1; badge.textContent = n > 0 ? n : ''; }
+      } else {
+        closeAdminConfirm();
+        const errText = await res.text();
+        toast('Erreur suppression: ' + res.status + ' ' + errText, 'error');
       }
-    } catch {}
+    } catch(e) {
+      closeAdminConfirm();
+      toast('Erreur: ' + e.message, 'error');
+    }
   };
   document.getElementById('confirmOverlay').classList.remove('hidden');
 }
