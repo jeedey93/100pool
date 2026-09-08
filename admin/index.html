@@ -606,8 +606,6 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
       </div>
     </div>
 
-  </div><!-- /content -->
-
     <!-- TAB FEEDBACK -->
     <div id='tab-feedback' style='display:none'>
       <div class='section-header'>
@@ -629,6 +627,7 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
       </div>
     </div>
 
+  </div><!-- /content -->
 </div><!-- /main -->
 
 <!-- MOBILE BOTTOM NAV -->
@@ -734,14 +733,14 @@ const TIERS = ['Elite','Top','Mid','Sleeper'];
 const TIER_COLORS = { Elite: '#92400e', Top: '#1e40af', Mid: '#475569', Sleeper: '#065f46' };
 
 // ── TABS ─────────────────────────────────────────────────
-const TAB_TITLES = { dashboard: '📊 Dashboard', acces: '💳 Accès & Achats', skaters: '⛸ Patineurs 2026-27', goalies: '🥅 Gardiens 2026-27' };
+const TAB_TITLES = { dashboard: '📊 Dashboard', acces: '💳 Accès & Achats', skaters: '⛸ Patineurs 2026-27', goalies: '🥅 Gardiens 2026-27', feedback: '💬 Feedback' };
 
 function switchTab(tab, btn) {
   document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(b => {
     if (b.getAttribute('onclick')?.includes(`"${tab}"`)) b.classList.add('active');
   });
-  ['dashboard','acces','skaters','goalies'].forEach(t => {
+  ['dashboard','acces','skaters','goalies','feedback'].forEach(t => {
     document.getElementById(`tab-${t}`).style.display = t === tab ? '' : 'none';
   });
   document.getElementById('topbar-title').textContent = TAB_TITLES[tab];
