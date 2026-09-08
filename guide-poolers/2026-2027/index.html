@@ -1351,6 +1351,7 @@ async function checkAccess() {
         const data = await res.json();
         if (res.ok && data.token) {
           localStorage.setItem('pool_pw_token', data.token);
+          localStorage.setItem('pool_user_email', email);
           overlay.remove();
           resolve();
         } else if (data.error === 'expired') {

@@ -620,6 +620,7 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
               <th>Message</th>
               <th>Email</th>
               <th>Date</th>
+              <th></th>
             </tr></thead>
             <tbody id='tbody-feedback'></tbody>
           </table>
@@ -902,9 +903,22 @@ async function loadFeedback() {
           <td style='max-width:340px;white-space:pre-wrap;word-break:break-word;font-size:0.88em'>${r.message ?? ''}</td>
           <td style='font-size:0.82em;color:#64748b'>${r.email ?? '—'}</td>
           <td class='date-cell'>${fmt(r.created_at)}</td>
+          <td><button onclick='deleteFeedback("${r.id}", this)' style='background:none;border:none;cursor:pointer;color:#e11d48;font-size:1em;padding:4px 8px;border-radius:6px;transition:background 0.15s' title='Supprimer' onmouseover='this.style.background="#fff1f2"' onmouseout='this.style.background="none"'>🗑</button></td>
         </tr>`).join('')
-      : `<tr><td colspan='3'><div class='empty-state'><div class='es-icon'>💬</div><p>Aucun feedback pour l'instant</p></div></td></tr>`;
+      : `<tr><td colspan='4'><div class='empty-state'><div class='es-icon'>💬</div><p>Aucun feedback pour l'instant</p></div></td></tr>`;
   } catch {}
+}
+
+async function deleteFeedback(id, btn) {
+  btn.disabled = true; btn.textContent = '…';
+  try {
+    const res = await dbFetch(`/rest/v1/feedback?id=eq.${id}`, { method: 'DELETE' });
+    if (res.ok) {
+      btn.closest('tr').remove();
+      const badge = document.getElementById('sidebar-feedback-count');
+      if (badge) { const n = parseInt(badge.textContent || '0') - 1; badge.textContent = n > 0 ? n : ''; }
+    } else { btn.disabled = false; btn.textContent = '🗑'; }
+  } catch { btn.disabled = false; btn.textContent = '🗑'; }
 }
 
 async function loadPlayers() {
