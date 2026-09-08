@@ -1032,7 +1032,7 @@ async function resolveFeedback(id) {
   try {
     const res = await dbFetch(`/rest/v1/feedback?id=eq.${id}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ resolved: nowResolved })
     });
     if (res.ok || res.status === 204) {
@@ -1050,7 +1050,7 @@ async function resolveFeedback(id) {
       toast(`Erreur ${res.status}: ${errText.slice(0, 80)}`, 'error');
     }
   } catch(e) {
-    alert('catch: ' + e.name + ': ' + e.message);
+    toast('Erreur: ' + e.message, 'error');
   }
 }
 
