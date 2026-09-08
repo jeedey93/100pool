@@ -1047,8 +1047,7 @@ async function resolveFeedback(id) {
       toast(nowResolved ? 'Commentaire marqué comme traité' : 'Commentaire rouvert', 'success');
     } else {
       const errText = await res.text();
-      console.error('resolveFeedback error', res.status, errText);
-      toast(`Erreur ${res.status}: ${errText.slice(0, 80)}`, 'error');
+      alert(`Erreur ${res.status}:\n${errText}`);
     }
   } catch(e) {
     toast('Erreur: ' + e.message, 'error');
