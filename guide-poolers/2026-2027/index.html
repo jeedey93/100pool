@@ -1020,9 +1020,9 @@ function saveDraftToCloud() {
         body: JSON.stringify({ drafted_ids: [...draftedIds] })
       });
       if (res.ok) showToast('☁️ Draft sauvegardé');
-      else { const t = await res.text(); alert('Erreur ' + res.status + ': ' + t); }
-    } catch(e) {
-      alert('catch: ' + e.name + ': ' + e.message);
+      else showToast('⚠️ Erreur de sauvegarde');
+    } catch {
+      showToast('⚠️ Hors ligne — sauvegardé localement');
     }
   }, 800);
 }
