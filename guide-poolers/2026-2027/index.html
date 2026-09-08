@@ -987,6 +987,7 @@ function openWatchlistPanel() {
   if (window.innerWidth <= 768) {
     document.getElementById('watchlistOverlay').classList.remove('hidden');
     document.body.classList.add('modal-open');
+  } else {
     document.getElementById('watchlistPanel').classList.add('open');
   }
 }
