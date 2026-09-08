@@ -465,7 +465,6 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
           <table>
             <thead><tr>
               <th>Acheteur</th>
-              <th>Produit</th>
               <th>Date</th>
             </tr></thead>
             <tbody id='tbody-recent'></tbody>
@@ -519,7 +518,6 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
             <thead><tr>
               <th class='hide-mobile'>#</th>
               <th>Acheteur</th>
-              <th>Produit</th>
               <th>Date d'achat</th>
               <th class='hide-mobile'>Expiration</th>
             </tr></thead>
@@ -839,10 +837,9 @@ function renderAcces() {
           </div>
         </div>
       </td>
-      <td><span class='product-badge'>${r.product ?? 'Guide'}</span></td>
       <td class='date-cell'>${fmt(r.created_at)}</td>
     </tr>`).join('') ||
-    `<tr><td colspan='3'><div class='empty-state'><div class='es-icon'>💳</div><p>Aucun achat pour l'instant</p></div></td></tr>`;
+    `<tr><td colspan='2'><div class='empty-state'><div class='es-icon'>💳</div><p>Aucun achat pour l'instant</p></div></td></tr>`;
 
   // Full accès table
   document.getElementById('tbody-acces').innerHTML = rows.length
@@ -855,11 +852,10 @@ function renderAcces() {
             <span style='font-weight:600;color:#1e293b'>${r.email ?? '—'}</span>
           </div>
         </td>
-        <td><span class='product-badge'>${r.product ?? 'Guide'}</span></td>
         <td class='date-cell'>${fmt(r.created_at)}</td>
         <td class='date-cell hide-mobile'>${fmt(r.expires_at)}</td>
       </tr>`).join('')
-    : `<tr><td colspan='5'><div class='empty-state'><div class='es-icon'>💳</div><p>Aucun achat pour l'instant</p></div></td></tr>`;
+    : `<tr><td colspan='4'><div class='empty-state'><div class='es-icon'>💳</div><p>Aucun achat pour l'instant</p></div></td></tr>`;
 }
 
 // ── JOUEURS ───────────────────────────────────────────────
