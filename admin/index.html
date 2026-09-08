@@ -127,6 +127,11 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 .email-sub { font-size: 0.74em; color: #94a3b8; font-weight: 400; }
 .product-badge { font-size: 0.72em; background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; padding: 3px 10px; border-radius: 99px; font-weight: 700; white-space: nowrap; }
 .date-cell { font-size: 0.82em; color: #64748b; white-space: nowrap; }
+/* feedback table - desktop */
+#tab-feedback td.fb-msg { max-width: 340px; white-space: pre-wrap; word-break: break-word; font-size: 0.88em; }
+#tab-feedback td.fb-meta { vertical-align: middle; }
+#tab-feedback td.fb-meta .fb-email { display: block; font-size: 0.82em; color: #64748b; }
+#tab-feedback td.fb-meta .fb-date { display: block; font-size: 0.76em; color: #94a3b8; white-space: nowrap; }
 .new-badge { display: inline-block; font-size: 0.65em; background: #fef3c7; color: #d97706; border: 1px solid #fde68a; padding: 2px 7px; border-radius: 99px; font-weight: 700; margin-left: 4px; white-space: nowrap; vertical-align: middle; }
 
 /* ── TOOLBAR ── */
@@ -315,6 +320,52 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
   .hide-mobile { display: none; }
 
   .mobile-nav { display: flex; }
+
+  /* feedback: card layout on mobile */
+  #tab-feedback .table-wrap { overflow-x: visible; }
+  #tab-feedback table, #tab-feedback thead, #tab-feedback tbody,
+  #tab-feedback th, #tab-feedback td, #tab-feedback tr { display: block; }
+  #tab-feedback thead { display: none; }
+  #tab-feedback tbody tr {
+    background: white;
+    border: 1px solid #e2eae5;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    padding: 14px 14px 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  #tab-feedback tbody tr:hover { background: white; }
+  #tab-feedback tbody td { padding: 0; border: none; }
+  #tab-feedback td.fb-msg {
+    font-size: 0.9em;
+    color: #1e293b;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  #tab-feedback td.fb-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  #tab-feedback td.fb-meta .fb-email {
+    font-size: 0.78em;
+    color: #64748b;
+    font-weight: 600;
+  }
+  #tab-feedback td.fb-meta .fb-date {
+    font-size: 0.75em;
+    color: #94a3b8;
+  }
+  #tab-feedback td.fb-del {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  #tab-feedback tbody tr { position: relative; padding-right: 44px; }
 }
 
 @media (max-width: 400px) {
@@ -375,7 +426,7 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
   <div class='sidebar-section'>
     <div class='sidebar-section-label'>Communauté</div>
     <button class='nav-item' onclick='switchTab("feedback",this)'>
-      <span class='nav-icon'>💬</span><span>Feedback</span><span class='nav-badge' id='sidebar-feedback-count'></span>
+      <span class='nav-icon'>💬</span><span>Commentaires</span><span class='nav-badge' id='sidebar-feedback-count'></span>
     </button>
   </div>
 
@@ -625,7 +676,7 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
     <!-- TAB FEEDBACK -->
     <div id='tab-feedback' style='display:none'>
       <div class='section-header'>
-        <h2>💬 Feedback</h2>
+        <h2>💬 Commentaires</h2>
         <p>Suggestions et demandes d'amélioration des utilisateurs</p>
       </div>
       <div class='card'>
@@ -634,8 +685,7 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
           <table>
             <thead><tr>
               <th>Message</th>
-              <th>Email</th>
-              <th>Date</th>
+              <th>Email / Date</th>
               <th></th>
             </tr></thead>
             <tbody id='tbody-feedback'></tbody>
@@ -662,7 +712,7 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
     <span class='mn-icon'>🥅</span>Gardiens<span class='mn-dot'></span>
   </button>
   <button class='mobile-nav-item' onclick='switchTab("feedback",this)'>
-    <span class='mn-icon'>💬</span>Feedback<span class='mn-dot'></span>
+    <span class='mn-icon'>💬</span>Commentaires<span class='mn-dot'></span>
   </button>
 </nav>
 
@@ -750,7 +800,7 @@ const TIERS = ['Elite','Top','Mid','Sleeper'];
 const TIER_COLORS = { Elite: '#92400e', Top: '#1e40af', Mid: '#475569', Sleeper: '#065f46' };
 
 // ── TABS ─────────────────────────────────────────────────
-const TAB_TITLES = { dashboard: '📊 Dashboard', acces: '💳 Accès & Achats', skaters: '⛸ Patineurs 2026-27', goalies: '🥅 Gardiens 2026-27', feedback: '💬 Feedback' };
+const TAB_TITLES = { dashboard: '📊 Dashboard', acces: '💳 Accès & Achats', skaters: '⛸ Patineurs 2026-27', goalies: '🥅 Gardiens 2026-27', feedback: '💬 Commentaires' };
 
 function switchTab(tab, btn) {
   document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(b => b.classList.remove('active'));
@@ -916,12 +966,14 @@ async function loadFeedback() {
     const fmt = d => d ? new Date(d).toLocaleString('fr-CA', { timeZone: 'America/Toronto', dateStyle: 'short', timeStyle: 'short' }) : '—';
     document.getElementById('tbody-feedback').innerHTML = rows.length
       ? rows.map(r => `<tr>
-          <td style='max-width:340px;white-space:pre-wrap;word-break:break-word;font-size:0.88em'>${r.message ?? ''}</td>
-          <td style='font-size:0.82em;color:#64748b'>${r.email ?? '—'}</td>
-          <td class='date-cell'>${fmt(r.created_at)}</td>
-          <td><button onclick='deleteFeedback("${r.id}", this)' data-feedback-id='${r.id}' style='background:none;border:none;cursor:pointer;color:#e11d48;font-size:1em;padding:4px 8px;border-radius:6px;transition:background 0.15s' title='Supprimer' onmouseover='this.style.background="#fff1f2"' onmouseout='this.style.background="none"'>🗑</button></td>
+          <td class='fb-msg'>${r.message ?? ''}</td>
+          <td class='fb-meta'>
+            <span class='fb-email'>${r.email ?? '—'}</span>
+            <span class='fb-date'>${fmt(r.created_at)}</span>
+          </td>
+          <td class='fb-del'><button onclick='deleteFeedback("${r.id}", this)' data-feedback-id='${r.id}' style='background:none;border:none;cursor:pointer;color:#e11d48;font-size:1em;padding:4px 8px;border-radius:6px;transition:background 0.15s' title='Supprimer' onmouseover='this.style.background="#fff1f2"' onmouseout='this.style.background="none"'>🗑</button></td>
         </tr>`).join('')
-      : `<tr><td colspan='4'><div class='empty-state'><div class='es-icon'>💬</div><p>Aucun feedback pour l'instant</p></div></td></tr>`;
+      : `<tr><td colspan='3'><div class='empty-state'><div class='es-icon'>💬</div><p>Aucun commentaire pour l'instant</p></div></td></tr>`;
   } catch {}
 }
 
@@ -1127,7 +1179,7 @@ function toast(msg, type='') {
 <div class='confirm-overlay hidden' id='confirmOverlay'>
   <div class='confirm-box'>
     <div class='confirm-icon'>🗑</div>
-    <div class='confirm-title'>Supprimer ce feedback ?</div>
+    <div class='confirm-title'>Supprimer ce commentaire ?</div>
     <div class='confirm-desc'>Cette action est irréversible.</div>
     <div class='confirm-actions'>
       <button class='confirm-btn confirm-btn-cancel' onclick='closeAdminConfirm()'>Annuler</button>
