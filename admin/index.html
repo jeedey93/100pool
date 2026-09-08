@@ -132,6 +132,19 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 #tab-feedback td.fb-meta { vertical-align: middle; }
 #tab-feedback td.fb-meta .fb-email { display: block; font-size: 0.82em; color: #64748b; }
 #tab-feedback td.fb-meta .fb-date { display: block; font-size: 0.76em; color: #94a3b8; white-space: nowrap; }
+/* feedback action buttons */
+.fb-btn-resolve, .fb-btn-delete {
+  background: none; border: none; cursor: pointer; font-size: 1em;
+  padding: 4px 6px; border-radius: 6px; transition: background 0.15s; line-height: 1;
+}
+.fb-btn-resolve { color: #64748b; }
+.fb-btn-resolve:hover { background: #f0fdf4; color: #15803d; }
+.fb-btn-resolve.fb-btn-active { color: #15803d; background: #dcfce7; }
+.fb-btn-delete { color: #e11d48; }
+.fb-btn-delete:hover { background: #fff1f2; }
+/* resolved row */
+#tab-feedback tbody tr.fb-resolved td.fb-msg { text-decoration: line-through; color: #94a3b8; }
+#tab-feedback tbody tr.fb-resolved { opacity: 0.55; }
 .new-badge { display: inline-block; font-size: 0.65em; background: #fef3c7; color: #d97706; border: 1px solid #fde68a; padding: 2px 7px; border-radius: 99px; font-weight: 700; margin-left: 4px; white-space: nowrap; vertical-align: middle; }
 
 /* ── TOOLBAR ── */
@@ -956,37 +969,75 @@ function renderAcces() {
 }
 
 // ── JOUEURS ───────────────────────────────────────────────
+function updateFeedbackBadge() {
+  const badge = document.getElementById('sidebar-feedback-count');
+  if (!badge) return;
+  const open = document.querySelectorAll('#tbody-feedback tr:not(.fb-resolved)').length;
+  badge.textContent = open || '';
+}
+
 async function loadFeedback() {
   try {
     const res = await dbFetch('/rest/v1/feedback?select=*&order=created_at.desc');
     if (!res.ok) return;
     const rows = await res.json();
-    const badge = document.getElementById('sidebar-feedback-count');
-    if (badge) badge.textContent = rows.length || '';
     const fmt = d => d ? new Date(d).toLocaleString('fr-CA', { timeZone: 'America/Toronto', dateStyle: 'short', timeStyle: 'short' }) : '—';
     document.getElementById('tbody-feedback').innerHTML = rows.length
-      ? rows.map(r => `<tr>
-          <td class='fb-msg'>${r.message ?? ''}</td>
-          <td class='fb-meta'>
-            <span class='fb-email'>${r.email ?? '—'}</span>
-            <span class='fb-date'>${fmt(r.created_at)}</span>
-          </td>
-          <td class='fb-del'><button onclick='deleteFeedback("${r.id}", this)' data-feedback-id='${r.id}' style='background:none;border:none;cursor:pointer;color:#e11d48;font-size:1em;padding:4px 8px;border-radius:6px;transition:background 0.15s' title='Supprimer' onmouseover='this.style.background="#fff1f2"' onmouseout='this.style.background="none"'>🗑</button></td>
-        </tr>`).join('')
+      ? rows.map(r => {
+          const resolved = r.resolved === true;
+          return `<tr class='${resolved ? 'fb-resolved' : ''}' data-feedback-id='${r.id}'>
+            <td class='fb-msg'>${r.message ?? ''}</td>
+            <td class='fb-meta'>
+              <span class='fb-email'>${r.email ?? '—'}</span>
+              <span class='fb-date'>${fmt(r.created_at)}</span>
+            </td>
+            <td class='fb-del'>
+              <button onclick='resolveFeedback("${r.id}")' class='fb-btn-resolve ${resolved ? 'fb-btn-active' : ''}' title='${resolved ? 'Marquer comme non-traité' : 'Marquer comme traité'}'>✓</button>
+              <button onclick='deleteFeedback("${r.id}")' class='fb-btn-delete' title='Supprimer'>🗑</button>
+            </td>
+          </tr>`;
+        }).join('')
       : `<tr><td colspan='3'><div class='empty-state'><div class='es-icon'>💬</div><p>Aucun commentaire pour l'instant</p></div></td></tr>`;
+    updateFeedbackBadge();
   } catch {}
 }
 
-async function deleteFeedback(id, btn) {
+async function resolveFeedback(id) {
+  const row = document.querySelector(`#tbody-feedback tr[data-feedback-id="${id}"]`);
+  if (!row) return;
+  const nowResolved = !row.classList.contains('fb-resolved');
+  try {
+    const res = await dbFetch(`/rest/v1/feedback?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ resolved: nowResolved })
+    });
+    if (res.ok || res.status === 204) {
+      row.classList.toggle('fb-resolved', nowResolved);
+      const btn = row.querySelector('.fb-btn-resolve');
+      if (btn) {
+        btn.classList.toggle('fb-btn-active', nowResolved);
+        btn.title = nowResolved ? 'Marquer comme non-traité' : 'Marquer comme traité';
+      }
+      updateFeedbackBadge();
+      toast(nowResolved ? 'Commentaire marqué comme traité' : 'Commentaire rouvert', 'success');
+    } else {
+      toast('Erreur lors de la mise à jour', 'error');
+    }
+  } catch(e) {
+    toast('Erreur: ' + e.message, 'error');
+  }
+}
+
+async function deleteFeedback(id) {
   document.getElementById('confirmDeleteBtn').onclick = async () => {
-    const row = document.querySelector(`[data-feedback-id="${id}"]`)?.closest('tr');
+    const row = document.querySelector(`#tbody-feedback tr[data-feedback-id="${id}"]`);
     try {
       const res = await dbFetch(`/rest/v1/feedback?id=eq.${id}`, { method: 'DELETE' });
       if (res.ok || res.status === 204) {
         closeAdminConfirm();
         row?.remove();
-        const badge = document.getElementById('sidebar-feedback-count');
-        if (badge) { const n = parseInt(badge.textContent || '0') - 1; badge.textContent = n > 0 ? n : ''; }
+        updateFeedbackBadge();
       } else {
         closeAdminConfirm();
         const errText = await res.text();
