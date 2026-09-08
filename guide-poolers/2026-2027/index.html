@@ -858,6 +858,7 @@ td.star-cell { padding: 0; width: 36px; }
           <div class='filter-group' style='flex-shrink:0'>
             <button class='ctrl-btn btn-draft-toggle' id='draftToggleBtn' onclick='toggleDraftMode()' style='margin:0'>⚾ Mode draft</button>
             <button class='ctrl-btn btn-reset-draft' id='resetDraftBtn' onclick='resetDraft()' style='display:none;margin:0'>✕ Reset draft</button>
+            <span id='draft-sync-indicator' style='font-size:0.75em;color:#64748b;font-weight:600;opacity:0;transition:opacity 0.3s;white-space:nowrap'></span>
           </div>
           <div class='filter-divider'></div>
           <!-- Watchlist -->
@@ -976,6 +977,50 @@ let allPlayers = [];
 let sortCol = 'proj_pts';
 let draftedIds = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]'));
 let draftMode = false;
+
+// ── DRAFT CLOUD SYNC ─────────────────────────────────────
+const USER_DATA_URL = 'https://fifurqlitkywtmhgtzeu.supabase.co/functions/v1/user-data';
+let _draftSaveTimer = null;
+
+function getUserToken() {
+  return localStorage.getItem('pool_pw_token') ?? '';
+}
+
+async function loadDraftFromCloud() {
+  const token = getUserToken();
+  if (!token) return;
+  try {
+    const res = await fetch(USER_DATA_URL + '/draft', {
+      headers: { 'x-user-token': token }
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (Array.isArray(data.drafted_ids) && data.drafted_ids.length > 0) {
+      draftedIds = new Set(data.drafted_ids);
+      localStorage.setItem('pool_drafted', JSON.stringify([...draftedIds]));
+    }
+  } catch {}
+}
+
+function saveDraftToCloud() {
+  clearTimeout(_draftSaveTimer);
+  _draftSaveTimer = setTimeout(async () => {
+    const token = getUserToken();
+    if (!token) return;
+    const indicator = document.getElementById('draft-sync-indicator');
+    try {
+      if (indicator) { indicator.textContent = '☁️ Sauvegarde…'; indicator.style.opacity = '1'; }
+      await fetch(USER_DATA_URL + '/draft', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-user-token': token },
+        body: JSON.stringify({ drafted_ids: [...draftedIds] })
+      });
+      if (indicator) { indicator.textContent = '✓ Sauvegardé'; setTimeout(() => { indicator.style.opacity = '0'; }, 1500); }
+    } catch {
+      if (indicator) { indicator.textContent = '⚠️ Hors ligne'; setTimeout(() => { indicator.style.opacity = '0'; }, 2000); }
+    }
+  }, 800);
+}
 let userNotes = JSON.parse(localStorage.getItem('pool_user_notes') || '{}');
 let watchlist = JSON.parse(localStorage.getItem('pool_watchlist') || '[]');
 
@@ -1255,6 +1300,7 @@ function toggleDraft(id, event) {
   if (draftedIds.has(id)) draftedIds.delete(id);
   else draftedIds.add(id);
   localStorage.setItem('pool_drafted', JSON.stringify([...draftedIds]));
+  saveDraftToCloud();
   renderAll();
 }
 
@@ -1262,6 +1308,7 @@ function resetDraft() {
   if (!draftedIds.size) return;
   draftedIds.clear();
   localStorage.removeItem('pool_drafted');
+  saveDraftToCloud();
   renderAll();
 }
 let sortDir = 'desc';
@@ -2528,10 +2575,11 @@ function downloadCSV() {
   a.click();
 }
 
-checkAccess().then(() => {
+checkAccess().then(async () => {
   document.getElementById('navBtnEquipe')?.style.removeProperty('display');
   document.getElementById('navBtnEquipeMobile')?.style.removeProperty('display');
   document.getElementById('btnFeedback')?.style.removeProperty('display');
+  await loadDraftFromCloud();
   init();
 });
 </script>
