@@ -742,7 +742,7 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
     <span class='mn-icon'>🥅</span>Gardiens<span class='mn-dot'></span>
   </button>
   <button class='mobile-nav-item' onclick='switchTab("feedback",this)'>
-    <span class='mn-icon'>💬</span>Commentaires<span class='mn-dot'></span>
+    <span class='mn-icon'>💬</span>Commentaires<span class='mn-dot'></span><span class='nav-badge' id='mobile-feedback-count' style='margin-left:4px'></span>
   </button>
 </nav>
 
@@ -987,10 +987,12 @@ function renderAcces() {
 
 // ── JOUEURS ───────────────────────────────────────────────
 function updateFeedbackBadge() {
-  const badge = document.getElementById('sidebar-feedback-count');
-  if (!badge) return;
   const open = document.querySelectorAll('#tbody-feedback tr:not(.fb-resolved)').length;
-  badge.textContent = open || '';
+  const val = open || '';
+  const sidebar = document.getElementById('sidebar-feedback-count');
+  const mobile = document.getElementById('mobile-feedback-count');
+  if (sidebar) sidebar.textContent = val;
+  if (mobile) mobile.textContent = val;
 }
 
 async function loadFeedback() {
