@@ -410,10 +410,11 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 /* pull-to-refresh indicator */
 #ptr-indicator {
   position: fixed; top: 0; left: 0; right: 0; z-index: 9000;
-  display: flex; align-items: center; justify-content: center;
+  display: none; align-items: center; justify-content: center;
   height: 0; overflow: hidden; background: #f0fdf4;
   transition: height 0.2s; font-size: 0.82em; font-weight: 700; color: #15803d;
 }
+#ptr-indicator.ptr-active { display: flex; }
 #ptr-indicator.ptr-ready { background: #dcfce7; }
 #ptr-indicator.ptr-loading { height: 48px; }
 </style>
@@ -1294,6 +1295,7 @@ function refreshAdmin(btn) {
     const dy = e.touches[0].clientY - startY;
     if (dy <= 0) { pulling = false; return; }
     const pct = Math.min(dy / THRESHOLD, 1);
+    ind.classList.add('ptr-active');
     ind.style.height = Math.min(dy * 0.5, 48) + 'px';
     ind.classList.toggle('ptr-ready', pct >= 1);
   }, { passive: true });
@@ -1310,13 +1312,13 @@ function refreshAdmin(btn) {
       init();
       setTimeout(() => {
         ind.style.height = '0';
-        ind.classList.remove('ptr-loading');
+        ind.classList.remove('ptr-loading', 'ptr-active');
         ind.textContent = '↓ Relâcher pour rafraîchir';
         toast('✅ Dashboard rafraîchi');
       }, 1200);
     } else {
       ind.style.height = '0';
-      ind.classList.remove('ptr-ready');
+      ind.classList.remove('ptr-ready', 'ptr-active');
     }
   }, { passive: true });
 })();
