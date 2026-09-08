@@ -67,6 +67,9 @@ nav { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; he
   .nav-links { display: none; }
   .nav-hamburger { display: flex; }
   .btn-help .btn-help-label { display: none; }
+  #nav-user-chip { max-width: 32px; padding: 0; border: none; background: none; }
+  #nav-user-email { display: none; }
+  #nav-user-avatar { width: 28px; height: 28px; font-size: 0.7em; }
 }
 
 /* ── FOOTER ── */
@@ -750,6 +753,10 @@ td.star-cell { padding: 0; width: 36px; }
   </div>
   <button class='btn-help' onclick='openHelp()' aria-label='Aide'>❓ <span class='btn-help-label'>Aide</span></button>
   <button class='btn-help' id='btnFeedback' onclick='openFeedback()' style='display:none' aria-label='Commentaires'>💬 <span class='btn-help-label'>Commentaires</span></button>
+  <div id='nav-user-chip' style='display:none;align-items:center;gap:6px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:99px;padding:4px 10px 4px 4px;max-width:180px;overflow:hidden'>
+    <div id='nav-user-avatar' style='width:24px;height:24px;border-radius:50%;background:#f5c842;color:#1a3d10;font-size:0.65em;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0'></div>
+    <span id='nav-user-email' style='color:rgba(255,255,255,0.85);font-size:0.75em;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'></span>
+  </div>
   <button class='nav-hamburger' onclick='toggleNav()' aria-label='Menu'>
     <span></span><span></span><span></span>
   </button>
@@ -2577,6 +2584,16 @@ checkAccess().then(async () => {
   document.getElementById('navBtnEquipe')?.style.removeProperty('display');
   document.getElementById('navBtnEquipeMobile')?.style.removeProperty('display');
   document.getElementById('btnFeedback')?.style.removeProperty('display');
+  // Afficher le chip utilisateur
+  const email = localStorage.getItem('pool_user_email') ?? '';
+  if (email) {
+    const chip = document.getElementById('nav-user-chip');
+    const avatar = document.getElementById('nav-user-avatar');
+    const emailEl = document.getElementById('nav-user-email');
+    if (chip) chip.style.display = 'flex';
+    if (avatar) avatar.textContent = email.slice(0, 2).toUpperCase();
+    if (emailEl) emailEl.textContent = email;
+  }
   await loadDraftFromCloud();
   init();
 });
