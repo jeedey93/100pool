@@ -374,11 +374,28 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
     color: #94a3b8;
   }
   #tab-feedback td.fb-del {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid #f0f5f2;
   }
-  #tab-feedback tbody tr { position: relative; padding-right: 44px; }
+  #tab-feedback td.fb-del .fb-btn-resolve,
+  #tab-feedback td.fb-del .fb-btn-delete {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 10px;
+    border-radius: 8px;
+    font-size: 0.85em;
+    font-weight: 600;
+  }
+  #tab-feedback td.fb-del .fb-btn-resolve { background: #f8fafc; color: #64748b; border: 1px solid #e2eae5; }
+  #tab-feedback td.fb-del .fb-btn-resolve.fb-btn-active { background: #dcfce7; color: #15803d; border-color: #bbf7d0; }
+  #tab-feedback td.fb-del .fb-btn-delete { background: #fff1f2; color: #e11d48; border: 1px solid #fecdd3; }
+  #tab-feedback tbody tr { position: relative; padding-right: 14px; }
 }
 
 @media (max-width: 400px) {
@@ -979,7 +996,11 @@ function updateFeedbackBadge() {
 async function loadFeedback() {
   try {
     const res = await dbFetch('/rest/v1/feedback?select=*&order=created_at.desc');
-    if (!res.ok) return;
+    if (!res.ok) {
+      const errText = await res.text();
+      document.getElementById('tbody-feedback').innerHTML = `<tr><td colspan='3'><div class='empty-state'><div class='es-icon'>⚠️</div><p>Erreur de chargement (${res.status}): ${errText}</p></div></td></tr>`;
+      return;
+    }
     const rows = await res.json();
     const fmt = d => d ? new Date(d).toLocaleString('fr-CA', { timeZone: 'America/Toronto', dateStyle: 'short', timeStyle: 'short' }) : '—';
     document.getElementById('tbody-feedback').innerHTML = rows.length
@@ -992,14 +1013,16 @@ async function loadFeedback() {
               <span class='fb-date'>${fmt(r.created_at)}</span>
             </td>
             <td class='fb-del'>
-              <button onclick='resolveFeedback("${r.id}")' class='fb-btn-resolve ${resolved ? 'fb-btn-active' : ''}' title='${resolved ? 'Marquer comme non-traité' : 'Marquer comme traité'}'>✓</button>
-              <button onclick='deleteFeedback("${r.id}")' class='fb-btn-delete' title='Supprimer'>🗑</button>
+              <button onclick='resolveFeedback("${r.id}")' class='fb-btn-resolve ${resolved ? 'fb-btn-active' : ''}' title='${resolved ? 'Marquer comme non-traité' : 'Marquer comme traité'}'>${resolved ? '✓ Traité' : '✓ Marquer traité'}</button>
+              <button onclick='deleteFeedback("${r.id}")' class='fb-btn-delete' title='Supprimer'>🗑 Supprimer</button>
             </td>
           </tr>`;
         }).join('')
       : `<tr><td colspan='3'><div class='empty-state'><div class='es-icon'>💬</div><p>Aucun commentaire pour l'instant</p></div></td></tr>`;
     updateFeedbackBadge();
-  } catch {}
+  } catch(e) {
+    document.getElementById('tbody-feedback').innerHTML = `<tr><td colspan='3'><div class='empty-state'><div class='es-icon'>⚠️</div><p>Erreur: ${e.message}</p></div></td></tr>`;
+  }
 }
 
 async function resolveFeedback(id) {
@@ -1018,6 +1041,7 @@ async function resolveFeedback(id) {
       if (btn) {
         btn.classList.toggle('fb-btn-active', nowResolved);
         btn.title = nowResolved ? 'Marquer comme non-traité' : 'Marquer comme traité';
+        btn.textContent = nowResolved ? '✓ Traité' : '✓ Marquer traité';
       }
       updateFeedbackBadge();
       toast(nowResolved ? 'Commentaire marqué comme traité' : 'Commentaire rouvert', 'success');
