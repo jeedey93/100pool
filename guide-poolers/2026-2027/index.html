@@ -634,6 +634,8 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 .feedback-textarea { width: 100%; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; font-size: 0.88em; font-family: inherit; resize: vertical; min-height: 100px; outline: none; transition: border 0.15s; color: #1e293b; }
 .feedback-textarea:focus { border-color: #2d8a3e; }
 .feedback-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }
+#guide-toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: #0f172a; color: white; border-radius: 12px; padding: 12px 22px; font-size: 0.88em; font-weight: 700; box-shadow: 0 8px 32px rgba(0,0,0,0.2); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; z-index: 99999; white-space: nowrap; border-left: 4px solid #22c55e; }
+#guide-toast.show { transform: translateX(-50%) translateY(0); }
 .confirm-box { background: white; border-radius: 20px; padding: 28px 28px 22px; max-width: 340px; width: 100%; box-shadow: 0 24px 64px rgba(0,0,0,0.25); text-align: center; animation: modalIn 0.18s ease; }
 .confirm-icon { font-size: 2em; margin-bottom: 12px; }
 .confirm-title { font-size: 1.05em; font-weight: 900; color: #0f172a; margin-bottom: 8px; }
@@ -1178,6 +1180,11 @@ function closeFeedback() {
   document.getElementById('feedbackOverlay').classList.add('hidden');
   document.body.classList.remove('modal-open');
 }
+function showToast(msg) {
+  const t = document.getElementById('guide-toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 3000);
+}
 async function submitFeedback() {
   const msg = document.getElementById('feedbackMsg').value.trim();
   if (!msg) return;
@@ -1191,8 +1198,8 @@ async function submitFeedback() {
       body: JSON.stringify({ message: msg, email: userEmail })
     });
     if (!res.ok) throw new Error();
-    btn.textContent = '✓ Envoyé !';
-    setTimeout(closeFeedback, 1200);
+    closeFeedback();
+    showToast('✓ Merci ! Ton message a bien été envoyé.');
   } catch {
     btn.disabled = false; btn.textContent = 'Envoyer';
     alert('Erreur lors de l\'envoi. Réessaie.');
@@ -2699,5 +2706,6 @@ checkAccess().then(() => {
     </div>
   </div>
 </div>
+<div id='guide-toast'></div>
 </body>
 </html>
