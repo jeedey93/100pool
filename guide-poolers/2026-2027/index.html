@@ -2538,8 +2538,15 @@ function openModal(id) {
   if (grade)    cards.push(`<div class='modal-stat-card'><div class='sc-val'><span class='grade-badge ${gradeClass(grade)}' style='font-size:1.1em;padding:3px 10px'>${grade}</span></div><div class='sc-lbl'>Valeur</div></div>`);
   if (p.pp_pct != null) cards.push(`<div class='modal-stat-card'><div class='sc-val'>${p.pp_pct}%</div><div class='sc-lbl'>PP%</div></div>`);
   if (p.aav)    cards.push(`<div class='modal-stat-card'><div class='sc-val'>${p.aav}M$</div><div class='sc-lbl'>AAV</div></div>`);
-  const ctcYrs = p.contract_yrs != null ? `${p.contract_yrs} an${p.contract_yrs > 1 ? 's' : ''}` : null;
-  cards.push(`<div class='modal-stat-card'><div class='sc-val' style='font-size:0.85em;color:${ctcYrs ? '#1e293b' : '#94a3b8'}'>${ctcYrs ?? 'À venir'}</div><div class='sc-lbl'>Contrat</div></div>`);
+  if (p.contract_yrs != null) {
+    const yrsLabel = `${p.contract_yrs} an${p.contract_yrs > 1 ? 's' : ''}`;
+    const lenLabel = p.contract_len && p.contract_len !== p.contract_yrs ? `/${p.contract_len}` : '';
+    const statusBadge = p.expiry_status
+      ? `<span style='display:inline-block;font-size:0.55em;font-weight:800;padding:2px 6px;border-radius:99px;margin-top:5px;letter-spacing:0.5px;${p.expiry_status==="UFA"?"background:#dbeafe;color:#1d4ed8;border:1px solid #93c5fd":"background:#fef3c7;color:#b45309;border:1px solid #fcd34d"}'>${p.expiry_status}</span>` : '';
+    cards.push(`<div class='modal-stat-card'><div class='sc-val' style='font-size:0.9em;line-height:1.2'>${yrsLabel}<span style='color:#94a3b8;font-size:0.8em'>${lenLabel}</span></div>${statusBadge}<div class='sc-lbl' style='margin-top:4px'>Contrat</div></div>`);
+  } else {
+    cards.push(`<div class='modal-stat-card'><div class='sc-val' style='font-size:0.85em;color:#94a3b8'>À venir</div><div class='sc-lbl'>Contrat</div></div>`);
+  }
   document.getElementById('modalStatsRow').innerHTML = cards.length
     ? `<div class='modal-stat-cards'>${cards.join('')}</div>` : '';
 
