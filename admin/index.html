@@ -1407,16 +1407,18 @@ async function shareSnapshot() {
     const canvas = await html2canvas(el, {
       backgroundColor: '#f8faf7',
       scale: 2,
+      width: 390,
+      windowWidth: 390,
       useCORS: true,
       allowTaint: true,
       logging: false,
       imageTimeout: 0,
       removeContainer: true,
       onclone: (doc) => {
-        // Hide share button in snapshot
         const shareBtn = doc.getElementById('shareBtn');
         if (shareBtn) shareBtn.style.display = 'none';
-        // Resolve CSS custom properties for stat-cards (html2canvas doesn't handle them)
+        const snap = doc.getElementById('dashSnapshot');
+        if (snap) { snap.style.width = '390px'; snap.style.maxWidth = '390px'; }
         doc.querySelectorAll('.stat-card').forEach(card => {
           const s = card.style;
           const accent = s.getPropertyValue('--accent') || '#2d8a3e';
