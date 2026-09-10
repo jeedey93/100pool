@@ -1433,13 +1433,14 @@ async function shareSnapshot() {
     });
     const blob = await new Promise((res, rej) => canvas.toBlob(b => b ? res(b) : rej(new Error('toBlob failed')), 'image/png'));
     const file = new File([blob], '100pool-dashboard.png', { type: 'image/png' });
-    if (navigator.share) {
+    const canShareFile = navigator.canShare && navigator.canShare({ files: [file] });
+    if (canShareFile) {
       try {
         await navigator.share({ files: [file], title: '100% Pool — Dashboard' });
-        return; // success or user cancelled — either way, done
+        return;
       } catch (shareErr) {
-        if (shareErr.name === 'AbortError') return; // user cancelled
-        // share failed (e.g. files not supported) — fall through to modal
+        if (shareErr.name === 'AbortError') return;
+        // files share failed — fall through to modal
       }
     }
     // Fallback: show preview modal
