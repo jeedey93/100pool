@@ -1405,12 +1405,30 @@ async function shareSnapshot() {
   try {
     const el = document.getElementById('dashSnapshot');
     const canvas = await html2canvas(el, {
-      backgroundColor: '#f1f5f0',
+      backgroundColor: '#f8faf7',
       scale: 2,
       useCORS: true,
+      allowTaint: true,
       logging: false,
+      imageTimeout: 0,
+      removeContainer: true,
+      onclone: (doc) => {
+        // Resolve CSS custom properties for stat-cards (html2canvas doesn't handle them)
+        doc.querySelectorAll('.stat-card').forEach(card => {
+          const s = card.style;
+          const accent = s.getPropertyValue('--accent') || '#2d8a3e';
+          const accentBg = s.getPropertyValue('--accent-bg') || '#f0fdf4';
+          card.style.setProperty('--accent', accent);
+          card.style.setProperty('--accent-bg', accentBg);
+          card.style.background = accentBg;
+          const iconWrap = card.querySelector('.stat-icon-wrap');
+          if (iconWrap) iconWrap.style.background = accentBg;
+          const val = card.querySelector('.stat-val');
+          if (val) val.style.color = accent;
+        });
+      },
     });
-    const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+    const blob = await new Promise((res, rej) => canvas.toBlob(b => b ? res(b) : rej(new Error('toBlob failed')), 'image/png'));
     const file = new File([blob], '100pool-dashboard.png', { type: 'image/png' });
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       await navigator.share({ files: [file], title: '100% Pool — Dashboard' });
@@ -1421,6 +1439,7 @@ async function shareSnapshot() {
       setTimeout(() => URL.revokeObjectURL(url), 5000);
     }
   } catch (e) {
+    console.error('[shareSnapshot]', e);
     if (e.name !== 'AbortError') toast('Erreur lors de la capture', 'error');
   } finally {
     btn.disabled = false;
