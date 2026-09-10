@@ -406,7 +406,28 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 #ptr-indicator.ptr-active { display: flex; }
 #ptr-indicator.ptr-ready { background: #dcfce7; }
 #ptr-indicator.ptr-loading { height: 48px; }
+
+/* ── MILESTONE BAR ── */
+.milestone-wrap { background: white; border-radius: 18px; border: 1px solid #e2eae5; box-shadow: 0 1px 6px rgba(0,0,0,0.05); padding: 18px 22px; margin-bottom: 20px; }
+.milestone-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.milestone-title { font-size: 0.82em; font-weight: 800; color: #1e293b; }
+.milestone-pct { font-size: 0.78em; font-weight: 800; color: #2d8a3e; }
+.milestone-track { background: #eef2f7; border-radius: 99px; height: 10px; overflow: hidden; }
+.milestone-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #2d8a3e, #4ade80); transition: width 0.6s cubic-bezier(0.34,1.1,0.64,1); }
+.milestone-labels { display: flex; justify-content: space-between; margin-top: 6px; }
+.milestone-sub { font-size: 0.7em; color: #94a3b8; font-weight: 600; }
+
+/* ── SHARE BUTTON ── */
+.btn-share { display: flex; align-items: center; gap: 7px; background: linear-gradient(135deg, #0f5c23, #2d8a3e); color: white; border: none; border-radius: 10px; padding: 8px 16px; font-size: 0.82em; font-weight: 700; cursor: pointer; transition: all 0.18s; box-shadow: 0 2px 8px rgba(45,138,62,0.3); }
+.btn-share:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(45,138,62,0.4); }
+.btn-share:active { transform: none; }
+.btn-share:disabled { opacity: 0.6; cursor: default; transform: none; }
+
+/* ── BEST DAY BADGE on chart ── */
+.bar.best { background: linear-gradient(180deg, #a78bfa, #7c3aed); }
+.bar-val.best-val { color: #7c3aed; }
 </style>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js' defer></script>
 </head>
 <body>
 
@@ -486,11 +507,15 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 
     <!-- TAB DASHBOARD -->
     <div id='tab-dashboard'>
-      <div class='section-header'>
-        <h2>Vue d'ensemble</h2>
-        <p>Statistiques du guide des poolers 2026-27</p>
+      <div class='section-header' style='display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px'>
+        <div>
+          <h2>Vue d'ensemble</h2>
+          <p>Statistiques du guide des poolers 2026-27</p>
+        </div>
+        <button class='btn-share' id='shareBtn' onclick='shareSnapshot()'>📸 Partager</button>
       </div>
 
+      <div id='dashSnapshot'>
       <div class='stats-grid'>
         <div class='stat-card' style='--accent:#2d8a3e;--accent-bg:#f0fdf4'>
           <div class='stat-card-top'>
@@ -548,6 +573,20 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
         </div>
       </div>
 
+      <div class='milestone-wrap'>
+        <div class='milestone-head'>
+          <span class='milestone-title'>🎯 Objectif 250 achats</span>
+          <span class='milestone-pct' id='milestone-pct'>0%</span>
+        </div>
+        <div class='milestone-track'>
+          <div class='milestone-fill' id='milestone-fill' style='width:0%'></div>
+        </div>
+        <div class='milestone-labels'>
+          <span class='milestone-sub' id='milestone-cur'>0 / 250</span>
+          <span class='milestone-sub' id='milestone-remaining'>250 restants</span>
+        </div>
+      </div>
+
       <div class='chart-wrap'>
         <div class='chart-head'>
           <div>
@@ -557,6 +596,8 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
         </div>
         <div class='chart-bars' id='chart-bars'></div>
       </div>
+
+      </div><!-- end dashSnapshot -->
 
       <div class='card'>
         <div class='card-header'>
@@ -904,6 +945,21 @@ function renderAcces() {
 
   // Dashboard cards
   setText('dash-total', rows.length);
+
+  // Milestone bar (250 achats)
+  const MILESTONE = 250;
+  const milestoneTotal = rows.length;
+  const milestonePct = Math.min(milestoneTotal / MILESTONE * 100, 100);
+  const remaining = Math.max(MILESTONE - milestoneTotal, 0);
+  requestAnimationFrame(() => {
+    const fill = document.getElementById('milestone-fill');
+    const pctEl = document.getElementById('milestone-pct');
+    if (fill) { fill.style.width = '0%'; setTimeout(() => { fill.style.width = milestonePct.toFixed(1) + '%'; }, 80); }
+    if (pctEl) pctEl.textContent = milestonePct.toFixed(0) + '%';
+    setText('milestone-cur', `${milestoneTotal} / ${MILESTONE}`);
+    setText('milestone-remaining', remaining > 0 ? `${remaining} restant${remaining !== 1 ? 's' : ''}` : '🎉 Objectif atteint !');
+  });
+
   setText('dash-today', today);
   setText('dash-week', week);
   setText('dash-gross', gross);
@@ -949,13 +1005,19 @@ function renderAcces() {
   const periodTotal = days.reduce((s, d) => s + d.count, 0);
   setText('chart-total-label', `${periodTotal} achat${periodTotal !== 1 ? 's' : ''} sur la période`);
 
-  document.getElementById('chart-bars').innerHTML = activeDays.map(d => `
-    <div class='bar-col' title='${d.key}: ${d.count} achat${d.count !== 1 ? "s" : ""}'>
-      <div class='bar-val ${d.isToday ? "today-val" : ""}'>${d.count > 0 ? d.count : ''}</div>
-      <div class='bar ${d.isToday ? "today" : d.count === 0 ? "zero" : ""}'
+  const bestCount = Math.max(...activeDays.filter(d => !d.isToday).map(d => d.count), 0);
+
+  document.getElementById('chart-bars').innerHTML = activeDays.map(d => {
+    const isBest = !d.isToday && d.count > 0 && d.count === bestCount;
+    const barClass = d.isToday ? 'today' : isBest ? 'best' : d.count === 0 ? 'zero' : '';
+    const valClass = d.isToday ? 'today-val' : isBest ? 'best-val' : '';
+    return `<div class='bar-col' title='${d.key}: ${d.count} achat${d.count !== 1 ? "s" : ""}'>
+      <div class='bar-val ${valClass}'>${d.count > 0 ? d.count : ''}</div>
+      <div class='bar ${barClass}'
            style='height:${d.count > 0 ? Math.max(d.count / maxCount * 80, 8) : 3}px'></div>
       <div class='bar-lbl'>${d.isToday ? '📍' : d.label}</div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
   // Helpers
   const fmt = d => d ? new Date(d).toLocaleString('fr-CA', { dateStyle: 'short', timeStyle: 'short' }) : '—';
@@ -1334,6 +1396,37 @@ function refreshAdmin(btn) {
     }
   }, { passive: true });
 })();
+
+async function shareSnapshot() {
+  const btn = document.getElementById('shareBtn');
+  if (!btn) return;
+  btn.disabled = true;
+  btn.textContent = '⏳ Capture…';
+  try {
+    const el = document.getElementById('dashSnapshot');
+    const canvas = await html2canvas(el, {
+      backgroundColor: '#f1f5f0',
+      scale: 2,
+      useCORS: true,
+      logging: false,
+    });
+    const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+    const file = new File([blob], '100pool-dashboard.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file], title: '100% Pool — Dashboard' });
+    } else {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = '100pool-dashboard.png'; a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+    }
+  } catch (e) {
+    if (e.name !== 'AbortError') toast('Erreur lors de la capture', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '📸 Partager';
+  }
+}
 </script>
 <div class='confirm-overlay hidden' id='confirmOverlay'>
   <div class='confirm-box'>
