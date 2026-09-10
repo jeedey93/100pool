@@ -1430,9 +1430,16 @@ async function shareSnapshot() {
     });
     const blob = await new Promise((res, rej) => canvas.toBlob(b => b ? res(b) : rej(new Error('toBlob failed')), 'image/png'));
     const file = new File([blob], '100pool-dashboard.png', { type: 'image/png' });
+    let shared = false;
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      await navigator.share({ files: [file], title: '100% Pool — Dashboard' });
-    } else {
+      try {
+        await navigator.share({ files: [file], title: '100% Pool — Dashboard' });
+        shared = true;
+      } catch (shareErr) {
+        if (shareErr.name === 'AbortError') { shared = true; } // user cancelled, don't fallback
+      }
+    }
+    if (!shared) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url; a.download = '100pool-dashboard.png'; a.click();
