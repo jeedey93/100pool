@@ -567,9 +567,9 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
             <div class='stat-icon-wrap'>💵</div>
             <span class='stat-trend neutral' id='dash-net-sub'>—</span>
           </div>
-          <div class='stat-val' id='dash-gross'>—</div>
-          <div class='stat-lbl'>Revenu brut / net</div>
-          <div class='stat-sub' id='dash-net'>&nbsp;</div>
+          <div class='stat-val' id='dash-net'>—</div>
+          <div class='stat-lbl'>Revenu net / brut</div>
+          <div class='stat-sub' id='dash-gross'>&nbsp;</div>
         </div>
       </div>
 
@@ -975,8 +975,8 @@ function renderAcces() {
   setText('dash-week', week);
   setText('dash-lastweek', lastWeek);
   setText('dash-sub-lastweek', week > lastWeek ? `↑ ${week - lastWeek} vs sem. préc.` : week < lastWeek ? `↓ ${lastWeek - week} vs sem. préc.` : '= sem. préc.');
-  setText('dash-gross', gross);
   setText('dash-net', net);
+  setText('dash-gross', `Brut: ${gross}`);
   setText('dash-net-sub', `Net: ${net}`);
   setText('dash-sub-total', `${week} cette semaine`);
   setText('dash-sub-today', yesterday > 0 ? `${yesterday} hier` : '');
