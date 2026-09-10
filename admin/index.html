@@ -1436,14 +1436,19 @@ async function shareSnapshot() {
         await navigator.share({ files: [file], title: '100% Pool — Dashboard' });
         shared = true;
       } catch (shareErr) {
-        if (shareErr.name === 'AbortError') { shared = true; } // user cancelled, don't fallback
+        if (shareErr.name === 'AbortError') { shared = true; }
       }
     }
     if (!shared) {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = '100pool-dashboard.png'; a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      try {
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        toast('📋 Image copiée dans le presse-papier !');
+      } catch {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = '100pool-dashboard.png'; a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+      }
     }
   } catch (e) {
     console.error('[shareSnapshot]', e);
