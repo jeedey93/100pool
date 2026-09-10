@@ -538,7 +538,7 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
         <div class='stat-card' style='--accent:#7c3aed;--accent-bg:#faf5ff'>
           <div class='stat-card-top'>
             <div class='stat-icon-wrap'>📆</div>
-            <span class='stat-trend neutral'>7 jours</span>
+            <span class='stat-trend neutral'>Jeu → Mer</span>
           </div>
           <div class='stat-val' id='dash-week'>—</div>
           <div class='stat-lbl'>Cette semaine</div>
@@ -916,11 +916,20 @@ function renderAcces() {
   const mtlDate = d => new Date(d).toLocaleDateString('en-CA', { timeZone: 'America/Toronto' });
   const todayStr   = mtlDate(now);
   const yesterStr  = mtlDate(new Date(now - 86400000));
-  const weekAgo    = new Date(now - 7 * 86400000);
+
+  // Semaine du pool : jeudi 00:00 → mercredi 23:59 (heure de Montréal)
+  const nowMtl = new Date(now.toLocaleString('en-US', { timeZone: 'America/Toronto' }));
+  const dayOfWeek = nowMtl.getDay(); // 0=dim, 1=lun, ..., 4=jeu, 5=ven, 6=sam
+  const daysSinceThursday = (dayOfWeek + 3) % 7; // jeudi=0, ven=1, ..., mer=6
+  const weekStart = new Date(nowMtl);
+  weekStart.setHours(0, 0, 0, 0);
+  weekStart.setDate(weekStart.getDate() - daysSinceThursday);
+  // Convertir weekStart en UTC pour comparer avec created_at
+  const weekStartUTC = new Date(weekStart.toLocaleString('en-US', { timeZone: 'UTC' }) + ' UTC');
 
   const today    = rows.filter(r => mtlDate(r.created_at) === todayStr).length;
   const yesterday = rows.filter(r => mtlDate(r.created_at) === yesterStr).length;
-  const week     = rows.filter(r => new Date(r.created_at) >= weekAgo).length;
+  const week     = rows.filter(r => new Date(r.created_at) >= weekStartUTC).length;
   const gross    = (rows.length * 5).toFixed(2).replace('.', ',') + ' $';
   const net      = (rows.length * 4.55).toFixed(2).replace('.', ',') + ' $';
 
