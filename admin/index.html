@@ -663,6 +663,9 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
               <th>Palier</th>
               <th>Risque</th>
               <th>💣 Bust</th>
+              <th>Ans rest.</th>
+              <th>Ans total</th>
+              <th>Statut</th>
               <th>Notes</th>
             </tr></thead>
             <tbody id='tbody-skaters'></tbody>
@@ -694,6 +697,9 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> BL</th>
               <th>Palier</th>
               <th>Risque</th>
+              <th>Ans rest.</th>
+              <th>Ans total</th>
+              <th>Statut</th>
               <th>Notes</th>
             </tr></thead>
             <tbody id='tbody-goalies'></tbody>
@@ -1158,6 +1164,13 @@ function rowHTML(p) {
       <option value='High'${p.risk==='High'?' selected':''}>🔴 Élevé</option>
     </select></td>
     <td style='text-align:center'><input type='checkbox' id='${id}-bust_alert' ${p.bust_alert?'checked':''} onchange='markDirty(${id})' style='width:17px;height:17px;accent-color:#be123c;cursor:pointer'></td>
+    <td><input class='ci n' id='${id}-contract_yrs' type='number' min='0' max='15' value='${p.contract_yrs??''}' oninput='markDirty(${id})'></td>
+    <td><input class='ci n' id='${id}-contract_len' type='number' min='0' max='15' value='${p.contract_len??''}' oninput='markDirty(${id})'></td>
+    <td><select class='cs' id='${id}-expiry_status' onchange='markDirty(${id})'>
+      <option value=''>—</option>
+      <option value='UFA'${p.expiry_status==='UFA'?' selected':''}>UFA</option>
+      <option value='RFA'${p.expiry_status==='RFA'?' selected':''}>RFA</option>
+    </select></td>
     <td><input class='ci w' id='${id}-notes' type='text' value='${esc(p.notes||'')}' style='color:#64748b;font-style:italic' oninput='markDirty(${id})'></td>
   </tr>`;
 }
@@ -1190,6 +1203,13 @@ function goalieRowHTML(p) {
       <option value='Medium'${p.risk==='Medium'?' selected':''}>🟡 Moyen</option>
       <option value='High'${p.risk==='High'?' selected':''}>🔴 Élevé</option>
     </select></td>
+    <td><input class='ci n' id='${id}-contract_yrs' type='number' min='0' max='15' value='${p.contract_yrs??''}' oninput='markDirty(${id})'></td>
+    <td><input class='ci n' id='${id}-contract_len' type='number' min='0' max='15' value='${p.contract_len??''}' oninput='markDirty(${id})'></td>
+    <td><select class='cs' id='${id}-expiry_status' onchange='markDirty(${id})'>
+      <option value=''>—</option>
+      <option value='UFA'${p.expiry_status==='UFA'?' selected':''}>UFA</option>
+      <option value='RFA'${p.expiry_status==='RFA'?' selected':''}>RFA</option>
+    </select></td>
     <td><input class='ci w' id='${id}-notes' type='text' value='${esc(p.notes||'')}' style='color:#64748b;font-style:italic' oninput='markDirty(${id})'></td>
   </tr>`;
 }
@@ -1217,6 +1237,9 @@ async function saveAll() {
       tier: document.getElementById(`${id}-tier`)?.value,
       risk: document.getElementById(`${id}-risk`)?.value || null,
       bust_alert: document.getElementById(`${id}-bust_alert`)?.checked ?? false,
+      contract_yrs: num('contract_yrs'),
+      contract_len: num('contract_len'),
+      expiry_status: document.getElementById(`${id}-expiry_status`)?.value || null,
       notes: document.getElementById(`${id}-notes`)?.value?.trim(),
     };
     const p = players.find(p => p.id === id);

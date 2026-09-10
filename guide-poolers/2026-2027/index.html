@@ -113,6 +113,7 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
 .filter-divider { width: 1px; height: 20px; background: #e2e8f0; flex-shrink: 0; }
 .pills-row1 { display: contents; }
 .pills-row2 { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; width: 100%; padding-top: 8px; border-top: 1px solid #f1f5f9; }
+.filter-group-risk-mobile { display: none; }
 .tier-select-mobile { display: none; }
 
 /* ── FILTER PILLS ── */
@@ -293,6 +294,17 @@ tr.drafted { background: #f8f9fa !important; }
 .modal-note-area { width: 100%; box-sizing: border-box; border: 1px solid #e2eae5; border-radius: 10px; padding: 10px 12px; font-size: 0.87em; color: #1e293b; line-height: 1.6; resize: vertical; min-height: 72px; font-family: inherit; background: #f8fafc; transition: border-color 0.15s; outline: none; }
 .modal-note-area:focus { border-color: #4ade80; background: white; }
 .modal-note-area::placeholder { color: #cbd5e1; }
+
+/* Contract bar */
+.modal-contract { padding: 14px 22px; background: white; border-bottom: 1px solid #eef2f7; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.modal-contract-label { font-size: 0.62em; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; color: #94a3b8; white-space: nowrap; }
+.modal-contract-bar-wrap { flex: 1; min-width: 80px; }
+.modal-contract-bar-track { background: #eef2f7; border-radius: 99px; height: 7px; overflow: hidden; }
+.modal-contract-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #2d8a3e, #4ade80); transition: width 0.4s ease; }
+.modal-contract-text { font-size: 0.82em; font-weight: 800; color: #1e293b; white-space: nowrap; }
+.modal-contract-status { font-size: 0.72em; font-weight: 800; padding: 3px 8px; border-radius: 99px; white-space: nowrap; }
+.modal-contract-status.ufa { background: #dbeafe; color: #1d4ed8; border: 1px solid #93c5fd; }
+.modal-contract-status.rfa { background: #fef3c7; color: #b45309; border: 1px solid #fcd34d; }
 
 /* Team / pos badges */
 .team-tag { display: inline-block; background: #dbeafe; color: #1e40af; font-size: 0.78em; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
@@ -486,6 +498,9 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   .controls-row-pills .pills-row1 { display: flex; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; gap: 6px; width: 100%; align-items: center; }
   .controls-row-pills .pills-row2 { display: flex; flex-wrap: nowrap; gap: 6px; width: 100%; }
   .controls-row-pills .filter-divider { display: none; }
+  /* On mobile: hide risk in row1, show it in row2 */
+  .filter-group-risk-desktop { display: none; }
+  .filter-group-risk-mobile { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
   #tierPills { display: none; }
   .tier-select-mobile { display: block; font-size: 15px; padding: 7px 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; background: white; color: #1e293b; font-weight: 600; flex-shrink: 0; }
   /* card footer: already split into 2 rows */
@@ -854,8 +869,8 @@ td.star-cell { padding: 0; width: 36px; }
             <option value=''>Tier — Tous</option>
           </select>
           <div class='filter-divider'></div>
-          <!-- Risk -->
-          <div class='filter-group'>
+          <!-- Risk (desktop only — moved to row2 on mobile) -->
+          <div class='filter-group filter-group-risk-desktop'>
             <span class='filter-label'>Risque</span>
             <button class='pill active' data-filter='risk' data-value='' onclick='setPill(this,"risk")'>Tous</button>
             <button class='pill' data-filter='risk' data-value='Low' onclick='setPill(this,"risk")'>🟢 Faible</button>
@@ -864,6 +879,15 @@ td.star-cell { padding: 0; width: 36px; }
           </div>
         </div>
         <div class='pills-row2'>
+          <!-- Risk (mobile only) -->
+          <div class='filter-group filter-group-risk-mobile'>
+            <span class='filter-label'>Risque</span>
+            <button class='pill active' data-filter='risk' data-value='' onclick='setPill(this,"risk")'>Tous</button>
+            <button class='pill' data-filter='risk' data-value='Low' onclick='setPill(this,"risk")'>🟢 Faible</button>
+            <button class='pill' data-filter='risk' data-value='Medium' onclick='setPill(this,"risk")'>🟡 Moyen</button>
+            <button class='pill' data-filter='risk' data-value='High' onclick='setPill(this,"risk")'>🔴 Élevé</button>
+          </div>
+          <div class='filter-divider filter-group-risk-mobile'></div>
           <!-- Draft mode -->
           <div class='filter-group' style='flex-shrink:0'>
             <button class='ctrl-btn btn-draft-toggle' id='draftToggleBtn' onclick='toggleDraftMode()' style='margin:0'>🏒 Mode draft</button>
@@ -967,6 +991,7 @@ td.star-cell { padding: 0; width: 36px; }
       <div id='modalHistory'><div class='modal-history-loading'>Chargement…</div></div>
     </div>
     <div id='modalStatsRow'></div>
+    <div id='modalContract' style='display:none'></div>
     <div class='modal-body' id='modalBody'></div>
   </div>
 </div>
@@ -2484,7 +2509,7 @@ function openModal(id) {
   const nhlMugBase = 'https://assets.nhle.com/mugs/nhl/60x60/';
   document.getElementById('modalName').textContent = p.name;
   document.getElementById('modalMeta').textContent =
-    [p.team, p.pos, p.age ? `${p.age} ans` : null, p.aav ? `${p.aav}M$ AAV` : 'CEN'].filter(Boolean).join(' · ');
+    [p.team, p.pos, p.age ? `${p.age} ans` : null].filter(Boolean).join(' · ');
   document.getElementById('modalTeamLogo').src = `https://assets.nhle.com/logos/nhl/svg/${p.team}_light.svg`;
   document.getElementById('scoutingModal').classList.remove('hidden');
   document.body.classList.add('modal-open');
@@ -2538,17 +2563,33 @@ function openModal(id) {
   if (grade)    cards.push(`<div class='modal-stat-card'><div class='sc-val'><span class='grade-badge ${gradeClass(grade)}' style='font-size:1.1em;padding:3px 10px'>${grade}</span></div><div class='sc-lbl'>Valeur</div></div>`);
   if (p.pp_pct != null) cards.push(`<div class='modal-stat-card'><div class='sc-val'>${p.pp_pct}%</div><div class='sc-lbl'>PP%</div></div>`);
   if (p.aav)    cards.push(`<div class='modal-stat-card'><div class='sc-val'>${p.aav}M$</div><div class='sc-lbl'>AAV</div></div>`);
-  if (p.contract_yrs != null) {
-    const yrsLabel = `${p.contract_yrs} an${p.contract_yrs > 1 ? 's' : ''}`;
-    const lenLabel = p.contract_len && p.contract_len !== p.contract_yrs ? `/${p.contract_len}` : '';
-    const statusBadge = p.expiry_status
-      ? `<span style='display:inline-block;font-size:0.55em;font-weight:800;padding:2px 6px;border-radius:99px;margin-top:5px;letter-spacing:0.5px;${p.expiry_status==="UFA"?"background:#dbeafe;color:#1d4ed8;border:1px solid #93c5fd":"background:#fef3c7;color:#b45309;border:1px solid #fcd34d"}'>${p.expiry_status}</span>` : '';
-    cards.push(`<div class='modal-stat-card'><div class='sc-val' style='font-size:0.9em;line-height:1.2'>${yrsLabel}<span style='color:#94a3b8;font-size:0.8em'>${lenLabel}</span></div>${statusBadge}<div class='sc-lbl' style='margin-top:4px'>Contrat</div></div>`);
-  } else {
-    cards.push(`<div class='modal-stat-card'><div class='sc-val' style='font-size:0.85em;color:#94a3b8'>À venir</div><div class='sc-lbl'>Contrat</div></div>`);
-  }
   document.getElementById('modalStatsRow').innerHTML = cards.length
     ? `<div class='modal-stat-cards'>${cards.join('')}</div>` : '';
+
+  // Contract bar
+  const ctcEl = document.getElementById('modalContract');
+  if (p.contract_yrs != null) {
+    const yrs = p.contract_yrs;
+    const len = p.contract_len || yrs;
+    const pct = Math.round((yrs / len) * 100);
+    const expiryYear = 2026 + yrs;
+    const statusClass = p.expiry_status === 'UFA' ? 'ufa' : 'rfa';
+    const statusLabel = p.expiry_status ?? '';
+    const lenText = len !== yrs ? `${yrs}/${len} ans` : `${yrs} an${yrs > 1 ? 's' : ''}`;
+    ctcEl.style.display = '';
+    ctcEl.innerHTML = `<div class='modal-contract'>
+      <div class='modal-contract-label'>Contrat</div>
+      <div class='modal-contract-bar-wrap'>
+        <div class='modal-contract-bar-track'>
+          <div class='modal-contract-bar-fill' style='width:${pct}%'></div>
+        </div>
+      </div>
+      <div class='modal-contract-text'>${lenText}</div>
+      ${statusLabel ? `<span class='modal-contract-status ${statusClass}'>${statusLabel} ${expiryYear}</span>` : ''}
+    </div>`;
+  } else {
+    ctcEl.style.display = 'none';
+  }
 
   // Body — notes, comparable, risks
   let body = '';
