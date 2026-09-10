@@ -1445,26 +1445,9 @@ async function shareSnapshot() {
         if (shareErr.name === 'AbortError' || shareErr.name === 'NotAllowedError') return;
       }
     }
-    // Fallback: show preview modal
-    const url = URL.createObjectURL(blob);
-      let overlay = document.getElementById('shareImgOverlay');
-      if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.id = 'shareImgOverlay';
-        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px';
-        overlay.innerHTML = `<img id='shareImgPreview' style='max-width:100%;max-height:70vh;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.6)'>
-          <div style='display:flex;gap:12px'>
-            <button onclick='document.getElementById("shareImgOverlay").remove()' style='padding:10px 22px;border-radius:10px;border:none;background:#334155;color:white;font-weight:700;cursor:pointer;font-size:0.9em'>Fermer</button>
-            <a id='shareImgDl' download='100pool-dashboard.png' style='padding:10px 22px;border-radius:10px;background:linear-gradient(135deg,#0f5c23,#2d8a3e);color:white;font-weight:700;cursor:pointer;font-size:0.9em;text-decoration:none'>⬇ Télécharger</a>
-          </div>
-          <p style='color:#94a3b8;font-size:0.75em;margin-top:-4px'>Appuie longuement sur l'image pour la copier</p>`;
-        document.body.appendChild(overlay);
-        overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-      }
-      document.getElementById('shareImgPreview').src = url;
-      document.getElementById('shareImgDl').href = url;
-      overlay.style.display = 'flex';
-      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    // Fallback: copy to clipboard
+    await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+    toast('📋 Image copiée dans le presse-papier !');
   } catch (e) {
     console.error('[shareSnapshot]', e);
     if (e.name !== 'AbortError') toast('Erreur: ' + (e.message || e.name || 'inconnue'), 'error');
