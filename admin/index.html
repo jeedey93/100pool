@@ -516,6 +516,20 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
         <button class='btn-share' id='shareBtn' onclick='shareSnapshot()'>📸 Partager</button>
       </div>
 
+      <div class='milestone-wrap'>
+        <div class='milestone-head'>
+          <span class='milestone-title'>🎯 Objectif 250 achats</span>
+          <span class='milestone-pct' id='milestone-pct'>0%</span>
+        </div>
+        <div class='milestone-track'>
+          <div class='milestone-fill' id='milestone-fill' style='width:0%'></div>
+        </div>
+        <div class='milestone-labels'>
+          <span class='milestone-sub' id='milestone-cur'>0 / 250</span>
+          <span class='milestone-sub' id='milestone-remaining'>250 restants</span>
+        </div>
+      </div>
+
       <div class='stats-grid'>
         <div class='stat-card' style='--accent:#2d8a3e;--accent-bg:#f0fdf4'>
           <div class='stat-card-top'>
@@ -570,20 +584,6 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
           <div class='stat-val' id='dash-net'>—</div>
           <div class='stat-lbl'>Revenu net / brut</div>
           <div class='stat-sub' id='dash-gross'>&nbsp;</div>
-        </div>
-      </div>
-
-      <div class='milestone-wrap'>
-        <div class='milestone-head'>
-          <span class='milestone-title'>🎯 Objectif 250 achats</span>
-          <span class='milestone-pct' id='milestone-pct'>0%</span>
-        </div>
-        <div class='milestone-track'>
-          <div class='milestone-fill' id='milestone-fill' style='width:0%'></div>
-        </div>
-        <div class='milestone-labels'>
-          <span class='milestone-sub' id='milestone-cur'>0 / 250</span>
-          <span class='milestone-sub' id='milestone-remaining'>250 restants</span>
         </div>
       </div>
 
