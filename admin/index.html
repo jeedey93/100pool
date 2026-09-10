@@ -1441,8 +1441,9 @@ async function shareSnapshot() {
         await navigator.share({ files: [file], title: '100% Pool — Dashboard' });
         return;
       } catch (shareErr) {
-        if (shareErr.name === 'AbortError') return;
-        // files share failed — fall through to modal
+        console.log('[share error]', shareErr.name, shareErr.message);
+        if (shareErr.name === 'AbortError' || shareErr.name === 'NotAllowedError') return;
+        // fall through to modal only for other errors
       }
     }
     // Fallback: show preview modal
