@@ -1433,18 +1433,17 @@ async function shareSnapshot() {
     });
     const blob = await new Promise((res, rej) => canvas.toBlob(b => b ? res(b) : rej(new Error('toBlob failed')), 'image/png'));
     const file = new File([blob], '100pool-dashboard.png', { type: 'image/png' });
-    let shared = false;
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    if (navigator.share) {
       try {
         await navigator.share({ files: [file], title: '100% Pool — Dashboard' });
-        shared = true;
+        return; // success or user cancelled — either way, done
       } catch (shareErr) {
-        if (shareErr.name === 'AbortError') { shared = true; }
+        if (shareErr.name === 'AbortError') return; // user cancelled
+        // share failed (e.g. files not supported) — fall through to modal
       }
     }
-    if (!shared) {
-      // Show image in a preview modal — works everywhere, same image as mobile
-      const url = URL.createObjectURL(blob);
+    // Fallback: show preview modal
+    const url = URL.createObjectURL(blob);
       let overlay = document.getElementById('shareImgOverlay');
       if (!overlay) {
         overlay = document.createElement('div');
@@ -1463,7 +1462,6 @@ async function shareSnapshot() {
       document.getElementById('shareImgDl').href = url;
       overlay.style.display = 'flex';
       setTimeout(() => URL.revokeObjectURL(url), 60000);
-    }
   } catch (e) {
     console.error('[shareSnapshot]', e);
     if (e.name !== 'AbortError') toast('Erreur: ' + (e.message || e.name || 'inconnue'), 'error');
