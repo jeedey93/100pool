@@ -113,6 +113,7 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
 .filter-divider { width: 1px; height: 20px; background: #e2e8f0; flex-shrink: 0; }
 .pills-row1 { display: contents; }
 .pills-row2 { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; width: 100%; padding-top: 8px; border-top: 1px solid #f1f5f9; }
+.pills-row3 { display: contents; }
 .filter-group-risk-mobile { display: none; }
 .tier-select-mobile { display: none; }
 
@@ -497,6 +498,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   .controls-row-pills .filter-group { flex-shrink: 0; }
   .controls-row-pills .pills-row1 { display: flex; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; gap: 6px; width: 100%; align-items: center; }
   .controls-row-pills .pills-row2 { display: flex; flex-wrap: nowrap; gap: 6px; width: 100%; }
+  .controls-row-pills .pills-row3 { display: flex; align-items: center; gap: 8px; width: 100%; padding-top: 8px; border-top: 1px solid #f1f5f9; }
   .controls-row-pills .filter-divider { display: none; }
   /* On mobile: hide risk in row1, show it in row2 */
   .filter-group-risk-desktop { display: none; }
@@ -887,7 +889,8 @@ td.star-cell { padding: 0; width: 36px; }
             <button class='pill' data-filter='risk' data-value='Medium' onclick='setPill(this,"risk")'>🟡 Moyen</button>
             <button class='pill' data-filter='risk' data-value='High' onclick='setPill(this,"risk")'>🔴 Élevé</button>
           </div>
-          <div class='filter-divider filter-group-risk-mobile'></div>
+        </div>
+        <div class='pills-row3'>
           <!-- Draft mode -->
           <div class='filter-group' style='flex-shrink:0'>
             <button class='ctrl-btn btn-draft-toggle' id='draftToggleBtn' onclick='toggleDraftMode()' style='margin:0'>🏒 Mode draft</button>
