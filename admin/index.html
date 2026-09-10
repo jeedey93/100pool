@@ -1436,16 +1436,18 @@ async function shareSnapshot() {
     const blob = await new Promise((res, rej) => canvas.toBlob(b => b ? res(b) : rej(new Error('toBlob failed')), 'image/png'));
     const file = new File([blob], '100pool-dashboard.png', { type: 'image/png' });
     const canShareFile = navigator.canShare && navigator.canShare({ files: [file] });
+    console.log('[share] canShareFile:', canShareFile);
     if (canShareFile) {
       try {
         await navigator.share({ files: [file], title: '100% Pool — Dashboard' });
+        console.log('[share] success, returning');
         return;
       } catch (shareErr) {
         console.log('[share error]', shareErr.name, shareErr.message);
         if (shareErr.name === 'AbortError' || shareErr.name === 'NotAllowedError') return;
-        // fall through to modal only for other errors
       }
     }
+    console.log('[share] showing modal');
     // Fallback: show preview modal
     const url = URL.createObjectURL(blob);
       let overlay = document.getElementById('shareImgOverlay');
