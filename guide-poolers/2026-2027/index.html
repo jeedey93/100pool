@@ -432,7 +432,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 .empty-state .icon { font-size: 2.5em; margin-bottom: 12px; }
 
 /* ── MOBILE CARDS (replaces table on small screens) ── */
-.card-list { display: none; flex-direction: column; gap: 10px; }
+.card-list { display: none; flex-direction: column; gap: 4px; }
 .player-card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden; }
   .player-card.tier-1 { border-left: 4px solid #f59e0b; }
   .player-card.tier-2 { border-left: 4px solid #3b82f6; }
@@ -449,6 +449,7 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 .card-rank   { color: #94a3b8; font-size: 0.8em; font-weight: 700; min-width: 22px; }
 .card-name   { font-weight: 800; color: #1e293b; font-size: 0.95em; flex: 1; }
 .card-badges { display: flex; gap: 5px; align-items: center; margin-left: auto; flex-shrink: 0; }
+.card-inline-stats { display: none; }
 .card-body   { padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; }
 .card-note   { color: #94a3b8; font-size: 0.75em; font-style: italic; }
 .card-stats  { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -467,6 +468,17 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 @media (max-width: 768px) {
   .table-wrap { display: none; }
   .card-list  { display: flex; }
+  /* Compact list style on mobile */
+  .player-card { border-radius: 8px; }
+  .card-body   { display: none; }
+  .card-footer { display: none; }
+  .card-header { padding: 9px 12px; border-bottom: none; gap: 8px; }
+  .card-rank   { font-size: 0.75em; min-width: 18px; }
+  .card-name   { font-size: 0.88em; }
+  .card-note   { display: none; }
+  .card-inline-stats { display: flex; align-items: center; gap: 6px; margin-left: auto; flex-shrink: 0; }
+  .card-proj-pts { font-size: 0.9em; font-weight: 800; color: #15803d; white-space: nowrap; }
+  .card-proj-lbl { font-size: 0.62em; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 1px; }
   .page-wrap { padding: 70px 10px 40px; }
   /* hero */
   .page-header { padding: 20px 16px; border-radius: 10px; }
@@ -2266,6 +2278,12 @@ function renderCards(filtered) {
         <div class='card-badges'>
           <span class='team-tag'>${p.team}</span>
           <span class='pos-tag pos-${p.pos}'>${p.pos}</span>
+        </div>
+        <div class='card-inline-stats'>
+          <div style='text-align:right'>
+            <div class='card-proj-pts'>${isGoalie ? (p.proj_g ?? '—') + 'W' : (p.proj_pts ?? '—') + ' pts'}</div>
+            <div class='card-proj-lbl'>2026-27</div>
+          </div>
         </div>
       </div>
       <div class='card-body'><div class='card-stats'>${statBlock}</div></div>
