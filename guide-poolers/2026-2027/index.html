@@ -2563,33 +2563,21 @@ function openModal(id) {
   if (grade)    cards.push(`<div class='modal-stat-card'><div class='sc-val'><span class='grade-badge ${gradeClass(grade)}' style='font-size:1.1em;padding:3px 10px'>${grade}</span></div><div class='sc-lbl'>Valeur</div></div>`);
   if (p.pp_pct != null) cards.push(`<div class='modal-stat-card'><div class='sc-val'>${p.pp_pct}%</div><div class='sc-lbl'>PP%</div></div>`);
   if (p.aav)    cards.push(`<div class='modal-stat-card'><div class='sc-val'>${p.aav}M$</div><div class='sc-lbl'>AAV</div></div>`);
+  if (p.contract_yrs != null) {
+    const yrs = p.contract_yrs;
+    const expiryYear = 2026 + yrs;
+    const statusBadge = p.expiry_status
+      ? `<span style='display:inline-block;font-size:0.55em;font-weight:800;padding:2px 6px;border-radius:99px;margin-top:5px;letter-spacing:0.5px;${p.expiry_status==="UFA"?"background:#dbeafe;color:#1d4ed8;border:1px solid #93c5fd":"background:#fef3c7;color:#b45309;border:1px solid #fcd34d"}'>${p.expiry_status} ${expiryYear}</span>` : '';
+    cards.push(`<div class='modal-stat-card'><div class='sc-val' style='font-size:0.9em;line-height:1.2'>${yrs} an${yrs>1?'s':''}</div>${statusBadge}<div class='sc-lbl' style='margin-top:4px'>Contrat</div></div>`);
+  } else {
+    cards.push(`<div class='modal-stat-card'><div class='sc-val' style='font-size:0.85em;color:#94a3b8'>À venir</div><div class='sc-lbl'>Contrat</div></div>`);
+  }
   document.getElementById('modalStatsRow').innerHTML = cards.length
     ? `<div class='modal-stat-cards'>${cards.join('')}</div>` : '';
 
-  // Contract bar
+  // Contract bar (hidden — data not differentiated yet)
   const ctcEl = document.getElementById('modalContract');
-  if (p.contract_yrs != null) {
-    const yrs = p.contract_yrs;
-    const len = p.contract_len || yrs;
-    const pct = Math.round((yrs / len) * 100);
-    const expiryYear = 2026 + yrs;
-    const statusClass = p.expiry_status === 'UFA' ? 'ufa' : 'rfa';
-    const statusLabel = p.expiry_status ?? '';
-    const lenText = len !== yrs ? `${yrs}/${len} ans` : `${yrs} an${yrs > 1 ? 's' : ''}`;
-    ctcEl.style.display = '';
-    ctcEl.innerHTML = `<div class='modal-contract'>
-      <div class='modal-contract-label'>Contrat</div>
-      <div class='modal-contract-bar-wrap'>
-        <div class='modal-contract-bar-track'>
-          <div class='modal-contract-bar-fill' style='width:${pct}%'></div>
-        </div>
-      </div>
-      <div class='modal-contract-text'>${lenText}</div>
-      ${statusLabel ? `<span class='modal-contract-status ${statusClass}'>${statusLabel} ${expiryYear}</span>` : ''}
-    </div>`;
-  } else {
-    ctcEl.style.display = 'none';
-  }
+  ctcEl.style.display = 'none';
 
   // Body — notes, comparable, risks
   let body = '';
