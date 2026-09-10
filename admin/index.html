@@ -535,6 +535,15 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
           <div class='stat-lbl'>Aujourd'hui</div>
           <div class='stat-sub' id='dash-sub-today'>&nbsp;</div>
         </div>
+        <div class='stat-card' style='--accent:#6d28d9;--accent-bg:#f5f3ff'>
+          <div class='stat-card-top'>
+            <div class='stat-icon-wrap'>📆</div>
+            <span class='stat-trend neutral'>Sem. précédente</span>
+          </div>
+          <div class='stat-val' id='dash-lastweek'>—</div>
+          <div class='stat-lbl'>Semaine dernière</div>
+          <div class='stat-sub' id='dash-sub-lastweek'>&nbsp;</div>
+        </div>
         <div class='stat-card' style='--accent:#7c3aed;--accent-bg:#faf5ff'>
           <div class='stat-card-top'>
             <div class='stat-icon-wrap'>📆</div>
@@ -556,20 +565,11 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
         <div class='stat-card' style='--accent:#059669;--accent-bg:#f0fdf4'>
           <div class='stat-card-top'>
             <div class='stat-icon-wrap'>💵</div>
-            <span class='stat-trend neutral'>5,00 $ / achat</span>
+            <span class='stat-trend neutral' id='dash-net-sub'>—</span>
           </div>
           <div class='stat-val' id='dash-gross'>—</div>
-          <div class='stat-lbl'>Revenu brut</div>
-          <div class='stat-sub'>&nbsp;</div>
-        </div>
-        <div class='stat-card' style='--accent:#0f766e;--accent-bg:#f0fdfa'>
-          <div class='stat-card-top'>
-            <div class='stat-icon-wrap'>🏦</div>
-            <span class='stat-trend neutral'>4,55 $ / achat</span>
-          </div>
-          <div class='stat-val' id='dash-net'>—</div>
-          <div class='stat-lbl'>Net (Après frais)</div>
-          <div class='stat-sub' style='color:#94a3b8'>Après frais Stripe</div>
+          <div class='stat-lbl'>Revenu brut / net</div>
+          <div class='stat-sub' id='dash-net'>&nbsp;</div>
         </div>
       </div>
 
@@ -926,12 +926,14 @@ function renderAcces() {
   weekStart.setDate(weekStart.getDate() - daysSinceThursday);
   // Convertir weekStart en UTC pour comparer avec created_at
   const weekStartUTC = new Date(weekStart.toLocaleString('en-US', { timeZone: 'UTC' }) + ' UTC');
+  const lastWeekStart = new Date(weekStartUTC - 7 * 86400000);
 
-  const today    = rows.filter(r => mtlDate(r.created_at) === todayStr).length;
+  const today     = rows.filter(r => mtlDate(r.created_at) === todayStr).length;
   const yesterday = rows.filter(r => mtlDate(r.created_at) === yesterStr).length;
-  const week     = rows.filter(r => new Date(r.created_at) >= weekStartUTC).length;
-  const gross    = (rows.length * 5).toFixed(2).replace('.', ',') + ' $';
-  const net      = (rows.length * 4.55).toFixed(2).replace('.', ',') + ' $';
+  const week      = rows.filter(r => new Date(r.created_at) >= weekStartUTC).length;
+  const lastWeek  = rows.filter(r => { const d = new Date(r.created_at); return d >= lastWeekStart && d < weekStartUTC; }).length;
+  const gross     = (rows.length * 5).toFixed(2).replace('.', ',') + ' $';
+  const net       = (rows.length * 4.55).toFixed(2).replace('.', ',') + ' $';
 
   // Sidebar badge
   const sbl = document.getElementById('sidebar-count');
@@ -971,8 +973,11 @@ function renderAcces() {
 
   setText('dash-today', today);
   setText('dash-week', week);
+  setText('dash-lastweek', lastWeek);
+  setText('dash-sub-lastweek', week > lastWeek ? `↑ ${week - lastWeek} vs sem. préc.` : week < lastWeek ? `↓ ${lastWeek - week} vs sem. préc.` : '= sem. préc.');
   setText('dash-gross', gross);
   setText('dash-net', net);
+  setText('dash-net-sub', `Net: ${net}`);
   setText('dash-sub-total', `${week} cette semaine`);
   setText('dash-sub-today', yesterday > 0 ? `${yesterday} hier` : '');
 
