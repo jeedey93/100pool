@@ -507,6 +507,7 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 
     <!-- TAB DASHBOARD -->
     <div id='tab-dashboard'>
+      <div id='dashSnapshot'>
       <div class='section-header' style='display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px'>
         <div>
           <h2>Vue d'ensemble</h2>
@@ -515,7 +516,6 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
         <button class='btn-share' id='shareBtn' onclick='shareSnapshot()'>📸 Partager</button>
       </div>
 
-      <div id='dashSnapshot'>
       <div class='stats-grid'>
         <div class='stat-card' style='--accent:#2d8a3e;--accent-bg:#f0fdf4'>
           <div class='stat-card-top'>
@@ -1413,6 +1413,9 @@ async function shareSnapshot() {
       imageTimeout: 0,
       removeContainer: true,
       onclone: (doc) => {
+        // Hide share button in snapshot
+        const shareBtn = doc.getElementById('shareBtn');
+        if (shareBtn) shareBtn.style.display = 'none';
         // Resolve CSS custom properties for stat-cards (html2canvas doesn't handle them)
         doc.querySelectorAll('.stat-card').forEach(card => {
           const s = card.style;
