@@ -1435,7 +1435,8 @@ async function shareSnapshot() {
     });
     const blob = await new Promise((res, rej) => canvas.toBlob(b => b ? res(b) : rej(new Error('toBlob failed')), 'image/png'));
     const file = new File([blob], '100pool-dashboard.png', { type: 'image/png' });
-    const canShareFile = navigator.canShare && navigator.canShare({ files: [file] });
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const canShareFile = isMobile && navigator.canShare && navigator.canShare({ files: [file] });
     if (canShareFile) {
       try {
         await navigator.share({ files: [file], title: '100% Pool — Dashboard' });
