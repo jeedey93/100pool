@@ -218,6 +218,9 @@ tr.drafted { background: #f8f9fa !important; }
 @keyframes draft-pulse { 0%,100% { box-shadow: 0 0 0 3px rgba(245,158,11,0.15); } 50% { box-shadow: 0 0 0 5px rgba(245,158,11,0.28); } }
 .btn-reset-draft { background: #fff1f2; border: 1.5px solid #fca5a5; color: #dc2626; }
 .btn-reset-draft:hover { background: #fee2e2; border-color: #f87171; }
+.btn-hide-drafted { background: #f1f5f9; border: 1.5px solid #cbd5e1; color: #475569; }
+.btn-hide-drafted:hover { background: #e2e8f0; }
+.btn-hide-drafted.active { background: #fef3c7; border-color: #f59e0b; color: #92400e; }
 .player-inline-badges { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; align-items: center; }
 .bandaid-inline { font-size: 0.9em; }
 .user-note-cell { min-width: 120px; max-width: 200px; }
@@ -897,6 +900,7 @@ td.star-cell { padding: 0; width: 36px; }
           <div class='filter-group' style='flex-shrink:0'>
             <button class='ctrl-btn btn-draft-toggle' id='draftToggleBtn' onclick='toggleDraftMode()' style='margin:0'>🏒 Mode draft</button>
             <button class='ctrl-btn btn-reset-draft' id='resetDraftBtn' onclick='resetDraft()' style='display:none;margin:0'>✕ Reset draft</button>
+            <button class='ctrl-btn btn-hide-drafted' id='hideDraftedBtn' onclick='toggleHideDrafted()' style='display:none;margin:0'>👁 Cacher les draftés</button>
           </div>
           <div class='filter-divider'></div>
           <!-- Watchlist -->
@@ -1016,6 +1020,7 @@ let allPlayers = [];
 let sortCol = 'proj_pts';
 let draftedIds = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]'));
 let draftMode = false;
+let hideDrafted = false;
 
 // ── CLOUD SYNC (fire-and-forget) ─────────────────────────
 const USER_DATA_URL = 'https://fifurqlitkywtmhgtzeu.supabase.co/functions/v1/user-data';
@@ -1332,9 +1337,21 @@ function toggleDraftMode() {
     updateDraftBtn();
   }
   if (tableWrap) tableWrap.classList.toggle('draft-mode-active', draftMode);
-  // Show reset only if mode is ON and there are drafted players
   const resetBtn = document.getElementById('resetDraftBtn');
   if (resetBtn) resetBtn.style.display = (draftMode && draftedIds.size) ? '' : 'none';
+  const hideBtn = document.getElementById('hideDraftedBtn');
+  if (hideBtn) hideBtn.style.display = (draftMode && draftedIds.size) ? '' : 'none';
+  if (!draftMode && hideDrafted) { hideDrafted = false; if (hideBtn) { hideBtn.classList.remove('active'); hideBtn.textContent = '👁 Cacher les draftés'; } renderAll(); }
+}
+
+function toggleHideDrafted() {
+  hideDrafted = !hideDrafted;
+  const btn = document.getElementById('hideDraftedBtn');
+  if (btn) {
+    btn.classList.toggle('active', hideDrafted);
+    btn.textContent = hideDrafted ? '👁 Montrer les draftés' : '👁 Cacher les draftés';
+  }
+  renderAll();
 }
 
 function updateDraftBtn() {
@@ -1355,6 +1372,8 @@ function toggleDraft(id, event) {
   updateDraftBtn();
   const resetBtn = document.getElementById('resetDraftBtn');
   if (resetBtn) resetBtn.style.display = (draftMode && draftedIds.size) ? '' : 'none';
+  const hideBtn = document.getElementById('hideDraftedBtn');
+  if (hideBtn) hideBtn.style.display = (draftMode && draftedIds.size) ? '' : 'none';
   renderAll();
 }
 
@@ -2140,7 +2159,8 @@ function buildRowHTML(p, displayRank) {
 }
 
 function renderAll() {
-  const filtered = sorted(getFiltered());
+  let filtered = sorted(getFiltered());
+  if (hideDrafted) filtered = filtered.filter(p => !draftedIds.has(p.id));
   const posFilter = activeFilters.pos;
   const goalieWrap = document.getElementById('goalieTableWrap');
 
