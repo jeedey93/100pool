@@ -221,6 +221,24 @@ tr.drafted { background: #f8f9fa !important; }
 .btn-hide-drafted { background: #f1f5f9; border: 1.5px solid #cbd5e1; color: #475569; }
 .btn-hide-drafted:hover { background: #e2e8f0; }
 .btn-hide-drafted.active { background: #fef3c7; border-color: #f59e0b; color: #92400e; }
+.btn-pool-settings { background: #f1f5f9; border: 1.5px solid #cbd5e1; color: #475569; }
+.btn-pool-settings:hover { background: #e2e8f0; }
+.btn-pool-settings.custom { background: #ede9fe; border-color: #a78bfa; color: #5b21b6; }
+/* Pool settings modal */
+.pool-settings-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.5); z-index: 9500; display: flex; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(6px); animation: fadeIn 0.15s ease; }
+.pool-settings-overlay.hidden { display: none; }
+.pool-settings-box { background: white; border-radius: 20px; padding: 28px 28px 22px; max-width: 380px; width: 100%; box-shadow: 0 24px 64px rgba(0,0,0,0.25); animation: modalIn 0.18s ease; }
+.pool-settings-box h3 { font-size: 1.05em; font-weight: 900; color: #0f172a; margin-bottom: 4px; }
+.pool-settings-box p { font-size: 0.82em; color: #64748b; margin-bottom: 18px; }
+.pool-settings-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.pool-settings-label { font-size: 0.85em; font-weight: 700; color: #334155; min-width: 100px; }
+.pool-settings-inputs { display: flex; align-items: center; gap: 10px; }
+.pool-settings-field { display: flex; align-items: center; gap: 5px; font-size: 0.8em; color: #64748b; }
+.pool-settings-field input { width: 48px; padding: 5px 8px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.9em; text-align: center; font-family: inherit; outline: none; }
+.pool-settings-field input:focus { border-color: #7c3aed; }
+.pool-settings-divider { border: none; border-top: 1px solid #f1f5f9; margin: 14px 0; }
+.pool-settings-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+.col-pool { color: #7c3aed; font-weight: 800; }
 .player-inline-badges { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; align-items: center; }
 .bandaid-inline { font-size: 0.9em; }
 .user-note-cell { min-width: 120px; max-width: 200px; }
@@ -907,6 +925,11 @@ td.star-cell { padding: 0; width: 36px; }
           <div class='filter-group' style='flex-shrink:0'>
             <button class='btn-watchlist' id='watchlistBtn' onclick='toggleWatchlistPanel()'>⭐ Ma liste</button>
           </div>
+          <div class='filter-divider'></div>
+          <!-- Pool scoring -->
+          <div class='filter-group' style='flex-shrink:0'>
+            <button class='ctrl-btn btn-pool-settings' id='poolSettingsBtn' onclick='openPoolSettings()' style='margin:0'>⚙️ Mon pool</button>
+          </div>
         </div>
     </div>
     <div class='table-wrap'>
@@ -1021,6 +1044,20 @@ let sortCol = 'proj_pts';
 let draftedIds = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]'));
 let draftMode = false;
 let hideDrafted = false;
+
+const POOL_SCORING_DEFAULT = { fwd_g: 1, fwd_a: 1, def_g: 2, def_a: 1, g_w: 2, g_so: 3 };
+let poolScoring = Object.assign({}, POOL_SCORING_DEFAULT, JSON.parse(localStorage.getItem('pool_scoring') || '{}'));
+
+function calcPoolPts(p) {
+  if (p.pos === 'G') return (p.proj_g ?? 0) * poolScoring.g_w + (p.proj_a ?? 0) * poolScoring.g_so;
+  const isD = p.pos === 'D';
+  return (p.proj_g ?? 0) * (isD ? poolScoring.def_g : poolScoring.fwd_g)
+       + (p.proj_a ?? 0) * (isD ? poolScoring.def_a : poolScoring.fwd_a);
+}
+
+function isScoringDefault() {
+  return Object.keys(POOL_SCORING_DEFAULT).every(k => poolScoring[k] === POOL_SCORING_DEFAULT[k]);
+}
 
 // ── CLOUD SYNC (fire-and-forget) ─────────────────────────
 const USER_DATA_URL = 'https://fifurqlitkywtmhgtzeu.supabase.co/functions/v1/user-data';
@@ -1318,6 +1355,44 @@ function closeHelp() {
   document.body.classList.remove('modal-open');
 }
 
+function openPoolSettings() {
+  const s = poolScoring;
+  document.getElementById('ps-fwd-g').value = s.fwd_g;
+  document.getElementById('ps-fwd-a').value = s.fwd_a;
+  document.getElementById('ps-def-g').value = s.def_g;
+  document.getElementById('ps-def-a').value = s.def_a;
+  document.getElementById('ps-g-w').value   = s.g_w;
+  document.getElementById('ps-g-so').value  = s.g_so;
+  document.getElementById('poolSettingsOverlay').classList.remove('hidden');
+  document.body.classList.add('modal-open');
+}
+function closePoolSettings() {
+  document.getElementById('poolSettingsOverlay').classList.add('hidden');
+  document.body.classList.remove('modal-open');
+}
+function applyPoolSettings() {
+  const v = k => parseFloat(document.getElementById('ps-' + k.replace('_','-'))?.value) || 0;
+  poolScoring = { fwd_g: v('fwd_g'), fwd_a: v('fwd_a'), def_g: v('def_g'), def_a: v('def_a'), g_w: v('g_w'), g_so: v('g_so') };
+  localStorage.setItem('pool_scoring', JSON.stringify(poolScoring));
+  closePoolSettings();
+  updatePoolSettingsBtn();
+  renderAll();
+}
+function resetPoolSettings() {
+  poolScoring = Object.assign({}, POOL_SCORING_DEFAULT);
+  localStorage.removeItem('pool_scoring');
+  closePoolSettings();
+  updatePoolSettingsBtn();
+  renderAll();
+}
+function updatePoolSettingsBtn() {
+  const btn = document.getElementById('poolSettingsBtn');
+  if (!btn) return;
+  const custom = !isScoringDefault();
+  btn.classList.toggle('custom', custom);
+  btn.textContent = custom ? '⚙️ Mon pool ✓' : '⚙️ Mon pool';
+}
+
 function resetUserNotes() {
   if (!Object.keys(userNotes).length) return;
   showConfirm('🗑', 'Effacer mes notes', 'Toutes tes notes personnelles seront supprimées. Cette action est irréversible.', () => {
@@ -1536,7 +1611,7 @@ function exportExcel() {
   const rows = [];
 
   // Skaters
-  rows.push(['# Rang','Nom','Pos','Équipe','Âge','AAV ($M)','Contrat','Statut','MJ Proj.','Proj G','Proj A','Proj PTS','PPG','MJ Dern.','Dern. G','Dern. A','Dern. PTS','Tier','Tendance','Risque','Band-aid','Catégorie','Notes','Disponible','Mes notes'].map(esc).join(','));
+  rows.push(['# Rang','Nom','Pos','Équipe','Âge','AAV ($M)','Contrat','Statut','MJ Proj.','Proj G','Proj A','Proj PTS','PPG','Pts Pool','MJ Dern.','Dern. G','Dern. A','Dern. PTS','Tier','Tendance','Risque','Band-aid','Catégorie','Notes','Disponible','Mes notes'].map(esc).join(','));
   skaters.forEach(p => rows.push([
     p.rank, p.name, p.pos, p.team, p.age,
     p.aav ?? '',
@@ -1545,6 +1620,7 @@ function exportExcel() {
     p.proj_gp ?? '',
     p.proj_g ?? '', p.proj_a ?? '', p.proj_pts ?? '',
     p.proj_pts && p.proj_gp ? (p.proj_pts / p.proj_gp).toFixed(2) : '',
+    calcPoolPts(p),
     p.last_gp ?? '', p.last_g ?? '', p.last_a ?? '', p.last_pts ?? '',
     p.tier ?? '', p.trend ?? '', p.risk ?? '',
     p.bandaid ? 'Oui' : '',
@@ -1554,7 +1630,7 @@ function exportExcel() {
   ].map(esc).join(',')));
 
   rows.push('');
-  rows.push(['# Rang','Nom','Équipe','Âge','AAV ($M)','Contrat','Statut','MJ Proj.','Proj V','Proj BL','Tier','Risque','Catégorie','Notes','Disponible','Mes notes'].map(esc).join(','));
+  rows.push(['# Rang','Nom','Équipe','Âge','AAV ($M)','Contrat','Statut','MJ Proj.','Proj V','Proj BL','Pts Pool','Tier','Risque','Catégorie','Notes','Disponible','Mes notes'].map(esc).join(','));
   goalies.forEach(p => rows.push([
     p.rank, p.name, p.team, p.age,
     p.aav ?? '',
@@ -1562,6 +1638,7 @@ function exportExcel() {
     p.expiry_status ?? '',
     p.proj_gp ?? '',
     p.proj_g ?? '', p.proj_a ?? '',
+    calcPoolPts(p),
     p.tier ?? '', p.risk ?? '',
     p.scouting_category ?? '', p.notes ?? '',
     draftedIds.has(p.id) ? 'Non' : 'Oui',
@@ -1689,6 +1766,7 @@ async function init() {
   renderCategory('À ÉVITER', 'aeviterGrid',  '⚠️', '#fda4af');
   renderScarcity();
   applyColVis();
+  updatePoolSettingsBtn();
 }
 
 // ── POOL VALUE SCORE ──────────────────────────────────────
@@ -1847,6 +1925,7 @@ function sorted(players) {
     if (sortCol === '_pv')    return getPV(p);
     if (sortCol === '_ppg_last') return p.last_gp > 0 ? p.last_pts / p.last_gp : 0;
     if (sortCol === '_ppg_proj') return p.proj_gp > 0 ? p.proj_pts / p.proj_gp : 0;
+    if (sortCol === '_pool_pts') return calcPoolPts(p);
     if (sortCol === '_goalie_l')   return getGoalieStats(p).l ?? 0;
     if (sortCol === '_goalie_otl') return getGoalieStats(p).otl ?? 0;
     if (sortCol === '_goalie_gaa') return getGoalieStats(p).gaa ?? 99;
@@ -1886,6 +1965,7 @@ function sortedGoalies(players) {
     if (goalieSortCol === '_goalie_otl')  return gs.otl ?? 0;
     if (goalieSortCol === '_goalie_wpct') { const gp = p.proj_gp ?? gs.gp; const w = p.proj_g ?? gs.w; return (gp && w != null) ? w / gp : 0; }
     if (goalieSortCol === '_goalie_trend') return getTrendGoalie(p).diff;
+    if (goalieSortCol === '_pool_pts') return calcPoolPts(p);
     if (goalieSortCol === '_pv') return calcEff(p) ?? -1;
     if (goalieSortCol === 'risk')  return p.risk === 'Low' ? 1 : p.risk === 'Medium' ? 2 : 3;
     if (goalieSortCol === 'injury') return p.bandaid ? 1 : 0;
@@ -1985,7 +2065,7 @@ function goalieHeaderHTML() {
   return `
   <tr class='group-row'>
     <th colspan='6' style='background:#f1f5f9;'></th>
-    <th colspan='6' class='col-group-proj'>🎯 PROJ 2026-27</th>
+    <th colspan='7' class='col-group-proj'>🎯 PROJ 2026-27</th>
     <th colspan='7' style='background:#f1f5f9;'></th>
   </tr>
   <tr class='col-row'>
@@ -2001,6 +2081,7 @@ function goalieHeaderHTML() {
     <th onclick='sortGoalieBy("_goalie_otl")'       data-col='_goalie_otl' class='col-group-proj'>OTL<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("proj_a")'            data-col='proj_a'   class='col-group-proj'>SO<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("_goalie_wpct")'      data-col='_goalie_wpct' class='col-group-proj' style='border-right:2px solid #bbf7d0;'>W%<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("_pool_pts")' data-col='_pool_pts' class='col-group-proj col-pool' style='border-left:2px solid #ddd6fe;color:#7c3aed;font-weight:800;'>Pool<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("_goalie_trend")'     data-col='_goalie_trend' class='cg-trend'>Tendance<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("aav")'               data-col='aav'  class='cg-salary'>💰 AAV<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("tier")'              data-col='tier' class='cg-tier'>Tier<span class='sort-icon'></span></th>
@@ -2013,7 +2094,7 @@ function skaterHeaderHTML() {
   <tr class='group-row'>
     <th colspan='6' style='background:#f1f5f9;'></th>
     <th id='gh-last' colspan='5' class='col-group-last cg-last'>📅 2025-26</th>
-    <th colspan='4' class='col-group-proj'>🎯 PROJECTION 2026-27</th>
+    <th colspan='6' class='col-group-proj'>🎯 PROJECTION 2026-27</th>
     <th colspan='7' style='background:#f1f5f9;'></th>
   </tr>
   <tr class='col-row'>
@@ -2033,6 +2114,7 @@ function skaterHeaderHTML() {
     <th onclick='sortBy("proj_a")'  data-col='proj_a'  class='col-group-proj' style='color:#15803d;'>A<span class='sort-icon'></span></th>
     <th onclick='sortBy("proj_pts")' data-col='proj_pts' class='col-group-proj' style='color:#15803d;font-weight:800;'>PTS<span class='sort-icon'></span></th>
     <th onclick='sortBy("_ppg_proj")' data-col='_ppg_proj' class='col-group-proj cg-ppg-proj' style='border-right:2px solid #bbf7d0;color:#15803d;'>PPG<span class='sort-icon'></span></th>
+    <th onclick='sortBy("_pool_pts")' data-col='_pool_pts' class='col-group-proj col-pool' style='border-left:2px solid #ddd6fe;color:#7c3aed;font-weight:800;'>Pool<span class='sort-icon'></span></th>
     <th onclick='sortBy("aav")'     data-col='aav'     class='cg-salary'>💰 AAV<span class='sort-icon'></span></th>
     <th onclick='sortBy("tier")'    data-col='tier'     class='cg-tier'>Tier<span class='sort-icon'></span></th>
     <th onclick='sortBy("_trend")'  data-col='_trend'   class='cg-trend'>Tendance<span class='sort-icon'></span></th>
@@ -2088,6 +2170,7 @@ function buildGoalieRowHTML(p, displayRank) {
       <td class='col-proj proj-stat'>${otl}</td>
       <td class='col-proj proj-stat'>${so}</td>
       <td class='col-proj' style='color:#64748b;font-size:0.85em;'>${wpct}</td>
+      <td class='col-proj col-pool' style='font-weight:800;color:#7c3aed;border-left:2px solid #ddd6fe;'>${calcPoolPts(p)}</td>
       ${(() => { const gt = getTrendGoalie(p); const gDiffStr = gt.diff > 0 ? '+' + gt.diff : '' + gt.diff; return `<td class='cg-trend'><span class='trend trend-${gt.trend}'>${gt.trend === 'up' ? '↑' : gt.trend === 'down' ? '↓' : '→'} ${gDiffStr} V</span></td>`; })()}
       <td class='cg-salary'><span class='salary'>${aav}</span></td>
       <td class='cg-tier'><span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span></td>
@@ -2157,6 +2240,7 @@ function buildRowHTML(p, displayRank) {
       <td class='col-proj proj-stat'>${p.proj_a ?? '—'}</td>
       <td class='col-proj proj-pts'>${projPtsDisplay}${upsideHtml}</td>
       <td class='col-proj col-proj-last cg-ppg-proj'><span class='ppg-proj'>${ppgProjHtml}</span></td>
+      <td class='col-proj col-pool' style='font-weight:800;color:#7c3aed;border-left:2px solid #ddd6fe;'>${calcPoolPts(p)}</td>
       `}
 
       <td class='cg-salary'><span class='salary'>${aav}</span></td>
@@ -2303,6 +2387,7 @@ function renderCards(filtered) {
             <div class='card-proj-pts'>${isGoalie ? (p.proj_g ?? '—') + 'W' : (p.proj_pts ?? '—') + ' pts'}</div>
             <div class='card-proj-lbl'>2026-27</div>
           </div>
+          ${!isScoringDefault() ? `<div style='text-align:right;margin-left:8px'><div class='card-proj-pts' style='color:#7c3aed'>${calcPoolPts(p)} pool</div><div class='card-proj-lbl'>pool</div></div>` : ''}
         </div>
       </div>
       <div class='card-body'><div class='card-stats'>${statBlock}</div></div>
@@ -2897,6 +2982,39 @@ checkAccess().then(async () => {
     <div class='confirm-actions'>
       <button class='confirm-btn confirm-btn-cancel' onclick='closeConfirm()'>Annuler</button>
       <button class='confirm-btn confirm-btn-danger' id='confirmOkBtn'>Effacer</button>
+    </div>
+  </div>
+</div>
+
+<div class='pool-settings-overlay hidden' id='poolSettingsOverlay' onclick='if(event.target===this)closePoolSettings()'>
+  <div class='pool-settings-box'>
+    <h3>⚙️ Paramètres de mon pool</h3>
+    <p>Ajuste le système de pointage selon les règles de ton pool.</p>
+    <div class='pool-settings-row'>
+      <span class='pool-settings-label'>⛸ Attaquants</span>
+      <div class='pool-settings-inputs'>
+        <div class='pool-settings-field'><input type='number' id='ps-fwd-g' min='0' max='10' step='0.5'> pt / but</div>
+        <div class='pool-settings-field'><input type='number' id='ps-fwd-a' min='0' max='10' step='0.5'> pt / passe</div>
+      </div>
+    </div>
+    <div class='pool-settings-row'>
+      <span class='pool-settings-label'>🛡 Défenseurs</span>
+      <div class='pool-settings-inputs'>
+        <div class='pool-settings-field'><input type='number' id='ps-def-g' min='0' max='10' step='0.5'> pt / but</div>
+        <div class='pool-settings-field'><input type='number' id='ps-def-a' min='0' max='10' step='0.5'> pt / passe</div>
+      </div>
+    </div>
+    <hr class='pool-settings-divider'>
+    <div class='pool-settings-row'>
+      <span class='pool-settings-label'>🥅 Gardiens</span>
+      <div class='pool-settings-inputs'>
+        <div class='pool-settings-field'><input type='number' id='ps-g-w' min='0' max='10' step='0.5'> pt / victoire</div>
+        <div class='pool-settings-field'><input type='number' id='ps-g-so' min='0' max='10' step='0.5'> pt / blanchissage</div>
+      </div>
+    </div>
+    <div class='pool-settings-actions'>
+      <button class='ctrl-btn btn-reset-draft' onclick='resetPoolSettings()' style='margin:0'>↺ Défaut</button>
+      <button class='ctrl-btn' style='margin:0;background:#7c3aed;border-color:#7c3aed;color:white' onclick='applyPoolSettings()'>Appliquer</button>
     </div>
   </div>
 </div>
