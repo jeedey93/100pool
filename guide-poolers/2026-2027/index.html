@@ -1533,12 +1533,16 @@ function exportExcel() {
   const rows = [];
 
   // Skaters
-  rows.push(['# Rang','Nom','Pos','Équipe','Âge','AAV ($M)','Proj G','Proj A','Proj PTS','PPG','Tier','Tendance','Risque','Band-aid','Catégorie','Notes','Disponible','Mes notes'].map(esc).join(','));
+  rows.push(['# Rang','Nom','Pos','Équipe','Âge','AAV ($M)','Contrat','Statut','MJ Proj.','Proj G','Proj A','Proj PTS','PPG','MJ Dern.','Dern. G','Dern. A','Dern. PTS','Tier','Tendance','Risque','Band-aid','Catégorie','Notes','Disponible','Mes notes'].map(esc).join(','));
   skaters.forEach(p => rows.push([
     p.rank, p.name, p.pos, p.team, p.age,
     p.aav ?? '',
+    p.contract_yrs != null ? p.contract_yrs + ' ans' : '',
+    p.expiry_status ?? '',
+    p.proj_gp ?? '',
     p.proj_g ?? '', p.proj_a ?? '', p.proj_pts ?? '',
     p.proj_pts && p.proj_gp ? (p.proj_pts / p.proj_gp).toFixed(2) : '',
+    p.last_gp ?? '', p.last_g ?? '', p.last_a ?? '', p.last_pts ?? '',
     p.tier ?? '', p.trend ?? '', p.risk ?? '',
     p.bandaid ? 'Oui' : '',
     p.scouting_category ?? '', p.notes ?? '',
@@ -1546,12 +1550,14 @@ function exportExcel() {
     userNotes[p.id] ?? '',
   ].map(esc).join(',')));
 
-  // Goalies
   rows.push('');
-  rows.push(['# Rang','Nom','Équipe','Âge','AAV ($M)','Proj V','Proj BL','Tier','Risque','Catégorie','Notes','Disponible','Mes notes'].map(esc).join(','));
+  rows.push(['# Rang','Nom','Équipe','Âge','AAV ($M)','Contrat','Statut','MJ Proj.','Proj V','Proj BL','Tier','Risque','Catégorie','Notes','Disponible','Mes notes'].map(esc).join(','));
   goalies.forEach(p => rows.push([
     p.rank, p.name, p.team, p.age,
     p.aav ?? '',
+    p.contract_yrs != null ? p.contract_yrs + ' ans' : '',
+    p.expiry_status ?? '',
+    p.proj_gp ?? '',
     p.proj_g ?? '', p.proj_a ?? '',
     p.tier ?? '', p.risk ?? '',
     p.scouting_category ?? '', p.notes ?? '',
@@ -2662,26 +2668,6 @@ function switchTab(name, btn) {
   document.getElementById('tab-' + name).classList.add('active');
   btn.classList.add('active');
   window.scrollTo(0, 0);
-}
-
-// ── CSV EXPORT ────────────────────────────────────────────
-function downloadCSV() {
-  const headers = ['Rang','Joueur','Équipe','Pos','Âge','MJ Dern.','B Dern.','A Dern.','PTS Dern.','PPM Dern.','MJ Proj.','B Proj.','A Proj.','PTS Proj.','PPM Proj.','Plafond','AAV','Palier','Tendance','Valeur','Notes'];
-  const rows = sorted(getFiltered()).map((p, i) => {
-    const trend = getTrend(p);
-    const diff  = p.proj_pts - (p.last_pts || p.proj_pts);
-    return [i + 1, p.name, p.team, p.pos, p.age,
-      p.last_gp??'', p.last_g??'', p.last_a??'', p.last_pts??'', ppg(p.last_pts, p.last_gp),
-      p.proj_gp, p.proj_g, p.proj_a, p.proj_pts, ppg(p.proj_pts, p.proj_gp),
-      p.upside ?? '',
-      p.aav ? '$'+p.aav+'M' : '',
-      p.tier, (trend==='up'?'+':'')+diff, getPV(p), p.notes||''];
-  });
-  const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n');
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  a.download = 'poolers-guide-2026-27.csv';
-  a.click();
 }
 
 checkAccess().then(async () => {
