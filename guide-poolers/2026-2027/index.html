@@ -936,7 +936,7 @@ td.star-cell { padding: 0; width: 36px; }
   <!-- TAB: RECRUES -->
   <div id='tab-recrue' class='tab-pane'>
     <div style='background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.83em;color:#15803d;line-height:1.6'>
-      <strong>🌱 Recrues</strong> — Joueurs de 23 ans et moins avec un AAV sous 1M$. Faible coût au repêchage, haut potentiel de croissance. Idéal pour ajouter de la valeur dans les rondes tardives.
+      <strong>🌱 Recrues</strong> — Joueurs de 23 ans et moins avec un AAV sous 1,1M$. Faible coût au repêchage, haut potentiel de croissance. Idéal pour ajouter de la valeur dans les rondes tardives.
     </div>
     <div id='recrueGrid' class='sleepers-grid'></div>
   </div>
@@ -2309,7 +2309,7 @@ function renderRecrue() {
   const color = '#22c55e';
   const icon = '🌱';
   const players = allPlayers
-    .filter(p => p.age != null && p.age <= 23 && p.aav != null && parseFloat(p.aav) < 1)
+    .filter(p => p.age != null && p.age <= 23 && p.aav != null && parseFloat(p.aav) < 1.1)
     .sort((a, b) => (a.rank || 999) - (b.rank || 999));
   const grid = document.getElementById('recrueGrid');
   if (!players.length) {
