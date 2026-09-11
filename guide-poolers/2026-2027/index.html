@@ -2309,7 +2309,7 @@ function renderRecrue() {
   const color = '#22c55e';
   const icon = '🌱';
   const players = allPlayers
-    .filter(p => p.age != null && p.age <= 23 && p.aav != null && parseFloat(p.aav) < 1.1)
+    .filter(p => p.age != null && p.age <= 23 && (p.aav == null || parseFloat(p.aav) < 1.1))
     .sort((a, b) => (a.rank || 999) - (b.rank || 999));
   const grid = document.getElementById('recrueGrid');
   if (!players.length) {
