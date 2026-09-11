@@ -1432,7 +1432,10 @@ async function checkAccess() {
   if (pwToken) {
     try {
       const payload = JSON.parse(atob(pwToken.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
-      if (payload.role === 'guide' && payload.email && payload.exp > Math.floor(Date.now() / 1000)) return;
+      if (payload.role === 'guide' && payload.email && payload.exp > Math.floor(Date.now() / 1000)) {
+        if (!localStorage.getItem('pool_user_email')) localStorage.setItem('pool_user_email', payload.email);
+        return;
+      }
     } catch(e) {}
     localStorage.removeItem('pool_pw_token');
   }
