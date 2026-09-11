@@ -112,9 +112,8 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
 .ctrl-btn.btn-primary:hover { background: #1a5c28; }
 .filter-divider { width: 1px; height: 20px; background: #e2e8f0; flex-shrink: 0; }
 .pills-row1 { display: contents; }
-.pills-row2 { display: none; }
-.pills-row3 { display: contents; }
-.filter-group-risk-mobile { display: none; }
+.pills-row2 { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; width: 100%; padding-top: 8px; border-top: 1px solid #f1f5f9; }
+.pills-row3 { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; width: 100%; padding-top: 8px; border-top: 1px solid #f1f5f9; }
 .tier-select-mobile { display: none; }
 
 /* ── FILTER PILLS ── */
@@ -513,8 +512,8 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   .controls-row-pills .pills-row3 { display: flex; align-items: center; gap: 8px; width: 100%; padding-top: 8px; border-top: 1px solid #f1f5f9; }
   .controls-row-pills .filter-divider { display: none; }
   /* On mobile: hide risk in row1, show it in row2 */
-  .filter-group-risk-desktop { display: none; }
-  .filter-group-risk-mobile { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .controls-row-pills .pills-row2 { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .controls-row-pills .pills-row3 { flex-wrap: nowrap; }
   #tierPills { display: none; }
   .tier-select-mobile { display: block; font-size: 15px; padding: 7px 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; background: white; color: #1e293b; font-weight: 600; flex-shrink: 0; }
   /* card footer: already split into 2 rows */
@@ -882,19 +881,10 @@ td.star-cell { padding: 0; width: 36px; }
           <select class='filter-select tier-select-mobile' id='tierSelect' onchange='setTierFromSelect(this)'>
             <option value=''>Tier — Tous</option>
           </select>
-          <div class='filter-divider'></div>
-          <!-- Risk (desktop only — moved to row2 on mobile) -->
-          <div class='filter-group filter-group-risk-desktop'>
-            <span class='filter-label'>Risque</span>
-            <button class='pill active' data-filter='risk' data-value='' onclick='setPill(this,"risk")'>Tous</button>
-            <button class='pill' data-filter='risk' data-value='Low' onclick='setPill(this,"risk")'>🟢 Faible</button>
-            <button class='pill' data-filter='risk' data-value='Medium' onclick='setPill(this,"risk")'>🟡 Moyen</button>
-            <button class='pill' data-filter='risk' data-value='High' onclick='setPill(this,"risk")'>🔴 Élevé</button>
-          </div>
         </div>
         <div class='pills-row2'>
-          <!-- Risk (mobile only) -->
-          <div class='filter-group filter-group-risk-mobile'>
+          <!-- Risk -->
+          <div class='filter-group'>
             <span class='filter-label'>Risque</span>
             <button class='pill active' data-filter='risk' data-value='' onclick='setPill(this,"risk")'>Tous</button>
             <button class='pill' data-filter='risk' data-value='Low' onclick='setPill(this,"risk")'>🟢 Faible</button>
