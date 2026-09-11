@@ -2685,6 +2685,7 @@ function openModal(id) {
     if (gs.svp) cards.push(`<div class='modal-stat-card'><div class='sc-val'>${gs.svp.toFixed(3)}</div><div class='sc-lbl'>SV%</div></div>`);
   }
   if (p.upside) cards.push(`<div class='modal-stat-card purple'><div class='sc-val'>${p.upside}</div><div class='sc-lbl'>Plafond</div></div>`);
+  cards.push(`<div class='modal-stat-card purple'><div class='sc-val'>${calcPoolPts(p)}</div><div class='sc-lbl'>Pts Pool</div></div>`);
   if (grade)    cards.push(`<div class='modal-stat-card'><div class='sc-val'><span class='grade-badge ${gradeClass(grade)}' style='font-size:1.1em;padding:3px 10px'>${grade}</span></div><div class='sc-lbl'>Valeur</div></div>`);
   if (p.pp_pct != null) cards.push(`<div class='modal-stat-card'><div class='sc-val'>${p.pp_pct}%</div><div class='sc-lbl'>PP%</div></div>`);
   if (p.aav)    cards.push(`<div class='modal-stat-card'><div class='sc-val'>${p.aav}M$</div><div class='sc-lbl'>AAV</div></div>`);
