@@ -783,6 +783,15 @@ td.star-cell { padding: 0; width: 36px; }
 .offline-banner { position: fixed; bottom: 0; left: 0; right: 0; z-index: 9900; background: #1e293b; color: white; text-align: center; padding: 10px 16px; font-size: 0.82em; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 -4px 20px rgba(0,0,0,0.3); animation: slideUp 0.3s ease; }
 .offline-banner.hidden { display: none; }
 .evolution-banner { background: linear-gradient(90deg, #f0fdf4, #eff6ff); border: 1px solid #bfdbfe; border-radius: 10px; padding: 10px 16px; font-size: 0.82em; color: #1e40af; line-height: 1.5; margin-bottom: 14px; }
+.changelog-banner { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 10px 14px 10px 16px; font-size: 0.82em; color: #166534; margin-bottom: 14px; display: flex; align-items: flex-start; gap: 10px; }
+.changelog-banner.hidden { display: none; }
+.changelog-items { flex: 1; }
+.changelog-title { font-weight: 800; margin-bottom: 4px; }
+.changelog-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.changelog-list li::before { content: '✦ '; color: #16a34a; font-size: 0.8em; }
+.changelog-date { color: #86efac; font-size: 0.85em; font-weight: 600; margin-left: 4px; }
+.changelog-close { background: none; border: none; cursor: pointer; font-size: 1.1em; color: #86efac; padding: 0 0 0 4px; line-height: 1; flex-shrink: 0; align-self: flex-start; }
+.changelog-close:hover { color: #166534; }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 </style>
 </head>
@@ -830,6 +839,14 @@ td.star-cell { padding: 0; width: 36px; }
 
   <div class='evolution-banner'>
     🚧 <strong>Guide en constante évolution</strong> — Projections, notes et catégories sont mis à jour régulièrement. Nouvelles fonctionnalités à venir tout au long de la saison.
+  </div>
+
+  <div class='changelog-banner hidden' id='changelogBanner'>
+    <div class='changelog-items'>
+      <div class='changelog-title'>🆕 Nouveautés</div>
+      <ul class='changelog-list' id='changelogList'></ul>
+    </div>
+    <button class='changelog-close' onclick='dismissChangelog()' title='Fermer'>×</button>
   </div>
 
   <!-- TABS -->
@@ -1044,6 +1061,30 @@ let sortCol = 'proj_pts';
 let draftedIds = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]'));
 let draftMode = false;
 let hideDrafted = false;
+
+// ── CHANGELOG ────────────────────────────────────────────────
+const CHANGELOG = [
+  { date: '2026-09-12', text: 'Colonne "Pts Pool" avec scoring personnalisable par position (⚙️ Mon pool)' },
+  { date: '2026-09-08', text: 'Mode draft amélioré — toggle "Cacher les draftés" + filtre Recrues élargi' },
+  { date: '2026-09-05', text: 'Export CSV enrichi — MJ, stats saison dernière, contrats' },
+];
+const CHANGELOG_LATEST = CHANGELOG[0].date;
+
+function initChangelog() {
+  const dismissed = localStorage.getItem('changelog_dismissed');
+  if (dismissed >= CHANGELOG_LATEST) return;
+  const list = document.getElementById('changelogList');
+  list.innerHTML = CHANGELOG.map(e =>
+    `<li>${e.text}<span class='changelog-date'>${new Date(e.date).toLocaleDateString('fr-CA', { month: 'short', day: 'numeric' })}</span></li>`
+  ).join('');
+  document.getElementById('changelogBanner').classList.remove('hidden');
+}
+
+function dismissChangelog() {
+  localStorage.setItem('changelog_dismissed', CHANGELOG_LATEST);
+  document.getElementById('changelogBanner').classList.add('hidden');
+}
+// ─────────────────────────────────────────────────────────────
 
 const POOL_SCORING_DEFAULT = { fwd_g: 1, fwd_a: 1, def_g: 2, def_a: 1, g_w: 2, g_so: 3 };
 let poolScoring = Object.assign({}, POOL_SCORING_DEFAULT, JSON.parse(localStorage.getItem('pool_scoring') || '{}'));
@@ -1770,6 +1811,7 @@ async function init() {
   renderScarcity();
   applyColVis();
   updatePoolSettingsBtn();
+  initChangelog();
 }
 
 // ── POOL VALUE SCORE ──────────────────────────────────────
