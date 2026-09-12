@@ -1311,6 +1311,7 @@ function closeConfirm() {
 
 function openFeedback() {
   document.getElementById('feedbackMsg').value = '';
+  document.getElementById('feedbackEmail').value = localStorage.getItem('pool_user_email') || '';
   document.getElementById('feedbackSubmitBtn').textContent = 'Envoyer';
   document.getElementById('feedbackSubmitBtn').disabled = false;
   document.getElementById('feedbackOverlay').classList.remove('hidden');
@@ -1330,8 +1331,10 @@ async function submitFeedback() {
   if (!msg) return;
   const btn = document.getElementById('feedbackSubmitBtn');
   btn.disabled = true; btn.textContent = 'Envoi…';
+  const emailInput = (document.getElementById('feedbackEmail').value || '').trim().toLowerCase() || null;
+  if (emailInput) localStorage.setItem('pool_user_email', emailInput);
+  const userEmail = emailInput || localStorage.getItem('pool_user_email') || null;
   try {
-    const userEmail = localStorage.getItem('pool_user_email') || null;
     const res = await fetch(`${SUPABASE_URL}/rest/v1/feedback`, {
       method: 'POST',
       headers: { ...SB_HEADERS, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
@@ -3030,6 +3033,7 @@ checkAccess().then(async () => {
   <div class='feedback-box'>
     <h3>💬 Suggérer une amélioration</h3>
     <p>Tu as une idée, une correction ou une demande ? Écris-nous — on lit tous les messages.</p>
+    <input type='email' id='feedbackEmail' placeholder='ton@email.com' autocomplete='email' style='width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:0.9em;margin-bottom:10px;font-family:inherit;color:#0f172a;outline:none;box-sizing:border-box;'>
     <textarea class='feedback-textarea' id='feedbackMsg' placeholder='Ton message…' maxlength='1000'></textarea>
     <div class='feedback-actions'>
       <button class='confirm-btn confirm-btn-cancel' onclick='closeFeedback()'>Annuler</button>
