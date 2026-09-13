@@ -1394,15 +1394,18 @@ async function saveAll() {
       aav: num('aav', true), proj_g: num('proj_g'), proj_a: num('proj_a'), proj_pts: num('proj_pts'),
       tier: document.getElementById(`${id}-tier`)?.value || players.find(p=>p.id===id)?.tier || null,
       risk: document.getElementById(`${id}-risk`)?.value || null,
-      bust_alert: document.getElementById(`${id}-bust_alert`)?.checked ?? false,
-      bandaid: document.getElementById(`${id}-bandaid`)?.checked ?? false,
       scouting_category: document.getElementById(`${id}-scouting_category`)?.value || null,
       upside: num('upside'),
       contract_yrs: num('contract_yrs'),
       contract_len: num('contract_len'),
       expiry_status: document.getElementById(`${id}-expiry_status`)?.value || null,
-      notes: document.getElementById(`${id}-notes`)?.value?.trim(),
+      notes: document.getElementById(`${id}-notes`)?.value?.trim() || null,
     };
+    // Remove null/undefined fields so PATCH doesn't overwrite existing DB values with null
+    Object.keys(data).forEach(k => { if (data[k] === null || data[k] === undefined) delete data[k]; });
+    // Always include boolean fields (false is a valid value to write)
+    if (document.getElementById(`${id}-bust_alert`)) data.bust_alert = document.getElementById(`${id}-bust_alert`).checked;
+    if (document.getElementById(`${id}-bandaid`)) data.bandaid = document.getElementById(`${id}-bandaid`).checked;
     const p = players.find(p => p.id === id);
     if (p?.pos === 'G') {
       data.scouting = JSON.stringify({ l: num('gs_l'), otl: num('gs_otl'), gaa: num('gs_gaa', true), svp: num('gs_svp', true) });
