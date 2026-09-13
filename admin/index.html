@@ -1187,6 +1187,7 @@ async function loadPlayers() {
     const res = await dbFetch('/rest/v1/poolers_players?order=rank.asc&select=*');
     if (!res.ok) throw new Error(await res.text());
     players = await res.json();
+    if (players.length) console.log('tier sample:', JSON.stringify(players[0].tier));
     setStatus(`${players.length} joueurs`);
     renderTable();
   } catch (e) { setStatus('Échec'); toast('Erreur: ' + e.message, 'error'); }
