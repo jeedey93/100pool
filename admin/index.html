@@ -703,7 +703,7 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
               <th class='ro-col'>Joueur</th>
               <th>Équipe</th>
               <th class='ro-col'>Pos</th>
-              <th class='ro-col'>Âge</th>
+              <th>Âge</th>
               <th>AAV ($M)</th>
               <th>Ans rest.</th>
               <th>Ans total</th>
@@ -715,8 +715,11 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> A</th>
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> PTS</th>
               <th>Palier</th>
+              <th>Catégorie</th>
               <th>Risque</th>
+              <th>Plafond</th>
               <th>💣 Bust</th>
+              <th>🩹 Blessé</th>
               <th>Notes</th>
             </tr></thead>
             <tbody id='tbody-skaters'></tbody>
@@ -751,6 +754,8 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> BL</th>
               <th>Palier</th>
               <th>Risque</th>
+              <th>🩹 Blessé</th>
+              <th>Catégorie</th>
               <th>Notes</th>
             </tr></thead>
             <tbody id='tbody-goalies'></tbody>
@@ -1250,13 +1255,22 @@ function rowHTML(p) {
     <td class='proj-td'><input class='ci n' id='${id}-proj_a'   type='number' value='${p.proj_a??''}' oninput='markDirty(${id})'></td>
     <td class='proj-td'><input class='ci n' id='${id}-proj_pts' type='number' value='${p.proj_pts??''}' style='font-weight:700;color:#059669' oninput='markDirty(${id})'></td>
     <td><select class='cs' id='${id}-tier' style='color:${tc};font-weight:700' onchange='markDirty(${id})'>${TIERS.map(v=>`<option value='${v}'${p.tier===v?' selected':''}>${v}</option>`).join('')}</select></td>
+    <td><select class='cs' id='${id}-scouting_category' onchange='markDirty(${id})'>
+      <option value=''>—</option>
+      <option value='GAMBLE'${p.scouting_category==='GAMBLE'?' selected':''}>🎰 Gamble</option>
+      <option value='SLEEPER'${p.scouting_category==='SLEEPER'?' selected':''}>😴 Sleeper</option>
+      <option value='BREAKOUT'${p.scouting_category==='BREAKOUT'?' selected':''}>🚀 Breakout</option>
+      <option value='À ÉVITER'${p.scouting_category==='À ÉVITER'?' selected':''}>⚠️ À Éviter</option>
+    </select></td>
     <td><select class='cs' id='${id}-risk' onchange='markDirty(${id})'>
       <option value=''>—</option>
       <option value='Low'${p.risk==='Low'?' selected':''}>🟢 Faible</option>
       <option value='Medium'${p.risk==='Medium'?' selected':''}>🟡 Moyen</option>
       <option value='High'${p.risk==='High'?' selected':''}>🔴 Élevé</option>
     </select></td>
+    <td><input class='ci n' id='${id}-upside' type='number' value='${p.upside??''}' oninput='markDirty(${id})' placeholder='—'></td>
     <td style='text-align:center'><input type='checkbox' id='${id}-bust_alert' ${p.bust_alert?'checked':''} onchange='markDirty(${id})' style='width:17px;height:17px;accent-color:#be123c;cursor:pointer'></td>
+    <td style='text-align:center'><input type='checkbox' id='${id}-bandaid' ${p.bandaid?'checked':''} onchange='markDirty(${id})' style='width:17px;height:17px;accent-color:#f59e0b;cursor:pointer'></td>
     <td><textarea class='ci w' id='${id}-notes' rows='3' style='color:#64748b;font-style:italic;resize:vertical;min-width:220px;' oninput='markDirty(${id})'>${esc(p.notes||'')}</textarea></td>
   </tr>`;
 }
@@ -1296,6 +1310,14 @@ function goalieRowHTML(p) {
       <option value='Medium'${p.risk==='Medium'?' selected':''}>🟡 Moyen</option>
       <option value='High'${p.risk==='High'?' selected':''}>🔴 Élevé</option>
     </select></td>
+    <td style='text-align:center'><input type='checkbox' id='${id}-bandaid' ${p.bandaid?'checked':''} onchange='markDirty(${id})' style='width:17px;height:17px;accent-color:#f59e0b;cursor:pointer'></td>
+    <td><select class='cs' id='${id}-scouting_category' onchange='markDirty(${id})'>
+      <option value=''>—</option>
+      <option value='GAMBLE'${p.scouting_category==='GAMBLE'?' selected':''}>🎰 Gamble</option>
+      <option value='SLEEPER'${p.scouting_category==='SLEEPER'?' selected':''}>😴 Sleeper</option>
+      <option value='BREAKOUT'${p.scouting_category==='BREAKOUT'?' selected':''}>🚀 Breakout</option>
+      <option value='À ÉVITER'${p.scouting_category==='À ÉVITER'?' selected':''}>⚠️ À Éviter</option>
+    </select></td>
     <td><textarea class='ci w' id='${id}-notes' rows='3' style='color:#64748b;font-style:italic;resize:vertical;min-width:220px;' oninput='markDirty(${id})'>${esc(p.notes||'')}</textarea></td>
   </tr>`;
 }
@@ -1324,6 +1346,9 @@ async function saveAll() {
       tier: document.getElementById(`${id}-tier`)?.value,
       risk: document.getElementById(`${id}-risk`)?.value || null,
       bust_alert: document.getElementById(`${id}-bust_alert`)?.checked ?? false,
+      bandaid: document.getElementById(`${id}-bandaid`)?.checked ?? false,
+      scouting_category: document.getElementById(`${id}-scouting_category`)?.value || null,
+      upside: num('upside'),
       contract_yrs: num('contract_yrs'),
       contract_len: num('contract_len'),
       expiry_status: document.getElementById(`${id}-expiry_status`)?.value || null,
@@ -1333,6 +1358,7 @@ async function saveAll() {
     if (p?.pos === 'G') {
       data.scouting = JSON.stringify({ l: num('gs_l'), otl: num('gs_otl'), gaa: num('gs_gaa', true), svp: num('gs_svp', true) });
       delete data.bust_alert;
+      delete data.upside;
     }
     try {
       const res = await dbFetch(`/rest/v1/poolers_players?id=eq.${id}`, {
