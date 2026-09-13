@@ -1228,11 +1228,17 @@ async function loadPlayers() {
     players = await res.json();
     // Build TIERS dynamically from actual DB values, sorted by tier number
     const tierMap = {};
+    const tierOrphans = new Set();
     players.forEach(p => {
-      if (p.tier) { const m = p.tier.match(/Tier\s*(\d+)/i); if (m) tierMap[parseInt(m[1])] = p.tier; }
+      if (p.tier) {
+        const m = p.tier.match(/Tier\s*(\d+)/i);
+        if (m) tierMap[parseInt(m[1])] = p.tier;
+        else tierOrphans.add(p.tier);
+      }
     });
     TIERS.length = 0;
     Object.keys(tierMap).sort((a,b) => a-b).forEach(n => TIERS.push(tierMap[n]));
+    tierOrphans.forEach(v => TIERS.push(v));
     setStatus(`${players.length} joueurs`);
     renderTable();
   } catch (e) { setStatus('Échec'); toast('Erreur: ' + e.message, 'error'); }
@@ -1386,7 +1392,7 @@ async function saveAll() {
       team: document.getElementById(`${id}-team`)?.value,
       age: num('age'),
       aav: num('aav', true), proj_g: num('proj_g'), proj_a: num('proj_a'), proj_pts: num('proj_pts'),
-      tier: document.getElementById(`${id}-tier`)?.value,
+      tier: document.getElementById(`${id}-tier`)?.value || players.find(p=>p.id===id)?.tier || null,
       risk: document.getElementById(`${id}-risk`)?.value || null,
       bust_alert: document.getElementById(`${id}-bust_alert`)?.checked ?? false,
       bandaid: document.getElementById(`${id}-bandaid`)?.checked ?? false,
