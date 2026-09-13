@@ -1348,7 +1348,8 @@ function goalieRowHTML(p) {
       <option value='RFA'${p.expiry_status==='RFA'?' selected':''}>RFA</option>
     </select></td>
     <td class='proj-td'><input class='ci n' id='${id}-proj_gp'  type='number' value='${p.proj_gp??''}' oninput='markDirty(${id})'></td>
-    <td class='proj-td'><input class='ci n' id='${id}-proj_g'   type='number' value='${p.proj_g??''}' oninput='markDirty(${id})'></td>     type='number' value='${gs.l??''}' oninput='markDirty(${id})'></td>
+    <td class='proj-td'><input class='ci n' id='${id}-proj_g'   type='number' value='${p.proj_g??''}' oninput='markDirty(${id})'></td>
+    <td class='proj-td'><input class='ci n' id='${id}-gs_l'     type='number' value='${gs.l??''}' oninput='markDirty(${id})'></td>
     <td class='proj-td'><input class='ci n' id='${id}-gs_otl'   type='number' value='${gs.otl??''}' oninput='markDirty(${id})'></td>
     <td class='proj-td'><input class='ci n' id='${id}-gs_gaa'   type='number' step='0.01' value='${gs.gaa??''}' oninput='markDirty(${id})'></td>
     <td class='proj-td'><input class='ci n' id='${id}-gs_svp'   type='number' step='0.001' value='${gs.svp??''}' oninput='markDirty(${id})'></td>
