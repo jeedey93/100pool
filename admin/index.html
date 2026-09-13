@@ -736,9 +736,8 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
               <th>Ans rest.</th>
               <th>Ans total</th>
               <th>Statut</th>
+              <th class='col-proj'><span class='sl sl-proj'>Proj</span> MJ</th>
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> G</th>
-              <th class='col-proj'><span class='sl sl-proj'>Proj</span> A</th>
-              <th class='col-proj'><span class='sl sl-proj'>Proj</span> PTS</th>
               <th>Palier</th>
               <th>Catégorie</th>
               <th>Risque</th>
@@ -771,6 +770,7 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
               <th>Ans rest.</th>
               <th>Ans total</th>
               <th>Statut</th>
+              <th class='col-proj'><span class='sl sl-proj'>Proj</span> MJ</th>
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> V</th>
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> D</th>
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> DP</th>
@@ -1300,6 +1300,7 @@ function rowHTML(p) {
       <option value='UFA'${p.expiry_status==='UFA'?' selected':''}>UFA</option>
       <option value='RFA'${p.expiry_status==='RFA'?' selected':''}>RFA</option>
     </select></td>
+    <td class='proj-td'><input class='ci n' id='${id}-proj_gp'  type='number' value='${p.proj_gp??''}' oninput='markDirty(${id})'></td>
     <td class='proj-td'><input class='ci n' id='${id}-proj_g'   type='number' value='${p.proj_g??''}' oninput='markDirty(${id})'></td>
     <td class='proj-td'><input class='ci n' id='${id}-proj_a'   type='number' value='${p.proj_a??''}' oninput='markDirty(${id})'></td>
     <td class='proj-td'><input class='ci n' id='${id}-proj_pts' type='number' value='${p.proj_pts??''}' style='font-weight:700;color:#059669' oninput='markDirty(${id})'></td>
@@ -1346,8 +1347,8 @@ function goalieRowHTML(p) {
       <option value='UFA'${p.expiry_status==='UFA'?' selected':''}>UFA</option>
       <option value='RFA'${p.expiry_status==='RFA'?' selected':''}>RFA</option>
     </select></td>
-    <td class='proj-td'><input class='ci n' id='${id}-proj_g'   type='number' value='${p.proj_g??''}' oninput='markDirty(${id})'></td>
-    <td class='proj-td'><input class='ci n' id='${id}-gs_l'     type='number' value='${gs.l??''}' oninput='markDirty(${id})'></td>
+    <td class='proj-td'><input class='ci n' id='${id}-proj_gp'  type='number' value='${p.proj_gp??''}' oninput='markDirty(${id})'></td>
+    <td class='proj-td'><input class='ci n' id='${id}-proj_g'   type='number' value='${p.proj_g??''}' oninput='markDirty(${id})'></td>     type='number' value='${gs.l??''}' oninput='markDirty(${id})'></td>
     <td class='proj-td'><input class='ci n' id='${id}-gs_otl'   type='number' value='${gs.otl??''}' oninput='markDirty(${id})'></td>
     <td class='proj-td'><input class='ci n' id='${id}-gs_gaa'   type='number' step='0.01' value='${gs.gaa??''}' oninput='markDirty(${id})'></td>
     <td class='proj-td'><input class='ci n' id='${id}-gs_svp'   type='number' step='0.001' value='${gs.svp??''}' oninput='markDirty(${id})'></td>
@@ -1391,7 +1392,7 @@ async function saveAll() {
     const data = {
       team: document.getElementById(`${id}-team`)?.value,
       age: num('age'),
-      aav: num('aav', true), proj_g: num('proj_g'), proj_a: num('proj_a'), proj_pts: num('proj_pts'),
+      aav: num('aav', true), proj_gp: num('proj_gp'), proj_g: num('proj_g'), proj_a: num('proj_a'), proj_pts: num('proj_pts'),
       tier: document.getElementById(`${id}-tier`)?.value || players.find(p=>p.id===id)?.tier || null,
       risk: document.getElementById(`${id}-risk`)?.value || null,
       scouting_category: document.getElementById(`${id}-scouting_category`)?.value || null,
