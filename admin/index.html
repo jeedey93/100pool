@@ -1410,7 +1410,17 @@ async function saveAll() {
     if (document.getElementById(`${id}-bandaid`)) data.bandaid = document.getElementById(`${id}-bandaid`).checked;
     const p = players.find(p => p.id === id);
     if (p?.pos === 'G') {
-      data.scouting = JSON.stringify({ l: num('gs_l'), otl: num('gs_otl'), gaa: num('gs_gaa', true), svp: num('gs_svp', true) });
+      const gs = {};
+      const l = num('gs_l'), otl = num('gs_otl'), gaa = num('gs_gaa', true), svp = num('gs_svp', true);
+      if (l   != null) gs.l   = l;
+      if (otl != null) gs.otl = otl;
+      if (gaa != null) gs.gaa = gaa;
+      if (svp != null) gs.svp = svp;
+      if (Object.keys(gs).length) {
+        // Merge with existing scouting data so we don't overwrite fields not shown
+        let existing = {}; try { existing = JSON.parse(p.scouting || '{}'); } catch(e) {}
+        data.scouting = JSON.stringify({ ...existing, ...gs });
+      }
       delete data.bust_alert;
       delete data.upside;
     }
