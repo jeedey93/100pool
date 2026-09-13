@@ -891,8 +891,8 @@ async function dbFetch(path, opts = {}) {
 let players = [], dirty = new Set(), activeTeam = '';
 
 const ALL_TEAMS = ['ANA','BOS','BUF','CAR','CBJ','CGY','CHI','COL','DAL','DET','EDM','FLA','LAK','MIN','MTL','NJD','NSH','NYI','NYR','OTT','PHI','PIT','SEA','SJS','STL','TBL','TOR','UTA','VAN','VGK','WPG','WSH'];
-const TIERS = ['Elite','Top','Mid','Sleeper'];
-const TIER_COLORS = { Elite: '#92400e', Top: '#1e40af', Mid: '#475569', Sleeper: '#065f46' };
+const TIERS = ['Tier 1','Tier 2','Tier 3','Tier 4','Tier 5','Tier 6','Tier 7','Tier 8','Tier 9','Tier 10','Tier 11'];
+const TIER_COLORS = { 'Tier 1': '#92400e', 'Tier 2': '#1e40af', 'Tier 3': '#065f46', 'Tier 4': '#475569', 'Tier 5': '#475569', 'Tier 6': '#475569', 'Tier 7': '#94a3b8', 'Tier 8': '#94a3b8', 'Tier 9': '#94a3b8', 'Tier 10': '#94a3b8', 'Tier 11': '#94a3b8' };
 
 // ── TABS ─────────────────────────────────────────────────
 const TAB_TITLES = { dashboard: '📊 Dashboard', acces: '💳 Accès & Achats', skaters: '⛸ Patineurs 2026-27', goalies: '🥅 Gardiens 2026-27', feedback: '💬 Commentaires' };
