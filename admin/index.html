@@ -891,7 +891,7 @@ async function dbFetch(path, opts = {}) {
 let players = [], dirty = new Set(), activeTeam = '';
 
 const ALL_TEAMS = ['ANA','BOS','BUF','CAR','CBJ','CGY','CHI','COL','DAL','DET','EDM','FLA','LAK','MIN','MTL','NJD','NSH','NYI','NYR','OTT','PHI','PIT','SEA','SJS','STL','TBL','TOR','UTA','VAN','VGK','WPG','WSH'];
-const TIERS = ['Tier 1','Tier 2','Tier 3','Tier 4','Tier 5','Tier 6','Tier 7','Tier 8','Tier 9','Tier 10','Tier 11'];
+let TIERS = [];
 const TIER_COLORS = { 'Tier 1': '#92400e', 'Tier 2': '#1e40af', 'Tier 3': '#065f46', 'Tier 4': '#475569', 'Tier 5': '#475569', 'Tier 6': '#475569', 'Tier 7': '#94a3b8', 'Tier 8': '#94a3b8', 'Tier 9': '#94a3b8', 'Tier 10': '#94a3b8', 'Tier 11': '#94a3b8' };
 
 // ── TABS ─────────────────────────────────────────────────
@@ -1187,7 +1187,13 @@ async function loadPlayers() {
     const res = await dbFetch('/rest/v1/poolers_players?order=rank.asc&select=*');
     if (!res.ok) throw new Error(await res.text());
     players = await res.json();
-    if (players.length) console.log('tier sample:', JSON.stringify(players[0].tier));
+    // Build TIERS dynamically from actual DB values, sorted by tier number
+    const tierMap = {};
+    players.forEach(p => {
+      if (p.tier) { const m = p.tier.match(/Tier\s*(\d+)/i); if (m) tierMap[parseInt(m[1])] = p.tier; }
+    });
+    TIERS.length = 0;
+    Object.keys(tierMap).sort((a,b) => a-b).forEach(n => TIERS.push(tierMap[n]));
     setStatus(`${players.length} joueurs`);
     renderTable();
   } catch (e) { setStatus('Échec'); toast('Erreur: ' + e.message, 'error'); }
@@ -1229,7 +1235,7 @@ function initials(name) {
 
 function rowHTML(p) {
   const id = p.id, ro = v => `<span class='ro'>${v ?? '—'}</span>`;
-  const tc = TIER_COLORS[p.tier] || '#475569';
+  const tc = (() => { const m = (p.tier||'').match(/Tier\s*(\d+)/i); const n = parseInt(m?.[1]); return n <= 1 ? '#92400e' : n <= 2 ? '#1e40af' : n <= 3 ? '#065f46' : n <= 6 ? '#475569' : '#94a3b8'; })();
   return `<tr id='row-${id}'>
     <td class='ro-td' style='font-weight:700'>${ro(p.rank)}</td>
     <td class='ro-td' style='min-width:160px'>
@@ -1278,7 +1284,7 @@ function rowHTML(p) {
 
 function goalieRowHTML(p) {
   const id = p.id, ro = v => `<span class='ro'>${v ?? '—'}</span>`;
-  const tc = TIER_COLORS[p.tier] || '#475569';
+  const tc = (() => { const m = (p.tier||'').match(/Tier\s*(\d+)/i); const n = parseInt(m?.[1]); return n <= 1 ? '#92400e' : n <= 2 ? '#1e40af' : n <= 3 ? '#065f46' : n <= 6 ? '#475569' : '#94a3b8'; })();
   let gs = {}; try { gs = JSON.parse(p.scouting || '{}'); } catch(e) {}
   return `<tr id='row-${id}'>
     <td class='ro-td' style='font-weight:700'>${ro(p.rank)}</td>
