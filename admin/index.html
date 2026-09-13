@@ -1261,7 +1261,7 @@ function rowHTML(p) {
     <td class='proj-td'><input class='ci n' id='${id}-proj_g'   type='number' value='${p.proj_g??''}' oninput='markDirty(${id})'></td>
     <td class='proj-td'><input class='ci n' id='${id}-proj_a'   type='number' value='${p.proj_a??''}' oninput='markDirty(${id})'></td>
     <td class='proj-td'><input class='ci n' id='${id}-proj_pts' type='number' value='${p.proj_pts??''}' style='font-weight:700;color:#059669' oninput='markDirty(${id})'></td>
-    <td><select class='cs' id='${id}-tier' style='color:${tc};font-weight:700' onchange='markDirty(${id})'><option value=''>—</option>${TIERS.map(v=>`<option value='${v}'${p.tier===v?' selected':''}>${v}</option>`).join('')}</select></td>
+    <td><select class='cs' id='${id}-tier' style='color:${tc};font-weight:700' onchange='markDirty(${id})'><option value=''>—</option>${TIERS.map(v=>`<option value='${v}'${((p.tier||'').match(/\d+/)||[])[0]===(v.match(/\d+/)||[])[0]?' selected':''}>${v}</option>`).join('')}</select></td>
     <td><select class='cs' id='${id}-scouting_category' onchange='markDirty(${id})'>
       <option value=''>—</option>
       <option value='GAMBLE'${p.scouting_category==='GAMBLE'?' selected':''}>🎰 Gamble</option>
