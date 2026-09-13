@@ -1247,7 +1247,7 @@ function rowHTML(p) {
       <option value='High'${p.risk==='High'?' selected':''}>🔴 Élevé</option>
     </select></td>
     <td style='text-align:center'><input type='checkbox' id='${id}-bust_alert' ${p.bust_alert?'checked':''} onchange='markDirty(${id})' style='width:17px;height:17px;accent-color:#be123c;cursor:pointer'></td>
-    <td><input class='ci w' id='${id}-notes' type='text' value='${esc(p.notes||'')}' style='color:#64748b;font-style:italic' oninput='markDirty(${id})'></td>
+    <td><textarea class='ci w' id='${id}-notes' rows='3' style='color:#64748b;font-style:italic;resize:vertical;min-width:220px;' oninput='markDirty(${id})'>${esc(p.notes||'')}</textarea></td>
   </tr>`;
 }
 
@@ -1286,7 +1286,7 @@ function goalieRowHTML(p) {
       <option value='Medium'${p.risk==='Medium'?' selected':''}>🟡 Moyen</option>
       <option value='High'${p.risk==='High'?' selected':''}>🔴 Élevé</option>
     </select></td>
-    <td><input class='ci w' id='${id}-notes' type='text' value='${esc(p.notes||'')}' style='color:#64748b;font-style:italic' oninput='markDirty(${id})'></td>
+    <td><textarea class='ci w' id='${id}-notes' rows='3' style='color:#64748b;font-style:italic;resize:vertical;min-width:220px;' oninput='markDirty(${id})'>${esc(p.notes||'')}</textarea></td>
   </tr>`;
 }
 
