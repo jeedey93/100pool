@@ -2375,7 +2375,10 @@ function renderCards(filtered) {
     container.innerHTML = '<div class="empty-state"><div class="icon">🔍</div>Aucun joueur ne correspond à vos filtres.</div>';
     return;
   }
-  container.innerHTML = filtered.map((p, i) => {
+  const skaters = filtered.filter(p => p.pos !== 'G');
+  const goalies = filtered.filter(p => p.pos === 'G').sort((a, b) => (b.proj_g ?? -1) - (a.proj_g ?? -1));
+  const sorted  = [...skaters, ...goalies];
+  container.innerHTML = sorted.map((p, i) => {
     const trend    = getTrend(p);
     const diff     = p.proj_pts - (p.last_pts || p.proj_pts);
     const diffStr  = diff > 0 ? '+' + diff : '' + diff;
