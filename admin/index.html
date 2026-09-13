@@ -1267,7 +1267,7 @@ function renderTable() {
   const vis = players.filter(p => (!q || p.name.toLowerCase().includes(q)) && (!activeTeam || p.team === activeTeam));
   document.getElementById('tbody-skaters').innerHTML = vis.filter(p => p.pos !== 'G').map(rowHTML).join('') ||
     `<tr><td colspan='16'><div class='empty-state'><div class='es-icon'>🔍</div><p>Aucun joueur trouvé</p></div></td></tr>`;
-  document.getElementById('tbody-goalies').innerHTML = vis.filter(p => p.pos === 'G').map(goalieRowHTML).join('') ||
+  document.getElementById('tbody-goalies').innerHTML = vis.filter(p => p.pos === 'G').sort((a,b) => (b.proj_g ?? -1) - (a.proj_g ?? -1)).map(goalieRowHTML).join('') ||
     `<tr><td colspan='14'><div class='empty-state'><div class='es-icon'>🥅</div><p>Aucun gardien trouvé</p></div></td></tr>`;
   updateStatus(vis.length);
 }
