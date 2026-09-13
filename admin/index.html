@@ -111,8 +111,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .card-header h3 { font-size: 0.93em; font-weight: 800; color: #1e293b; }
 .card-header-right { display: flex; align-items: center; gap: 8px; }
 .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-table { width: 100%; border-collapse: collapse; font-size: 0.84em; }
-thead th { background: #f7faf8; color: #64748b; font-weight: 700; font-size: 0.71em; letter-spacing: 0.6px; text-transform: uppercase; padding: 10px 14px; text-align: left; white-space: nowrap; border-bottom: 1px solid #eef3f0; }
+table { width: 100%; border-collapse: collapse; font-size: 0.78em; }
+thead th { background: #f7faf8; color: #64748b; font-weight: 700; font-size: 0.68em; letter-spacing: 0.5px; text-transform: uppercase; padding: 8px 8px; text-align: left; white-space: nowrap; border-bottom: 1px solid #eef3f0; }
 thead th.ro-col { color: #9fb4a8; }
 thead th.col-last { background: #f5fbf7; color: #15803d; }
 thead th.col-proj { background: #edfbf2; color: #059669; }
@@ -124,7 +124,7 @@ tbody td:nth-child(2) { left: 48px; box-shadow: 2px 0 4px rgba(0,0,0,0.06); min-
 tbody tr { border-bottom: 1px solid #f3f7f4; transition: background 0.12s; }
 tbody tr:last-child { border-bottom: none; }
 tbody tr:hover { background: #f8fcf9; }
-tbody td { padding: 9px 14px; vertical-align: middle; }
+tbody td { padding: 6px 8px; vertical-align: middle; }
 tbody td.ro-td { color: #9fb4a8; font-size: 0.85em; }
 tbody td.last-td { background: #fafffe; }
 tbody td.proj-td { background: #f6fdf9; }
@@ -713,9 +713,6 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
               <th>Ans rest.</th>
               <th>Ans total</th>
               <th>Statut</th>
-              <th class='ro-col col-last'><span class='sl sl-last'>25-26</span> G</th>
-              <th class='ro-col col-last'><span class='sl sl-last'>25-26</span> A</th>
-              <th class='ro-col col-last'><span class='sl sl-last'>25-26</span> PTS</th>
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> G</th>
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> A</th>
               <th class='col-proj'><span class='sl sl-proj'>Proj</span> PTS</th>
@@ -1260,9 +1257,6 @@ function rowHTML(p) {
       <option value='UFA'${p.expiry_status==='UFA'?' selected':''}>UFA</option>
       <option value='RFA'${p.expiry_status==='RFA'?' selected':''}>RFA</option>
     </select></td>
-    <td class='ro-td last-td'>${ro(p.last_g)}</td>
-    <td class='ro-td last-td'>${ro(p.last_a)}</td>
-    <td class='ro-td last-td' style='font-weight:700;color:#1d4ed8'>${ro(p.last_pts)}</td>
     <td class='proj-td'><input class='ci n' id='${id}-proj_g'   type='number' value='${p.proj_g??''}' oninput='markDirty(${id})'></td>
     <td class='proj-td'><input class='ci n' id='${id}-proj_a'   type='number' value='${p.proj_a??''}' oninput='markDirty(${id})'></td>
     <td class='proj-td'><input class='ci n' id='${id}-proj_pts' type='number' value='${p.proj_pts??''}' style='font-weight:700;color:#059669' oninput='markDirty(${id})'></td>
