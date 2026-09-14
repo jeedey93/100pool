@@ -165,13 +165,13 @@ body.has-shared-sidebar.shared-sb-collapsed { padding-left: 52px; }
   #sbFeedbackOverlay { position: fixed; inset: 0; background: rgba(15,23,42,0.55); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); animation: sbFadeIn 0.15s ease; }
   #sbFeedbackOverlay.hidden { display: none; }
   @keyframes sbFadeIn { from { opacity: 0; } to { opacity: 1; } }
-  #sbFeedbackBox { background: white; border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,0.2); padding: 28px 28px 22px; max-width: 420px; width: 100%; animation: sbScaleIn 0.18s cubic-bezier(0.34,1.56,0.64,1); }
+  #sbFeedbackBox { background: white; border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,0.2); padding: 32px 32px 26px; max-width: 560px; width: 100%; animation: sbScaleIn 0.18s cubic-bezier(0.34,1.56,0.64,1); }
   @keyframes sbScaleIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   #sbFeedbackBox h3 { font-size: 1.05em; font-weight: 900; color: #0f172a; margin-bottom: 6px; }
   #sbFeedbackBox p { font-size: 0.83em; color: #64748b; margin-bottom: 14px; line-height: 1.5; }
   #sbFeedbackEmail { width: 100%; padding: 10px 14px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 0.88em; font-family: inherit; color: #1e293b; outline: none; box-sizing: border-box; margin-bottom: 10px; transition: border 0.15s; }
   #sbFeedbackEmail:focus { border-color: #2d8a3e; }
-  #sbFeedbackMsg { width: 100%; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; font-size: 0.88em; font-family: inherit; resize: vertical; min-height: 100px; outline: none; transition: border 0.15s; color: #1e293b; box-sizing: border-box; }
+  #sbFeedbackMsg { width: 100%; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; font-size: 0.88em; font-family: inherit; resize: vertical; min-height: 160px; outline: none; transition: border 0.15s; color: #1e293b; box-sizing: border-box; }
   #sbFeedbackMsg:focus { border-color: #2d8a3e; }
   .sb-feedback-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }
   .sb-feedback-btn { font-size: 0.88em; font-weight: 700; padding: 9px 20px; border-radius: 9px; border: none; cursor: pointer; transition: all 0.15s; }
