@@ -60,23 +60,23 @@
 .sb-user-avatar { width: 26px; height: 26px; border-radius: 50%; background: #f5c842; color: #1a3d10; font-size: 0.62em; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .sb-user-email { color: rgba(255,255,255,0.55); font-size: 0.75em; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-.sidebar-logo { display: flex; align-items: center; gap: 13px; padding: 26px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); text-decoration: none; flex-shrink: 0; }
-.sidebar-logo img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(74,222,128,0.3); flex-shrink: 0; }
-.sidebar-logo-text { line-height: 1; }
-.sidebar-logo-text span { display: block; color: white; font-weight: 800; font-size: 1em; letter-spacing: -0.2px; }
-.sidebar-logo-text small { display: block; color: rgba(255,255,255,0.35); font-size: 0.65em; font-weight: 500; letter-spacing: 0.4px; margin-top: 2px; }
-.sidebar-section { padding: 18px 10px 4px; }
-.sidebar-section-label { font-size: 0.58em; font-weight: 700; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 1.4px; padding: 0 10px; margin-bottom: 6px; }
-.gs-nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; cursor: pointer; color: rgba(255,255,255,0.5); font-size: 0.87em; font-weight: 600; transition: all 0.18s; border: none; background: none; width: 100%; text-align: left; letter-spacing: 0.1px; text-decoration: none; box-sizing: border-box; }
-.gs-nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); }
-.gs-nav-item.active { background: linear-gradient(135deg, rgba(45,138,62,0.22), rgba(74,222,128,0.1)); color: #4ade80; box-shadow: inset 0 0 0 1px rgba(74,222,128,0.15); }
-.gs-nav-icon { font-size: 1.05em; width: 20px; text-align: center; flex-shrink: 0; }
-.sidebar-bottom { margin-top: auto; padding: 12px 10px 14px; border-top: 1px solid rgba(255,255,255,0.06); }
-.sidebar-version { text-align: center; font-size: 0.58em; color: rgba(255,255,255,0.15); padding: 8px 0 4px; letter-spacing: 0.5px; }
-.sidebar-toggle { display: flex; align-items: center; gap: 8px; width: 100%; padding: 10px 14px; background: none; border: none; border-top: 1px solid rgba(255,255,255,0.06); cursor: pointer; color: rgba(255,255,255,0.3); font-size: 0.82em; font-weight: 600; transition: all 0.18s; }
-.sidebar-toggle:hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.65); }
-.sidebar-toggle .toggle-icon { width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
-.sidebar-toggle .toggle-label { white-space: nowrap; overflow: hidden; }
+#${SIDEBAR_ID} .sidebar-logo { display: flex; align-items: center; gap: 13px; padding: 26px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); text-decoration: none; flex-shrink: 0; }
+#${SIDEBAR_ID} .sidebar-logo img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(74,222,128,0.3); flex-shrink: 0; }
+#${SIDEBAR_ID} .sidebar-logo-text { line-height: 1; }
+#${SIDEBAR_ID} .sidebar-logo-text span { display: block; color: white; font-weight: 800; font-size: 1em; letter-spacing: -0.2px; }
+#${SIDEBAR_ID} .sidebar-logo-text small { display: block; color: rgba(255,255,255,0.35); font-size: 0.65em; font-weight: 500; letter-spacing: 0.4px; margin-top: 2px; }
+#${SIDEBAR_ID} .sidebar-section { padding: 18px 10px 4px; }
+#${SIDEBAR_ID} .sidebar-section-label { font-size: 0.58em; font-weight: 700; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 1.4px; padding: 0 10px; margin-bottom: 6px; }
+#${SIDEBAR_ID} .gs-nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; cursor: pointer; color: rgba(255,255,255,0.5); font-size: 0.87em; font-weight: 600; transition: all 0.18s; border: none; background: none; width: 100%; text-align: left; letter-spacing: 0.1px; text-decoration: none; box-sizing: border-box; }
+#${SIDEBAR_ID} .gs-nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); }
+#${SIDEBAR_ID} .gs-nav-item.active { background: linear-gradient(135deg, rgba(45,138,62,0.22), rgba(74,222,128,0.1)); color: #4ade80; box-shadow: inset 0 0 0 1px rgba(74,222,128,0.15); }
+#${SIDEBAR_ID} .gs-nav-icon { font-size: 1.05em; width: 20px; text-align: center; flex-shrink: 0; }
+#${SIDEBAR_ID} .sidebar-bottom { margin-top: auto; padding: 12px 10px 14px; border-top: 1px solid rgba(255,255,255,0.06); }
+#${SIDEBAR_ID} .sidebar-version { text-align: center; font-size: 0.58em; color: rgba(255,255,255,0.15); padding: 8px 0 4px; letter-spacing: 0.5px; }
+#${SIDEBAR_ID} .sidebar-toggle { display: flex; align-items: center; gap: 8px; width: 100%; padding: 10px 14px; background: none; border: none; border-top: 1px solid rgba(255,255,255,0.06); cursor: pointer; color: rgba(255,255,255,0.3); font-size: 0.82em; font-weight: 600; transition: all 0.18s; }
+#${SIDEBAR_ID} .sidebar-toggle:hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.65); }
+#${SIDEBAR_ID} .sidebar-toggle .toggle-icon { width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
+#${SIDEBAR_ID} .sidebar-toggle .toggle-label { white-space: nowrap; overflow: hidden; }
 
 body.has-shared-sidebar { padding-left: 220px; transition: padding-left 0.2s ease; }
 body.has-shared-sidebar.shared-sb-collapsed { padding-left: 52px; }
