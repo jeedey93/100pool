@@ -21,9 +21,7 @@
 
   const navItems = links.map(l => {
     const id = l.id ? ` id="${l.id}"` : '';
-    // Mon équipe est masqué par défaut — la page guide le révèle via checkAccess()
-    const hidden = l.id === 'sidebarEquipe' ? ' style="display:none"' : '';
-    return `<a class="gs-nav-item${isActive(l.href) ? ' active' : ''}" href="${l.href}"${id}${hidden}>
+    return `<a class="gs-nav-item${isActive(l.href) ? ' active' : ''}" href="${l.href}"${id}>
       <span class="gs-nav-icon">${l.icon}</span><span>${l.label}</span>
     </a>`;
   }).join('');
