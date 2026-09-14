@@ -19,6 +19,7 @@
       links: [
         { href: '/',                         icon: '🏠', label: 'Accueil' },
         { href: '/guide-poolers/2026-2027/', icon: '📋', label: 'Guide des poolers' },
+        { href: '/podcast/',                 icon: '🎙', label: 'Podcast' },
         { href: '/faq/',                     icon: '❓', label: 'FAQ' },
       ]
     },
@@ -27,12 +28,6 @@
       links: [
         { href: '/ma-liste/',   icon: '⭐', label: 'Ma liste' },
         { href: '/mon-equipe/', icon: '👥', label: 'Mon équipe' },
-      ]
-    },
-    {
-      label: 'Communauté',
-      links: [
-        { href: '/podcast/', icon: '🎙', label: 'Podcast' },
       ]
     },
   ];
