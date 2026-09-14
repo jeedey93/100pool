@@ -545,7 +545,7 @@ function toggleNav() {
   document.getElementById('navMobile').classList.toggle('open');
 }
 document.addEventListener('click', function(e) {
-  if (!document.querySelector('nav').contains(e.target))
+  const _nav = document.querySelector('nav:not(#sharedSidebar)'); if (_nav && !_nav.contains(e.target))
     document.getElementById('navMobile').classList.remove('open');
 });
 </script>

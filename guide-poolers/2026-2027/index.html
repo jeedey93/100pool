@@ -1055,7 +1055,8 @@ function toggleNav() {
   document.getElementById('navMobile').classList.toggle('open');
 }
 document.addEventListener('click', function(e) {
-  if (!document.querySelector('nav').contains(e.target))
+  const topNav = document.querySelector('nav:not(#sharedSidebar)');
+  if (topNav && !topNav.contains(e.target))
     document.getElementById('navMobile').classList.remove('open');
 });
 let allPlayers = [];
