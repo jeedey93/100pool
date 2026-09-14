@@ -28,7 +28,6 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
 .nav-links { display: flex; align-items: center; gap: 6px; margin-left: auto; }
 .nav-link { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.85em; font-weight: 600; padding: 7px 14px; border-radius: 8px; transition: all 0.2s; }
 .nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
-.nav-link.active { background: rgba(255,255,255,0.15); color: white; }
 .nav-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; margin-left: auto; flex-direction: column; gap: 5px; align-items: center; justify-content: center; }
 .nav-hamburger span { display: block; width: 22px; height: 2px; background: white; border-radius: 2px; }
 .nav-mobile { display: none; position: fixed; top: 56px; left: 0; right: 0; background: linear-gradient(135deg, #1a5c28, #2d8a3e); border-top: 1px solid rgba(255,255,255,0.1); padding: 8px 16px 16px; flex-direction: column; gap: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
@@ -48,75 +47,122 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
 .page-header-sub { color: rgba(255,255,255,0.65); font-size: 0.95em; max-width: 480px; margin: 0 auto; }
 
 /* ── MAIN WRAP ── */
-.page-wrap { max-width: 860px; margin: 0 auto; padding: 40px 20px 80px; }
+.page-wrap { max-width: 920px; margin: 0 auto; padding: 36px 20px 80px; }
 
 /* ── TOOLBAR ── */
-.toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
-.toolbar-title { font-size: 1.1em; font-weight: 800; color: #0f172a; flex: 1; min-width: 120px; }
+.toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.toolbar-title { font-size: 1.05em; font-weight: 800; color: #0f172a; flex: 1; min-width: 120px; }
 .toolbar-title span { color: #b45309; }
-.btn-secondary { background: white; border: 1.5px solid #e2e8f0; color: #475569; font-size: 0.85em; font-weight: 700; padding: 8px 16px; border-radius: 9px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+.btn-secondary { background: white; border: 1.5px solid #e2e8f0; color: #475569; font-size: 0.82em; font-weight: 700; padding: 7px 14px; border-radius: 9px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; text-decoration: none; }
 .btn-secondary:hover { border-color: #94a3b8; color: #1e293b; }
 .btn-danger { background: #fff5f5; border: 1.5px solid #fecaca; color: #dc2626; }
 .btn-danger:hover { background: #fee2e2; border-color: #f87171; color: #b91c1c; }
 
-/* ── WATCHLIST ITEMS ── */
-.wl-list { display: flex; flex-direction: column; gap: 6px; }
-.wl-item { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px; background: white; border: 1.5px solid #e2e8f0; box-shadow: 0 1px 4px rgba(0,0,0,0.04); cursor: grab; transition: background 0.15s, opacity 0.15s, box-shadow 0.15s; user-select: none; }
-.wl-item:active { cursor: grabbing; }
-.wl-item.dragging { opacity: 0.4; }
-.wl-item.drag-over { border-color: #f59e0b; background: #fffbeb; box-shadow: 0 0 0 2px rgba(245,158,11,0.2); }
-.wl-drag-handle { color: #cbd5e1; font-size: 1.1em; cursor: grab; flex-shrink: 0; }
-.wl-rank { width: 24px; text-align: center; font-size: 0.78em; font-weight: 800; color: #94a3b8; flex-shrink: 0; }
-.wl-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #92400e, #b45309); color: white; font-size: 0.65em; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; letter-spacing: -0.5px; }
+/* ── SUMMARY BAR ── */
+.wl-summary { background: white; border-radius: 14px; border: 1.5px solid #e2e8f0; padding: 14px 20px; margin-bottom: 16px; display: flex; gap: 28px; flex-wrap: wrap; align-items: center; }
+.wl-summary-stat { }
+.wl-summary-val { font-size: 1.4em; font-weight: 900; color: #0f172a; line-height: 1; }
+.wl-summary-lbl { font-size: 0.68em; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; margin-top: 3px; }
+.wl-summary-divider { width: 1px; height: 32px; background: #e2e8f0; flex-shrink: 0; }
+
+/* ── CARD LIST ── */
+.wl-list { display: flex; flex-direction: column; gap: 8px; }
+
+/* ── PLAYER CARD ── */
+.wl-card { background: white; border-radius: 14px; border: 1.5px solid #e2e8f0; box-shadow: 0 1px 4px rgba(0,0,0,0.04); overflow: hidden; transition: box-shadow 0.15s, opacity 0.15s; }
+.wl-card.dragging { opacity: 0.4; }
+.wl-card.drag-over { border-color: #f59e0b; box-shadow: 0 0 0 2px rgba(245,158,11,0.2); }
+
+/* card main row */
+.wl-card-row { display: flex; align-items: center; gap: 10px; padding: 12px 14px; cursor: grab; user-select: none; }
+.wl-card-row:active { cursor: grabbing; }
+.wl-drag-handle { color: #d1d5db; font-size: 1.05em; flex-shrink: 0; line-height: 1; }
+.wl-rank { width: 22px; text-align: center; font-size: 0.75em; font-weight: 800; color: #94a3b8; flex-shrink: 0; }
+
+/* headshot */
+.wl-headshot-wrap { position: relative; flex-shrink: 0; }
+.wl-headshot { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #f1f5f9; background: linear-gradient(135deg, #92400e, #b45309); display: block; }
+.wl-headshot-fallback { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #92400e, #b45309); color: white; font-size: 0.7em; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; letter-spacing: -0.5px; border: 2px solid #f1f5f9; }
+.wl-bust-badge { position: absolute; bottom: -2px; right: -2px; font-size: 0.75em; line-height: 1; }
+
+/* player info */
 .wl-info { flex: 1; min-width: 0; }
-.wl-name { font-size: 0.92em; font-weight: 700; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.wl-meta { font-size: 0.75em; color: #64748b; margin-top: 2px; }
-.wl-tier-badge { display: inline-block; font-size: 0.68em; font-weight: 800; padding: 2px 7px; border-radius: 6px; margin-left: 5px; vertical-align: middle; }
-.wl-stats { display: flex; gap: 16px; flex-shrink: 0; }
-.wl-stat { text-align: center; }
-.wl-stat-val { font-size: 0.88em; font-weight: 800; color: #0f172a; }
-.wl-stat-lbl { font-size: 0.62em; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 1px; }
-.wl-remove { background: none; border: none; color: #fbbf24; font-size: 1.1em; cursor: pointer; padding: 4px 6px; border-radius: 6px; transition: all 0.15s; flex-shrink: 0; line-height: 1; }
+.wl-name-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.wl-name { font-size: 0.93em; font-weight: 800; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wl-tier-badge { display: inline-block; font-size: 0.62em; font-weight: 800; padding: 2px 6px; border-radius: 5px; flex-shrink: 0; }
+.wl-risk-badge { display: inline-block; font-size: 0.62em; font-weight: 700; padding: 2px 6px; border-radius: 5px; flex-shrink: 0; }
+.risk-low    { background: rgba(34,197,94,0.12);  color: #15803d; }
+.risk-medium { background: rgba(245,158,11,0.12); color: #b45309; }
+.risk-high   { background: rgba(239,68,68,0.12);  color: #b91c1c; }
+.wl-meta { font-size: 0.72em; color: #64748b; margin-top: 3px; display: flex; align-items: center; gap: 6px; }
+.wl-meta-sep { color: #cbd5e1; }
+
+/* stats grid */
+.wl-stats { display: flex; gap: 0; flex-shrink: 0; border-left: 1px solid #f1f5f9; margin-left: 4px; }
+.wl-stat { text-align: center; padding: 0 14px; border-right: 1px solid #f1f5f9; }
+.wl-stat:last-child { border-right: none; }
+.wl-stat-val { font-size: 0.95em; font-weight: 800; color: #0f172a; line-height: 1.2; }
+.wl-stat-val.dim { color: #94a3b8; }
+.wl-stat-lbl { font-size: 0.58em; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; white-space: nowrap; }
+.wl-stat-sub { font-size: 0.58em; color: #b0bec5; margin-top: 1px; }
+
+/* remove button */
+.wl-remove { background: none; border: none; color: #fbbf24; font-size: 1.1em; cursor: pointer; padding: 6px 8px; border-radius: 6px; transition: all 0.15s; flex-shrink: 0; line-height: 1; }
 .wl-remove:hover { background: #fff7ed; color: #f59e0b; }
 
-/* Tier colors */
-.tier-1 { background: rgba(34,197,94,0.12); color: #15803d; }
-.tier-2 { background: rgba(59,130,246,0.12); color: #1d4ed8; }
-.tier-3 { background: rgba(168,85,247,0.12); color: #7e22ce; }
-.tier-4 { background: rgba(245,158,11,0.12); color: #b45309; }
-.tier-5 { background: rgba(239,68,68,0.12); color: #b91c1c; }
+/* expand toggle */
+.wl-expand-btn { width: 100%; background: none; border: none; border-top: 1px solid #f1f5f9; padding: 6px 14px; font-size: 0.72em; font-weight: 600; color: #94a3b8; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 6px; transition: background 0.12s; }
+.wl-expand-btn:hover { background: #fafbfc; color: #64748b; }
+.wl-expand-btn svg { transition: transform 0.2s; flex-shrink: 0; }
+.wl-card.expanded .wl-expand-btn svg { transform: rotate(180deg); }
 
-/* ── EMPTY STATE ── */
+/* notes panel */
+.wl-notes { display: none; padding: 12px 16px 14px; border-top: 1px solid #f1f5f9; background: #fafbfc; }
+.wl-card.expanded .wl-notes { display: block; }
+.wl-notes p { font-size: 0.82em; color: #475569; line-height: 1.65; }
+.wl-notes-empty { font-size: 0.8em; color: #94a3b8; font-style: italic; }
+.wl-comp { margin-top: 8px; font-size: 0.78em; color: #64748b; }
+.wl-comp strong { color: #0f172a; }
+.wl-upside-bar { margin-top: 10px; }
+.wl-upside-label { font-size: 0.7em; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.wl-upside-track { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
+.wl-upside-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #f59e0b, #d97706); transition: width 0.4s ease; }
+
+/* tier colors */
+.tier-1 { background: rgba(34,197,94,0.12);  color: #15803d; }
+.tier-2 { background: rgba(59,130,246,0.12);  color: #1d4ed8; }
+.tier-3 { background: rgba(168,85,247,0.12);  color: #7e22ce; }
+.tier-4 { background: rgba(245,158,11,0.12);  color: #b45309; }
+.tier-5 { background: rgba(239,68,68,0.12);   color: #b91c1c; }
+
+/* ── EMPTY / LOADING / ERROR ── */
 .wl-empty { background: white; border-radius: 16px; border: 2px dashed #e2e8f0; padding: 60px 24px; text-align: center; color: #94a3b8; }
 .wl-empty-icon { font-size: 2.5em; margin-bottom: 16px; }
 .wl-empty h3 { font-size: 1.1em; font-weight: 700; color: #475569; margin-bottom: 8px; }
 .wl-empty p { font-size: 0.88em; line-height: 1.6; max-width: 340px; margin: 0 auto 20px; }
 .wl-empty a { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #92400e, #b45309); color: white; font-weight: 700; font-size: 0.88em; padding: 10px 20px; border-radius: 10px; text-decoration: none; transition: all 0.2s; }
 .wl-empty a:hover { opacity: 0.9; transform: translateY(-1px); }
-
-/* ── LOADING / ERROR ── */
 .state-card { background: white; border-radius: 16px; border: 1.5px solid #e2e8f0; padding: 48px 24px; text-align: center; color: #64748b; font-size: 0.92em; }
 .spinner { width: 32px; height: 32px; border: 3px solid #e2e8f0; border-top-color: #b45309; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px; }
 @keyframes spin { to { transform: rotate(360deg); } }
-
-/* ── STATS SUMMARY ── */
-.wl-summary { background: white; border-radius: 14px; border: 1.5px solid #e2e8f0; padding: 16px 20px; margin-bottom: 20px; display: flex; gap: 24px; flex-wrap: wrap; }
-.wl-summary-stat { }
-.wl-summary-val { font-size: 1.5em; font-weight: 900; color: #0f172a; line-height: 1; }
-.wl-summary-lbl { font-size: 0.72em; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; margin-top: 3px; }
-
-/* ── RESPONSIVE ── */
-@media (max-width: 600px) {
-  .wl-stats { display: none; }
-  .wl-item { padding: 10px 12px; }
-  .wl-summary { gap: 16px; }
-}
 
 /* ── AUTH GATE ── */
 .auth-gate { max-width: 480px; margin: 80px auto; padding: 40px 24px; text-align: center; background: white; border-radius: 20px; border: 1.5px solid #e2e8f0; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
 .auth-gate h2 { font-size: 1.3em; font-weight: 900; margin-bottom: 12px; }
 .auth-gate p { color: #64748b; font-size: 0.92em; line-height: 1.6; margin-bottom: 24px; }
 .auth-gate a { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #1a5c28, #2d8a3e); color: white; font-weight: 700; padding: 12px 24px; border-radius: 10px; text-decoration: none; font-size: 0.95em; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  .wl-stats { display: none; }
+  .wl-card-row { gap: 8px; }
+  .wl-headshot, .wl-headshot-fallback { width: 40px; height: 40px; }
+  .wl-summary { gap: 16px; }
+  .wl-summary-divider { display: none; }
+}
+@media (max-width: 400px) {
+  .wl-risk-badge { display: none; }
+}
 
 /* ── FOOTER ── */
 footer { background: #0f1f13; padding: 32px 24px; text-align: center; }
@@ -193,7 +239,7 @@ document.addEventListener('click', function(e) {
   if (_nav && !_nav.contains(e.target)) document.getElementById('navMobile').classList.remove('open');
 });
 
-// ── Auth check ──────────────────────────────────────────────
+// ── Auth ────────────────────────────────────────────────────
 const token = localStorage.getItem('pool_pw_token') || localStorage.getItem('pool_token');
 const isDev = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 if (!isDev && !token) {
@@ -234,6 +280,166 @@ function clearAll() {
   render();
 }
 
+function toggleNotes(cardEl) {
+  cardEl.classList.toggle('expanded');
+}
+
+// ── Helpers ─────────────────────────────────────────────────
+function tierNum(tier) {
+  if (!tier) return null;
+  const m = String(tier).match(/\d+/);
+  return m ? parseInt(m[0]) : null;
+}
+
+function tierClass(n) {
+  if (!n) return '';
+  if (n <= 1) return 'tier-1';
+  if (n <= 2) return 'tier-2';
+  if (n <= 3) return 'tier-3';
+  if (n <= 4) return 'tier-4';
+  return 'tier-5';
+}
+
+function riskClass(risk) {
+  if (!risk) return '';
+  const r = risk.toLowerCase();
+  if (r === 'low') return 'risk-low';
+  if (r === 'medium' || r === 'med') return 'risk-medium';
+  return 'risk-high';
+}
+
+function riskLabel(risk) {
+  if (!risk) return null;
+  const r = risk.toLowerCase();
+  if (r === 'low') return '🟢 Low';
+  if (r === 'medium' || r === 'med') return '🟡 Med';
+  return '🔴 High';
+}
+
+function playerInitials(name) {
+  if (!name) return '?';
+  const parts = name.trim().split(' ');
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function fmt(v) { return v != null ? v : '—'; }
+
+// ── Build card HTML ─────────────────────────────────────────
+function buildCard(p, idx) {
+  const tn = tierNum(p.tier);
+  const tierBadge = tn ? `<span class='wl-tier-badge ${tierClass(tn)}'>T${tn}</span>` : '';
+  const riskBadge = p.risk ? `<span class='wl-risk-badge ${riskClass(p.risk)}'>${riskLabel(p.risk)}</span>` : '';
+  const bustBadge = p.bust_alert ? `<span class='wl-bust-badge' title='Bust alert'>⚠️</span>` : '';
+  const bandaidBadge = p.bandaid ? `<span title='Blessure récente' style='font-size:0.75em'>🩹</span>` : '';
+
+  // Headshot with fallback
+  const headshotHtml = p.headshot_url
+    ? `<img class='wl-headshot' src='${p.headshot_url}' alt='${p.name}'
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+         loading='lazy'>
+       <div class='wl-headshot-fallback' style='display:none'>${playerInitials(p.name)}</div>`
+    : `<div class='wl-headshot-fallback'>${playerInitials(p.name)}</div>`;
+
+  // AAV display
+  const aavStr = p.aav ? `${p.aav.toFixed(1)}M$` : null;
+
+  // Meta line: team · pos · age · aav
+  const metaParts = [
+    p.team || '—',
+    p.pos || '—',
+    p.age ? `${p.age} ans` : null,
+    aavStr,
+  ].filter(Boolean);
+
+  // Stats columns — skaters vs goalies
+  const isGoalie = p.pos === 'G';
+  let statsHtml;
+  if (isGoalie) {
+    statsHtml = `
+      <div class='wl-stat'>
+        <div class='wl-stat-val'>${fmt(p.proj_g)}</div>
+        <div class='wl-stat-lbl'>Proj V</div>
+        <div class='wl-stat-sub'>sur ${fmt(p.proj_gp)} matchs</div>
+      </div>
+      <div class='wl-stat'>
+        <div class='wl-stat-val ${p.last_pts == null ? "dim" : ""}'>${fmt(p.last_pts)}</div>
+        <div class='wl-stat-lbl'>V an dernier</div>
+        <div class='wl-stat-sub'>${p.last_gp ? `${p.last_gp} GP` : ''}</div>
+      </div>`;
+  } else {
+    statsHtml = `
+      <div class='wl-stat'>
+        <div class='wl-stat-val'>${fmt(p.proj_pts)}</div>
+        <div class='wl-stat-lbl'>Proj PTS</div>
+        <div class='wl-stat-sub'>sur ${fmt(p.proj_gp)} GP</div>
+      </div>
+      <div class='wl-stat'>
+        <div class='wl-stat-val'>${fmt(p.proj_g)}</div>
+        <div class='wl-stat-lbl'>Proj G</div>
+      </div>
+      <div class='wl-stat'>
+        <div class='wl-stat-val'>${fmt(p.proj_a)}</div>
+        <div class='wl-stat-lbl'>Proj A</div>
+      </div>
+      <div class='wl-stat'>
+        <div class='wl-stat-val ${p.last_pts == null ? "dim" : ""}'>${fmt(p.last_pts)}</div>
+        <div class='wl-stat-lbl'>Last PTS</div>
+        <div class='wl-stat-sub'>${p.last_gp ? `${p.last_gp} GP` : ''}</div>
+      </div>`;
+  }
+
+  // Notes panel
+  const upside = p.upside != null ? `
+    <div class='wl-upside-bar'>
+      <div class='wl-upside-label'>Upside — ${p.upside}/100</div>
+      <div class='wl-upside-track'><div class='wl-upside-fill' style='width:${p.upside}%'></div></div>
+    </div>` : '';
+  const comp = p.comp_player ? `<div class='wl-comp'>Comparaison : <strong>${p.comp_player}</strong></div>` : '';
+  const notesText = p.notes
+    ? `<p>${p.notes}</p>`
+    : `<p class='wl-notes-empty'>Aucune note disponible pour ce joueur.</p>`;
+  const notesPanel = `<div class='wl-notes'>${notesText}${comp}${upside}</div>`;
+
+  const hasNotes = !!(p.notes || p.comp_player || p.upside != null);
+
+  return `<div class='wl-card' id='wlcard-${p.id}' data-id='${p.id}'
+    draggable='true'
+    ondragstart='wlDragStart(event,${p.id})'
+    ondragover='wlDragOver(event)'
+    ondragleave='wlDragLeave(event)'
+    ondrop='wlDrop(event,${p.id})'
+    ondragend='wlDragEnd(event)'>
+    <div class='wl-card-row'>
+      <span class='wl-drag-handle'>⠿</span>
+      <span class='wl-rank'>${idx + 1}</span>
+      <div class='wl-headshot-wrap'>
+        ${headshotHtml}
+        ${bustBadge}
+      </div>
+      <div class='wl-info'>
+        <div class='wl-name-row'>
+          <span class='wl-name'>${p.name}</span>
+          ${tierBadge}
+          ${riskBadge}
+          ${bandaidBadge}
+        </div>
+        <div class='wl-meta'>
+          ${metaParts.join('<span class="wl-meta-sep">·</span>')}
+        </div>
+      </div>
+      <div class='wl-stats'>${statsHtml}</div>
+      <button class='wl-remove' onclick='event.stopPropagation();removePlayer(${p.id})' title='Retirer de ma liste'>★</button>
+    </div>
+    ${hasNotes ? `
+    <button class='wl-expand-btn' onclick='toggleNotes(this.closest(".wl-card"))'>
+      <svg width='12' height='12' viewBox='0 0 12 12' fill='none'><path d='M2 4l4 4 4-4' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>
+      Notes &amp; analyse
+    </button>
+    ${notesPanel}` : ''}
+  </div>`;
+}
+
 // ── Drag & drop (desktop) ───────────────────────────────────
 function wlDragStart(e, id) {
   wlDragId = id;
@@ -264,15 +470,11 @@ function wlDragEnd(e) { e.currentTarget.classList.remove('dragging'); wlDragId =
 function setupTouchDrag() {
   const container = document.getElementById('wlList');
   if (!container) return;
-  let touchDragId = null;
-  let touchDragEl = null;
-  let longPressTimer = null;
-  let touchStartY = 0;
+  let touchDragId = null, touchDragEl = null, longPressTimer = null;
 
   container.addEventListener('touchstart', e => {
-    const item = e.target.closest('.wl-item');
+    const item = e.target.closest('.wl-card');
     if (!item) return;
-    touchStartY = e.touches[0].clientY;
     longPressTimer = setTimeout(() => {
       touchDragId = parseInt(item.dataset.id);
       touchDragEl = item;
@@ -286,8 +488,8 @@ function setupTouchDrag() {
     e.preventDefault();
     const touch = e.touches[0];
     const els = document.elementsFromPoint(touch.clientX, touch.clientY);
-    const target = els.find(el => el.classList.contains('wl-item') && el !== touchDragEl);
-    container.querySelectorAll('.wl-item').forEach(i => i.classList.remove('drag-over'));
+    const target = els.find(el => el.classList.contains('wl-card') && el !== touchDragEl);
+    container.querySelectorAll('.wl-card').forEach(i => i.classList.remove('drag-over'));
     if (target) target.classList.add('drag-over');
   }, { passive: false });
 
@@ -296,8 +498,8 @@ function setupTouchDrag() {
     if (!touchDragId) return;
     const touch = e.changedTouches[0];
     const els = document.elementsFromPoint(touch.clientX, touch.clientY);
-    const target = els.find(el => el.classList.contains('wl-item') && el !== touchDragEl);
-    container.querySelectorAll('.wl-item').forEach(i => i.classList.remove('drag-over', 'dragging'));
+    const target = els.find(el => el.classList.contains('wl-card') && el !== touchDragEl);
+    container.querySelectorAll('.wl-card').forEach(i => i.classList.remove('drag-over', 'dragging'));
     if (target) {
       const targetId = parseInt(target.dataset.id);
       const fromIdx = watchlist.indexOf(touchDragId);
@@ -309,59 +511,11 @@ function setupTouchDrag() {
         render();
       }
     }
-    touchDragId = null;
-    touchDragEl = null;
+    touchDragId = null; touchDragEl = null;
   });
 }
 
 // ── Render ───────────────────────────────────────────────────
-function tierClass(tier) {
-  if (!tier) return '';
-  const t = parseInt(tier);
-  if (t <= 1) return 'tier-1';
-  if (t <= 2) return 'tier-2';
-  if (t <= 3) return 'tier-3';
-  if (t <= 4) return 'tier-4';
-  return 'tier-5';
-}
-
-function playerInitials(name) {
-  if (!name) return '?';
-  const parts = name.trim().split(' ');
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
-
-function buildItem(p, idx) {
-  const pts = p.proj_pts != null ? p.proj_pts : (p.proj_g != null ? p.proj_g : '—');
-  const tierBadge = p.tier ? `<span class='wl-tier-badge ${tierClass(p.tier)}'>T${p.tier}</span>` : '';
-  return `<div class='wl-item' data-id='${p.id}' draggable='true'
-    ondragstart='wlDragStart(event,${p.id})'
-    ondragover='wlDragOver(event)'
-    ondragleave='wlDragLeave(event)'
-    ondrop='wlDrop(event,${p.id})'
-    ondragend='wlDragEnd(event)'>
-    <span class='wl-drag-handle'>⠿</span>
-    <span class='wl-rank'>${idx + 1}</span>
-    <div class='wl-avatar'>${playerInitials(p.name)}</div>
-    <div class='wl-info'>
-      <div class='wl-name'>${p.name}${tierBadge}</div>
-      <div class='wl-meta'>${p.team || '—'} · ${p.pos || '—'}</div>
-    </div>
-    <div class='wl-stats'>
-      <div class='wl-stat'>
-        <div class='wl-stat-val'>${pts}</div>
-        <div class='wl-stat-lbl'>Proj pts</div>
-      </div>
-      ${p.proj_g != null && p.pos === 'G' ? `<div class='wl-stat'>
-        <div class='wl-stat-val'>${p.proj_g}</div>
-        <div class='wl-stat-lbl'>Proj V</div>
-      </div>` : ''}
-    </div>
-    <button class='wl-remove' onclick='removePlayer(${p.id})' title='Retirer de ma liste'>★</button>
-  </div>`;
-}
-
 function render() {
   const wrap = document.getElementById('pageWrap');
   const items = watchlist.map(id => allPlayers.find(p => p.id === id)).filter(Boolean);
@@ -377,9 +531,11 @@ function render() {
     return;
   }
 
-  const avgPts = (items.reduce((s, p) => s + (p.proj_pts || p.proj_g || 0), 0) / items.length).toFixed(0);
+  const totalProjPts = items.reduce((s, p) => s + (p.proj_pts || p.proj_g || 0), 0);
+  const avgPts = (totalProjPts / items.length).toFixed(0);
   const topPos = items.reduce((acc, p) => { acc[p.pos] = (acc[p.pos] || 0) + 1; return acc; }, {});
   const posSummary = Object.entries(topPos).sort((a,b) => b[1]-a[1]).map(([k,v]) => `${v} ${k}`).join(' · ');
+  const highRisk = items.filter(p => p.risk && p.risk.toLowerCase() === 'high').length;
 
   wrap.innerHTML = `
     <div class='toolbar'>
@@ -392,25 +548,32 @@ function render() {
         <div class='wl-summary-val'>${items.length}</div>
         <div class='wl-summary-lbl'>Joueurs</div>
       </div>
+      <div class='wl-summary-divider'></div>
       <div class='wl-summary-stat'>
         <div class='wl-summary-val'>${avgPts}</div>
-        <div class='wl-summary-lbl'>Moy. proj</div>
+        <div class='wl-summary-lbl'>Moy. proj pts</div>
       </div>
+      <div class='wl-summary-divider'></div>
       <div class='wl-summary-stat'>
-        <div class='wl-summary-val' style='font-size:0.9em;color:#64748b'>${posSummary}</div>
+        <div class='wl-summary-val' style='font-size:0.95em;color:#475569'>${posSummary}</div>
         <div class='wl-summary-lbl'>Positions</div>
       </div>
+      ${highRisk > 0 ? `
+      <div class='wl-summary-divider'></div>
+      <div class='wl-summary-stat'>
+        <div class='wl-summary-val' style='color:#b91c1c'>${highRisk}</div>
+        <div class='wl-summary-lbl'>Risque élevé</div>
+      </div>` : ''}
     </div>
     <div class='wl-list' id='wlList'>
-      ${items.map(buildItem).join('')}
+      ${items.map(buildCard).join('')}
     </div>`;
   setupTouchDrag();
 }
 
-// ── Load players ─────────────────────────────────────────────
+// ── Load ─────────────────────────────────────────────────────
 async function init() {
   if (!isDev && !token) return;
-
   try {
     const res = await fetch(PLAYERS_URL, { headers: SB_HEADERS });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -429,7 +592,6 @@ async function init() {
 
 init();
 
-// Listen for watchlist changes from other tabs (e.g. guide)
 window.addEventListener('storage', e => {
   if (e.key === 'pool_watchlist') {
     watchlist = JSON.parse(e.newValue || '[]');
