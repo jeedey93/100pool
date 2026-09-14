@@ -13,32 +13,36 @@
     return path === h || path.startsWith(h + '/');
   };
 
-  const sections = [
+  const navLinks = [
+    { href: '/',                         icon: '🏠', label: 'Accueil' },
     {
-      label: 'Navigation',
-      links: [
-        { href: '/',                         icon: '🏠', label: 'Accueil' },
-        { href: '/guide-poolers/2026-2027/', icon: '📋', label: 'Guide des poolers' },
-        { href: '/podcast/',                 icon: '🎙', label: 'Podcast' },
-        { href: '/faq/',                     icon: '❓', label: 'FAQ' },
-      ]
-    },
-    {
-      label: 'Outils',
-      links: [
+      href: '/guide-poolers/2026-2027/', icon: '📋', label: 'Guide des poolers',
+      children: [
         { href: '/ma-liste/',   icon: '⭐', label: 'Ma liste' },
         { href: '/mon-equipe/', icon: '👥', label: 'Mon équipe' },
       ]
     },
+    { href: '/podcast/', icon: '🎙', label: 'Podcast' },
+    { href: '/faq/',     icon: '❓', label: 'FAQ' },
   ];
 
-  const navHtml = sections.map(s => `
-    <div class="sidebar-section">
-      <div class="sidebar-section-label">${s.label}</div>
-      ${s.links.map(l => `<a class="gs-nav-item${isActive(l.href) ? ' active' : ''}" href="${l.href}">
-        <span class="gs-nav-icon">${l.icon}</span><span>${l.label}</span>
-      </a>`).join('')}
-    </div>`).join('');
+  const buildLink = (l, sub = false) => {
+    const cls = ['gs-nav-item', isActive(l.href) ? 'active' : '', sub ? 'gs-nav-sub' : ''].filter(Boolean).join(' ');
+    return `<a class="${cls}" href="${l.href}">
+      <span class="gs-nav-icon">${l.icon}</span><span>${l.label}</span>
+    </a>`;
+  };
+
+  const navHtml = `<div class="sidebar-section">
+    <div class="sidebar-section-label">Navigation</div>
+    ${navLinks.map(l => {
+      if (!l.children) return buildLink(l);
+      return `${buildLink(l)}
+      <div class="gs-nav-children">
+        ${l.children.map(c => buildLink(c, true)).join('')}
+      </div>`;
+    }).join('')}
+  </div>`;
 
   const email = localStorage.getItem('pool_user_email') || '';
   const initials = email ? email.slice(0, 2).toUpperCase() : '';
@@ -89,6 +93,13 @@
 #${SIDEBAR_ID} .sidebar-toggle:hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.65); }
 #${SIDEBAR_ID} .sidebar-toggle .toggle-icon { width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
 #${SIDEBAR_ID} .sidebar-toggle .toggle-label { white-space: nowrap; overflow: hidden; }
+
+#${SIDEBAR_ID} .gs-nav-children { position: relative; margin: 2px 0 4px 20px; padding-left: 12px; border-left: 1px solid rgba(255,255,255,0.08); }
+#${SIDEBAR_ID} .gs-nav-sub { font-size: 0.82em; padding: 8px 12px; color: rgba(255,255,255,0.4); }
+#${SIDEBAR_ID} .gs-nav-sub .gs-nav-icon { font-size: 0.95em; width: 18px; }
+#${SIDEBAR_ID} .gs-nav-sub:hover { color: rgba(255,255,255,0.75); }
+#${SIDEBAR_ID} .gs-nav-sub.active { color: #4ade80; }
+#${SIDEBAR_ID}.collapsed .gs-nav-children { display: none; }
 
 body.has-shared-sidebar { padding-left: 220px; transition: padding-left 0.2s ease; }
 body.has-shared-sidebar.shared-sb-collapsed { padding-left: 52px; }
