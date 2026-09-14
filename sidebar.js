@@ -118,6 +118,9 @@ body.has-shared-sidebar.shared-sb-collapsed { padding-left: 52px; }
   ${userChipHtml}
   ${navHtml}
   <div class="sidebar-bottom" id="sbBottom">
+    <button class="gs-nav-item" onclick="window._sbOpenFeedback()" style="width:100%">
+      <span class="gs-nav-icon">💬</span><span>Commentaires</span>
+    </button>
   </div>
   <div class="sidebar-version">Guide 2026-27</div>
   <button class="sidebar-toggle" id="sbToggleBtn" title="Réduire la navigation">
@@ -151,5 +154,95 @@ body.has-shared-sidebar.shared-sb-collapsed { padding-left: 52px; }
   window._sidebarPrepend = function(html) {
     const bottom = document.getElementById('sbBottom');
     if (bottom) bottom.insertAdjacentHTML('afterbegin', html);
+  };
+
+  // ── Feedback modal ──────────────────────────────────────────
+  const SUPABASE_URL = 'https://fifurqlitkywtmhgtzeu.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpZnVycWxpdGt5d3RtaGd0emV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDIyMjQsImV4cCI6MjA5MjI3ODIyNH0.KPVPj1qwbSJJMyLR_-AhDcRs0vi2sUU6qbFQ-kH53C0';
+  const SB_HEADERS = { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` };
+
+  const feedbackStyle = `
+  #sbFeedbackOverlay { position: fixed; inset: 0; background: rgba(15,23,42,0.55); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); animation: sbFadeIn 0.15s ease; }
+  #sbFeedbackOverlay.hidden { display: none; }
+  @keyframes sbFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  #sbFeedbackBox { background: white; border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,0.2); padding: 28px 28px 22px; max-width: 420px; width: 100%; animation: sbScaleIn 0.18s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes sbScaleIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  #sbFeedbackBox h3 { font-size: 1.05em; font-weight: 900; color: #0f172a; margin-bottom: 6px; }
+  #sbFeedbackBox p { font-size: 0.83em; color: #64748b; margin-bottom: 14px; line-height: 1.5; }
+  #sbFeedbackEmail { width: 100%; padding: 10px 14px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 0.88em; font-family: inherit; color: #1e293b; outline: none; box-sizing: border-box; margin-bottom: 10px; transition: border 0.15s; }
+  #sbFeedbackEmail:focus { border-color: #2d8a3e; }
+  #sbFeedbackMsg { width: 100%; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; font-size: 0.88em; font-family: inherit; resize: vertical; min-height: 100px; outline: none; transition: border 0.15s; color: #1e293b; box-sizing: border-box; }
+  #sbFeedbackMsg:focus { border-color: #2d8a3e; }
+  .sb-feedback-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }
+  .sb-feedback-btn { font-size: 0.88em; font-weight: 700; padding: 9px 20px; border-radius: 9px; border: none; cursor: pointer; transition: all 0.15s; }
+  .sb-feedback-cancel { background: #f1f5f9; color: #475569; }
+  .sb-feedback-cancel:hover { background: #e2e8f0; }
+  .sb-feedback-send { background: #2d8a3e; color: white; }
+  .sb-feedback-send:hover { background: #1a6e2e; }
+  .sb-feedback-send:disabled { opacity: 0.6; cursor: default; }
+  #sbToast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(12px); background: #0f172a; color: white; font-size: 0.88em; font-weight: 600; padding: 10px 20px; border-radius: 10px; opacity: 0; pointer-events: none; transition: all 0.25s; z-index: 10000; white-space: nowrap; }
+  #sbToast.show { opacity: 1; transform: translateX(-50%) translateY(0); }`;
+
+  const feedbackHtml = `
+  <div id="sbFeedbackOverlay" class="hidden" onclick="if(event.target===this)window._sbCloseFeedback()">
+    <div id="sbFeedbackBox">
+      <h3>💬 Laisser un commentaire</h3>
+      <p>Une idée, une correction ou un feedback ? On lit tous les messages.</p>
+      <input type="email" id="sbFeedbackEmail" placeholder="ton@email.com" autocomplete="email">
+      <textarea id="sbFeedbackMsg" placeholder="Ton message…" maxlength="1000"></textarea>
+      <div class="sb-feedback-actions">
+        <button class="sb-feedback-btn sb-feedback-cancel" onclick="window._sbCloseFeedback()">Annuler</button>
+        <button class="sb-feedback-btn sb-feedback-send" id="sbFeedbackSendBtn" onclick="window._sbSubmitFeedback()">Envoyer</button>
+      </div>
+    </div>
+  </div>
+  <div id="sbToast"></div>`;
+
+  const feedbackStyleEl = document.createElement('style');
+  feedbackStyleEl.textContent = feedbackStyle;
+  document.head.appendChild(feedbackStyleEl);
+  document.body.insertAdjacentHTML('beforeend', feedbackHtml);
+
+  window._sbOpenFeedback = function() {
+    document.getElementById('sbFeedbackMsg').value = '';
+    document.getElementById('sbFeedbackEmail').value = localStorage.getItem('pool_user_email') || '';
+    document.getElementById('sbFeedbackSendBtn').textContent = 'Envoyer';
+    document.getElementById('sbFeedbackSendBtn').disabled = false;
+    document.getElementById('sbFeedbackOverlay').classList.remove('hidden');
+  };
+
+  window._sbCloseFeedback = function() {
+    document.getElementById('sbFeedbackOverlay').classList.add('hidden');
+  };
+
+  window._sbShowToast = function(msg) {
+    const t = document.getElementById('sbToast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._t);
+    t._t = setTimeout(() => t.classList.remove('show'), 3000);
+  };
+
+  window._sbSubmitFeedback = async function() {
+    const msg = document.getElementById('sbFeedbackMsg').value.trim();
+    if (!msg) return;
+    const btn = document.getElementById('sbFeedbackSendBtn');
+    btn.disabled = true; btn.textContent = 'Envoi…';
+    const emailInput = (document.getElementById('sbFeedbackEmail').value || '').trim().toLowerCase() || null;
+    if (emailInput) localStorage.setItem('pool_user_email', emailInput);
+    const userEmail = emailInput || localStorage.getItem('pool_user_email') || null;
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/feedback`, {
+        method: 'POST',
+        headers: { ...SB_HEADERS, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ message: msg, email: userEmail })
+      });
+      if (!res.ok) throw new Error();
+      window._sbCloseFeedback();
+      window._sbShowToast('✓ Merci ! Ton message a bien été envoyé.');
+    } catch {
+      btn.disabled = false; btn.textContent = 'Envoyer';
+      window._sbShowToast('Erreur lors de l\'envoi. Réessaie.');
+    }
   };
 })();
