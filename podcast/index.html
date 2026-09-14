@@ -29,7 +29,7 @@ gtag('config', 'G-9PE65ZKRE4');
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f4f8; color: #1e293b; min-height: 100vh; overflow-x: hidden; }
 
 /* ── NAV ── */
-nav { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; height: 56px; display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); position: sticky; top: 0; z-index: 200; }
+nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; height: 56px; display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); position: sticky; top: 0; z-index: 200; }
 .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; line-height: 1; }
 .nav-logo img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; vertical-align: middle; }
 .nav-logo span { color: white; font-weight: 800; font-size: 1.05em; vertical-align: middle; }
@@ -45,7 +45,7 @@ nav { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; he
 .nav-mobile.open { display: flex; }
 .nav-mobile .nav-link { padding: 11px 14px; font-size: 0.95em; border-radius: 8px; }
 @media (max-width: 640px) {
-  nav { padding: 0 16px; }
+  nav:not(#sharedSidebar) { padding: 0 16px; }
   .nav-links { display: none; }
   .nav-hamburger { display: flex; }
 }
