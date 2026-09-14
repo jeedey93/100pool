@@ -146,6 +146,22 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
 .spinner { width: 32px; height: 32px; border: 3px solid #e2e8f0; border-top-color: #b45309; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* ── CONFIRM MODAL ── */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,0.55); z-index: 9000; display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); animation: fadeIn 0.15s ease; }
+.modal-backdrop.hidden { display: none; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal-box { background: white; border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,0.18); padding: 28px 28px 24px; max-width: 360px; width: 100%; animation: scaleIn 0.18s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes scaleIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-icon { font-size: 2em; margin-bottom: 12px; }
+.modal-title { font-size: 1.05em; font-weight: 900; color: #0f172a; margin-bottom: 8px; }
+.modal-body { font-size: 0.88em; color: #64748b; line-height: 1.6; margin-bottom: 22px; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.modal-btn { font-size: 0.88em; font-weight: 700; padding: 9px 20px; border-radius: 9px; border: none; cursor: pointer; transition: all 0.15s; }
+.modal-btn-cancel { background: #f1f5f9; color: #475569; }
+.modal-btn-cancel:hover { background: #e2e8f0; }
+.modal-btn-confirm { background: #dc2626; color: white; }
+.modal-btn-confirm:hover { background: #b91c1c; }
+
 /* ── AUTH GATE ── */
 .auth-gate { max-width: 480px; margin: 80px auto; padding: 40px 24px; text-align: center; background: white; border-radius: 20px; border: 1.5px solid #e2e8f0; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
 .auth-gate h2 { font-size: 1.3em; font-weight: 900; margin-bottom: 12px; }
@@ -205,6 +221,19 @@ footer { background: #0f1f13; padding: 32px 24px; text-align: center; }
   <div class='page-header-eyebrow'>Draft 2026-27</div>
   <h1>⭐ <span>Ma liste</span></h1>
   <p class='page-header-sub'>Tes joueurs à surveiller pour le draft, dans l'ordre que tu veux.</p>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class='modal-backdrop hidden' id='confirmModal' onclick='if(event.target===this)closeModal()'>
+  <div class='modal-box'>
+    <div class='modal-icon'>🗑️</div>
+    <div class='modal-title'>Vider ta liste ?</div>
+    <div class='modal-body'>Tous tes joueurs seront retirés. Cette action ne peut pas être annulée.</div>
+    <div class='modal-actions'>
+      <button class='modal-btn modal-btn-cancel' onclick='closeModal()'>Annuler</button>
+      <button class='modal-btn modal-btn-confirm' onclick='confirmClearAll()'>Vider la liste</button>
+    </div>
+  </div>
 </div>
 
 <!-- MAIN -->
@@ -274,7 +303,15 @@ function removePlayer(id) {
 }
 
 function clearAll() {
-  if (!confirm('Vider toute ta liste ? Cette action est irréversible.')) return;
+  document.getElementById('confirmModal').classList.remove('hidden');
+}
+
+function closeModal() {
+  document.getElementById('confirmModal').classList.add('hidden');
+}
+
+function confirmClearAll() {
+  closeModal();
   watchlist = [];
   saveWatchlist();
   render();
