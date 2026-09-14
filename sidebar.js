@@ -13,21 +13,37 @@
     return path === h || path.startsWith(h + '/');
   };
 
-  const links = [
-    { href: '/',                          icon: '🏠', label: 'Accueil' },
-    { href: '/guide-poolers/2026-2027/', icon: '📋', label: 'Guide des poolers' },
-    { href: '/ma-liste/',               icon: '⭐', label: 'Ma liste' },
-    { href: '/mon-equipe/',              icon: '👥', label: 'Mon équipe' },
-    { href: '/podcast/',                 icon: '🎙', label: 'Podcast' },
-    { href: '/faq/',                     icon: '❓', label: 'FAQ' },
+  const sections = [
+    {
+      label: 'Navigation',
+      links: [
+        { href: '/',                         icon: '🏠', label: 'Accueil' },
+        { href: '/guide-poolers/2026-2027/', icon: '📋', label: 'Guide des poolers' },
+        { href: '/faq/',                     icon: '❓', label: 'FAQ' },
+      ]
+    },
+    {
+      label: 'Outils',
+      links: [
+        { href: '/ma-liste/',   icon: '⭐', label: 'Ma liste' },
+        { href: '/mon-equipe/', icon: '👥', label: 'Mon équipe' },
+      ]
+    },
+    {
+      label: 'Communauté',
+      links: [
+        { href: '/podcast/', icon: '🎙', label: 'Podcast' },
+      ]
+    },
   ];
 
-  const navItems = links.map(l => {
-    const id = l.id ? ` id="${l.id}"` : '';
-    return `<a class="gs-nav-item${isActive(l.href) ? ' active' : ''}" href="${l.href}"${id}>
-      <span class="gs-nav-icon">${l.icon}</span><span>${l.label}</span>
-    </a>`;
-  }).join('');
+  const navHtml = sections.map(s => `
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">${s.label}</div>
+      ${s.links.map(l => `<a class="gs-nav-item${isActive(l.href) ? ' active' : ''}" href="${l.href}">
+        <span class="gs-nav-icon">${l.icon}</span><span>${l.label}</span>
+      </a>`).join('')}
+    </div>`).join('');
 
   const email = localStorage.getItem('pool_user_email') || '';
   const initials = email ? email.slice(0, 2).toUpperCase() : '';
@@ -94,10 +110,7 @@ body.has-shared-sidebar.shared-sb-collapsed { padding-left: 52px; }
     </div>
   </a>
   ${userChipHtml}
-  <div class="sidebar-section">
-    <div class="sidebar-section-label">Navigation</div>
-    ${navItems}
-  </div>
+  ${navHtml}
   <div class="sidebar-bottom" id="sbBottom">
   </div>
   <div class="sidebar-version">Guide 2026-27</div>
