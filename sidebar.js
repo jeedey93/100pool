@@ -1,4 +1,4 @@
-// Shared sidebar — shown only when user has guide access
+// Shared sidebar v3 — shown only when user has guide access
 (function () {
   const isDev = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
   if (!isDev && !localStorage.getItem('pool_pw_token') && !localStorage.getItem('pool_token')) return;
