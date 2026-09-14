@@ -13,8 +13,9 @@
   };
 
   const links = [
+    { href: '/',                          icon: '🏠', label: 'Accueil' },
     { href: '/guide-poolers/2026-2027/', icon: '📋', label: 'Guide des poolers' },
-    { href: '/mon-equipe/',              icon: '👥', label: 'Mon équipe', id: 'sidebarEquipe' },
+    { href: '/mon-equipe/',              icon: '👥', label: 'Mon équipe' },
     { href: '/podcast/',                 icon: '🎙', label: 'Podcast' },
     { href: '/faq/',                     icon: '❓', label: 'FAQ' },
   ];
@@ -96,9 +97,6 @@ body.has-shared-sidebar.shared-sb-collapsed { margin-left: 52px; }
     ${navItems}
   </div>
   <div class="sidebar-bottom" id="sbBottom">
-    <a class="gs-nav-item" href="/">
-      <span class="gs-nav-icon">🏠</span><span>Accueil</span>
-    </a>
   </div>
   <div class="sidebar-version">Guide 2026-27</div>
   <button class="sidebar-toggle" id="sbToggleBtn" title="Réduire la navigation">
