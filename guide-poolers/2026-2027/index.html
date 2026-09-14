@@ -64,7 +64,7 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
 .nav-mobile.open { display: flex; }
 .nav-mobile .nav-link { padding: 11px 14px; font-size: 0.95em; border-radius: 8px; }
 @media (max-width: 640px) {
-  nav { padding: 0 16px; }
+  nav:not(#sharedSidebar) { padding: 0 16px; }
   .nav-links { display: none; }
   .nav-hamburger { display: flex; }
   .btn-help .btn-help-label { display: none; }
@@ -85,8 +85,6 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
 
 /* ── LAYOUT ── */
 .page-wrap { max-width: 1500px; margin: 0 auto; padding: 24px 16px 60px; min-height: 100vh; }
-/* When sidebar.js is active, body has margin-left:220px — prevent page-wrap from re-centering away from content */
-body.has-shared-sidebar .page-wrap { margin-left: 0; margin-right: 0; }
 .page-header { text-align: center; margin-bottom: 24px; background: linear-gradient(135deg, #1a5c28 0%, #2d8a3e 50%, #1e6b2e 100%); border-radius: 12px; padding: 40px 24px; }
 .page-header h1 { font-size: 2em; font-weight: 800; color: white; margin-bottom: 6px; }
 .page-header p { color: rgba(255,255,255,0.8); font-size: 0.95em; }

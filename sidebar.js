@@ -78,10 +78,10 @@
 .sidebar-toggle .toggle-icon { width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
 .sidebar-toggle .toggle-label { white-space: nowrap; overflow: hidden; }
 
-body.has-shared-sidebar { margin-left: 220px; transition: margin-left 0.2s ease; }
-body.has-shared-sidebar.shared-sb-collapsed { margin-left: 52px; }
+body.has-shared-sidebar { padding-left: 220px; transition: padding-left 0.2s ease; }
+body.has-shared-sidebar.shared-sb-collapsed { padding-left: 52px; }
 @media (min-width: 769px) { body.has-shared-sidebar nav:not(#${SIDEBAR_ID}) { display: none !important; } }
-@media (max-width: 768px) { #${SIDEBAR_ID} { display: none !important; } body.has-shared-sidebar { margin-left: 0 !important; } }`;
+@media (max-width: 768px) { #${SIDEBAR_ID} { display: none !important; } body.has-shared-sidebar { padding-left: 0 !important; } }`;
 
   const html = `
 <nav id="${SIDEBAR_ID}">
