@@ -568,11 +568,33 @@ function render() {
     return;
   }
 
-  const totalProjPts = items.reduce((s, p) => s + (p.proj_pts || p.proj_g || 0), 0);
-  const avgPts = (totalProjPts / items.length).toFixed(0);
   const topPos = items.reduce((acc, p) => { acc[p.pos] = (acc[p.pos] || 0) + 1; return acc; }, {});
   const posSummary = Object.entries(topPos).sort((a,b) => b[1]-a[1]).map(([k,v]) => `${v} ${k}`).join(' · ');
-  const highRisk = items.filter(p => p.risk && p.risk.toLowerCase() === 'high').length;
+
+  // Tier breakdown
+  const tierCounts = {};
+  items.forEach(p => {
+    const n = tierNum(p.tier);
+    if (n) tierCounts[n] = (tierCounts[n] || 0) + 1;
+  });
+  const tierPills = Object.entries(tierCounts).sort((a,b) => a[0]-b[0])
+    .map(([n,c]) => `<span class='wl-tier-badge ${tierClass(parseInt(n))}' style='font-size:0.72em;padding:3px 8px'>T${n} ×${c}</span>`)
+    .join('');
+
+  // Risk breakdown
+  const riskCounts = { low: 0, medium: 0, high: 0 };
+  items.forEach(p => {
+    if (!p.risk) return;
+    const r = p.risk.toLowerCase();
+    if (r === 'low') riskCounts.low++;
+    else if (r === 'medium' || r === 'med') riskCounts.medium++;
+    else riskCounts.high++;
+  });
+  const riskPills = [
+    riskCounts.low    ? `<span class='wl-risk-badge risk-low'    style='font-size:0.72em;padding:3px 8px'>🟢 ${riskCounts.low}</span>` : '',
+    riskCounts.medium ? `<span class='wl-risk-badge risk-medium' style='font-size:0.72em;padding:3px 8px'>🟡 ${riskCounts.medium}</span>` : '',
+    riskCounts.high   ? `<span class='wl-risk-badge risk-high'   style='font-size:0.72em;padding:3px 8px'>🔴 ${riskCounts.high}</span>` : '',
+  ].filter(Boolean).join('');
 
   wrap.innerHTML = `
     <div class='toolbar'>
@@ -587,19 +609,20 @@ function render() {
       </div>
       <div class='wl-summary-divider'></div>
       <div class='wl-summary-stat'>
-        <div class='wl-summary-val'>${avgPts}</div>
-        <div class='wl-summary-lbl'>Moy. proj pts</div>
-      </div>
-      <div class='wl-summary-divider'></div>
-      <div class='wl-summary-stat'>
-        <div class='wl-summary-val' style='font-size:0.95em;color:#475569'>${posSummary}</div>
+        <div class='wl-summary-val' style='font-size:0.9em;color:#475569'>${posSummary}</div>
         <div class='wl-summary-lbl'>Positions</div>
       </div>
-      ${highRisk > 0 ? `
+      ${tierPills ? `
       <div class='wl-summary-divider'></div>
       <div class='wl-summary-stat'>
-        <div class='wl-summary-val' style='color:#b91c1c'>${highRisk}</div>
-        <div class='wl-summary-lbl'>Risque élevé</div>
+        <div style='display:flex;gap:4px;flex-wrap:wrap'>${tierPills}</div>
+        <div class='wl-summary-lbl' style='margin-top:5px'>Tiers</div>
+      </div>` : ''}
+      ${riskPills ? `
+      <div class='wl-summary-divider'></div>
+      <div class='wl-summary-stat'>
+        <div style='display:flex;gap:4px;flex-wrap:wrap'>${riskPills}</div>
+        <div class='wl-summary-lbl' style='margin-top:5px'>Risque</div>
       </div>` : ''}
     </div>
     <div class='wl-list' id='wlList'>
