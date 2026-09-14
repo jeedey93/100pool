@@ -104,7 +104,17 @@
 body.has-shared-sidebar { padding-left: 220px; transition: padding-left 0.2s ease; }
 body.has-shared-sidebar.shared-sb-collapsed { padding-left: 52px; }
 @media (min-width: 769px) { body.has-shared-sidebar nav:not(#${SIDEBAR_ID}) { display: none !important; } }
-@media (max-width: 768px) { #${SIDEBAR_ID} { display: none !important; } body.has-shared-sidebar { padding-left: 0 !important; } }`;
+@media (max-width: 768px) { #${SIDEBAR_ID} { display: none !important; } body.has-shared-sidebar { padding-left: 0 !important; } }
+
+#sbBottomNav { display: none; }
+@media (max-width: 768px) {
+  #sbBottomNav { display: flex; position: fixed; bottom: 0; left: 0; right: 0; height: 58px; background: white; border-top: 1px solid #e2e8f0; z-index: 400; box-shadow: 0 -2px 12px rgba(0,0,0,0.08); }
+  #sbBottomNav a { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; text-decoration: none; color: #94a3b8; font-size: 0.6em; font-weight: 700; letter-spacing: 0.3px; transition: color 0.15s; padding: 6px 2px 10px; }
+  #sbBottomNav a:hover { color: #1a5c28; }
+  #sbBottomNav a.active { color: #1a5c28; }
+  #sbBottomNav a .sbn-icon { font-size: 1.55em; line-height: 1; }
+  body.has-shared-sidebar { padding-bottom: 58px; }
+}`;
 
   const html = `
 <nav id="${SIDEBAR_ID}">
@@ -135,6 +145,21 @@ body.has-shared-sidebar.shared-sb-collapsed { padding-left: 52px; }
 
   document.body.insertAdjacentHTML('afterbegin', html);
   document.body.classList.add('has-shared-sidebar');
+
+  // Bottom nav (mobile only)
+  const bottomNavLinks = [
+    { href: '/',                         icon: '🏠', label: 'Accueil' },
+    { href: '/guide-poolers/2026-2027/', icon: '📋', label: 'Guide' },
+    { href: '/ma-liste/',               icon: '⭐', label: 'Ma liste' },
+    { href: '/mon-equipe/',              icon: '👥', label: 'Équipe' },
+    { href: '/podcast/',                 icon: '🎙', label: 'Podcast' },
+  ];
+  const bottomNavHtml = `<div id="sbBottomNav">${bottomNavLinks.map(l =>
+    `<a href="${l.href}" class="${isActive(l.href) ? 'active' : ''}">
+      <span class="sbn-icon">${l.icon}</span>${l.label}
+    </a>`
+  ).join('')}</div>`;
+  document.body.insertAdjacentHTML('beforeend', bottomNavHtml);
 
   const sidebar = document.getElementById(SIDEBAR_ID);
   const collapsed = localStorage.getItem('shared_sidebar_collapsed') === '1';
