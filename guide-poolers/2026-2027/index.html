@@ -488,9 +488,10 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 
 @media (max-width: 768px) {
   .table-wrap { display: none; }
-  .card-list  { display: flex; }
+  .card-list  { display: flex; width: 100%; }
   /* Compact list style on mobile */
-  .player-card { border-radius: 8px; }
+  .player-card { border-radius: 8px; max-width: 100%; overflow: hidden; }
+  .card-header { overflow: hidden; }
   .card-body   { display: none; }
   .card-footer { display: none; }
   .card-header { padding: 9px 12px; border-bottom: none; gap: 8px; }
