@@ -16,6 +16,7 @@
   const links = [
     { href: '/',                          icon: '🏠', label: 'Accueil' },
     { href: '/guide-poolers/2026-2027/', icon: '📋', label: 'Guide des poolers' },
+    { href: '/ma-liste/',               icon: '⭐', label: 'Ma liste' },
     { href: '/mon-equipe/',              icon: '👥', label: 'Mon équipe' },
     { href: '/podcast/',                 icon: '🎙', label: 'Podcast' },
     { href: '/faq/',                     icon: '❓', label: 'FAQ' },
