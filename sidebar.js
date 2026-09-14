@@ -9,6 +9,7 @@
   const path = location.pathname.replace(/\/$/, '') || '/';
   const isActive = href => {
     const h = href.replace(/\/$/, '');
+    if (h === '') return path === '';  // accueil exact uniquement
     return path === h || path.startsWith(h + '/');
   };
 
