@@ -3,9 +3,6 @@
   const isDev = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
   if (!isDev && !localStorage.getItem('pool_pw_token') && !localStorage.getItem('pool_token')) return;
 
-  // Skip if the guide page already rendered its own sidebar
-  if (document.getElementById('guideSidebar')) return;
-
   const SIDEBAR_ID = 'sharedSidebar';
   if (document.getElementById(SIDEBAR_ID)) return;
 
@@ -17,17 +14,28 @@
 
   const links = [
     { href: '/guide-poolers/2026-2027/', icon: '📋', label: 'Guide des poolers' },
-    { href: '/mon-equipe/',              icon: '👥', label: 'Mon équipe' },
+    { href: '/mon-equipe/',              icon: '👥', label: 'Mon équipe', id: 'sidebarEquipe' },
     { href: '/podcast/',                 icon: '🎙', label: 'Podcast' },
     { href: '/faq/',                     icon: '❓', label: 'FAQ' },
   ];
 
-  const navItems = links.map(l => `
-    <a class="gs-nav-item${isActive(l.href) ? ' active' : ''}" href="${l.href}">
+  const navItems = links.map(l => {
+    const id = l.id ? ` id="${l.id}"` : '';
+    // Mon équipe est masqué par défaut — la page guide le révèle via checkAccess()
+    const hidden = l.id === 'sidebarEquipe' ? ' style="display:none"' : '';
+    return `<a class="gs-nav-item${isActive(l.href) ? ' active' : ''}" href="${l.href}"${id}${hidden}>
       <span class="gs-nav-icon">${l.icon}</span><span>${l.label}</span>
-    </a>`).join('');
+    </a>`;
+  }).join('');
 
-  // Same CSS as the guide's inline sidebar — keeps both visually identical
+  const email = localStorage.getItem('pool_user_email') || '';
+  const initials = email ? email.slice(0, 2).toUpperCase() : '';
+  const userChipHtml = email ? `
+  <div class="sb-user-chip">
+    <div class="sb-user-avatar">${initials}</div>
+    <span class="sb-user-email">${email}</span>
+  </div>` : '';
+
   const css = `
 #${SIDEBAR_ID} { width: 220px; min-height: 100vh; background: linear-gradient(180deg, #080f09 0%, #0f1f13 40%, #111e14 100%); display: flex; flex-direction: column; position: fixed; left: 0; top: 0; bottom: 0; z-index: 300; border-right: 1px solid rgba(255,255,255,0.05); transition: width 0.2s ease; overflow: hidden; }
 #${SIDEBAR_ID}.collapsed { width: 52px; }
@@ -36,7 +44,8 @@
 #${SIDEBAR_ID}.collapsed .gs-nav-item span:not(.gs-nav-icon),
 #${SIDEBAR_ID}.collapsed .sidebar-bottom a span,
 #${SIDEBAR_ID}.collapsed .sidebar-bottom button span:not(.gs-nav-icon),
-#${SIDEBAR_ID}.collapsed .sidebar-version { display: none; }
+#${SIDEBAR_ID}.collapsed .sidebar-version,
+#${SIDEBAR_ID}.collapsed .sb-user-email { display: none; }
 #${SIDEBAR_ID}.collapsed .gs-nav-item { justify-content: center; padding: 10px; }
 #${SIDEBAR_ID}.collapsed .sidebar-logo { padding: 20px 7px; justify-content: center; }
 #${SIDEBAR_ID}.collapsed .sidebar-bottom a,
@@ -44,14 +53,13 @@
 #${SIDEBAR_ID}.collapsed .sidebar-toggle { justify-content: center; padding: 10px; }
 #${SIDEBAR_ID}.collapsed .sidebar-toggle .toggle-label { display: none; }
 #${SIDEBAR_ID}.collapsed .sidebar-toggle .toggle-icon { transform: rotate(180deg); }
+#${SIDEBAR_ID}.collapsed .sb-user-chip { padding: 8px 7px; justify-content: center; }
+#${SIDEBAR_ID}.collapsed .sb-user-avatar { flex-shrink: 0; }
 
-body.has-shared-sidebar { margin-left: 220px; transition: margin-left 0.2s ease; }
-body.has-shared-sidebar.shared-sb-collapsed { margin-left: 52px; }
+.sb-user-chip { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.07); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 8px 14px; overflow: hidden; }
+.sb-user-avatar { width: 26px; height: 26px; border-radius: 50%; background: #f5c842; color: #1a3d10; font-size: 0.62em; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.sb-user-email { color: rgba(255,255,255,0.55); font-size: 0.75em; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-@media (min-width: 769px) { body.has-shared-sidebar nav { display: none !important; } }
-@media (max-width: 768px) { #${SIDEBAR_ID} { display: none !important; } body.has-shared-sidebar { margin-left: 0 !important; } }
-
-/* Shared sidebar reuses guide sidebar styles — these may already exist on the guide page */
 .sidebar-logo { display: flex; align-items: center; gap: 13px; padding: 26px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); text-decoration: none; flex-shrink: 0; }
 .sidebar-logo img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(74,222,128,0.3); flex-shrink: 0; }
 .sidebar-logo-text { line-height: 1; }
@@ -68,7 +76,12 @@ body.has-shared-sidebar.shared-sb-collapsed { margin-left: 52px; }
 .sidebar-toggle { display: flex; align-items: center; gap: 8px; width: 100%; padding: 10px 14px; background: none; border: none; border-top: 1px solid rgba(255,255,255,0.06); cursor: pointer; color: rgba(255,255,255,0.3); font-size: 0.82em; font-weight: 600; transition: all 0.18s; }
 .sidebar-toggle:hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.65); }
 .sidebar-toggle .toggle-icon { width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
-.sidebar-toggle .toggle-label { white-space: nowrap; overflow: hidden; }`;
+.sidebar-toggle .toggle-label { white-space: nowrap; overflow: hidden; }
+
+body.has-shared-sidebar { margin-left: 220px; transition: margin-left 0.2s ease; }
+body.has-shared-sidebar.shared-sb-collapsed { margin-left: 52px; }
+@media (min-width: 769px) { body.has-shared-sidebar nav:not(#${SIDEBAR_ID}) { display: none !important; } }
+@media (max-width: 768px) { #${SIDEBAR_ID} { display: none !important; } body.has-shared-sidebar { margin-left: 0 !important; } }`;
 
   const html = `
 <nav id="${SIDEBAR_ID}">
@@ -79,11 +92,12 @@ body.has-shared-sidebar.shared-sb-collapsed { margin-left: 52px; }
       <small>Guide 2026-27</small>
     </div>
   </a>
+  ${userChipHtml}
   <div class="sidebar-section">
     <div class="sidebar-section-label">Navigation</div>
     ${navItems}
   </div>
-  <div class="sidebar-bottom">
+  <div class="sidebar-bottom" id="sbBottom">
     <a class="gs-nav-item" href="/">
       <span class="gs-nav-icon">🏠</span><span>Accueil</span>
     </a>
@@ -114,4 +128,11 @@ body.has-shared-sidebar.shared-sb-collapsed { margin-left: 52px; }
     document.body.classList.toggle('shared-sb-collapsed', c);
     localStorage.setItem('shared_sidebar_collapsed', c ? '1' : '0');
   });
+
+  // Allow the host page to prepend extra buttons to sidebar-bottom
+  // Usage: window._sidebarPrepend('<button ...>...</button>')
+  window._sidebarPrepend = function(html) {
+    const bottom = document.getElementById('sbBottom');
+    if (bottom) bottom.insertAdjacentHTML('afterbegin', html);
+  };
 })();

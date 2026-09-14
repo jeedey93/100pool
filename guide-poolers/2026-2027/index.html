@@ -587,49 +587,6 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 .scarcity-cliff { padding: 10px 18px 14px; font-size: 0.8em; color: #64748b; font-style: italic; border-top: 1px solid #f1f5f9; line-height: 1.5; }
 .scarcity-cliff strong { color: #1e293b; font-style: normal; }
 
-/* ── SIDEBAR ── */
-.guide-sidebar { width: 220px; min-height: 100vh; background: linear-gradient(180deg, #080f09 0%, #0f1f13 40%, #111e14 100%); display: flex; flex-direction: column; position: fixed; left: 0; top: 0; bottom: 0; z-index: 100; border-right: 1px solid rgba(255,255,255,0.05); transition: width 0.2s ease; overflow: hidden; }
-.guide-sidebar.collapsed { width: 52px; }
-.guide-sidebar.collapsed .sidebar-logo-text,
-.guide-sidebar.collapsed .sidebar-section-label,
-.guide-sidebar.collapsed .gs-nav-item span:not(.gs-nav-icon),
-.guide-sidebar.collapsed .sidebar-bottom a span,
-.guide-sidebar.collapsed .sidebar-bottom button span:not(.gs-nav-icon),
-.guide-sidebar.collapsed .sidebar-version { display: none; }
-.guide-sidebar.collapsed .gs-nav-item { justify-content: center; padding: 10px; }
-.guide-sidebar.collapsed .sidebar-logo { padding: 20px 7px; justify-content: center; }
-.guide-sidebar.collapsed .sidebar-bottom a,
-.guide-sidebar.collapsed .sidebar-bottom button { justify-content: center; padding: 8px; }
-.guide-sidebar.collapsed .sidebar-toggle { justify-content: center; padding: 10px; }
-.guide-sidebar.collapsed .sidebar-toggle .toggle-label { display: none; }
-.guide-sidebar.collapsed .sidebar-toggle .toggle-icon { transform: rotate(180deg); }
-.guide-main { margin-left: 220px; flex: 1; min-height: 100vh; transition: margin-left 0.2s ease; }
-.guide-main.sidebar-collapsed { margin-left: 52px; }
-@media (max-width: 768px) {
-  .guide-sidebar { display: none; }
-  .guide-main { margin-left: 0 !important; }
-}
-@media (min-width: 769px) {
-  nav:not(.guide-sidebar) { display: none; }
-}
-.sidebar-logo { display: flex; align-items: center; gap: 13px; padding: 26px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); text-decoration: none; }
-.sidebar-logo img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(74,222,128,0.3); flex-shrink: 0; }
-.sidebar-logo-text { line-height: 1; }
-.sidebar-logo-text span { display: block; color: white; font-weight: 800; font-size: 1em; letter-spacing: -0.2px; }
-.sidebar-logo-text small { display: block; color: rgba(255,255,255,0.35); font-size: 0.65em; font-weight: 500; letter-spacing: 0.4px; margin-top: 2px; }
-.sidebar-section { padding: 18px 10px 4px; }
-.sidebar-section-label { font-size: 0.58em; font-weight: 700; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 1.4px; padding: 0 10px; margin-bottom: 6px; }
-.gs-nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; cursor: pointer; color: rgba(255,255,255,0.5); font-size: 0.87em; font-weight: 600; transition: all 0.18s; border: none; background: none; width: 100%; text-align: left; letter-spacing: 0.1px; text-decoration: none; }
-.gs-nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); }
-.gs-nav-item.active { background: linear-gradient(135deg, rgba(45,138,62,0.22), rgba(74,222,128,0.1)); color: #4ade80; box-shadow: inset 0 0 0 1px rgba(74,222,128,0.15); }
-.gs-nav-icon { font-size: 1.05em; width: 20px; text-align: center; flex-shrink: 0; }
-.sidebar-bottom { margin-top: auto; padding: 12px 10px 14px; border-top: 1px solid rgba(255,255,255,0.06); }
-.sidebar-version { text-align: center; font-size: 0.58em; color: rgba(255,255,255,0.15); padding: 8px 0 4px; letter-spacing: 0.5px; }
-.sidebar-toggle { display: flex; align-items: center; gap: 8px; width: 100%; padding: 10px 14px; background: none; border: none; border-top: 1px solid rgba(255,255,255,0.06); cursor: pointer; color: rgba(255,255,255,0.3); font-size: 0.82em; font-weight: 600; transition: all 0.18s; }
-.sidebar-toggle:hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.65); }
-.sidebar-toggle .toggle-icon { width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
-.sidebar-toggle .toggle-label { white-space: nowrap; overflow: hidden; }
-
 /* ── PRINT ── */
 @media print {
   @page { size: landscape; margin: 12mm 8mm; }
@@ -875,56 +832,7 @@ td.star-cell { padding: 0; width: 36px; }
   </div>
 </nav>
 
-<!-- SIDEBAR -->
-<nav class='guide-sidebar' id='guideSidebar'>
-  <a class='sidebar-logo' href='/'>
-    <img src='../../100pool.jpg' alt='100% Pool'>
-    <div class='sidebar-logo-text'>
-      <span>100% Pool</span>
-      <small>Guide 2026-27</small>
-    </div>
-  </a>
-
-  <div class='sidebar-section'>
-    <div class='sidebar-section-label'>Navigation</div>
-    <a class='gs-nav-item active' href='/guide-poolers/2026-2027/'>
-      <span class='gs-nav-icon'>📋</span><span>Guide des poolers</span>
-    </a>
-    <a class='gs-nav-item' href='/mon-equipe/' id='sidebarEquipe' style='display:none'>
-      <span class='gs-nav-icon'>👥</span><span>Mon équipe</span>
-    </a>
-  </div>
-
-  <div class='sidebar-section'>
-    <div class='sidebar-section-label'>100% Pool</div>
-    <a class='gs-nav-item' href='/podcast/'>
-      <span class='gs-nav-icon'>🎙</span><span>Podcast</span>
-    </a>
-    <a class='gs-nav-item' href='/faq/'>
-      <span class='gs-nav-icon'>❓</span><span>FAQ</span>
-    </a>
-  </div>
-
-  <div class='sidebar-bottom'>
-    <button class='gs-nav-item' onclick='openHelp()'>
-      <span class='gs-nav-icon'>💡</span><span>Aide</span>
-    </button>
-    <button class='gs-nav-item' id='sidebarFeedback' style='display:none' onclick='openFeedback()'>
-      <span class='gs-nav-icon'>💬</span><span>Commentaires</span>
-    </button>
-    <a class='gs-nav-item' href='/'>
-      <span class='gs-nav-icon'>🏠</span><span>Accueil</span>
-    </a>
-  </div>
-  <div class='sidebar-version'>Guide 2026-27</div>
-  <button class='sidebar-toggle' onclick='toggleGuideSidebar()' title='Réduire la navigation'>
-    <span class='toggle-icon'><svg width='16' height='16' viewBox='0 0 16 16' fill='none'><path d='M10 3L5 8L10 13' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg></span>
-    <span class='toggle-label'>Réduire</span>
-  </button>
-</nav>
-
 <!-- MAIN -->
-<div class='guide-main' id='guideMain'>
 <div class='page-wrap'>
   <div class='page-header'>
     <h1>📋 Guide des poolers <span class='badge'>2026-27</span></h1>
@@ -2913,39 +2821,25 @@ checkAccess().then(async () => {
   document.getElementById('btnFeedback')?.style.removeProperty('display');
   document.getElementById('sidebarEquipe')?.style.removeProperty('display');
   document.getElementById('sidebarFeedback')?.style.removeProperty('display');
-  // Afficher le chip utilisateur
-  const email = localStorage.getItem('pool_user_email') ?? '';
-  if (email) {
-    const chip = document.getElementById('nav-user-chip');
-    const avatar = document.getElementById('nav-user-avatar');
-    const emailEl = document.getElementById('nav-user-email');
-    if (chip) chip.style.display = 'flex';
-    if (avatar) avatar.textContent = email.slice(0, 2).toUpperCase();
-    if (emailEl) emailEl.textContent = email;
-  }
   await loadFromCloud();
   updateDraftBtn();
   init();
 });
 
-// ── SIDEBAR ──────────────────────────────────────────────
-function toggleGuideSidebar() {
-  const s = document.getElementById('guideSidebar');
-  const m = document.getElementById('guideMain');
-  const c = s.classList.toggle('collapsed');
-  m.classList.toggle('sidebar-collapsed', c);
-  localStorage.setItem('guide_sidebar_collapsed', c ? '1' : '0');
-}
-(function() {
-  if (localStorage.getItem('guide_sidebar_collapsed') === '1') {
-    document.getElementById('guideSidebar')?.classList.add('collapsed');
-    document.getElementById('guideMain')?.classList.add('sidebar-collapsed');
-  }
-})();
+</script>
+<script src='/sidebar.js'></script>
+<script>
+// Inject guide-specific sidebar buttons (Aide + Commentaires) once sidebar.js has run
+window._sidebarPrepend(`
+  <button class="gs-nav-item" onclick="openHelp()">
+    <span class="gs-nav-icon">💡</span><span>Aide</span>
+  </button>
+  <button class="gs-nav-item" id="sidebarFeedback" style="display:none" onclick="openFeedback()">
+    <span class="gs-nav-icon">💬</span><span>Commentaires</span>
+  </button>`);
 </script>
 
 <!-- FOOTER -->
-</div><!-- /guide-main -->
 <footer>
   <div class='logo'>
     <img src='../../100pool.jpg' alt='100% Pool'>
