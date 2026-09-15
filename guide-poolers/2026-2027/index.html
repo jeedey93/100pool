@@ -2428,7 +2428,7 @@ function renderCards(filtered) {
       <div class='card-header'>
         <button class='star-btn card-star${watchlist.includes(p.id) ? ' watchlisted' : ''}' onclick='event.stopPropagation();toggleWatchlist(${p.id})' title='${watchlist.includes(p.id) ? "Retirer de ma liste" : "Ajouter à ma liste"}'>★</button>
         <span class='card-rank'>${i + 1}${isDrafted ? '<span class="draft-badge">✓</span>' : ''}</span>
-        ${p.nhl_id ? `<img class='card-headshot' src='https://assets.nhle.com/mugs/nhl/408x408/${p.nhl_id}.png' alt='${p.name}' onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class='card-headshot-fallback' style='display:none'>${p.name.split(' ').map(w=>w[0]).slice(0,2).join('')}</span>` : ''}
+        ${p.nhl_id ? `<img class='card-headshot' src='https://assets.nhle.com/mugs/nhl/20262027/${p.team}/${p.nhl_id}.png' alt='${p.name}' onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class='card-headshot-fallback' style='display:none'>${p.name.split(' ').map(w=>w[0]).slice(0,2).join('')}</span>` : ''}
         <div style='flex:1;min-width:0'>
           <div class='card-name' style='${isDrafted ? "text-decoration:line-through;color:#94a3b8;" : ""}' onclick='event.stopPropagation();openModal(${p.id})'>${p.name}</div>
           ${p.notes ? `<div class='card-note'>${p.notes}</div>` : ''}
@@ -2482,7 +2482,7 @@ function renderRecrue() {
       <div class='sleeper-aav'>${aav}</div>
       <div class='sleeper-rank' style='color:${color}'>${icon} Recrue · Rang #${p.rank}</div>
       <div style='display:flex;align-items:center;gap:10px;margin-bottom:4px'>
-        ${p.nhl_id ? `<img style='width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #f1f5f9;flex-shrink:0' src='https://assets.nhle.com/mugs/nhl/408x408/${p.nhl_id}.png' alt='${p.name}' onerror="this.style.display='none'">` : ''}
+        ${p.nhl_id ? `<img style='width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #f1f5f9;flex-shrink:0' src='https://assets.nhle.com/mugs/nhl/20262027/${p.team}/${p.nhl_id}.png' alt='${p.name}' onerror="this.style.display='none'">` : ''}
         <div>
           <div class='sleeper-name'>${p.name}</div>
           <div class='sleeper-meta'>${p.team} · ${p.pos} · ${p.age} ans${p.proj_gp ? ' · ' + p.proj_gp + ' PJ' : ''}</div>
@@ -2521,7 +2521,7 @@ function renderCategory(category, gridId, icon, color) {
       ${p.aav != null ? `<div class='sleeper-aav'>${aav}</div>` : ''}
       <div class='sleeper-rank' style='color:${color}'>${icon} ${category} · Rang #${p.rank}</div>
       <div style='display:flex;align-items:center;gap:10px;margin-bottom:4px'>
-        ${p.nhl_id ? `<img style='width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #f1f5f9;flex-shrink:0' src='https://assets.nhle.com/mugs/nhl/408x408/${p.nhl_id}.png' alt='${p.name}' onerror="this.style.display='none'">` : ''}
+        ${p.nhl_id ? `<img style='width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #f1f5f9;flex-shrink:0' src='https://assets.nhle.com/mugs/nhl/20262027/${p.team}/${p.nhl_id}.png' alt='${p.name}' onerror="this.style.display='none'">` : ''}
         <div>
           <div class='sleeper-name'>${p.name}</div>
           <div class='sleeper-meta'>${p.team} · ${p.pos} · ${p.age ?? 'N/A'} ans${p.proj_gp ? ' · ' + p.proj_gp + ' PJ' : ''}</div>
