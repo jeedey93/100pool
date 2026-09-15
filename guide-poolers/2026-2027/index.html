@@ -2882,16 +2882,19 @@ function openModal(id) {
 
   // Joueurs similaires
   const isGoalie = p.pos === 'G';
+  const isDefender = p.pos === 'D';
   const projRef = isGoalie ? (p.proj_g ?? 0) : (p.proj_pts ?? 0);
   const aavRef = parseFloat(p.aav) || 0;
-  const similar = allPlayers.filter(s =>
-    s.id !== p.id &&
-    s.pos === p.pos &&
-    (isGoalie
-      ? Math.abs((s.proj_g ?? 0) - projRef) <= projRef * 0.2
-      : Math.abs((s.proj_pts ?? 0) - projRef) <= projRef * 0.2) &&
-    (aavRef === 0 || Math.abs((parseFloat(s.aav) || 0) - aavRef) <= aavRef * 0.3)
-  ).sort((a, b) => {
+  const similar = allPlayers.filter(s => {
+    if (s.id === p.id) return false;
+    if (isGoalie && s.pos !== 'G') return false;
+    if (isDefender && s.pos !== 'D') return false;
+    if (!isGoalie && !isDefender && (s.pos === 'D' || s.pos === 'G')) return false;
+    const sPts = isGoalie ? (s.proj_g ?? 0) : (s.proj_pts ?? 0);
+    if (Math.abs(sPts - projRef) > projRef * 0.2) return false;
+    if (aavRef > 0 && Math.abs((parseFloat(s.aav) || 0) - aavRef) > aavRef * 0.3) return false;
+    return true;
+  }).sort((a, b) => {
     const aPts = isGoalie ? (a.proj_g ?? 0) : (a.proj_pts ?? 0);
     const bPts = isGoalie ? (b.proj_g ?? 0) : (b.proj_pts ?? 0);
     return Math.abs(aPts - projRef) - Math.abs(bPts - projRef);
@@ -2899,7 +2902,7 @@ function openModal(id) {
 
   if (similar.length) {
     const simHtml = `<div>
-      <div class='modal-section-title'>🔄 Alternatives similaires <span style='font-size:0.85em;font-weight:500;color:#b0bec5;text-transform:none;letter-spacing:0'>— même position, pts proj ±20%, AAV ±30%</span></div>
+      <div class='modal-section-title'>🔄 Alternatives similaires <span style='font-size:0.85em;font-weight:500;color:#b0bec5;text-transform:none;letter-spacing:0'>— même catégorie (F/D/G), pts proj ±20%, AAV ±30%</span></div>
       <div class='modal-similar-list'>${similar.map(s => {
         const sPts = isGoalie ? (s.proj_g ?? '—') : (s.proj_pts ?? '—');
         const sAav = s.aav ? `$${parseFloat(s.aav).toFixed(1)}M` : 'CEN';
