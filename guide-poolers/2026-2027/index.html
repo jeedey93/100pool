@@ -899,6 +899,7 @@ td.star-cell { padding: 0; width: 36px; }
           <div id='searchAutocomplete'></div>
         </div>
         <span class='results-count' id='resultsCount'></span>
+        <button class='ctrl-btn' id='resetFiltersBtn' onclick='resetAllFilters()' style='display:none;font-size:0.78em;padding:5px 10px;color:#dc2626;border-color:#fecaca;background:#fff5f5'>✕ Filtres</button>
         <div class='filter-divider'></div>
         <!-- Position -->
         <div class='filter-group'>
@@ -978,6 +979,7 @@ td.star-cell { padding: 0; width: 36px; }
             <button class='ctrl-btn btn-reset-draft' id='resetDraftBtn' onclick='resetDraft()' style='display:none;margin:0'>✕ Reset draft</button>
             <button class='ctrl-btn btn-hide-drafted' id='hideDraftedBtn' onclick='toggleHideDrafted()' style='display:none;margin:0'>👁 Cacher les draftés</button>
           </div>
+          <div id='draftPosCounter' style='display:none;font-size:0.75em;color:#64748b;font-weight:600;padding:4px 8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;white-space:nowrap'></div>
           <div class='filter-divider'></div>
           <!-- Watchlist -->
           <div class='filter-group' style='flex-shrink:0'>
@@ -1846,6 +1848,12 @@ async function init() {
     tierSelect.appendChild(opt);
   });
 
+  // Restore saved filters
+  if (_savedFilters.pos) { const b = document.querySelector(`[data-filter="pos"][data-value="${_savedFilters.pos}"]`); if (b) setPill(b, 'pos'); }
+  if (_savedFilters.tier) { const b = document.querySelector(`[data-filter="tier"][data-value="${_savedFilters.tier}"]`); if (b) setPill(b, 'tier'); }
+  if (_savedFilters.risk) { const b = document.querySelector(`[data-filter="risk"][data-value="${_savedFilters.risk}"]`); if (b) setPill(b, 'risk'); }
+  if (_savedFilters.team) setTeamFilter(_savedFilters.team);
+
   renderAll();
   renderRecrue();
   renderCategory('GAMBLE',   'gambleGrid',   '🎰', '#fb923c');
@@ -2079,7 +2087,8 @@ function sortGoalieBy(col) {
 }
 
 // ── FILTERS ───────────────────────────────────────────────
-const activeFilters = { pos: '', tier: '', team: '', risk: '' };
+const _savedFilters = JSON.parse(localStorage.getItem('guide_filters') || '{}');
+const activeFilters = { pos: _savedFilters.pos || '', tier: _savedFilters.tier || '', team: _savedFilters.team || '', risk: _savedFilters.risk || '' };
 
 function setTierFromSelect(sel) {
   const val = sel.value;
@@ -2116,6 +2125,7 @@ function setPill(btn, filterKey) {
     const sel = document.getElementById('tierSelect');
     if (sel) sel.value = val;
   }
+  localStorage.setItem('guide_filters', JSON.stringify(activeFilters));
   renderAll();
 }
 
@@ -2126,6 +2136,7 @@ function toggleTeamPopover(e) {
 }
 function setTeamFilter(val) {
   activeFilters.team = val;
+  localStorage.setItem('guide_filters', JSON.stringify(activeFilters));
   const btn = document.getElementById('teamBtn');
   btn.textContent = val ? val + ' ✕' : 'Équipe ▾';
   btn.classList.toggle('team-active', !!val);
@@ -2157,6 +2168,18 @@ function getFiltered() {
   });
 }
 function applyFilters() { renderAll(); }
+
+function resetAllFilters() {
+  document.getElementById('searchInput').value = '';
+  const aavMin = document.getElementById('aavMin'); if (aavMin) aavMin.value = '';
+  const aavMax = document.getElementById('aavMax'); if (aavMax) aavMax.value = '';
+  ['pos','tier','risk'].forEach(key => {
+    activeFilters[key] = '';
+    document.querySelectorAll(`[data-filter="${key}"]`).forEach(b => b.classList.toggle('active', b.dataset.value === ''));
+  });
+  setTeamFilter('');
+  renderAll();
+}
 
 // ── Autocomplete ──────────────────────────────────────────────
 let acIndex = -1;
@@ -2425,7 +2448,31 @@ function renderAll() {
   const skaters = filtered.filter(p => p.pos !== 'G');
   const goalies  = filtered.filter(p => p.pos === 'G');
 
-  document.getElementById('resultsCount').textContent = filtered.length + ' joueurs';
+  document.getElementById('resultsCount').textContent = filtered.length + ' / ' + allPlayers.length + ' joueurs';
+
+  // Reset filters button — show only when any filter is active
+  const hasFilters = activeFilters.pos || activeFilters.tier || activeFilters.team || activeFilters.risk ||
+    document.getElementById('searchInput').value ||
+    document.getElementById('aavMin')?.value || document.getElementById('aavMax')?.value;
+  const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+  if (resetFiltersBtn) resetFiltersBtn.style.display = hasFilters ? '' : 'none';
+
+  // Draft position counter
+  const draftCounter = document.getElementById('draftPosCounter');
+  if (draftCounter && draftMode && draftedIds.size) {
+    const counts = {};
+    draftedIds.forEach(id => {
+      const p = allPlayers.find(x => x.id === id);
+      if (!p) return;
+      const cat = p.pos === 'D' ? 'D' : p.pos === 'G' ? 'G' : p.pos;
+      counts[cat] = (counts[cat] || 0) + 1;
+    });
+    const order = ['C','LW','RW','D','G'];
+    draftCounter.textContent = order.filter(k => counts[k]).map(k => `${counts[k]}${k}`).join(' · ');
+    draftCounter.style.display = '';
+  } else if (draftCounter) {
+    draftCounter.style.display = 'none';
+  }
 
   // ── Skater table ──
   if (showSkaterTable) {
@@ -2564,6 +2611,19 @@ function renderCards(filtered) {
       </div>
     </div>`;
   }).join('');
+
+  // Swipe left to toggle watchlist on mobile cards
+  container.querySelectorAll('.player-card').forEach(card => {
+    let startX = 0;
+    card.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+    card.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - startX;
+      if (dx < -60) {
+        const id = parseInt(card.getAttribute('onclick')?.match(/\d+/)?.[0]);
+        if (id) { toggleWatchlist(id); card.style.transition = 'background 0.3s'; card.style.background = watchlist.includes(id) ? '#f0fdf4' : '#fff'; setTimeout(() => card.style.background = '', 600); }
+      }
+    }, { passive: true });
+  });
 }
 
 
