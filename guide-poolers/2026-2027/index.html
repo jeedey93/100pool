@@ -2346,7 +2346,7 @@ function buildGoalieRowHTML(p, displayRank) {
     const userNote = userNotes[p.id] || '';
 
     return `<tr class='${tierRowClass(p.tier)}${isDrafted ? ' drafted' : ''}' onclick='draftMode ? toggleDraft(${p.id}, event) : openModal(${p.id})' style='cursor:pointer' title='${draftMode ? (isDrafted ? "Remettre disponible" : "Marquer comme repêché") : "Voir la fiche"}'>
-      <td class='star-cell' onclick='event.stopPropagation()'><button class='star-btn${watchlist.includes(p.id) ? ' watchlisted' : ''}' onclick='toggleWatchlist(${p.id})' title='${watchlist.includes(p.id) ? "Retirer de ma liste" : "Ajouter à ma liste"}'>★</button>${draftMode ? `<button class='tbl-add-btn${getMyTeam().includes(p.id) ? ' in-team' : ''}' onclick='event.stopPropagation();addToMyTeam(${p.id})' title='${getMyTeam().includes(p.id) ? "Dans mon équipe" : "Ajouter à mon équipe"}'>➕</button>` : ''}</td>
+      <td class='star-cell' onclick='event.stopPropagation()'><button class='star-btn${watchlist.includes(p.id) ? ' watchlisted' : ''}' onclick='toggleWatchlist(${p.id})' title='${watchlist.includes(p.id) ? "Retirer de ma liste" : "Ajouter à ma liste"}'>★</button></td>
       <td>${displayRank}${isDrafted ? '<span class="draft-badge">✓</span>' : ''}</td>
       <td>
         <div class='player-name' onclick='event.stopPropagation();openModal(${p.id})'>${p.name}</div>
@@ -2406,7 +2406,7 @@ function buildRowHTML(p, displayRank) {
     const userNote = userNotes[p.id] || '';
 
     return `<tr class='${tierRowClass(p.tier)}${isDrafted ? ' drafted' : ''}' onclick='draftMode ? toggleDraft(${p.id}, event) : openModal(${p.id})' style='cursor:pointer' title='${draftMode ? (isDrafted ? "Remettre disponible" : "Marquer comme repêché") : "Voir la fiche"}'>
-      <td class='star-cell' onclick='event.stopPropagation()'><button class='star-btn${watchlist.includes(p.id) ? ' watchlisted' : ''}' onclick='toggleWatchlist(${p.id})' title='${watchlist.includes(p.id) ? "Retirer de ma liste" : "Ajouter à ma liste"}'>★</button>${draftMode ? `<button class='tbl-add-btn${getMyTeam().includes(p.id) ? ' in-team' : ''}' onclick='event.stopPropagation();addToMyTeam(${p.id})' title='${getMyTeam().includes(p.id) ? "Dans mon équipe" : "Ajouter à mon équipe"}'>➕</button>` : ''}</td>
+      <td class='star-cell' onclick='event.stopPropagation()'><button class='star-btn${watchlist.includes(p.id) ? ' watchlisted' : ''}' onclick='toggleWatchlist(${p.id})' title='${watchlist.includes(p.id) ? "Retirer de ma liste" : "Ajouter à ma liste"}'>★</button></td>
       <td>${displayRank}${isDrafted ? '<span class="draft-badge">✓</span>' : ''}</td>
       <td>
         <div class='player-name' onclick='event.stopPropagation();openModal(${p.id})'>${p.name}</div>
