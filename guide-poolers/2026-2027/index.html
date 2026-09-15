@@ -328,6 +328,15 @@ tr.drafted { background: #f8f9fa !important; }
 .modal-note-area { width: 100%; box-sizing: border-box; border: 1px solid #e2eae5; border-radius: 10px; padding: 10px 12px; font-size: 0.87em; color: #1e293b; line-height: 1.6; resize: vertical; min-height: 72px; font-family: inherit; background: #f8fafc; transition: border-color 0.15s; outline: none; }
 .modal-note-area:focus { border-color: #4ade80; background: white; }
 .modal-note-area::placeholder { color: #cbd5e1; }
+.modal-similar-list { display: flex; flex-direction: column; gap: 6px; }
+.modal-similar-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.15s; text-decoration: none; }
+.modal-similar-item:hover { background: #f0f9f3; border-color: #bbf7d0; }
+.modal-similar-photo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1.5px solid #e2e8f0; background: linear-gradient(135deg, #1a5c28, #2d8a3e); }
+.modal-similar-info { flex: 1; min-width: 0; }
+.modal-similar-name { font-size: 0.88em; font-weight: 700; color: #0f172a; }
+.modal-similar-meta { font-size: 0.72em; color: #64748b; margin-top: 1px; }
+.modal-similar-pts { font-size: 0.9em; font-weight: 800; color: #1a5c28; flex-shrink: 0; text-align: right; }
+.modal-similar-pts span { display: block; font-size: 0.65em; font-weight: 600; color: #94a3b8; }
 
 /* Contract bar */
 .modal-contract { padding: 14px 22px; background: white; border-bottom: 1px solid #eef2f7; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
@@ -2869,6 +2878,42 @@ function openModal(id) {
   document.getElementById('modalNoteArea').addEventListener('blur', function() {
     syncToCloud({ notes: userNotes });
   });
+
+  // Joueurs similaires
+  const isGoalie = p.pos === 'G';
+  const projRef = isGoalie ? (p.proj_g ?? 0) : (p.proj_pts ?? 0);
+  const aavRef = parseFloat(p.aav) || 0;
+  const similar = allPlayers.filter(s =>
+    s.id !== p.id &&
+    s.pos === p.pos &&
+    (isGoalie
+      ? Math.abs((s.proj_g ?? 0) - projRef) <= projRef * 0.2
+      : Math.abs((s.proj_pts ?? 0) - projRef) <= projRef * 0.2) &&
+    (aavRef === 0 || Math.abs((parseFloat(s.aav) || 0) - aavRef) <= aavRef * 0.3)
+  ).sort((a, b) => {
+    const aPts = isGoalie ? (a.proj_g ?? 0) : (a.proj_pts ?? 0);
+    const bPts = isGoalie ? (b.proj_g ?? 0) : (b.proj_pts ?? 0);
+    return Math.abs(aPts - projRef) - Math.abs(bPts - projRef);
+  }).slice(0, 4);
+
+  if (similar.length) {
+    const simHtml = `<div>
+      <div class='modal-section-title'>🔄 Alternatives similaires</div>
+      <div class='modal-similar-list'>${similar.map(s => {
+        const sPts = isGoalie ? (s.proj_g ?? '—') : (s.proj_pts ?? '—');
+        const sAav = s.aav ? `$${parseFloat(s.aav).toFixed(1)}M` : 'CEN';
+        return `<div class='modal-similar-item' onclick='closeModalDirect();openModal(${s.id})'>
+          <img class='modal-similar-photo' src='${s.headshot_url || ''}' alt='${s.name}' onerror="this.style.background='linear-gradient(135deg,#1a5c28,#2d8a3e)';this.src=''">
+          <div class='modal-similar-info'>
+            <div class='modal-similar-name'>${s.name}</div>
+            <div class='modal-similar-meta'>${s.team} · ${s.pos}${s.age ? ' · ' + s.age + ' ans' : ''} · ${sAav}</div>
+          </div>
+          <div class='modal-similar-pts'>${sPts}<span>${isGoalie ? 'V proj' : 'pts proj'}</span></div>
+        </div>`;
+      }).join('')}</div>
+    </div>`;
+    document.getElementById('modalBody').innerHTML += simHtml;
+  }
 
   const nhlId = p.nhl_id;
   loadNhlHistory(nhlId, p.pos, p).then(html => {
