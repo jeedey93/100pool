@@ -1094,7 +1094,7 @@ function initChangelog() {
   const dismissed = localStorage.getItem('changelog_dismissed');
   if (dismissed >= CHANGELOG_LATEST) return;
   const list = document.getElementById('changelogList');
-  list.innerHTML = CHANGELOG.map(e =>
+  list.innerHTML = CHANGELOG.slice(0, 3).map(e =>
     `<li>${e.text}<span class='changelog-date'>${new Date(e.date).toLocaleDateString('fr-CA', { month: 'short', day: 'numeric' })}</span></li>`
   ).join('');
   document.getElementById('changelogBanner').classList.remove('hidden');
