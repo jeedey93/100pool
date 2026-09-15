@@ -2509,13 +2509,13 @@ function renderCards(filtered) {
       </div>`;
     const grade = calcGrade(p);
     const isDrafted = draftedIds.has(p.id);
-    return `<div class='player-card ${tierClass(p.tier)}${isDrafted ? ' drafted-card' : ''}' style='cursor:pointer;${isDrafted ? 'opacity:0.4;' : ''}' onclick='draftMode ? toggleDraft(${p.id}, event) : openModal(${p.id})'>
+    return `<div class='player-card ${tierClass(p.tier)}${isDrafted ? ' drafted-card' : ''}' style='cursor:pointer;${isDrafted ? 'opacity:0.4;' : ''}' title='${isDrafted && draftMode ? "Cliquer pour déscratcher" : ""}' onclick='draftMode ? toggleDraft(${p.id}, event) : openModal(${p.id})'>
       <div class='card-header'>
         <button class='star-btn card-star${watchlist.includes(p.id) ? ' watchlisted' : ''}' onclick='event.stopPropagation();toggleWatchlist(${p.id})' title='${watchlist.includes(p.id) ? "Retirer de ma liste" : "Ajouter à ma liste"}'>★</button>
         <span class='card-rank'>${i + 1}${isDrafted ? '<span class="draft-badge">✓</span>' : ''}</span>
         ${p.nhl_id ? `<img class='card-headshot' src='https://assets.nhle.com/mugs/nhl/20262027/${p.team}/${p.nhl_id}.png' alt='${p.name}' onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class='card-headshot-fallback' style='display:none'>${p.name.split(' ').map(w=>w[0]).slice(0,2).join('')}</span>` : ''}
         <div style='flex:1;min-width:0'>
-          <div class='card-name' style='${isDrafted ? "text-decoration:line-through;color:#94a3b8;" : ""}' onclick='event.stopPropagation();openModal(${p.id})'>${p.name}</div>
+          <div class='card-name' style='${isDrafted ? "text-decoration:line-through;color:#94a3b8;" : ""}' onclick='event.stopPropagation();draftMode ? toggleDraft(${p.id}, event) : openModal(${p.id})'>${p.name}</div>
           ${p.notes ? `<div class='card-note'>${p.notes}</div>` : ''}
         </div>
         <div class='card-badges'>
