@@ -106,6 +106,18 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
 .search-box input { width: 100%; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 9px; color: #1e293b; padding: 8px 10px 8px 32px; font-size: 0.88em; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
 .search-box input:focus { border-color: #2d8a3e; box-shadow: 0 0 0 3px rgba(45,138,62,0.15); background: white; }
 .search-box::before { content: '🔍'; position: absolute; left: 9px; top: 50%; transform: translateY(-50%); font-size: 0.82em; pointer-events: none; }
+#searchAutocomplete { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: white; border: 1.5px solid #e2e8f0; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); z-index: 500; overflow: hidden; display: none; max-height: 320px; overflow-y: auto; }
+#searchAutocomplete.open { display: block; }
+.ac-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; cursor: pointer; transition: background 0.12s; border-bottom: 1px solid #f1f5f9; }
+.ac-item:last-child { border-bottom: none; }
+.ac-item:hover, .ac-item.ac-active { background: #f0f9f3; }
+.ac-photo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1.5px solid #e2e8f0; background: linear-gradient(135deg, #1a5c28, #2d8a3e); }
+.ac-info { flex: 1; min-width: 0; }
+.ac-name { font-size: 0.88em; font-weight: 700; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ac-name mark { background: none; color: #2d8a3e; font-weight: 800; }
+.ac-meta { font-size: 0.7em; color: #64748b; margin-top: 1px; }
+.ac-tier { font-size: 0.68em; font-weight: 800; padding: 1px 6px; border-radius: 4px; flex-shrink: 0; }
+.ac-empty { padding: 14px 16px; font-size: 0.85em; color: #94a3b8; text-align: center; }
 .results-count { color: #94a3b8; font-size: 0.78em; white-space: nowrap; }
 .ctrl-btn { background: white; border: 1px solid #e2e8f0; border-radius: 8px; color: #64748b; padding: 7px 12px; font-size: 0.82em; font-weight: 600; cursor: pointer; white-space: nowrap; transition: color 0.2s, border-color 0.2s; }
 .ctrl-btn:hover { color: #1e293b; border-color: #cbd5e1; }
@@ -871,7 +883,8 @@ td.star-cell { padding: 0; width: 36px; }
       <!-- Row 1: Search + Position + Équipe + Actions -->
       <div class='controls-row'>
         <div class='search-box'>
-          <input type='text' id='searchInput' placeholder='Rechercher un joueur…' oninput='applyFilters()'>
+          <input type='text' id='searchInput' placeholder='Rechercher un joueur…' oninput='applyFilters();updateAutocomplete()' onkeydown='handleAcKey(event)' autocomplete='off'>
+          <div id='searchAutocomplete'></div>
         </div>
         <span class='results-count' id='resultsCount'></span>
         <div class='filter-divider'></div>
@@ -2110,6 +2123,62 @@ function getFiltered() {
   });
 }
 function applyFilters() { renderAll(); }
+
+// ── Autocomplete ──────────────────────────────────────────────
+let acIndex = -1;
+
+function tierColors(tier) {
+  const map = { 1:'#f59e0b', 2:'#3b82f6', 3:'#8b5cf6', 4:'#34d399', 5:'#38bdf8', 6:'#f472b6', 7:'#fb923c' };
+  return map[tier] || '#94a3b8';
+}
+
+function updateAutocomplete() {
+  const q = document.getElementById('searchInput').value.trim();
+  const ac = document.getElementById('searchAutocomplete');
+  acIndex = -1;
+  if (q.length < 2) { ac.classList.remove('open'); return; }
+  const ql = q.toLowerCase();
+  const matches = allPlayers.filter(p => p.name.toLowerCase().includes(ql)).slice(0, 7);
+  if (!matches.length) {
+    ac.innerHTML = `<div class='ac-empty'>Aucun joueur trouvé</div>`;
+    ac.classList.add('open');
+    return;
+  }
+  ac.innerHTML = matches.map((p, i) => {
+    const highlighted = p.name.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'), '<mark>$1</mark>');
+    const color = tierColors(p.tier);
+    return `<div class='ac-item' data-id='${p.id}' onmousedown='selectAcItem(${p.id})'>
+      <img class='ac-photo' src='${p.headshot_url || ''}' alt='${p.name}' onerror="this.style.background='linear-gradient(135deg,#1a5c28,#2d8a3e)';this.src=''">
+      <div class='ac-info'>
+        <div class='ac-name'>${highlighted}</div>
+        <div class='ac-meta'>${p.team} · ${p.pos}${p.age ? ' · ' + p.age + ' ans' : ''}</div>
+      </div>
+      <span class='ac-tier' style='background:${color}22;color:${color}'>T${p.tier ?? '?'}</span>
+    </div>`;
+  }).join('');
+  ac.classList.add('open');
+}
+
+function selectAcItem(id) {
+  document.getElementById('searchAutocomplete').classList.remove('open');
+  document.getElementById('searchInput').value = '';
+  applyFilters();
+  openModal(id);
+}
+
+function handleAcKey(e) {
+  const ac = document.getElementById('searchAutocomplete');
+  const items = ac.querySelectorAll('.ac-item');
+  if (!items.length) return;
+  if (e.key === 'ArrowDown') { e.preventDefault(); acIndex = Math.min(acIndex + 1, items.length - 1); items.forEach((el,i) => el.classList.toggle('ac-active', i === acIndex)); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); acIndex = Math.max(acIndex - 1, 0); items.forEach((el,i) => el.classList.toggle('ac-active', i === acIndex)); }
+  else if (e.key === 'Enter' && acIndex >= 0) { e.preventDefault(); selectAcItem(parseInt(items[acIndex].dataset.id)); }
+  else if (e.key === 'Escape') { ac.classList.remove('open'); }
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.search-box')) document.getElementById('searchAutocomplete')?.classList.remove('open');
+});
 
 // ── RENDER HEADER ─────────────────────────────────────────
 function goalieHeaderHTML() {
