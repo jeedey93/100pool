@@ -2901,28 +2901,70 @@ function openModal(id) {
   }).slice(0, 4);
 
   if (similar.length) {
-    const simHtml = `<div>
-      <div class='modal-section-title'>🔄 Alternatives similaires <span style='font-size:0.85em;font-weight:500;color:#b0bec5;text-transform:none;letter-spacing:0'>— même catégorie (F/D/G), pts proj ±20%, AAV ±30%</span></div>
-      <div class='modal-similar-list'>${similar.map(s => {
+    const simId = `simList_${p.id}`;
+    const allSimilarHtml = (filterDrafted) => similar
+      .filter(s => !filterDrafted || !draftedIds.has(s.id))
+      .map(s => {
         const sPts = isGoalie ? (s.proj_g ?? '—') : (s.proj_pts ?? '—');
         const sAav = s.aav ? `$${parseFloat(s.aav).toFixed(1)}M` : 'CEN';
-        return `<div class='modal-similar-item' onclick='closeModalDirect();openModal(${s.id})'>
+        const drafted = draftedIds.has(s.id);
+        return `<div class='modal-similar-item${drafted ? " drafted-similar" : ""}' onclick='closeModalDirect();openModal(${s.id})' style='${drafted ? "opacity:0.45;" : ""}'>
           <img class='modal-similar-photo' src='${s.headshot_url || ''}' alt='${s.name}' onerror="this.style.background='linear-gradient(135deg,#1a5c28,#2d8a3e)';this.src=''">
           <div class='modal-similar-info'>
-            <div class='modal-similar-name'>${s.name}</div>
+            <div class='modal-similar-name'>${s.name}${drafted ? " <span style='font-size:0.75em;color:#94a3b8'>(drafté)</span>" : ''}</div>
             <div class='modal-similar-meta'>${s.team} · ${s.pos}${s.age ? ' · ' + s.age + ' ans' : ''} · ${sAav}</div>
           </div>
           <div class='modal-similar-pts'>${sPts}<span>${isGoalie ? 'V proj' : 'pts proj'}</span></div>
         </div>`;
-      }).join('')}</div>
+      }).join('') || `<div style='font-size:0.83em;color:#94a3b8;padding:8px 4px'>Aucun joueur disponible correspondant.</div>`;
+
+    const simHtml = `<div id='simSection_${p.id}'>
+      <div class='modal-section-title' style='display:flex;align-items:center;gap:10px;flex-wrap:wrap'>
+        🔄 Alternatives similaires
+        <span style='font-size:0.85em;font-weight:500;color:#b0bec5;text-transform:none;letter-spacing:0'>— même catégorie (F/D/G), pts proj ±20%, AAV ±30%</span>
+        ${draftMode ? `<label style='margin-left:auto;display:flex;align-items:center;gap:5px;font-size:0.85em;font-weight:600;color:#475569;text-transform:none;letter-spacing:0;cursor:pointer'>
+          <input type='checkbox' id='simAvailableToggle' onchange='renderSimilarList(${p.id})' style='accent-color:#2d8a3e'>
+          Disponibles seulement
+        </label>` : ''}
+      </div>
+      <div class='modal-similar-list' id='${simId}'>${allSimilarHtml(false)}</div>
     </div>`;
     document.getElementById('modalBody').innerHTML += simHtml;
+
+    window._similarData = window._similarData || {};
+    window._similarData[p.id] = { similar, isGoalie, draftedIds: new Set(draftedIds) };
   }
 
   const nhlId = p.nhl_id;
   loadNhlHistory(nhlId, p.pos, p).then(html => {
     document.getElementById('modalHistory').innerHTML = html;
   });
+}
+
+function renderSimilarList(playerId) {
+  const toggle = document.getElementById('simAvailableToggle');
+  const filterDrafted = toggle && toggle.checked;
+  const data = window._similarData && window._similarData[playerId];
+  if (!data) return;
+  const { similar, isGoalie, draftedIds } = data;
+  const list = document.getElementById(`simList_${playerId}`);
+  if (!list) return;
+  const html = similar
+    .filter(s => !filterDrafted || !draftedIds.has(s.id))
+    .map(s => {
+      const sPts = isGoalie ? (s.proj_g ?? '—') : (s.proj_pts ?? '—');
+      const sAav = s.aav ? `$${parseFloat(s.aav).toFixed(1)}M` : 'CEN';
+      const drafted = draftedIds.has(s.id);
+      return `<div class='modal-similar-item' onclick='closeModalDirect();openModal(${s.id})' style='${drafted ? "opacity:0.45;" : ""}'>
+        <img class='modal-similar-photo' src='${s.headshot_url || ''}' alt='${s.name}' onerror="this.style.background='linear-gradient(135deg,#1a5c28,#2d8a3e)';this.src=''">
+        <div class='modal-similar-info'>
+          <div class='modal-similar-name'>${s.name}${drafted ? " <span style='font-size:0.75em;color:#94a3b8'>(drafté)</span>" : ''}</div>
+          <div class='modal-similar-meta'>${s.team} · ${s.pos}${s.age ? ' · ' + s.age + ' ans' : ''} · ${sAav}</div>
+        </div>
+        <div class='modal-similar-pts'>${sPts}<span>${isGoalie ? 'V proj' : 'pts proj'}</span></div>
+      </div>`;
+    }).join('') || `<div style='font-size:0.83em;color:#94a3b8;padding:8px 4px'>Aucun joueur disponible correspondant.</div>`;
+  list.innerHTML = html;
 }
 
 function closeModal(e) {
