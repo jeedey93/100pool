@@ -2129,8 +2129,9 @@ function applyFilters() { renderAll(); }
 let acIndex = -1;
 
 function tierColors(tier) {
+  const num = parseInt((tier || '').toString().replace(/\D/g, ''));
   const map = { 1:'#f59e0b', 2:'#3b82f6', 3:'#8b5cf6', 4:'#34d399', 5:'#38bdf8', 6:'#f472b6', 7:'#fb923c' };
-  return map[tier] || '#94a3b8';
+  return map[num] || '#94a3b8';
 }
 
 function updateAutocomplete() {
@@ -2154,7 +2155,7 @@ function updateAutocomplete() {
         <div class='ac-name'>${highlighted}</div>
         <div class='ac-meta'>${p.team} · ${p.pos}${p.age ? ' · ' + p.age + ' ans' : ''}</div>
       </div>
-      <span class='ac-tier' style='background:${color}22;color:${color}'>T${p.tier ?? '?'}</span>
+      <span class='ac-tier' style='background:${color}22;color:${color}'>${p.tier ?? '—'}</span>
     </div>`;
   }).join('');
   ac.classList.add('open');
