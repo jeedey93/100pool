@@ -2186,8 +2186,12 @@ function resetAllFilters() {
   const aavMax = document.getElementById('aavMax'); if (aavMax) aavMax.value = '';
   ['pos','tier','risk'].forEach(key => {
     activeFilters[key] = '';
-    document.querySelectorAll(`[data-filter="${key}"]`).forEach(b => b.classList.toggle('active', b.dataset.value === ''));
+    document.querySelectorAll(`[data-filter="${key}"]`).forEach(b => {
+      b.classList.remove('active','active-elite','active-top','active-sleeper','active-up','active-down','active-low','active-medium','active-high');
+      if (b.dataset.value === '') b.classList.add('active');
+    });
   });
+  localStorage.setItem('guide_filters', JSON.stringify(activeFilters));
   setTeamFilter('');
   renderAll();
 }
