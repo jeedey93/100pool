@@ -288,6 +288,16 @@ tr.drafted { background: #f8f9fa !important; }
 .modal-player-name { font-size: 1.55em; font-weight: 900; color: white; line-height: 1.1; margin-bottom: 7px; letter-spacing: -0.3px; }
 .modal-player-meta { font-size: 0.82em; color: rgba(255,255,255,0.65); margin-bottom: 10px; letter-spacing: 0.2px; }
 .modal-badges { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+.modal-draft-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 9px; border: none; cursor: pointer; font-size: 0.82em; font-weight: 700; transition: all 0.15s; }
+.modal-draft-btn.drafted { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.3); }
+.modal-draft-btn.drafted:hover { background: rgba(255,255,255,0.25); }
+.modal-draft-btn.drafted.active { background: rgba(239,68,68,0.25); border-color: rgba(239,68,68,0.5); }
+.modal-draft-btn.my-team { background: #f5c842; color: #1a3d10; }
+.modal-draft-btn.my-team:hover { background: #f9d55a; }
+.modal-draft-btn.my-team.active { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.3); cursor: default; }
+.tbl-add-btn { background: none; border: none; cursor: pointer; color: #94a3b8; font-size: 1em; padding: 2px 6px; border-radius: 5px; transition: all 0.15s; line-height: 1; }
+.tbl-add-btn:hover { color: #2d8a3e; background: #f0fdf4; }
+.tbl-add-btn.in-team { color: #2d8a3e; }
 .modal-close { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.15); border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 0.9em; color: rgba(255,255,255,0.8); z-index: 2; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
 .modal-close:hover { background: rgba(255,255,255,0.22); color: white; }
 
@@ -1075,6 +1085,7 @@ td.star-cell { padding: 0; width: 36px; }
           <div class='modal-player-name' id='modalName'></div>
           <div class='modal-player-meta' id='modalMeta'></div>
           <div class='modal-badges' id='modalBadges'></div>
+          <div id='modalDraftActions' style='display:none;margin-top:10px;display:flex;gap:8px;flex-wrap:wrap'></div>
         </div>
       </div>
     </div>
@@ -2331,7 +2342,7 @@ function buildGoalieRowHTML(p, displayRank) {
     const userNote = userNotes[p.id] || '';
 
     return `<tr class='${tierRowClass(p.tier)}${isDrafted ? ' drafted' : ''}' onclick='draftMode ? toggleDraft(${p.id}, event) : openModal(${p.id})' style='cursor:pointer' title='${draftMode ? (isDrafted ? "Remettre disponible" : "Marquer comme repêché") : "Voir la fiche"}'>
-      <td class='star-cell' onclick='event.stopPropagation()'><button class='star-btn${watchlist.includes(p.id) ? ' watchlisted' : ''}' onclick='toggleWatchlist(${p.id})' title='${watchlist.includes(p.id) ? "Retirer de ma liste" : "Ajouter à ma liste"}'>★</button></td>
+      <td class='star-cell' onclick='event.stopPropagation()'><button class='star-btn${watchlist.includes(p.id) ? ' watchlisted' : ''}' onclick='toggleWatchlist(${p.id})' title='${watchlist.includes(p.id) ? "Retirer de ma liste" : "Ajouter à ma liste"}'>★</button>${draftMode ? `<button class='tbl-add-btn${getMyTeam().includes(p.id) ? ' in-team' : ''}' onclick='event.stopPropagation();addToMyTeam(${p.id})' title='${getMyTeam().includes(p.id) ? "Dans mon équipe" : "Ajouter à mon équipe"}'>➕</button>` : ''}</td>
       <td>${displayRank}${isDrafted ? '<span class="draft-badge">✓</span>' : ''}</td>
       <td>
         <div class='player-name' onclick='event.stopPropagation();openModal(${p.id})'>${p.name}</div>
@@ -2391,7 +2402,7 @@ function buildRowHTML(p, displayRank) {
     const userNote = userNotes[p.id] || '';
 
     return `<tr class='${tierRowClass(p.tier)}${isDrafted ? ' drafted' : ''}' onclick='draftMode ? toggleDraft(${p.id}, event) : openModal(${p.id})' style='cursor:pointer' title='${draftMode ? (isDrafted ? "Remettre disponible" : "Marquer comme repêché") : "Voir la fiche"}'>
-      <td class='star-cell' onclick='event.stopPropagation()'><button class='star-btn${watchlist.includes(p.id) ? ' watchlisted' : ''}' onclick='toggleWatchlist(${p.id})' title='${watchlist.includes(p.id) ? "Retirer de ma liste" : "Ajouter à ma liste"}'>★</button></td>
+      <td class='star-cell' onclick='event.stopPropagation()'><button class='star-btn${watchlist.includes(p.id) ? ' watchlisted' : ''}' onclick='toggleWatchlist(${p.id})' title='${watchlist.includes(p.id) ? "Retirer de ma liste" : "Ajouter à ma liste"}'>★</button>${draftMode ? `<button class='tbl-add-btn${getMyTeam().includes(p.id) ? ' in-team' : ''}' onclick='event.stopPropagation();addToMyTeam(${p.id})' title='${getMyTeam().includes(p.id) ? "Dans mon équipe" : "Ajouter à mon équipe"}'>➕</button>` : ''}</td>
       <td>${displayRank}${isDrafted ? '<span class="draft-badge">✓</span>' : ''}</td>
       <td>
         <div class='player-name' onclick='event.stopPropagation();openModal(${p.id})'>${p.name}</div>
@@ -2893,6 +2904,25 @@ function openModal(id) {
   ].filter(Boolean).join('');
   document.getElementById('modalBadges').innerHTML = badges;
 
+  // Draft actions (only in draft mode)
+  const draftActions = document.getElementById('modalDraftActions');
+  if (draftActions) {
+    if (draftMode) {
+      const isDrafted = draftedIds.has(p.id);
+      const inMyTeam = getMyTeam().includes(p.id);
+      draftActions.style.display = 'flex';
+      draftActions.innerHTML = `
+        <button class='modal-draft-btn drafted${isDrafted ? ' active' : ''}' onclick='toggleDraft(${p.id}, event); updateModalDraftActions(${p.id})'>
+          ${isDrafted ? '✓ Drafté' : '✓ Marquer drafté'}
+        </button>
+        <button class='modal-draft-btn my-team${inMyTeam ? ' active' : ''}' onclick='addToMyTeam(${p.id})' ${inMyTeam ? 'disabled' : ''}>
+          ${inMyTeam ? '✓ Dans mon équipe' : '➕ Mon équipe'}
+        </button>`;
+    } else {
+      draftActions.style.display = 'none';
+    }
+  }
+
   // History placeholder
   document.getElementById('modalHistory').innerHTML = '<div class="modal-history-loading">Chargement…</div>';
 
@@ -3048,6 +3078,34 @@ function renderSimilarList(playerId) {
       </div>`;
     }).join('') || `<div style='font-size:0.83em;color:#94a3b8;padding:8px 4px'>Aucun joueur disponible correspondant.</div>`;
   list.innerHTML = html;
+}
+
+function getMyTeam() {
+  try { return JSON.parse(localStorage.getItem('100pool_team_2026') || '[]'); } catch { return []; }
+}
+
+function addToMyTeam(id) {
+  const team = getMyTeam();
+  if (team.includes(id)) return;
+  team.push(id);
+  localStorage.setItem('100pool_team_2026', JSON.stringify(team));
+  if (!draftedIds.has(id)) toggleDraft(id, null);
+  updateModalDraftActions(id);
+  window._sbShowToast('✓ Joueur ajouté à ton équipe');
+}
+
+function updateModalDraftActions(id) {
+  const draftActions = document.getElementById('modalDraftActions');
+  if (!draftActions || !draftMode) return;
+  const isDrafted = draftedIds.has(id);
+  const inMyTeam = getMyTeam().includes(id);
+  draftActions.innerHTML = `
+    <button class='modal-draft-btn drafted${isDrafted ? ' active' : ''}' onclick='toggleDraft(${id}, event); updateModalDraftActions(${id})'>
+      ${isDrafted ? '✓ Drafté' : '✓ Marquer drafté'}
+    </button>
+    <button class='modal-draft-btn my-team${inMyTeam ? ' active' : ''}' onclick='addToMyTeam(${id})' ${inMyTeam ? 'disabled' : ''}>
+      ${inMyTeam ? '✓ Dans mon équipe' : '➕ Mon équipe'}
+    </button>`;
 }
 
 function closeModal(e) {
