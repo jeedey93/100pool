@@ -959,6 +959,17 @@ td.star-cell { padding: 0; width: 36px; }
             <button class='pill' data-filter='risk' data-value='Medium' onclick='setPill(this,"risk")'>🟡 Moyen</button>
             <button class='pill' data-filter='risk' data-value='High' onclick='setPill(this,"risk")'>🔴 Élevé</button>
           </div>
+          <div class='filter-divider'></div>
+          <!-- AAV -->
+          <div class='filter-group' style='align-items:center'>
+            <span class='filter-label'>AAV</span>
+            <div style='display:flex;align-items:center;gap:4px'>
+              <input type='number' id='aavMin' placeholder='Min' min='0' max='20' step='0.5' oninput='applyFilters()' style='width:58px;padding:5px 7px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:0.82em;outline:none;color:#1e293b;background:#f8fafc;'>
+              <span style='color:#94a3b8;font-size:0.8em'>—</span>
+              <input type='number' id='aavMax' placeholder='Max' min='0' max='20' step='0.5' oninput='applyFilters()' style='width:58px;padding:5px 7px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:0.82em;outline:none;color:#1e293b;background:#f8fafc;'>
+              <span style='color:#94a3b8;font-size:0.75em'>M$</span>
+            </div>
+          </div>
         </div>
         <div class='pills-row3'>
           <!-- Draft mode -->
@@ -2125,6 +2136,8 @@ function setTeamFilter(val) {
 
 function getFiltered() {
   const q = document.getElementById('searchInput').value.toLowerCase();
+  const aavMin = parseFloat(document.getElementById('aavMin')?.value) || null;
+  const aavMax = parseFloat(document.getElementById('aavMax')?.value) || null;
   return allPlayers.filter(p => {
     if (q && !p.name.toLowerCase().includes(q) && !p.team.toLowerCase().includes(q)) return false;
     if (activeFilters.pos) {
@@ -2134,6 +2147,12 @@ function getFiltered() {
     if (activeFilters.tier && tierNum(p.tier) !== activeFilters.tier) return false;
     if (activeFilters.team && p.team !== activeFilters.team)          return false;
     if (activeFilters.risk && p.risk !== activeFilters.risk)          return false;
+    if (aavMin !== null || aavMax !== null) {
+      const aav = parseFloat(p.aav);
+      if (isNaN(aav)) return false;
+      if (aavMin !== null && aav < aavMin) return false;
+      if (aavMax !== null && aav > aavMax) return false;
+    }
     return true;
   });
 }
