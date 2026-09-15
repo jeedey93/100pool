@@ -2899,7 +2899,7 @@ function openModal(id) {
 
   if (similar.length) {
     const simHtml = `<div>
-      <div class='modal-section-title'>🔄 Alternatives similaires</div>
+      <div class='modal-section-title'>🔄 Alternatives similaires <span style='font-size:0.85em;font-weight:500;color:#b0bec5;text-transform:none;letter-spacing:0'>— même position, pts proj ±20%, AAV ±30%</span></div>
       <div class='modal-similar-list'>${similar.map(s => {
         const sPts = isGoalie ? (s.proj_g ?? '—') : (s.proj_pts ?? '—');
         const sAav = s.aav ? `$${parseFloat(s.aav).toFixed(1)}M` : 'CEN';
