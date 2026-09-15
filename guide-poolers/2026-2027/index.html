@@ -468,6 +468,8 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   .player-card.tier-11 { border-left: 4px solid #fda4af; }
 .card-header { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid #f1f5f9; }
 .card-rank   { color: #94a3b8; font-size: 0.8em; font-weight: 700; min-width: 22px; }
+.card-headshot { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #f1f5f9; flex-shrink: 0; background: linear-gradient(135deg, #1a5c28, #2d8a3e); }
+.card-headshot-fallback { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #1a5c28, #2d8a3e); color: white; font-size: 0.65em; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 2px solid #f1f5f9; }
 .card-name   { font-weight: 800; color: #1e293b; font-size: 0.95em; flex: 1; }
 .card-badges { display: flex; gap: 5px; align-items: center; margin-left: auto; flex-shrink: 0; }
 .card-inline-stats { display: none; }
@@ -2426,6 +2428,7 @@ function renderCards(filtered) {
       <div class='card-header'>
         <button class='star-btn card-star${watchlist.includes(p.id) ? ' watchlisted' : ''}' onclick='event.stopPropagation();toggleWatchlist(${p.id})' title='${watchlist.includes(p.id) ? "Retirer de ma liste" : "Ajouter à ma liste"}'>★</button>
         <span class='card-rank'>${i + 1}${isDrafted ? '<span class="draft-badge">✓</span>' : ''}</span>
+        ${p.nhl_id ? `<img class='card-headshot' src='https://assets.nhle.com/mugs/nhl/408x408/${p.nhl_id}.png' alt='${p.name}' onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class='card-headshot-fallback' style='display:none'>${p.name.split(' ').map(w=>w[0]).slice(0,2).join('')}</span>` : ''}
         <div style='flex:1;min-width:0'>
           <div class='card-name' style='${isDrafted ? "text-decoration:line-through;color:#94a3b8;" : ""}' onclick='event.stopPropagation();openModal(${p.id})'>${p.name}</div>
           ${p.notes ? `<div class='card-note'>${p.notes}</div>` : ''}
