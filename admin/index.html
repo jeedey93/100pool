@@ -496,6 +496,12 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
       <span class='nav-icon'>💳</span><span>Accès & Achats</span>
       <span class='nav-badge' id='sidebar-count'></span>
     </button>
+    <button class='nav-item' onclick='switchTab("trafic",this)'>
+      <span class='nav-icon'>📈</span><span>Trafic</span>
+    </button>
+    <button class='nav-item' onclick='switchTab("feedback",this)'>
+      <span class='nav-icon'>💬</span><span>Commentaires</span><span class='nav-badge' id='sidebar-feedback-count'></span>
+    </button>
   </div>
 
   <div class='sidebar-section'>
@@ -505,15 +511,6 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
     </button>
     <button class='nav-item' onclick='switchTab("goalies",this)'>
       <span class='nav-icon'>🥅</span><span>Gardiens</span>
-    </button>
-  </div>
-  <div class='sidebar-section'>
-    <div class='sidebar-section-label'>Communauté</div>
-    <button class='nav-item' onclick='switchTab("feedback",this)'>
-      <span class='nav-icon'>💬</span><span>Commentaires</span><span class='nav-badge' id='sidebar-feedback-count'></span>
-    </button>
-    <button class='nav-item' onclick='switchTab("trafic",this)'>
-      <span class='nav-icon'>📈</span><span>Trafic</span>
     </button>
   </div>
 
@@ -869,6 +866,9 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
   <button class='mobile-nav-item' onclick='switchTab("acces",this)'>
     <span class='mn-icon'>💳</span>Accès<span class='mn-dot'></span>
   </button>
+  <button class='mobile-nav-item' onclick='switchTab("trafic",this)'>
+    <span class='mn-icon'>📈</span>Trafic<span class='mn-dot'></span>
+  </button>
   <button class='mobile-nav-item' onclick='switchTab("skaters",this)'>
     <span class='mn-icon'>⛸</span>Patineurs<span class='mn-dot'></span>
   </button>
@@ -877,9 +877,6 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
   </button>
   <button class='mobile-nav-item' onclick='switchTab("feedback",this)'>
     <span class='mn-icon'>💬</span>Commentaires<span class='mn-dot'></span><span class='nav-badge' id='mobile-feedback-count' style='margin-left:4px'></span>
-  </button>
-  <button class='mobile-nav-item' onclick='switchTab("trafic",this)'>
-    <span class='mn-icon'>📈</span>Trafic<span class='mn-dot'></span>
   </button>
   <button class='mobile-nav-item' onclick='refreshAdmin(this)'>
     <span class='mn-icon'>🔄</span>Refresh<span class='mn-dot'></span>
