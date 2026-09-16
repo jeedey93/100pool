@@ -3142,6 +3142,11 @@ checkAccess().then(async () => {
   document.getElementById('navBtnEquipeMobile')?.style.removeProperty('display');
   document.getElementById('btnFeedback')?.style.removeProperty('display');
   document.getElementById('sidebarFeedback')?.style.removeProperty('display');
+  fetch(`${SUPABASE_URL}/rest/v1/page_views`, {
+    method: 'POST',
+    headers: { ...SB_HEADERS, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ page: 'guide' })
+  }).catch(() => {});
   await loadFromCloud();
   updateDraftBtn();
   init();

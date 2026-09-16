@@ -512,6 +512,9 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
     <button class='nav-item' onclick='switchTab("feedback",this)'>
       <span class='nav-icon'>💬</span><span>Commentaires</span><span class='nav-badge' id='sidebar-feedback-count'></span>
     </button>
+    <button class='nav-item' onclick='switchTab("trafic",this)'>
+      <span class='nav-icon'>📈</span><span>Trafic</span>
+    </button>
   </div>
 
   <div class='sidebar-bottom'>
@@ -812,6 +815,48 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
       </div>
     </div>
 
+    <div id='tab-trafic' style='display:none'>
+      <div class='section-header'>
+        <h2>📈 Trafic — Guide des poolers</h2>
+        <p>Nombre de visites par jour sur le guide</p>
+      </div>
+      <div class='stats-grid' style='grid-template-columns:repeat(auto-fill,minmax(170px,1fr))'>
+        <div class='stat-card' style='--accent:#2d8a3e'>
+          <div class='stat-card-top'><div class='stat-icon-wrap'>👁</div></div>
+          <div class='stat-val' id='trafic-total'>—</div>
+          <div class='stat-lbl'>Visites totales</div>
+        </div>
+        <div class='stat-card' style='--accent:#0369a1'>
+          <div class='stat-card-top'><div class='stat-icon-wrap'>📅</div></div>
+          <div class='stat-val' id='trafic-today'>—</div>
+          <div class='stat-lbl'>Aujourd'hui</div>
+        </div>
+        <div class='stat-card' style='--accent:#6d28d9'>
+          <div class='stat-card-top'><div class='stat-icon-wrap'>📆</div></div>
+          <div class='stat-val' id='trafic-week'>—</div>
+          <div class='stat-lbl'>7 derniers jours</div>
+        </div>
+      </div>
+      <div class='chart-wrap'>
+        <div class='chart-head'>
+          <div>
+            <div class='chart-title'>Visites — 30 derniers jours</div>
+            <div class='chart-subtitle' id='trafic-chart-label'>&nbsp;</div>
+          </div>
+        </div>
+        <div class='chart-bars' id='trafic-chart-bars' style='min-height:120px'></div>
+      </div>
+      <div class='card' style='margin-top:24px'>
+        <div class='card-header'><h3>Détail par jour</h3></div>
+        <div class='table-wrap'>
+          <table>
+            <thead><tr><th>Date</th><th style='text-align:right'>Visites</th></tr></thead>
+            <tbody id='tbody-trafic'></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /content -->
 </div><!-- /main -->
 
@@ -832,6 +877,9 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
   </button>
   <button class='mobile-nav-item' onclick='switchTab("feedback",this)'>
     <span class='mn-icon'>💬</span>Commentaires<span class='mn-dot'></span><span class='nav-badge' id='mobile-feedback-count' style='margin-left:4px'></span>
+  </button>
+  <button class='mobile-nav-item' onclick='switchTab("trafic",this)'>
+    <span class='mn-icon'>📈</span>Trafic<span class='mn-dot'></span>
   </button>
   <button class='mobile-nav-item' onclick='refreshAdmin(this)'>
     <span class='mn-icon'>🔄</span>Refresh<span class='mn-dot'></span>
@@ -936,19 +984,20 @@ let TIERS = [];
 const TIER_COLORS = { 'Tier 1': '#92400e', 'Tier 2': '#1e40af', 'Tier 3': '#065f46', 'Tier 4': '#475569', 'Tier 5': '#475569', 'Tier 6': '#475569', 'Tier 7': '#94a3b8', 'Tier 8': '#94a3b8', 'Tier 9': '#94a3b8', 'Tier 10': '#94a3b8', 'Tier 11': '#94a3b8' };
 
 // ── TABS ─────────────────────────────────────────────────
-const TAB_TITLES = { dashboard: '📊 Dashboard', acces: '💳 Accès & Achats', skaters: '⛸ Patineurs 2026-27', goalies: '🥅 Gardiens 2026-27', feedback: '💬 Commentaires' };
+const TAB_TITLES = { dashboard: '📊 Dashboard', acces: '💳 Accès & Achats', skaters: '⛸ Patineurs 2026-27', goalies: '🥅 Gardiens 2026-27', feedback: '💬 Commentaires', trafic: '📈 Trafic' };
 
 function switchTab(tab, btn) {
   document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(b => {
     if (b.getAttribute('onclick')?.includes(`"${tab}"`)) b.classList.add('active');
   });
-  ['dashboard','acces','skaters','goalies','feedback'].forEach(t => {
+  ['dashboard','acces','skaters','goalies','feedback','trafic'].forEach(t => {
     document.getElementById(`tab-${t}`).style.display = t === tab ? '' : 'none';
   });
   document.getElementById('topbar-title').textContent = TAB_TITLES[tab];
   const saveBtn = document.getElementById('saveAllBtn');
   saveBtn.style.display = ['skaters','goalies'].includes(tab) ? '' : 'none';
+  if (tab === 'trafic' && !window._traficLoaded) loadTrafic();
 }
 
 // ── ACCÈS ─────────────────────────────────────────────────
@@ -1165,6 +1214,79 @@ async function loadFeedback() {
     updateFeedbackBadge();
   } catch(e) {
     document.getElementById('tbody-feedback').innerHTML = `<tr><td colspan='3'><div class='empty-state'><div class='es-icon'>⚠️</div><p>Erreur: ${e.message}</p></div></td></tr>`;
+  }
+}
+
+// ── TRAFIC ────────────────────────────────────────────────
+window._traficLoaded = false;
+async function loadTrafic() {
+  window._traficLoaded = true;
+  const SB_URL = 'https://fifurqlitkywtmhgtzeu.supabase.co';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpZnVycWxpdGt5d3RtaGd0emV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDIyMjQsImV4cCI6MjA5MjI3ODIyNH0.KPVPj1qwbSJJMyLR_-AhDcRs0vi2sUU6qbFQ-kH53C0';
+  const headers = { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` };
+
+  // Fetch last 30 days of page_views grouped by date
+  const since = new Date();
+  since.setDate(since.getDate() - 30);
+  const sinceStr = since.toISOString().slice(0, 10);
+
+  try {
+    const res = await fetch(`${SB_URL}/rest/v1/page_views?select=visited_at&page=eq.guide&visited_at=gte.${sinceStr}T00:00:00Z&order=visited_at.asc&limit=5000`, { headers });
+    if (!res.ok) throw new Error(await res.text());
+    const rows = await res.json();
+
+    // Group by local date (America/Toronto)
+    const counts = {};
+    for (const r of rows) {
+      const d = new Date(r.visited_at).toLocaleDateString('en-CA', { timeZone: 'America/Toronto' });
+      counts[d] = (counts[d] || 0) + 1;
+    }
+
+    // Build full 30-day range
+    const days = [];
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const key = d.toLocaleDateString('en-CA', { timeZone: 'America/Toronto' });
+      days.push({ key, count: counts[key] || 0 });
+    }
+
+    const todayKey = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Toronto' });
+    const total = rows.length;
+    const todayCount = counts[todayKey] || 0;
+    const weekCount = days.slice(-7).reduce((s, d) => s + d.count, 0);
+
+    document.getElementById('trafic-total').textContent = total;
+    document.getElementById('trafic-today').textContent = todayCount;
+    document.getElementById('trafic-week').textContent = weekCount;
+    document.getElementById('trafic-chart-label').textContent = `${total} visites au total`;
+
+    // Bar chart
+    const maxVal = Math.max(...days.map(d => d.count), 1);
+    const barsEl = document.getElementById('trafic-chart-bars');
+    barsEl.innerHTML = days.map(d => {
+      const pct = Math.round((d.count / maxVal) * 100);
+      const isToday = d.key === todayKey;
+      const label = d.key.slice(5); // MM-DD
+      return `<div class='chart-bar' style='flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0'>
+        <span style='font-size:0.6em;color:#94a3b8;font-weight:700'>${d.count || ''}</span>
+        <div style='width:100%;background:#f0f4f8;border-radius:4px;height:80px;display:flex;align-items:flex-end'>
+          <div style='width:100%;background:${isToday ? '#2d8a3e' : '#93c5a8'};height:${pct}%;border-radius:4px 4px 0 0;min-height:${d.count ? '3px' : '0'};transition:height 0.3s'></div>
+        </div>
+        <span style='font-size:0.55em;color:#94a3b8;white-space:nowrap'>${label}</span>
+      </div>`;
+    }).join('');
+
+    // Table rows
+    const tbody = document.getElementById('tbody-trafic');
+    const sortedDays = [...days].reverse();
+    tbody.innerHTML = sortedDays.filter(d => d.count > 0).map(d => `<tr>
+      <td>${d.key}</td>
+      <td style='text-align:right;font-weight:700'>${d.count}</td>
+    </tr>`).join('') || `<tr><td colspan='2'><div class='empty-state'><div class='es-icon'>📭</div><p>Aucune visite enregistrée</p></div></td></tr>`;
+
+  } catch(e) {
+    document.getElementById('trafic-chart-bars').innerHTML = `<p style='color:#e11d48;padding:16px'>Erreur: ${e.message}</p>`;
   }
 }
 
