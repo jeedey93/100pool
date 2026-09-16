@@ -257,9 +257,9 @@ body.has-shared-sidebar.shared-sb-collapsed { padding-left: 52px; }
     if (emailInput) localStorage.setItem('pool_user_email', emailInput);
     const userEmail = emailInput || localStorage.getItem('pool_user_email') || null;
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/feedback`, {
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/submit-feedback`, {
         method: 'POST',
-        headers: { ...SB_HEADERS, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+        headers: { 'Content-Type': 'application/json', ...SB_HEADERS },
         body: JSON.stringify({ message: msg, email: userEmail })
       });
       if (!res.ok) throw new Error();
