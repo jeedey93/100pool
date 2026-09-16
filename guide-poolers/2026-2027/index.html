@@ -985,7 +985,7 @@ td.star-cell { padding: 0; width: 36px; }
         <div class='pills-row3'>
           <!-- Draft mode -->
           <div class='filter-group' style='flex-shrink:0'>
-            <button class='ctrl-btn btn-draft-toggle' id='draftToggleBtn' onclick='toggleDraftMode()' style='margin:0'>🏒 Mode draft</button>
+            <button class='ctrl-btn btn-draft-toggle' id='draftToggleBtn' onclick='toggleDraftMode()' style='margin:0' title='Activer le mode draft pour barrer les joueurs au fur et à mesure'>🏒 Mode draft</button>
             <button class='ctrl-btn btn-reset-draft' id='resetDraftBtn' onclick='resetDraft()' style='display:none;margin:0'>✕ Reset draft</button>
             <button class='ctrl-btn btn-hide-drafted' id='hideDraftedBtn' onclick='toggleHideDrafted()' style='display:none;margin:0'>👁 Cacher les draftés</button>
           </div>
@@ -1510,6 +1510,7 @@ function toggleDraftMode() {
   const tableWrap = document.querySelector('.table-wrap');
   if (btn) {
     btn.classList.toggle('active', draftMode);
+    btn.title = draftMode ? 'Clique sur un joueur pour le barrer — il a été drafté par quelqu\'un' : 'Activer le mode draft pour barrer les joueurs au fur et à mesure';
     updateDraftBtn();
   }
   if (tableWrap) tableWrap.classList.toggle('draft-mode-active', draftMode);
@@ -1518,6 +1519,10 @@ function toggleDraftMode() {
   const hideBtn = document.getElementById('hideDraftedBtn');
   if (hideBtn) hideBtn.style.display = (draftMode && draftedIds.size) ? '' : 'none';
   if (!draftMode && hideDrafted) { hideDrafted = false; if (hideBtn) { hideBtn.classList.remove('active'); hideBtn.textContent = '👁 Cacher les draftés'; } renderAll(); }
+  if (draftMode && !localStorage.getItem('draft_mode_tip_seen')) {
+    localStorage.setItem('draft_mode_tip_seen', '1');
+    window._sbShowToast('🏒 Mode draft actif — clique sur un joueur pour le barrer');
+  }
 }
 
 function toggleHideDrafted() {
