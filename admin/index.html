@@ -1263,10 +1263,11 @@ async function loadTrafic() {
     document.getElementById('trafic-week').textContent = weekCount;
     document.getElementById('trafic-chart-label').textContent = `${total} visites au total`;
 
-    // Bar chart
-    const maxVal = Math.max(...days.map(d => d.count), 1);
+    // Bar chart — only days with visits (plus today even if 0)
+    const visibleDays = days.filter(d => d.count > 0 || d.key === todayKey);
+    const maxVal = Math.max(...visibleDays.map(d => d.count), 1);
     const barsEl = document.getElementById('trafic-chart-bars');
-    barsEl.innerHTML = days.map(d => {
+    barsEl.innerHTML = visibleDays.map(d => {
       const pct = Math.round((d.count / maxVal) * 100);
       const isToday = d.key === todayKey;
       const label = d.key.slice(5); // MM-DD
