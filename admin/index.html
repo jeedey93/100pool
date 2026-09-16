@@ -813,9 +813,13 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
     </div>
 
     <div id='tab-trafic' style='display:none'>
-      <div class='section-header'>
-        <h2>📈 Trafic — Guide des poolers</h2>
-        <p>Nombre de visites par jour sur le guide</p>
+      <div id='traficSnapshot'>
+      <div class='section-header' style='display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px'>
+        <div>
+          <h2>📈 Trafic — Guide des poolers</h2>
+          <p>Nombre de visites par jour sur le guide</p>
+        </div>
+        <button class='btn-share' id='traficShareBtn' onclick='shareTraficSnapshot()'>📸 Partager</button>
       </div>
       <div class='stats-grid' style='grid-template-columns:repeat(auto-fill,minmax(170px,1fr))'>
         <div class='stat-card' style='--accent:#2d8a3e'>
@@ -843,6 +847,7 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
         </div>
         <div class='chart-bars' id='trafic-chart-bars' style='min-height:120px'></div>
       </div>
+      </div><!-- end traficSnapshot -->
       <div class='card' style='margin-top:24px'>
         <div class='card-header'><h3>Détail par jour</h3></div>
         <div class='table-wrap'>
@@ -1686,6 +1691,65 @@ async function shareSnapshot() {
     toast('📋 Image copiée dans le presse-papier !');
   } catch (e) {
     console.error('[shareSnapshot]', e);
+    if (e.name !== 'AbortError') toast('Erreur: ' + (e.message || e.name || 'inconnue'), 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '📸 Partager';
+  }
+}
+
+async function shareTraficSnapshot() {
+  const btn = document.getElementById('traficShareBtn');
+  if (!btn || btn.disabled) return;
+  btn.disabled = true;
+  btn.textContent = '⏳ Capture…';
+  try {
+    const el = document.getElementById('traficSnapshot');
+    const canvas = await html2canvas(el, {
+      backgroundColor: '#f8faf7',
+      scale: 2,
+      width: 390,
+      windowWidth: 390,
+      useCORS: true,
+      allowTaint: true,
+      logging: false,
+      imageTimeout: 0,
+      removeContainer: true,
+      onclone: (doc) => {
+        const shareBtn = doc.getElementById('traficShareBtn');
+        if (shareBtn) shareBtn.style.display = 'none';
+        const snap = doc.getElementById('traficSnapshot');
+        if (snap) { snap.style.width = '390px'; snap.style.maxWidth = '390px'; }
+        doc.querySelectorAll('.stat-card').forEach(card => {
+          const s = card.style;
+          const accent = s.getPropertyValue('--accent') || '#2d8a3e';
+          const accentBg = s.getPropertyValue('--accent-bg') || '#f0fdf4';
+          card.style.setProperty('--accent', accent);
+          card.style.setProperty('--accent-bg', accentBg);
+          card.style.background = accentBg;
+          const iconWrap = card.querySelector('.stat-icon-wrap');
+          if (iconWrap) iconWrap.style.background = accentBg;
+          const val = card.querySelector('.stat-val');
+          if (val) val.style.color = accent;
+        });
+      },
+    });
+    const blob = await new Promise((res, rej) => canvas.toBlob(b => b ? res(b) : rej(new Error('toBlob failed')), 'image/png'));
+    const file = new File([blob], '100pool-trafic.png', { type: 'image/png' });
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const canShareFile = isMobile && navigator.canShare && navigator.canShare({ files: [file] });
+    if (canShareFile) {
+      try {
+        await navigator.share({ files: [file], title: '100% Pool — Trafic' });
+        return;
+      } catch (shareErr) {
+        if (shareErr.name === 'AbortError' || shareErr.name === 'NotAllowedError') return;
+      }
+    }
+    await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+    toast('📋 Image copiée dans le presse-papier !');
+  } catch (e) {
+    console.error('[shareTraficSnapshot]', e);
     if (e.name !== 'AbortError') toast('Erreur: ' + (e.message || e.name || 'inconnue'), 'error');
   } finally {
     btn.disabled = false;
