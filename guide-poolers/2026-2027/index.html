@@ -3167,7 +3167,15 @@ function doPrint() {
     });
   }
   const tbody = tbodyClone ? tbodyClone.innerHTML : '';
-  const gthead = document.getElementById('goalieThead')?.innerHTML ?? '';
+  const gtheadEl = document.getElementById('goalieThead');
+  const gtheadClone = gtheadEl ? gtheadEl.cloneNode(true) : null;
+  if (gtheadClone) {
+    const colRow = gtheadClone.querySelector('tr.col-row');
+    if (colRow) { const first = colRow.querySelector('th'); if (first) first.remove(); }
+    const groupRow = gtheadClone.querySelector('tr.group-row');
+    if (groupRow) { const first = groupRow.querySelector('th'); if (first && first.colSpan >= 6) first.colSpan = first.colSpan - 1; }
+  }
+  const gthead = gtheadClone ? gtheadClone.innerHTML : '';
   const gtbody = document.getElementById('goalieTbody')?.innerHTML ?? '';
   const win = window.open('', '_blank');
   win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8">
