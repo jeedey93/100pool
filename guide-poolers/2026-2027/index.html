@@ -630,9 +630,13 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 
   /* Hide UI chrome */
   nav, .guide-sidebar, .controls, .tabs, .disclaimer, .tooltip, .col-toggle-menu,
-  .card-list, .watchlist-panel, .watchlist-overlay, .offline-banner,
+  .watchlist-panel, .watchlist-overlay, .offline-banner,
   .help-overlay, .confirm-overlay, td.star-cell, th.star-cell,
   #sharedSidebar, #sbBottomNav { display: none !important; }
+
+  /* Force whichever view is visible to print correctly */
+  .card-list { display: flex !important; flex-direction: column !important; gap: 4px !important; }
+  .table-wrap { display: block !important; overflow: visible !important; }
 
   body.has-shared-sidebar { padding-left: 0 !important; padding-bottom: 0 !important; }
 
