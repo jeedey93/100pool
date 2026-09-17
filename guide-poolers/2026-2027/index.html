@@ -3135,20 +3135,31 @@ checkAccess().then(async () => {
   init();
 });
 
-// Force critical styles before print — CSS @media print alone can't override inline styles set by JS
+// Force critical styles before print — @media print can't override JS-set inline styles
 window.onbeforeprint = function() {
-  document.querySelectorAll('.tab-pane').forEach(el => { el.dataset._printDisplay = el.style.display; el.style.display = 'none'; });
+  // Show only #tab-all, hide others
+  document.querySelectorAll('.tab-pane:not(#tab-all)').forEach(el => {
+    el.dataset._pd = el.style.display;
+    el.style.display = 'none';
+  });
   const tabAll = document.getElementById('tab-all');
-  if (tabAll) { tabAll.style.display = 'block'; tabAll.style.minHeight = '0'; tabAll.style.height = 'auto'; }
-  document.querySelectorAll('.table-wrap').forEach(el => { el.dataset._printDisplay = el.style.display; el.style.display = 'block'; el.style.overflow = 'visible'; });
+  if (tabAll) {
+    tabAll.dataset._pd = tabAll.style.display;
+    tabAll.style.cssText += ';display:block!important;min-height:0!important;height:auto!important;overflow:visible!important;';
+  }
+  // Show all table-wrap (goalie wrap may be display:none inline)
+  document.querySelectorAll('.table-wrap').forEach(el => {
+    el.dataset._pd = el.style.display;
+    el.style.cssText += ';display:block!important;overflow:visible!important;';
+  });
   document.body.style.overflow = 'visible';
   document.documentElement.style.overflow = 'visible';
 };
 window.onafterprint = function() {
-  document.querySelectorAll('.tab-pane').forEach(el => { el.style.display = el.dataset._printDisplay ?? ''; });
+  document.querySelectorAll('.tab-pane:not(#tab-all)').forEach(el => { el.style.display = el.dataset._pd ?? ''; });
   const tabAll = document.getElementById('tab-all');
-  if (tabAll) { tabAll.style.minHeight = ''; tabAll.style.height = ''; }
-  document.querySelectorAll('.table-wrap').forEach(el => { el.style.display = el.dataset._printDisplay ?? ''; el.style.overflow = ''; });
+  if (tabAll) { tabAll.style.cssText = tabAll.style.cssText.replace(/display:[^;]+;?/gi, '').replace(/min-height:[^;]+;?/gi, '').replace(/height:[^;]+;?/gi, '').replace(/overflow:[^;]+;?/gi, ''); }
+  document.querySelectorAll('.table-wrap').forEach(el => { el.style.display = el.dataset._pd ?? ''; el.style.overflow = ''; });
   document.body.style.overflow = '';
   document.documentElement.style.overflow = '';
 };
