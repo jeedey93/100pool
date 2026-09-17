@@ -3135,6 +3135,24 @@ checkAccess().then(async () => {
   init();
 });
 
+// Force critical styles before print — CSS @media print alone can't override inline styles set by JS
+window.onbeforeprint = function() {
+  document.querySelectorAll('.tab-pane').forEach(el => { el.dataset._printDisplay = el.style.display; el.style.display = 'none'; });
+  const tabAll = document.getElementById('tab-all');
+  if (tabAll) { tabAll.style.display = 'block'; tabAll.style.minHeight = '0'; tabAll.style.height = 'auto'; }
+  document.querySelectorAll('.table-wrap').forEach(el => { el.dataset._printDisplay = el.style.display; el.style.display = 'block'; el.style.overflow = 'visible'; });
+  document.body.style.overflow = 'visible';
+  document.documentElement.style.overflow = 'visible';
+};
+window.onafterprint = function() {
+  document.querySelectorAll('.tab-pane').forEach(el => { el.style.display = el.dataset._printDisplay ?? ''; });
+  const tabAll = document.getElementById('tab-all');
+  if (tabAll) { tabAll.style.minHeight = ''; tabAll.style.height = ''; }
+  document.querySelectorAll('.table-wrap').forEach(el => { el.style.display = el.dataset._printDisplay ?? ''; el.style.overflow = ''; });
+  document.body.style.overflow = '';
+  document.documentElement.style.overflow = '';
+};
+
 </script>
 <script src='/sidebar.js?v=14'></script>
 <script>
