@@ -132,7 +132,7 @@ body.has-shared-sidebar.shared-sb-collapsed { padding-left: 52px; }
       <span class="gs-nav-icon">💬</span><span>Commentaires</span>
     </button>
   </div>
-  <div class="sidebar-version">Guide 2026-27 · v1.450</div>
+  <div class="sidebar-version">Guide 2026-27 · v1.451</div>
   <button class="sidebar-toggle" id="sbToggleBtn" title="Réduire la navigation">
     <span class="toggle-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     <span class="toggle-label">Réduire</span>
