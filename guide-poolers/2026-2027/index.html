@@ -3168,17 +3168,19 @@ function printGuide() {
   if (allTab && !allTab.classList.contains('active')) {
     switchTab('all', allTab);
   }
-  // Make sure table-wrap is block before printing (overrides mobile CSS)
-  document.querySelectorAll('.table-wrap').forEach(el => {
-    el.dataset.printDisplay = el.style.display || '';
-    el.style.display = 'block';
-  });
+  // Temporarily override all display:none that would hide the table
+  const tabAll = document.getElementById('tab-all');
+  if (tabAll) { tabAll.style.cssText = 'display:block!important'; }
+  document.querySelectorAll('.table-wrap').forEach(el => { el.style.cssText = 'display:block!important;overflow:visible!important'; });
+  document.querySelectorAll('.controls').forEach(el => { el.style.cssText = 'display:none!important'; });
+
   window.print();
-  // Restore after print dialog closes
+
+  // Restore after dialog closes
   requestAnimationFrame(() => {
-    document.querySelectorAll('.table-wrap').forEach(el => {
-      el.style.display = el.dataset.printDisplay || '';
-    });
+    if (tabAll) tabAll.style.cssText = '';
+    document.querySelectorAll('.table-wrap').forEach(el => { el.style.cssText = ''; });
+    document.querySelectorAll('.controls').forEach(el => { el.style.cssText = ''; });
   });
 }
 
