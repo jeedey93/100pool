@@ -3134,56 +3134,70 @@ checkAccess().then(async () => {
   init();
 });
 
-// Force critical styles before print — @media print can't override JS-set inline styles
-window.onbeforeprint = function() {
-  // Show only #tab-all, hide others
-  document.querySelectorAll('.tab-pane:not(#tab-all)').forEach(el => {
-    el.dataset._pd = el.style.display;
-    el.style.display = 'none';
-  });
-  const tabAll = document.getElementById('tab-all');
-  if (tabAll) {
-    tabAll.dataset._pd = tabAll.style.display;
-    tabAll.style.cssText += ';display:block!important;min-height:0!important;height:auto!important;overflow:visible!important;';
-  }
-  // Show all table-wrap (goalie wrap may be display:none inline)
-  document.querySelectorAll('.table-wrap').forEach(el => {
-    el.dataset._pd = el.style.display;
-    el.style.cssText += ';display:block!important;overflow:visible!important;';
-  });
-  document.body.style.overflow = 'visible';
-  document.documentElement.style.overflow = 'visible';
-};
-window.onafterprint = function() {
-  document.querySelectorAll('.tab-pane:not(#tab-all)').forEach(el => { el.style.display = el.dataset._pd ?? ''; });
-  const tabAll = document.getElementById('tab-all');
-  if (tabAll) { tabAll.style.cssText = tabAll.style.cssText.replace(/display:[^;]+;?/gi, '').replace(/min-height:[^;]+;?/gi, '').replace(/height:[^;]+;?/gi, '').replace(/overflow:[^;]+;?/gi, ''); }
-  document.querySelectorAll('.table-wrap').forEach(el => { el.style.display = el.dataset._pd ?? ''; el.style.overflow = ''; });
-  document.body.style.overflow = '';
-  document.documentElement.style.overflow = '';
-};
-
 function doPrint() {
-  document.querySelectorAll('.tab-pane:not(#tab-all)').forEach(el => { el.style.display = 'none'; });
-  const tabAll = document.getElementById('tab-all');
-  if (tabAll) { tabAll.style.display = 'block'; tabAll.style.minHeight = '0'; tabAll.style.height = 'auto'; tabAll.style.overflow = 'visible'; }
-  document.querySelectorAll('.table-wrap').forEach(el => { el.style.display = 'block'; el.style.overflow = 'visible'; });
-  document.body.style.overflow = 'visible';
-  document.body.style.paddingLeft = '0';
-  document.body.style.paddingBottom = '0';
-  document.documentElement.style.overflow = 'visible';
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    window.print();
-    setTimeout(() => {
-      document.querySelectorAll('.tab-pane:not(#tab-all)').forEach(el => { el.style.display = ''; });
-      if (tabAll) { tabAll.style.display = ''; tabAll.style.minHeight = ''; tabAll.style.height = ''; tabAll.style.overflow = ''; }
-      document.querySelectorAll('.table-wrap').forEach(el => { el.style.display = ''; el.style.overflow = ''; });
-      document.body.style.overflow = '';
-      document.body.style.paddingLeft = '';
-      document.body.style.paddingBottom = '';
-      document.documentElement.style.overflow = '';
-    }, 1000);
-  }));
+  const thead = document.getElementById('playerThead')?.innerHTML ?? '';
+  const tbody = document.getElementById('playerTbody')?.innerHTML ?? '';
+  const gthead = document.getElementById('goalieThead')?.innerHTML ?? '';
+  const gtbody = document.getElementById('goalieTbody')?.innerHTML ?? '';
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8">
+<title>Guide des poolers 2026-27 — 100% Pool</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: landscape; margin: 10mm 8mm; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 7pt; color: #111; background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+h1 { font-size: 11pt; font-weight: 900; color: white; }
+.header { background: #1a5c28; padding: 8px 14px; border-radius: 6px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+.header p { font-size: 7pt; color: rgba(255,255,255,0.8); margin-top: 2px; }
+.section-title { font-size: 9pt; font-weight: 800; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.04em; border-top: 2px solid #15803d; padding-top: 8px; margin: 16px 0 6px; }
+table { width: 100%; border-collapse: collapse; font-size: 6.8pt; }
+thead th { background: #f1f5f9; color: #333; padding: 3px 4px; border-bottom: 1.5px solid #ccc; white-space: nowrap; text-align: left; }
+tbody td { padding: 2px 4px; border-bottom: 1px solid #e8e8e8; color: #111; }
+tbody tr:nth-child(even) td { background: #f9fafb; }
+tbody tr.tier-row-1 td { background: rgba(245,158,11,0.08); }
+tbody tr.tier-row-2 td { background: rgba(59,130,246,0.06); }
+tbody tr.tier-row-3 td { background: rgba(139,92,246,0.06); }
+tbody tr.drafted td { opacity: 0.3; text-decoration: line-through; }
+.player-name { font-size: 7.5pt; font-weight: 700; color: #000; }
+.team-tag { background: #dcfce7; color: #15803d; border-radius: 3px; padding: 1px 4px; font-size: 6pt; font-weight: 700; }
+.pos-tag { background: #e8edf5; color: #333; border-radius: 3px; padding: 1px 4px; font-size: 6pt; font-weight: 700; }
+.tier { background: #eee; color: #333; border: 1px solid #ccc; border-radius: 3px; font-size: 6pt; padding: 1px 4px; }
+.tier-1 { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
+.tier-2 { background: #dbeafe; color: #1e40af; border-color: #93c5fd; }
+.tier-3 { background: #ede9fe; color: #4c1d95; border-color: #c4b5fd; }
+.trend { background: none; border: none; font-size: 6.5pt; padding: 1px 3px; }
+.trend-up { color: #15803d; }
+.trend-down { color: #dc2626; }
+.last-stat, .last-pts, .proj-stat, .proj-pts, .ppg-last, .ppg-proj { color: #15803d; font-weight: 700; }
+.salary { color: #b45309; }
+.pv-track { display: none; }
+.pv-bar { gap: 2px; }
+.pv-num { font-size: 6.5pt; padding: 1px 3px; }
+.sort-icon { display: none; }
+.note-icon { display: none; }
+.star-cell, .star-btn { display: none; }
+.col-group-last { background: #dcfce7; color: #15803d; }
+.col-group-proj { background: #dcfce7; color: #166534; }
+td.col-last { background: #f0fdf4; }
+td.col-proj { background: #f0fdf4; }
+.user-note-input { display: none; }
+.btn-reset-draft { display: none; }
+tr td:has(.user-note-input) { display: none; }
+tbody tr { page-break-inside: avoid; }
+.no-print { display: none; }
+</style>
+</head><body>
+<div class="header">
+  <div>
+    <h1>📋 Guide des poolers 2026-27</h1>
+    <p>100% Pool · Imprimé le ${new Date().toLocaleDateString('fr-CA')}</p>
+  </div>
+</div>
+<table><thead>${thead}</thead><tbody>${tbody}</tbody></table>
+${gtbody.trim() ? `<div class="section-title">🥅 Gardiens</div><table><thead>${gthead}</thead><tbody>${gtbody}</tbody></table>` : ''}
+<script>window.onload = function() { window.print(); }<\/script>
+</body></html>`);
+  win.document.close();
 }
 
 </script>
