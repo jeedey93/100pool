@@ -3183,6 +3183,7 @@ function doPrint() {
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 @page { size: landscape; margin: 10mm 8mm; }
+@page { @bottom-center { content: '100pool.ca · Guide des poolers 2026-27'; font-size: 7pt; color: #94a3b8; } }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 7pt; color: #111; background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 h1 { font-size: 11pt; font-weight: 900; color: white; }
 .header { background: #1a5c28; padding: 8px 14px; border-radius: 6px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
@@ -3232,9 +3233,10 @@ th.cg-ppg-last, td.cg-ppg-last, th.cg-ppg-proj, td.cg-ppg-proj { display: none; 
 </style>
 </head><body>
 <div class="header">
+  <img src="https://100pool.ca/100pool.jpg" alt="100% Pool" style="width:36px;height:36px;border-radius:50%;border:2px solid rgba(255,255,255,0.4);">
   <div>
-    <h1>📋 Guide des poolers 2026-27</h1>
-    <p>100% Pool · Imprimé le ${new Date().toLocaleDateString('fr-CA')}</p>
+    <h1>Guide des poolers 2026-27</h1>
+    <p>100pool.ca · Imprimé le ${new Date().toLocaleDateString('fr-CA')}</p>
   </div>
 </div>
 <table><thead>${thead}</thead><tbody>${tbody}</tbody></table>
