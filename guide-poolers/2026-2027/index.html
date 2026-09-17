@@ -3165,21 +3165,23 @@ window.onafterprint = function() {
 };
 
 function doPrint() {
-  // Apply print styles inline before opening print dialog
   document.querySelectorAll('.tab-pane:not(#tab-all)').forEach(el => { el.style.display = 'none'; });
   const tabAll = document.getElementById('tab-all');
   if (tabAll) { tabAll.style.display = 'block'; tabAll.style.minHeight = '0'; tabAll.style.height = 'auto'; tabAll.style.overflow = 'visible'; }
   document.querySelectorAll('.table-wrap').forEach(el => { el.style.display = 'block'; el.style.overflow = 'visible'; });
   document.body.style.overflow = 'visible';
+  document.body.style.paddingLeft = '0';
+  document.body.style.paddingBottom = '0';
   document.documentElement.style.overflow = 'visible';
   requestAnimationFrame(() => requestAnimationFrame(() => {
     window.print();
-    // Restore after print closes
     setTimeout(() => {
       document.querySelectorAll('.tab-pane:not(#tab-all)').forEach(el => { el.style.display = ''; });
       if (tabAll) { tabAll.style.display = ''; tabAll.style.minHeight = ''; tabAll.style.height = ''; tabAll.style.overflow = ''; }
       document.querySelectorAll('.table-wrap').forEach(el => { el.style.display = ''; el.style.overflow = ''; });
       document.body.style.overflow = '';
+      document.body.style.paddingLeft = '';
+      document.body.style.paddingBottom = '';
       document.documentElement.style.overflow = '';
     }, 1000);
   }));
