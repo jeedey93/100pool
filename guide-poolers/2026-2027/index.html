@@ -3167,26 +3167,22 @@ checkAccess().then(async () => {
 });
 
 function printGuide() {
-  // Switch to "Tous" tab so the full table is in the DOM
   const allTab = document.querySelector('.tab-btn[onclick*="all"]');
-  if (allTab && !allTab.classList.contains('active')) {
-    switchTab('all', allTab);
-  }
-  // Temporarily override all display:none that would hide the table
-  const tabAll = document.getElementById('tab-all');
-  if (tabAll) { tabAll.style.cssText = 'display:block!important'; }
-  document.querySelectorAll('.table-wrap').forEach(el => { el.style.cssText = 'display:block!important;overflow:visible!important'; });
-  document.querySelectorAll('.controls').forEach(el => { el.style.cssText = 'display:none!important'; });
-
+  if (allTab && !allTab.classList.contains('active')) switchTab('all', allTab);
   window.print();
-
-  // Restore after dialog closes
-  requestAnimationFrame(() => {
-    if (tabAll) tabAll.style.cssText = '';
-    document.querySelectorAll('.table-wrap').forEach(el => { el.style.cssText = ''; });
-    document.querySelectorAll('.controls').forEach(el => { el.style.cssText = ''; });
-  });
 }
+
+window.onbeforeprint = function() {
+  document.getElementById('tab-all').style.cssText = 'display:block!important';
+  document.querySelectorAll('.table-wrap').forEach(el => el.style.cssText = 'display:block!important;overflow:visible!important;border:none!important');
+  document.querySelectorAll('.controls').forEach(el => el.style.cssText = 'display:none!important');
+};
+
+window.onafterprint = function() {
+  document.getElementById('tab-all').style.cssText = '';
+  document.querySelectorAll('.table-wrap').forEach(el => el.style.cssText = '');
+  document.querySelectorAll('.controls').forEach(el => el.style.cssText = '');
+};
 
 </script>
 <script src='/sidebar.js?v=14'></script>
