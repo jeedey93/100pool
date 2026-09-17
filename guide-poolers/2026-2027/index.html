@@ -3162,8 +3162,8 @@ function doPrint() {
   const tbodyClone = tbodyEl ? tbodyEl.cloneNode(true) : null;
   if (tbodyClone) {
     tbodyClone.querySelectorAll('.note-icon').forEach(el => {
-      const full = el.dataset.note;
-      if (full) el.textContent = full;
+      const full = el.getAttribute('data-note');
+      if (full) { el.removeAttribute('onmouseenter'); el.removeAttribute('onmouseleave'); el.innerHTML = full.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
     });
   }
   const tbody = tbodyClone ? tbodyClone.innerHTML : '';
