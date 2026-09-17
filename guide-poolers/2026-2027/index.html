@@ -3142,9 +3142,19 @@ function doPrint() {
     // Remove the empty star-cell th (first th in col-row)
     const colRow = theadClone.querySelector('tr.col-row');
     if (colRow) { const first = colRow.querySelector('th'); if (first) first.remove(); }
-    // Fix group-row first colspan (was 6 including watchlist, now 5)
+    // Fix group-row colspans: remove watchlist col (-1 from first), PPG last (-1 from last-group), PPG proj + trend (-2 from proj-group)
     const groupRow = theadClone.querySelector('tr.group-row');
-    if (groupRow) { const first = groupRow.querySelector('th'); if (first && first.colSpan >= 6) first.colSpan = first.colSpan - 1; }
+    if (groupRow) {
+      const ths = groupRow.querySelectorAll('th');
+      // first th = base cols (was 6, -1 for watchlist = 5)
+      if (ths[0] && ths[0].colSpan >= 6) ths[0].colSpan = ths[0].colSpan - 1;
+      // last-group th (📅 2025-26, was 5, -1 for PPG = 4)
+      const lastGh = groupRow.querySelector('.col-group-last');
+      if (lastGh && lastGh.colSpan >= 5) lastGh.colSpan = lastGh.colSpan - 1;
+      // proj-group th (🎯 PROJECTION, was 6, -2 for PPG+trend = 4... but trend is in base cols area)
+      const projGh = groupRow.querySelector('.col-group-proj');
+      if (projGh && projGh.colSpan >= 6) projGh.colSpan = projGh.colSpan - 1;
+    }
   }
   const thead = theadClone ? theadClone.innerHTML : '';
   const tbody = document.getElementById('playerTbody')?.innerHTML ?? '';
@@ -3199,6 +3209,9 @@ tbody tr { page-break-inside: avoid; }
 th.cg-user-note { display: none; }
 td.col-hidden, th.col-hidden { display: none; }
 td.star-cell, th.star-cell { display: none; }
+.note-icon { display: block !important; font-size: 6pt; color: #475569; font-style: italic; margin-top: 2px; white-space: normal; overflow: visible; text-overflow: unset; max-width: none; }
+th.cg-trend, td.cg-trend { display: none; }
+th.cg-ppg-last, td.cg-ppg-last, th.cg-ppg-proj, td.cg-ppg-proj { display: none; }
 </style>
 </head><body>
 <div class="header">
