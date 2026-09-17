@@ -947,7 +947,7 @@ td.star-cell { padding: 0; width: 36px; }
               <button class='col-sort-btn' onclick='sortBy("scouting_category");this.closest(".col-toggle-menu").classList.remove("open")'>🏷 Catégorie (A→Z)</button>
             </div>
           </div>
-          <button class='ctrl-btn btn-primary' onclick='window.print()'>🖨 Imprimer</button>
+          <button class='ctrl-btn btn-primary' onclick='printGuide()'>🖨 Imprimer</button>
           <button class='ctrl-btn' onclick='exportExcel()'>📥 Exporter</button>
           <button class='ctrl-btn btn-reset-draft' id='resetNotesBtn' onclick='resetUserNotes()' style='display:none'>🗑 Effacer mes notes</button>
         </div>
@@ -3161,6 +3161,26 @@ checkAccess().then(async () => {
   updateDraftBtn();
   init();
 });
+
+function printGuide() {
+  // Switch to "Tous" tab so the full table is in the DOM
+  const allTab = document.querySelector('.tab-btn[onclick*="all"]');
+  if (allTab && !allTab.classList.contains('active')) {
+    switchTab('all', allTab);
+  }
+  // Make sure table-wrap is block before printing (overrides mobile CSS)
+  document.querySelectorAll('.table-wrap').forEach(el => {
+    el.dataset.printDisplay = el.style.display || '';
+    el.style.display = 'block';
+  });
+  window.print();
+  // Restore after print dialog closes
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.table-wrap').forEach(el => {
+      el.style.display = el.dataset.printDisplay || '';
+    });
+  });
+}
 
 </script>
 <script src='/sidebar.js?v=14'></script>
