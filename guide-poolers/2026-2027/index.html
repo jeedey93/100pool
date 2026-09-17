@@ -3157,7 +3157,16 @@ function doPrint() {
     }
   }
   const thead = theadClone ? theadClone.innerHTML : '';
-  const tbody = document.getElementById('playerTbody')?.innerHTML ?? '';
+  // Clone tbody and expand truncated notes to full text
+  const tbodyEl = document.getElementById('playerTbody');
+  const tbodyClone = tbodyEl ? tbodyEl.cloneNode(true) : null;
+  if (tbodyClone) {
+    tbodyClone.querySelectorAll('.note-icon').forEach(el => {
+      const full = el.dataset.note;
+      if (full) el.textContent = full;
+    });
+  }
+  const tbody = tbodyClone ? tbodyClone.innerHTML : '';
   const gthead = document.getElementById('goalieThead')?.innerHTML ?? '';
   const gtbody = document.getElementById('goalieTbody')?.innerHTML ?? '';
   const win = window.open('', '_blank');
