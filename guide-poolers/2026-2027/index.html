@@ -3135,7 +3135,18 @@ checkAccess().then(async () => {
 });
 
 function doPrint() {
-  const thead = document.getElementById('playerThead')?.innerHTML ?? '';
+  // Clone thead and fix colspans (remove watchlist col)
+  const theadEl = document.getElementById('playerThead');
+  const theadClone = theadEl ? theadEl.cloneNode(true) : null;
+  if (theadClone) {
+    // Remove the empty star-cell th (first th in col-row)
+    const colRow = theadClone.querySelector('tr.col-row');
+    if (colRow) { const first = colRow.querySelector('th'); if (first) first.remove(); }
+    // Fix group-row first colspan (was 6 including watchlist, now 5)
+    const groupRow = theadClone.querySelector('tr.group-row');
+    if (groupRow) { const first = groupRow.querySelector('th'); if (first && first.colSpan >= 6) first.colSpan = first.colSpan - 1; }
+  }
+  const thead = theadClone ? theadClone.innerHTML : '';
   const tbody = document.getElementById('playerTbody')?.innerHTML ?? '';
   const gthead = document.getElementById('goalieThead')?.innerHTML ?? '';
   const gtbody = document.getElementById('goalieTbody')?.innerHTML ?? '';
@@ -3187,6 +3198,8 @@ tbody tr { page-break-inside: avoid; }
 .user-note-cell { display: none; }
 th.cg-user-note { display: none; }
 td.col-hidden, th.col-hidden { display: none; }
+td.star-cell, th.star-cell { display: none; }
+thead tr.col-row th:first-child { display: none; }
 </style>
 </head><body>
 <div class="header">
