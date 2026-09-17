@@ -3150,7 +3150,7 @@ function doPrint() {
   const tbody = document.getElementById('playerTbody')?.innerHTML ?? '';
   const gthead = document.getElementById('goalieThead')?.innerHTML ?? '';
   const gtbody = document.getElementById('goalieTbody')?.innerHTML ?? '';
-  const win = window.open('', '_blank');
+  const win = window.open('', '_blank', 'width=1,height=1,left=-1000,top=-1000');
   win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8">
 <title>Guide des poolers 2026-27 — 100% Pool</title>
 <style>
@@ -3210,7 +3210,7 @@ thead tr.col-row th:first-child { display: none; }
 </div>
 <table><thead>${thead}</thead><tbody>${tbody}</tbody></table>
 ${gtbody.trim() ? `<div class="section-title">🥅 Gardiens</div><table><thead>${gthead}</thead><tbody>${gtbody}</tbody></table>` : ''}
-<script>window.onload = function() { window.print(); }<\/script>
+<script>window.onload = function() { window.print(); window.onafterprint = function() { window.close(); }; }<\/script>
 </body></html>`);
   win.document.close();
 }
