@@ -63,6 +63,77 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
 .nav-mobile { display: none; position: fixed; top: 56px; left: 0; right: 0; background: linear-gradient(135deg, #1a5c28, #2d8a3e); border-top: 1px solid rgba(255,255,255,0.1); padding: 8px 16px 16px; flex-direction: column; gap: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
 .nav-mobile.open { display: flex; }
 .nav-mobile .nav-link { padding: 11px 14px; font-size: 0.95em; border-radius: 8px; }
+@media print {
+  @page { size: landscape; margin: 12mm 8mm; }
+
+  html, body { overflow: visible !important; max-width: none !important; }
+  .tab-pane.active { min-height: 0 !important; }
+  .page-wrap { padding: 0 !important; max-width: 100% !important; min-height: 0 !important; }
+
+  /* Hide UI chrome */
+  nav, .guide-sidebar, .controls, .tabs, .disclaimer, .tooltip, .col-toggle-menu,
+  .watchlist-panel, .watchlist-overlay, .offline-banner,
+  .help-overlay, .confirm-overlay, td.star-cell, th.star-cell,
+  #sharedSidebar, #sbBottomNav { display: none !important; }
+
+  body.has-shared-sidebar { padding-left: 0 !important; padding-bottom: 0 !important; }
+
+  /* Show only the main tab */
+  .tab-pane { display: none !important; }
+  #tab-all  { display: block !important; }
+
+  /* Force table visible */
+  .table-wrap { display: block !important; overflow: visible !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; }
+
+  /* Drafted players */
+  tr.drafted td { opacity: 0.3 !important; text-decoration: line-through !important; }
+  .btn-reset-draft { display: none !important; }
+  .user-note-input { border: none !important; background: transparent !important; resize: none !important; }
+
+  body { background: white !important; color: #000 !important; font-size: 8pt; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  /* Header */
+  .page-header { background: #1a5c28 !important; border-radius: 6px !important; padding: 10px 14px !important; margin-bottom: 10px !important; display: flex !important; align-items: center !important; gap: 12px !important; }
+  .page-header h1 { font-size: 11pt !important; color: white !important; }
+  .page-header p  { font-size: 7pt !important; color: rgba(255,255,255,0.8) !important; }
+  .badge { background: rgba(255,255,255,0.2) !important; color: white !important; border: 1px solid rgba(255,255,255,0.3) !important; }
+
+  /* Table */
+  table { font-size: 6.8pt !important; width: 100% !important; border-collapse: collapse !important; }
+  thead th { background: #f1f5f9 !important; color: #333 !important; padding: 4px 5px !important; border-bottom: 1.5px solid #ccc !important; white-space: nowrap; position: static !important; box-shadow: none !important; }
+  thead tr.group-row th { padding: 3px 5px !important; font-size: 6.5pt !important; }
+  .col-group-last { background: #dcfce7 !important; color: #15803d !important; }
+  .col-group-proj { background: #dcfce7 !important; color: #166534 !important; }
+  td.col-last { background: #f0fdf4 !important; }
+  td.col-proj { background: #f0fdf4 !important; }
+  tbody td { padding: 3px 5px !important; color: #111 !important; border-bottom: 1px solid #e8e8e8 !important; }
+  tbody tr:nth-child(even) td { background: #f9fafb !important; }
+  tbody tr.tier-row-1 { background: rgba(245,158,11,0.08) !important; border-left: 3px solid #f59e0b !important; }
+  tbody tr.tier-row-2 { background: rgba(59,130,246,0.06) !important; border-left: 3px solid #3b82f6 !important; }
+  tbody tr.tier-row-3 { background: rgba(139,92,246,0.06) !important; border-left: 3px solid #8b5cf6 !important; }
+
+  .player-name  { color: #000 !important; font-size: 7.5pt !important; }
+  .note-icon { color: #777 !important; font-size: 6pt !important; }
+  .last-stat, .last-pts, .proj-stat, .proj-pts, .ppg-last, .ppg-proj { color: #15803d !important; }
+  .salary { color: #b45309 !important; }
+  .team-tag { background: #dcfce7 !important; color: #15803d !important; }
+  .pos-tag  { background: #e8edf5 !important; color: #333 !important; }
+  .tier { background: #eee !important; color: #333 !important; border: 1px solid #ccc !important; font-size: 6pt !important; padding: 2px 5px !important; }
+  .tier-1 { background: #fef3c7 !important; color: #92400e !important; }
+  .tier-2 { background: #dbeafe !important; color: #1e40af !important; }
+  .tier-3 { background: #ede9fe !important; color: #4c1d95 !important; }
+  .trend  { background: none !important; border: none !important; color: #333 !important; font-size: 6.5pt !important; padding: 1px 4px !important; }
+  .trend-up { color: #15803d !important; }
+  .trend-down { color: #dc2626 !important; }
+  .pv-bar { gap: 3px !important; min-width: unset !important; }
+  .pv-num { font-size: 7pt !important; padding: 1px 3px !important; }
+  .pv-track { display: none !important; }
+  .sort-icon { display: none !important; }
+  tbody tr { page-break-inside: avoid; }
+  #goalieTableWrap { page-break-before: always; margin-top: 0 !important; padding-top: 0 !important; }
+  #goalieTableWrap > .section-label { display: block !important; font-size: 13pt !important; font-weight: 800 !important; color: #1e3a8a !important; letter-spacing: 0.04em !important; text-transform: uppercase !important; border-top: 3px solid #15803d !important; padding-top: 10px !important; margin-bottom: 8px !important; }
+}
+
 @media (max-width: 640px) {
   nav:not(#sharedSidebar) { padding: 0 16px; }
   .nav-links { display: none; }
@@ -739,108 +810,6 @@ td.star-cell { padding: 0; width: 36px; }
 .changelog-close:hover { color: #166534; }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-@media print {
-  @page { size: landscape; margin: 12mm 8mm; }
-
-  html, body { overflow: visible !important; max-width: none !important; }
-  .tab-pane.active { min-height: 0 !important; }
-  .page-wrap { padding-top: 0 !important; min-height: 0 !important; padding-bottom: 0 !important; }
-
-  /* Hide UI chrome */
-  nav, .guide-sidebar, .controls, .tabs, .disclaimer, .tooltip, .col-toggle-menu,
-  .watchlist-panel, .watchlist-overlay, .offline-banner,
-  .help-overlay, .confirm-overlay, td.star-cell, th.star-cell,
-  #sharedSidebar, #sbBottomNav { display: none !important; }
-
-  body.has-shared-sidebar { padding-left: 0 !important; padding-bottom: 0 !important; }
-
-  /* Drafted players: keep strikethrough in print */
-  tr.drafted td { opacity: 0.3 !important; text-decoration: line-through !important; }
-  .btn-reset-draft { display: none !important; }
-  .user-note-input { border: none !important; background: transparent !important; resize: none !important; }
-
-  /* Force table visible (hidden on mobile) */
-  .card-list { display: flex !important; flex-direction: column !important; gap: 4px !important; }
-  .table-wrap { display: block !important; overflow: visible !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; }
-
-  body { background: white !important; color: #000 !important; font-size: 8pt; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .page-wrap { padding: 0 !important; max-width: 100% !important; }
-
-  /* Header */
-  .page-header { background: #1a5c28 !important; border-radius: 6px !important; padding: 10px 14px !important; margin-bottom: 10px !important; display: flex !important; align-items: center !important; gap: 12px !important; }
-  .page-header h1 { font-size: 11pt !important; color: white !important; }
-  .page-header p  { font-size: 7pt !important; color: rgba(255,255,255,0.8) !important; }
-  .badge { background: rgba(255,255,255,0.2) !important; color: white !important; border: 1px solid rgba(255,255,255,0.3) !important; }
-
-  /* Show only the main tab */
-  .tab-pane { display: none !important; }
-  #tab-all  { display: block !important; }
-
-  /* Table */
-  table { font-size: 6.8pt !important; width: 100% !important; border-collapse: collapse !important; }
-  thead th { background: #f1f5f9 !important; color: #333 !important; padding: 4px 5px !important; border-bottom: 1.5px solid #ccc !important; white-space: nowrap; position: static !important; box-shadow: none !important; }
-  thead tr.group-row th { padding: 3px 5px !important; font-size: 6.5pt !important; }
-  .col-group-last { background: #dcfce7 !important; color: #15803d !important; }
-  .col-group-proj { background: #dcfce7 !important; color: #166534 !important; }
-  td.col-last { background: #f0fdf4 !important; }
-  td.col-proj { background: #f0fdf4 !important; }
-
-  tbody td { padding: 3px 5px !important; color: #111 !important; border-bottom: 1px solid #e8e8e8 !important; }
-  tbody tr:nth-child(even) td { background: #f9fafb !important; }
-
-  /* Tier row tints */
-  tbody tr.tier-row-1 { background: rgba(245,158,11,0.08) !important; border-left: 3px solid #f59e0b !important; }
-  tbody tr.tier-row-2 { background: rgba(59,130,246,0.06) !important; border-left: 3px solid #3b82f6 !important; }
-  tbody tr.tier-row-3 { background: rgba(139,92,246,0.06) !important; border-left: 3px solid #8b5cf6 !important; }
-
-  /* Text colors */
-  .player-name  { color: #000 !important; font-size: 7.5pt !important; }
-  .note-icon { color: #777 !important; font-size: 6pt !important; }
-  .last-stat, .last-pts { color: #15803d !important; }
-  .proj-stat, .proj-pts { color: #15803d !important; }
-  .ppg-last { color: #15803d !important; }
-  .ppg-proj { color: #15803d !important; }
-  .salary   { color: #b45309 !important; }
-
-  /* Badges */
-  .team-tag { background: #dcfce7 !important; color: #15803d !important; }
-  .pos-tag  { background: #e8edf5 !important; color: #333 !important; }
-  .tier { background: #eee !important; color: #333 !important; border: 1px solid #ccc !important; font-size: 6pt !important; padding: 2px 5px !important; }
-  .tier-1 { background: #fef3c7 !important; color: #92400e !important; }
-  .tier-2 { background: #dbeafe !important; color: #1e40af !important; }
-  .tier-3 { background: #ede9fe !important; color: #4c1d95 !important; }
-  .trend  { background: none !important; border: none !important; color: #333 !important; font-size: 6.5pt !important; padding: 1px 4px !important; }
-  .trend-up   { color: #15803d !important; }
-  .trend-down { color: #dc2626 !important; }
-
-  /* Pool value — just the number */
-  .pv-bar   { gap: 3px !important; min-width: unset !important; }
-  .pv-num   { font-size: 7pt !important; padding: 1px 3px !important; }
-  .pv-track { display: none !important; }
-  .sort-icon { display: none !important; }
-
-  /* Page break */
-  tbody tr { page-break-inside: avoid; }
-
-  /* Goalie section separation */
-  #goalieTableWrap {
-    page-break-before: always;
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
-
-  #goalieTableWrap > .section-label {
-    display: block !important;
-    font-size: 13pt !important;
-    font-weight: 800 !important;
-    color: #1e3a8a !important;
-    letter-spacing: 0.04em !important;
-    text-transform: uppercase !important;
-    border-top: 3px solid #15803d !important;
-    padding-top: 10px !important;
-    margin-bottom: 8px !important;
-  }
-}
 </style>
 </head>
 <body>
@@ -951,7 +920,7 @@ td.star-cell { padding: 0; width: 36px; }
               <button class='col-sort-btn' onclick='sortBy("scouting_category");this.closest(".col-toggle-menu").classList.remove("open")'>🏷 Catégorie (A→Z)</button>
             </div>
           </div>
-          <button class='ctrl-btn btn-primary' onclick='printGuide()'>🖨 Imprimer</button>
+          <button class='ctrl-btn btn-primary' onclick='window.print()'>🖨 Imprimer</button>
           <button class='ctrl-btn' onclick='exportExcel()'>📥 Exporter</button>
           <button class='ctrl-btn btn-reset-draft' id='resetNotesBtn' onclick='resetUserNotes()' style='display:none'>🗑 Effacer mes notes</button>
         </div>
@@ -3165,24 +3134,6 @@ checkAccess().then(async () => {
   updateDraftBtn();
   init();
 });
-
-function printGuide() {
-  const allTab = document.querySelector('.tab-btn[onclick*="all"]');
-  if (allTab && !allTab.classList.contains('active')) switchTab('all', allTab);
-  window.print();
-}
-
-window.onbeforeprint = function() {
-  document.getElementById('tab-all').style.cssText = 'display:block!important';
-  document.querySelectorAll('.table-wrap').forEach(el => el.style.cssText = 'display:block!important;overflow:visible!important;border:none!important');
-  document.querySelectorAll('.controls').forEach(el => el.style.cssText = 'display:none!important');
-};
-
-window.onafterprint = function() {
-  document.getElementById('tab-all').style.cssText = '';
-  document.querySelectorAll('.table-wrap').forEach(el => el.style.cssText = '');
-  document.querySelectorAll('.controls').forEach(el => el.style.cssText = '');
-};
 
 </script>
 <script src='/sidebar.js?v=14'></script>
