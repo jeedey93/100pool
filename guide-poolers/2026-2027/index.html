@@ -631,7 +631,10 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   /* Hide UI chrome */
   nav, .guide-sidebar, .controls, .tabs, .disclaimer, .tooltip, .col-toggle-menu,
   .card-list, .watchlist-panel, .watchlist-overlay, .offline-banner,
-  .help-overlay, .confirm-overlay, td.star-cell, th.star-cell { display: none !important; }
+  .help-overlay, .confirm-overlay, td.star-cell, th.star-cell,
+  #sharedSidebar, #sbBottomNav { display: none !important; }
+
+  body.has-shared-sidebar { padding-left: 0 !important; padding-bottom: 0 !important; }
 
   /* Drafted players: keep strikethrough in print */
   tr.drafted td { opacity: 0.3 !important; text-decoration: line-through !important; }
