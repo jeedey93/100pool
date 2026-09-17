@@ -78,9 +78,8 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
 
   body.has-shared-sidebar { padding-left: 0 !important; padding-bottom: 0 !important; }
 
-  /* Show only the main tab */
-  .tab-pane { display: none !important; }
-  #tab-all  { display: block !important; }
+  /* Show only the main tab — other tab-panes are already display:none by default CSS */
+  #tab-all  { display: block !important; min-height: 0 !important; }
 
   /* Force table visible */
   .table-wrap { display: block !important; overflow: visible !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; }
