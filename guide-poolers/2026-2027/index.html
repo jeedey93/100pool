@@ -920,7 +920,7 @@ td.star-cell { padding: 0; width: 36px; }
               <button class='col-sort-btn' onclick='sortBy("scouting_category");this.closest(".col-toggle-menu").classList.remove("open")'>🏷 Catégorie (A→Z)</button>
             </div>
           </div>
-          <button class='ctrl-btn btn-primary' onclick='window.print()'>🖨 Imprimer</button>
+          <button class='ctrl-btn btn-primary' onclick='doPrint()'>🖨 Imprimer</button>
           <button class='ctrl-btn' onclick='exportExcel()'>📥 Exporter</button>
           <button class='ctrl-btn btn-reset-draft' id='resetNotesBtn' onclick='resetUserNotes()' style='display:none'>🗑 Effacer mes notes</button>
         </div>
@@ -3163,6 +3163,27 @@ window.onafterprint = function() {
   document.body.style.overflow = '';
   document.documentElement.style.overflow = '';
 };
+
+function doPrint() {
+  // Apply print styles inline before opening print dialog
+  document.querySelectorAll('.tab-pane:not(#tab-all)').forEach(el => { el.style.display = 'none'; });
+  const tabAll = document.getElementById('tab-all');
+  if (tabAll) { tabAll.style.display = 'block'; tabAll.style.minHeight = '0'; tabAll.style.height = 'auto'; tabAll.style.overflow = 'visible'; }
+  document.querySelectorAll('.table-wrap').forEach(el => { el.style.display = 'block'; el.style.overflow = 'visible'; });
+  document.body.style.overflow = 'visible';
+  document.documentElement.style.overflow = 'visible';
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    window.print();
+    // Restore after print closes
+    setTimeout(() => {
+      document.querySelectorAll('.tab-pane:not(#tab-all)').forEach(el => { el.style.display = ''; });
+      if (tabAll) { tabAll.style.display = ''; tabAll.style.minHeight = ''; tabAll.style.height = ''; tabAll.style.overflow = ''; }
+      document.querySelectorAll('.table-wrap').forEach(el => { el.style.display = ''; el.style.overflow = ''; });
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }, 1000);
+  }));
+}
 
 </script>
 <script src='/sidebar.js?v=14'></script>
