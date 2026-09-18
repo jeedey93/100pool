@@ -198,6 +198,10 @@ body.has-shared-sidebar.shared-sb-collapsed { padding-left: 52px; }
   #sbFeedbackEmail:focus { border-color: #2d8a3e; }
   #sbFeedbackMsg { width: 100%; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; font-size: 0.88em; font-family: inherit; resize: vertical; min-height: 160px; outline: none; transition: border 0.15s; color: #1e293b; box-sizing: border-box; }
   #sbFeedbackMsg:focus { border-color: #2d8a3e; }
+  .sb-rating { display: flex; gap: 6px; margin-bottom: 14px; }
+  .sb-star { font-size: 1.6em; cursor: pointer; color: #e2e8f0; transition: color 0.1s, transform 0.1s; line-height: 1; user-select: none; }
+  .sb-star:hover, .sb-star.active { color: #f59e0b; transform: scale(1.15); }
+  .sb-rating-label { font-size: 0.78em; color: #94a3b8; margin-bottom: 10px; font-weight: 600; }
   .sb-feedback-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }
   .sb-feedback-btn { font-size: 0.88em; font-weight: 700; padding: 9px 20px; border-radius: 9px; border: none; cursor: pointer; transition: all 0.15s; }
   .sb-feedback-cancel { background: #f1f5f9; color: #475569; }
@@ -213,6 +217,14 @@ body.has-shared-sidebar.shared-sb-collapsed { padding-left: 52px; }
     <div id="sbFeedbackBox">
       <h3>💬 Laisser un commentaire</h3>
       <p>Une idée, une correction ou un feedback ? On lit tous les messages.</p>
+      <div class="sb-rating-label">Ta satisfaction (optionnel)</div>
+      <div class="sb-rating" id="sbStars">
+        <span class="sb-star" data-val="1">★</span>
+        <span class="sb-star" data-val="2">★</span>
+        <span class="sb-star" data-val="3">★</span>
+        <span class="sb-star" data-val="4">★</span>
+        <span class="sb-star" data-val="5">★</span>
+      </div>
       <input type="email" id="sbFeedbackEmail" placeholder="ton@email.com" autocomplete="email">
       <textarea id="sbFeedbackMsg" placeholder="Ton message…" maxlength="1000"></textarea>
       <div class="sb-feedback-actions">
@@ -233,8 +245,27 @@ body.has-shared-sidebar.shared-sb-collapsed { padding-left: 52px; }
     document.getElementById('sbFeedbackEmail').value = localStorage.getItem('pool_user_email') || '';
     document.getElementById('sbFeedbackSendBtn').textContent = 'Envoyer';
     document.getElementById('sbFeedbackSendBtn').disabled = false;
+    window._sbSelectedRating = 0;
+    document.querySelectorAll('.sb-star').forEach(s => s.classList.remove('active'));
     document.getElementById('sbFeedbackOverlay').classList.remove('hidden');
   };
+
+  // Star rating interaction
+  let _sbRating = 0;
+  document.getElementById('sbStars').addEventListener('mouseover', e => {
+    const val = +e.target.dataset.val;
+    if (!val) return;
+    document.querySelectorAll('.sb-star').forEach(s => s.classList.toggle('active', +s.dataset.val <= val));
+  });
+  document.getElementById('sbStars').addEventListener('mouseout', () => {
+    document.querySelectorAll('.sb-star').forEach(s => s.classList.toggle('active', +s.dataset.val <= _sbRating));
+  });
+  document.getElementById('sbStars').addEventListener('click', e => {
+    const val = +e.target.dataset.val;
+    if (!val) return;
+    _sbRating = val;
+    document.querySelectorAll('.sb-star').forEach(s => s.classList.toggle('active', +s.dataset.val <= _sbRating));
+  });
 
   window._sbCloseFeedback = function() {
     document.getElementById('sbFeedbackOverlay').classList.add('hidden');
@@ -250,7 +281,7 @@ body.has-shared-sidebar.shared-sb-collapsed { padding-left: 52px; }
 
   window._sbSubmitFeedback = async function() {
     const msg = document.getElementById('sbFeedbackMsg').value.trim();
-    if (!msg) return;
+    if (!msg && !_sbRating) return;
     const btn = document.getElementById('sbFeedbackSendBtn');
     btn.disabled = true; btn.textContent = 'Envoi…';
     const emailInput = (document.getElementById('sbFeedbackEmail').value || '').trim().toLowerCase() || null;
@@ -260,7 +291,7 @@ body.has-shared-sidebar.shared-sb-collapsed { padding-left: 52px; }
       const res = await fetch(`${SUPABASE_URL}/functions/v1/submit-feedback`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...SB_HEADERS },
-        body: JSON.stringify({ message: msg, email: userEmail })
+        body: JSON.stringify({ message: msg || null, email: userEmail, rating: _sbRating || null })
       });
       if (!res.ok) throw new Error();
       window._sbCloseFeedback();
