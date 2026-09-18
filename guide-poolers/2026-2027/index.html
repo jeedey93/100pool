@@ -1837,7 +1837,8 @@ async function init() {
     tierPills.appendChild(btn);
     const opt = document.createElement('option');
     opt.value = n;
-    opt.textContent = 'Tier ' + n + (tierLabelMap[n] ? ' — ' + tierLabelMap[n] : '');
+    const tierSuffix = tierLabelMap[n] ? tierLabelMap[n].replace(/^Tier\s*\d+\s*[-—]\s*/i, '') : '';
+    opt.textContent = 'Tier ' + n + (tierSuffix ? ' — ' + tierSuffix : '');
     tierSelect.appendChild(opt);
   });
 
