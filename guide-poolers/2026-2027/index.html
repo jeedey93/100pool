@@ -325,6 +325,9 @@ tr.drafted { background: #f8f9fa !important; }
 .col-pool { color: #7c3aed; font-weight: 800; }
 .player-inline-badges { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; align-items: center; }
 .bandaid-inline { font-size: 0.9em; }
+.trend-badge { display: inline-block; font-size: 0.7em; font-weight: 700; padding: 1px 6px; border-radius: 99px; white-space: nowrap; }
+.trend-badge-up   { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+.trend-badge-down { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
 .user-note-cell { min-width: 120px; max-width: 200px; }
 .user-note-input { width: 100%; min-width: 100px; border: 1.5px solid #e2e8f0; border-radius: 6px; padding: 4px 7px; font-size: 0.8em; font-family: inherit; color: #1e293b; background: #f8fafc; resize: none; outline: none; line-height: 1.4; }
 .user-note-input:focus { border-color: #2d8a3e; background: white; box-shadow: 0 0 0 2px rgba(45,138,62,0.12); }
@@ -913,7 +916,6 @@ td.star-cell { padding: 0; width: 36px; }
               <label><input type='checkbox' id='col-ppg' checked onchange='applyColVis()'> PPG (pts/partie)</label>
               <label><input type='checkbox' id='col-salary' checked onchange='applyColVis()'> 💰 Salaire (AAV)</label>
               <label><input type='checkbox' id='col-tier' checked onchange='applyColVis()'> Palier</label>
-              <label><input type='checkbox' id='col-trend' checked onchange='applyColVis()'> Tendance</label>
               <label><input type='checkbox' id='col-value' checked onchange='applyColVis()'> Valeur (PTS÷√AAV)</label>
               <div class='menu-title' style='margin-top:8px;'>Trier par</div>
               <button class='col-sort-btn' onclick='sortBy("risk");this.closest(".col-toggle-menu").classList.remove("open")'>⚠️ Risque (Low → High)</button>
@@ -1953,7 +1955,6 @@ const COL_GROUPS = {
   'col-ppg':     ['cg-ppg-proj'],
   'col-salary':  ['cg-salary'],
   'col-tier':    ['cg-tier'],
-  'col-trend':   ['cg-trend'],
   'col-value':   ['cg-value'],
 };
 
@@ -2288,7 +2289,6 @@ function goalieHeaderHTML() {
     <th onclick='sortGoalieBy("proj_a")'            data-col='proj_a'   class='col-group-proj'>SO<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("_goalie_wpct")'      data-col='_goalie_wpct' class='col-group-proj' style='border-right:2px solid #bbf7d0;'>W%<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("_pool_pts")' data-col='_pool_pts' class='col-group-proj col-pool' style='border-left:2px solid #ddd6fe;color:#7c3aed;font-weight:800;'>Pts Pool<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("_goalie_trend")'     data-col='_goalie_trend' class='cg-trend'>Tendance<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("aav")'               data-col='aav'  class='cg-salary'>💰 AAV<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("tier")'              data-col='tier' class='cg-tier'>Tier<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("_pv")'               data-col='_pv'  class='cg-value'>Valeur<span class='sort-icon'></span></th>
@@ -2323,7 +2323,6 @@ function skaterHeaderHTML() {
     <th onclick='sortBy("_pool_pts")' data-col='_pool_pts' class='col-group-proj col-pool' style='border-left:2px solid #ddd6fe;color:#7c3aed;font-weight:800;'>Pts Pool<span class='sort-icon'></span></th>
     <th onclick='sortBy("aav")'     data-col='aav'     class='cg-salary'>💰 AAV<span class='sort-icon'></span></th>
     <th onclick='sortBy("tier")'    data-col='tier'     class='cg-tier'>Tier<span class='sort-icon'></span></th>
-    <th onclick='sortBy("_trend")'  data-col='_trend'   class='cg-trend'>Tendance<span class='sort-icon'></span></th>
     <th onclick='sortBy("_pv")'     data-col='_pv'      class='cg-value'>Valeur<span class='sort-icon'></span></th>
     <th class='cg-user-note'>Mes notes</th>
   </tr>`;
@@ -2377,7 +2376,6 @@ function buildGoalieRowHTML(p, displayRank) {
       <td class='col-proj proj-stat'>${so}</td>
       <td class='col-proj' style='color:#64748b;font-size:0.85em;'>${wpct}</td>
       <td class='col-proj col-pool' style='font-weight:800;color:#7c3aed;border-left:2px solid #ddd6fe;'>${calcPoolPts(p)}</td>
-      ${(() => { const gt = getTrendGoalie(p); const gDiffStr = gt.diff > 0 ? '+' + gt.diff : '' + gt.diff; return `<td class='cg-trend'><span class='trend trend-${gt.trend}'>${gt.trend === 'up' ? '↑' : gt.trend === 'down' ? '↓' : '→'} ${gDiffStr} V</span></td>`; })()}
       <td class='cg-salary'><span class='salary'>${aav}</span></td>
       <td class='cg-tier'><span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span></td>
       <td class='cg-value'>${grade ? `<span class='grade-badge ${gradeClass(grade)}'>${grade}</span>` : '—'}</td>
@@ -2386,10 +2384,10 @@ function buildGoalieRowHTML(p, displayRank) {
 }
 
 function buildRowHTML(p, displayRank) {
-    const trend    = getTrend(p);
-    const diff     = p.proj_pts - (p.last_pts || p.proj_pts);
-    const diffStr  = diff > 0 ? '+' + diff : '' + diff;
-    const trendLbl = trend === 'up' ? `↑ ${diffStr}` : trend === 'down' ? `↓ ${diffStr}` : `→ ${diffStr}`;
+    const diff     = p.last_pts != null && p.proj_pts != null ? Math.round(p.proj_pts - p.last_pts) : null;
+    const trendBadgeHtml = !p.isGoalie && diff != null && Math.abs(diff) >= 10
+      ? `<span class='trend-badge trend-badge-${diff > 0 ? 'up' : 'down'}'>${diff > 0 ? '↑ +' : '↓ '}${diff} vs 25-26</span>`
+      : '';
     const pv       = getPV(p);
     const pc       = pvClass(pv);
     const noteEsc  = (p.notes || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
@@ -2425,7 +2423,7 @@ function buildRowHTML(p, displayRank) {
         <div class='player-name' onclick='event.stopPropagation();openModal(${p.id})'>${p.name}</div>
         ${noteEsc ? `<div class='note-icon' onmouseenter='showTooltip(this, this.dataset.note)' onmouseleave='hideTooltip()' data-note="${noteEsc}">${noteFull.length > 50 ? noteFull.slice(0,50) + '…' : noteFull}</div>` : ''}
         ${bustHtml}
-        ${inlineBadges ? `<div class='player-inline-badges'>${inlineBadges}</div>` : ''}
+        ${trendBadgeHtml || inlineBadges ? `<div class='player-inline-badges'>${[trendBadgeHtml, inlineBadges].filter(Boolean).join(' ')}</div>` : ''}
       </td>
       <td><span class='team-tag'>${p.team}</span></td>
       <td><span class='pos-tag pos-${p.pos}'>${p.pos}</span></td>
@@ -2451,7 +2449,6 @@ function buildRowHTML(p, displayRank) {
 
       <td class='cg-salary'><span class='salary'>${aav}</span></td>
       <td class='cg-tier'><span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span></td>
-      ${isGoalie ? (() => { const gt = getTrendGoalie(p); const gDiff = gt.diff; const gDiffStr = gDiff > 0 ? '+' + gDiff : '' + gDiff; return `<td class='cg-trend'><span class='trend trend-${gt.trend}'>${gt.trend === 'up' ? '↑' : gt.trend === 'down' ? '↓' : '→'} ${gDiffStr} V</span></td>`; })() : `<td class='cg-trend'><span class='trend trend-${trend}'>${trendLbl}</span></td>`}
       <td class='cg-value'>${grade ? `<span class='grade-badge ${gradeClass(grade)}'>${grade}</span>` : '—'}</td>
       <td class='user-note-cell' onclick='event.stopPropagation()'><textarea class='user-note-input' rows='2' placeholder='Ta note…' onclick='event.stopPropagation()' onchange='saveUserNote(${p.id}, this.value)'>${userNote.replace(/</g,'&lt;')}</textarea></td>
     </tr>`;
