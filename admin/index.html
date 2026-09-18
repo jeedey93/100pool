@@ -1678,7 +1678,7 @@ async function shareSnapshot() {
     const canShareFile = isMobile && navigator.canShare && navigator.canShare({ files: [file] });
     if (canShareFile) {
       try {
-        await navigator.share({ files: [file], title: '100% Pool — Dashboard' });
+        await navigator.share({ files: [file] });
         return;
       } catch (shareErr) {
         if (shareErr.name === 'AbortError' || shareErr.name === 'NotAllowedError') return;
@@ -1738,7 +1738,7 @@ async function shareTraficSnapshot() {
     const canShareFile = isMobile && navigator.canShare && navigator.canShare({ files: [file] });
     if (canShareFile) {
       try {
-        await navigator.share({ files: [file], title: '100% Pool — Trafic' });
+        await navigator.share({ files: [file] });
         return;
       } catch (shareErr) {
         if (shareErr.name === 'AbortError' || shareErr.name === 'NotAllowedError') return;
