@@ -183,6 +183,7 @@ footer p { color: rgba(255,255,255,0.22); font-size: 0.74em; }
 .ac-item:hover, .ac-item.ac-active { background: #f0f9f3; }
 .ac-photo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1.5px solid #e2e8f0; background: linear-gradient(135deg, #1a5c28, #2d8a3e); }
 .ac-info { flex: 1; min-width: 0; }
+.ac-history-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px 4px; font-size: 0.72em; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.8px; border-bottom: 1px solid #f1f5f9; }
 .ac-name { font-size: 0.88em; font-weight: 700; color: #0f172a; }
 .ac-name mark { background: none; color: #2d8a3e; font-weight: 800; }
 .ac-meta { font-size: 0.7em; color: #64748b; margin-top: 1px; }
@@ -882,7 +883,7 @@ td.star-cell { padding: 0; width: 36px; }
       <!-- Row 1: Search + Position + Équipe + Actions -->
       <div class='controls-row'>
         <div class='search-box'>
-          <input type='text' id='searchInput' placeholder='Rechercher un joueur…' oninput='applyFilters();updateAutocomplete()' onkeydown='handleAcKey(event)' autocomplete='off'>
+          <input type='text' id='searchInput' placeholder='Rechercher un joueur…' oninput='applyFilters();updateAutocomplete()' onfocus='showSearchHistory()' onkeydown='handleAcKey(event)' autocomplete='off'>
           <div id='searchAutocomplete'></div>
         </div>
         <span class='results-count' id='resultsCount'></span>
@@ -2188,11 +2189,40 @@ function tierColors(tier) {
   return map[num] || '#94a3b8';
 }
 
+function showSearchHistory() {
+  const ac = document.getElementById('searchAutocomplete');
+  const hist = JSON.parse(localStorage.getItem('guide_history') || '[]');
+  const players = hist.map(id => allPlayers.find(p => p.id === id)).filter(Boolean);
+  if (!players.length) { ac.classList.remove('open'); return; }
+  const color = p => tierColors(p.tier);
+  ac.innerHTML = `<div class='ac-history-header'>
+    <span>🕐 Récemment consultés</span>
+    <button onmousedown='clearSearchHistory()' style='background:none;border:none;font-size:0.75em;color:#94a3b8;cursor:pointer;padding:0'>Effacer</button>
+  </div>` + players.map(p => `
+    <div class='ac-item' data-id='${p.id}' onmousedown='selectAcItem(${p.id})'>
+      <img class='ac-photo' src='${p.headshot_url || ''}' alt='${p.name}' onerror="this.style.background='linear-gradient(135deg,#1a5c28,#2d8a3e)';this.src=''">
+      <div class='ac-info'>
+        <div class='ac-name'>${p.name}</div>
+        <div class='ac-meta'>${p.team} · ${p.pos}${p.age ? ' · ' + p.age + ' ans' : ''}</div>
+      </div>
+      <span class='ac-tier' style='background:${color(p)}22;color:${color(p)}'>${p.tier ?? '—'}</span>
+    </div>`).join('');
+  ac.classList.add('open');
+}
+
+function clearSearchHistory() {
+  localStorage.removeItem('guide_history');
+  document.getElementById('searchAutocomplete').classList.remove('open');
+}
+
 function updateAutocomplete() {
   const q = document.getElementById('searchInput').value.trim();
   const ac = document.getElementById('searchAutocomplete');
   acIndex = -1;
-  if (q.length < 2) { ac.classList.remove('open'); return; }
+  if (q.length < 2) {
+    showSearchHistory();
+    return;
+  }
   const ql = q.toLowerCase();
   const matches = allPlayers.filter(p => p.name.toLowerCase().includes(ql)).slice(0, 7);
   if (!matches.length) {
@@ -2856,6 +2886,11 @@ async function loadNhlHistory(nhlId, pos, projRow) {
 function openModal(id) {
   const p = allPlayers.find(p => p.id === id);
   if (!p) return;
+
+  // Save to search history
+  let hist = JSON.parse(localStorage.getItem('guide_history') || '[]');
+  hist = [id, ...hist.filter(x => x !== id)].slice(0, 8);
+  localStorage.setItem('guide_history', JSON.stringify(hist));
 
   // Hero: photo + team logo
   const nhlMugBase = 'https://assets.nhle.com/mugs/nhl/60x60/';
