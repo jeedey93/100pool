@@ -1198,7 +1198,10 @@ async function loadFeedback() {
       ? rows.map(r => {
           const resolved = r.resolved === true;
           return `<tr class='${resolved ? 'fb-resolved' : ''}' data-feedback-id='${r.id}'>
-            <td class='fb-msg'>${r.message ?? ''}</td>
+            <td class='fb-msg'>
+              ${r.rating ? `<div style='color:#f59e0b;font-size:1em;letter-spacing:1px;margin-bottom:4px'>${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>` : ''}
+              ${r.message ?? ''}
+            </td>
             <td class='fb-meta'>
               <span class='fb-email'>${r.email ?? '—'}</span>
               <span class='fb-date'>${fmt(r.created_at)}</span>
