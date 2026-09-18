@@ -1687,17 +1687,18 @@ function exportExcel() {
   const skaters  = filtered.filter(p => p.pos !== 'G');
   const goalies  = filtered.filter(p => p.pos === 'G').sort((a, b) => (b.proj_g ?? 0) - (a.proj_g ?? 0));
 
+  const SEP = ';';
   const esc = v => {
     if (v == null || v === '') return '';
     const s = String(v);
-    if (s.includes(',') || s.includes('"') || s.includes('\n')) return `"${s.replace(/"/g, '""')}"`;
+    if (s.includes(';') || s.includes('"') || s.includes('\n')) return `"${s.replace(/"/g, '""')}"`;
     return s;
   };
 
   const rows = [];
 
   // Skaters
-  rows.push(['# Rang','Nom','Pos','Équipe','Âge','AAV ($M)','Contrat','Statut','MJ Proj.','Proj G','Proj A','Proj PTS','PPG','Pts Pool','MJ Dern.','Dern. G','Dern. A','Dern. PTS','Tier','Tendance','Risque','Band-aid','Catégorie','Notes','Disponible','Mes notes'].map(esc).join(','));
+  rows.push(['# Rang','Nom','Pos','Équipe','Âge','AAV ($M)','Contrat','Statut','MJ Proj.','Proj G','Proj A','Proj PTS','PPG','Pts Pool','MJ Dern.','Dern. G','Dern. A','Dern. PTS','Tier','Tendance','Risque','Band-aid','Catégorie','Notes','Disponible','Mes notes'].map(esc).join(SEP));
   skaters.forEach(p => rows.push([
     p.rank, p.name, p.pos, p.team, p.age,
     p.aav ?? '',
@@ -1713,10 +1714,10 @@ function exportExcel() {
     p.scouting_category ?? '', p.notes ?? '',
     draftedIds.has(p.id) ? 'Non' : 'Oui',
     userNotes[p.id] ?? '',
-  ].map(esc).join(',')));
+  ].map(esc).join(SEP)));
 
   rows.push('');
-  rows.push(['# Rang','Nom','Équipe','Âge','AAV ($M)','Contrat','Statut','MJ Proj.','Proj V','Proj BL','Pts Pool','Tier','Risque','Catégorie','Notes','Disponible','Mes notes'].map(esc).join(','));
+  rows.push(['# Rang','Nom','Équipe','Âge','AAV ($M)','Contrat','Statut','MJ Proj.','Proj V','Proj BL','Pts Pool','Tier','Risque','Catégorie','Notes','Disponible','Mes notes'].map(esc).join(SEP));
   goalies.forEach(p => rows.push([
     p.rank, p.name, p.team, p.age,
     p.aav ?? '',
@@ -1729,7 +1730,7 @@ function exportExcel() {
     p.scouting_category ?? '', p.notes ?? '',
     draftedIds.has(p.id) ? 'Non' : 'Oui',
     userNotes[p.id] ?? '',
-  ].map(esc).join(',')));
+  ].map(esc).join(SEP)));
 
   // UTF-8 BOM so Excel opens accents correctly
   const blob = new Blob(['﻿' + rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
