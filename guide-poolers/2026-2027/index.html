@@ -3002,14 +3002,18 @@ function openModal(id) {
 
   // Note personnelle
   const noteVal = userNotes[p.id] || '';
-  const noteHtml = `<div><div class='modal-section-title'>Ma note</div><textarea class='modal-note-area' id='modalNoteArea' placeholder='Ajouter une note personnelle…'>${noteVal}</textarea></div>`;
+  const noteHtml = `<div><div class='modal-section-title'>Ma note</div><textarea class='modal-note-area' id='modalNoteArea' data-player-id='${p.id}' placeholder='Ajouter une note personnelle…'>${noteVal}</textarea></div>`;
   document.getElementById('modalBody').innerHTML += noteHtml;
-  document.getElementById('modalNoteArea').addEventListener('input', function() {
+  const saveModalNote = function() {
     const val = this.value.trim();
     if (val) userNotes[p.id] = val; else delete userNotes[p.id];
     localStorage.setItem('pool_user_notes', JSON.stringify(userNotes));
-  });
-  document.getElementById('modalNoteArea').addEventListener('blur', function() {
+  };
+  const noteArea = document.getElementById('modalNoteArea');
+  noteArea.addEventListener('input', saveModalNote);
+  noteArea.addEventListener('change', saveModalNote);
+  noteArea.addEventListener('blur', function() {
+    saveModalNote.call(this);
     syncToCloud({ notes: userNotes });
   });
 
@@ -3132,6 +3136,15 @@ function closeModal(e) {
   if (e.target === document.getElementById('scoutingModal')) closeModalDirect();
 }
 function closeModalDirect() {
+  const noteArea = document.getElementById('modalNoteArea');
+  if (noteArea) {
+    const val = noteArea.value.trim();
+    const id = parseInt(noteArea.getAttribute('data-player-id'));
+    if (id) {
+      if (val) userNotes[id] = val; else delete userNotes[id];
+      localStorage.setItem('pool_user_notes', JSON.stringify(userNotes));
+    }
+  }
   document.getElementById('scoutingModal').classList.add('hidden');
   document.body.classList.remove('modal-open');
 }
