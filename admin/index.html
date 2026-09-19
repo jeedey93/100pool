@@ -556,15 +556,15 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 
       <div class='milestone-wrap'>
         <div class='milestone-head'>
-          <span class='milestone-title'>🎯 Objectif 250 achats</span>
+          <span class='milestone-title'>🎯 Objectif 500 achats</span>
           <span class='milestone-pct' id='milestone-pct'>0%</span>
         </div>
         <div class='milestone-track'>
           <div class='milestone-fill' id='milestone-fill' style='width:0%'></div>
         </div>
         <div class='milestone-labels'>
-          <span class='milestone-sub' id='milestone-cur'>0 / 250</span>
-          <span class='milestone-sub' id='milestone-remaining'>250 restants</span>
+          <span class='milestone-sub' id='milestone-cur'>0 / 500</span>
+          <span class='milestone-sub' id='milestone-remaining'>500 restants</span>
         </div>
       </div>
 
@@ -1061,8 +1061,8 @@ function renderAcces() {
   // Dashboard cards
   setText('dash-total', rows.length);
 
-  // Milestone bar (250 achats)
-  const MILESTONE = 250;
+  // Milestone bar (500 achats)
+  const MILESTONE = 500;
   const milestoneTotal = rows.length;
   const milestonePct = Math.min(milestoneTotal / MILESTONE * 100, 100);
   const remaining = Math.max(MILESTONE - milestoneTotal, 0);
