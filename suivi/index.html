@@ -291,40 +291,21 @@ async function checkAuth() {
   });
 }
 
-// ── MOCK DATA ────────────────────────────────────────────────
-// Données simulées — seront remplacées par l'API quand la saison commence
-const MOCK_SKATERS = [
-  { id:1, name:'Connor McDavid',    team:'EDM', pos:'C',  age:29, nhl_id:8478402, proj_pts:110, proj_gp:80, live_pts:18, live_g:6,  live_a:12, live_gp:14 },
-  { id:2, name:'Nathan MacKinnon',  team:'COL', pos:'C',  age:30, nhl_id:8477492, proj_pts:105, proj_gp:79, live_pts:16, live_g:5,  live_a:11, live_gp:14 },
-  { id:3, name:'Leon Draisaitl',    team:'EDM', pos:'C',  age:29, nhl_id:8477934, proj_pts:100, proj_gp:79, live_pts:20, live_g:9,  live_a:11, live_gp:14 },
-  { id:4, name:'Auston Matthews',   team:'TOR', pos:'C',  age:28, nhl_id:8479318, proj_pts:95,  proj_gp:78, live_pts:8,  live_g:3,  live_a:5,  live_gp:14 },
-  { id:5, name:'Nikita Kucherov',   team:'TBL', pos:'RW', age:33, nhl_id:8476453, proj_pts:95,  proj_gp:78, live_pts:19, live_g:4,  live_a:15, live_gp:14 },
-  { id:6, name:'David Pastrnak',    team:'BOS', pos:'RW', age:30, nhl_id:8477956, proj_pts:90,  proj_gp:78, live_pts:15, live_g:7,  live_a:8,  live_gp:14 },
-  { id:7, name:'Cale Makar',        team:'COL', pos:'D',  age:26, nhl_id:8480069, proj_pts:88,  proj_gp:78, live_pts:17, live_g:4,  live_a:13, live_gp:14 },
-  { id:8, name:'Mikko Rantanen',    team:'CAR', pos:'RW', age:29, nhl_id:8478420, proj_pts:88,  proj_gp:78, live_pts:11, live_g:4,  live_a:7,  live_gp:14 },
-  { id:9, name:'Elias Pettersson',  team:'VAN', pos:'C',  age:26, nhl_id:8481522, proj_pts:85,  proj_gp:77, live_pts:10, live_g:3,  live_a:7,  live_gp:14 },
-  { id:10,name:'Brayden Point',     team:'TBL', pos:'C',  age:28, nhl_id:8478010, proj_pts:85,  proj_gp:75, live_pts:14, live_g:6,  live_a:8,  live_gp:14 },
-  { id:11,name:'Roman Josi',        team:'NSH', pos:'D',  age:34, nhl_id:8474590, proj_pts:72,  proj_gp:78, live_pts:12, live_g:3,  live_a:9,  live_gp:14 },
-  { id:12,name:'Quinn Hughes',      team:'VAN', pos:'D',  age:25, nhl_id:8481533, proj_pts:80,  proj_gp:78, live_pts:7,  live_g:1,  live_a:6,  live_gp:14 },
-  { id:13,name:'Mitch Marner',      team:'TOR', pos:'RW', age:28, nhl_id:8478483, proj_pts:82,  proj_gp:77, live_pts:16, live_g:3,  live_a:13, live_gp:14 },
-  { id:14,name:'Jake Guentzel',     team:'TBL', pos:'LW', age:30, nhl_id:8478694, proj_pts:72,  proj_gp:76, live_pts:9,  live_g:4,  live_a:5,  live_gp:14 },
-  { id:15,name:'William Nylander',  team:'TOR', pos:'RW', age:28, nhl_id:8477939, proj_pts:78,  proj_gp:77, live_pts:13, live_g:5,  live_a:8,  live_gp:14 },
-];
-
-const MOCK_GOALIES = [
-  { id:101, name:'Connor Hellebuyck', team:'WPG', pos:'G', age:32, nhl_id:8476945, proj_g:38, proj_gp:62, live_g:7, live_gp:12, live_gaa:2.21, live_svp:.921 },
-  { id:102, name:'Igor Shesterkin',   team:'NYR', pos:'G', age:28, nhl_id:8481533, proj_g:36, proj_gp:60, live_g:8, live_gp:13, live_gaa:2.05, live_svp:.931 },
-  { id:103, name:'Andrei Vasilevskiy',team:'TBL', pos:'G', age:31, nhl_id:8476883, proj_g:34, proj_gp:58, live_g:5, live_gp:11, live_gaa:2.68, live_svp:.908 },
-  { id:104, name:'Jake Oettinger',    team:'DAL', pos:'G', age:26, nhl_id:8480382, proj_g:34, proj_gp:58, live_g:6, live_gp:12, live_gaa:2.45, live_svp:.916 },
-  { id:105, name:'Linus Ullmark',     team:'OTT', pos:'G', age:31, nhl_id:8476976, proj_g:30, proj_gp:54, live_g:4, live_gp:10, live_gaa:3.10, live_svp:.895 },
-];
+// ── SUPABASE ─────────────────────────────────────────────────
+const SUPABASE_URL = 'https://fifurqlitkywtmhgtzeu.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpZnVycWxpdGt5d3RtaGd0emV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDIyMjQsImV4cCI6MjA5MjI3ODIyNH0.KPVPj1qwbSJJMyLR_-AhDcRs0vi2sUU6qbFQ-kH53C0';
+const SB_HEADERS = { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` };
 
 // ── STATE ────────────────────────────────────────────────────
+let allSkaters = [];
+let allGoalies = [];
+let liveStats  = {}; // keyed by nhl_id
 let currentTab = 'skaters';
-let sortCol = 'ecart';
+let sortCol = 'proj_pts';
 let sortDir = 'desc';
 let showTop25 = false;
 let searchQ = '';
+let seasonLive = false;
 
 // ── SEASON START DATE (1er octobre 2026) ─────────────────────
 const SEASON_START = new Date('2026-10-07T19:00:00-04:00');
@@ -345,7 +326,7 @@ function calcEcartPct(pace, proj) {
 }
 
 function getStatut(pct) {
-  if (pct == null) return 'ok';
+  if (pct == null) return null;
   if (pct >= 15) return 'fire';
   if (pct >= -10) return 'ok';
   if (pct >= -15) return 'warn';
@@ -353,7 +334,7 @@ function getStatut(pct) {
 }
 
 function statutLabel(s) {
-  return { fire: '🔥 En feu', ok: '✅ On track', warn: '⚠️ Attention', cold: '❄️ Décevant' }[s] || '';
+  return { fire: '🔥 En feu', ok: '✅ On track', warn: '⚠️ Attention', cold: '❄️ Décevant' }[s] || '—';
 }
 
 function statutClass(s) {
@@ -383,8 +364,17 @@ function enrichGoalie(p) {
 
 // ── RENDER ────────────────────────────────────────────────────
 function getRows() {
-  const raw = currentTab === 'skaters' ? MOCK_SKATERS : MOCK_GOALIES;
-  let rows = (currentTab === 'skaters' ? raw.map(enrichSkater) : raw.map(enrichGoalie));
+  const raw = currentTab === 'skaters' ? allSkaters : allGoalies;
+
+  // Merge live stats
+  let rows = raw.map(p => {
+    const live = liveStats[p.nhl_id] || {};
+    return currentTab === 'skaters'
+      ? { ...p, live_pts: live.pts ?? null, live_g: live.g ?? null, live_a: live.a ?? null, live_gp: live.gp ?? null }
+      : { ...p, live_g: live.g ?? null, live_gp: live.gp ?? null, live_gaa: live.gaa ?? null, live_svp: live.svp ?? null };
+  });
+
+  rows = currentTab === 'skaters' ? rows.map(enrichSkater) : rows.map(enrichGoalie);
 
   // Filters
   const q = searchQ.toLowerCase();
@@ -411,7 +401,10 @@ function renderTable() {
   const tbody = document.getElementById('suiviTbody');
 
   // Update summary
-  const all = (currentTab === 'skaters' ? MOCK_SKATERS.map(enrichSkater) : MOCK_GOALIES.map(enrichGoalie));
+  const all = (currentTab === 'skaters'
+    ? allSkaters.map(p => { const live = liveStats[p.nhl_id]||{}; return enrichSkater({...p, live_pts:live.pts??null, live_g:live.g??null, live_a:live.a??null, live_gp:live.gp??null}); })
+    : allGoalies.map(p => { const live = liveStats[p.nhl_id]||{}; return enrichGoalie({...p, live_g:live.g??null, live_gp:live.gp??null, live_gaa:live.gaa??null, live_svp:live.svp??null}); })
+  );
   document.getElementById('sum-fire').textContent = all.filter(r => r.statut === 'fire').length;
   document.getElementById('sum-ok').textContent   = all.filter(r => r.statut === 'ok').length;
   document.getElementById('sum-warn').textContent = all.filter(r => r.statut === 'warn').length;
@@ -572,6 +565,36 @@ async function init() {
   await checkAuth();
   updateCountdown();
   setInterval(updateCountdown, 1000);
+
+  // Load players from Supabase
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/poolers_players?select=id,nhl_id,name,team,pos,age,proj_pts,proj_g,proj_a,proj_gp,last_pts,last_g,last_a,last_gp,tier&order=proj_pts.desc.nullslast`, { headers: SB_HEADERS });
+    if (!res.ok) throw new Error();
+    const players = await res.json();
+    allSkaters = players.filter(p => p.pos !== 'G');
+    allGoalies = players.filter(p => p.pos === 'G');
+  } catch {
+    document.querySelector('.page-wrap').insertAdjacentHTML('afterbegin', `<div style='background:#fee2e2;border:1px solid #fecaca;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.85em;color:#dc2626;font-weight:600;'>⚠️ Impossible de charger les joueurs. Vérifie ta connexion et recharge la page.</div>`);
+    return;
+  }
+
+  // Load live stats (nhl_stats_live) — optional, only available once season starts
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/nhl_stats_live?select=*`, { headers: SB_HEADERS });
+    if (res.ok) {
+      const stats = await res.json();
+      if (stats.length > 0) {
+        seasonLive = true;
+        stats.forEach(s => { liveStats[s.nhl_id] = s; });
+        sortCol = 'ecart';
+        document.getElementById('seasonBadge').textContent = '🟢 Saison en cours';
+        document.getElementById('preseasonBanner').style.display = 'none';
+        const lastUpdate = stats[0]?.updated_at ? new Date(stats[0].updated_at).toLocaleDateString('fr-CA', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) : '';
+        if (lastUpdate) document.getElementById('updateBadge').textContent = `🕐 Mis à jour ${lastUpdate}`;
+      }
+    }
+  } catch {}
+
   renderThead();
   renderTable();
 }
