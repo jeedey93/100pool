@@ -19,7 +19,6 @@
       children: [
         { href: '/ma-liste/',   icon: '⭐', label: 'Ma liste' },
         { href: '/mon-equipe/', icon: '👥', label: 'Mon équipe' },
-        { href: '/suivi/',      icon: '📈', label: 'Suivi de saison' },
       ]
     },
     { href: '/podcast/', icon: '🎙', label: 'Podcast' },
