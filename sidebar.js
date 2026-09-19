@@ -15,11 +15,11 @@
 
   const navLinks = [
     { href: '/',                         icon: '🏠', label: 'Accueil' },
-    {
-      href: '/guide-poolers/2026-2027/', icon: '📋', label: 'Guide des poolers',
+    { href: '/guide-poolers/2026-2027/', icon: '📋', label: 'Guide des poolers',
       children: [
         { href: '/ma-liste/',   icon: '⭐', label: 'Ma liste' },
         { href: '/mon-equipe/', icon: '👥', label: 'Mon équipe' },
+        { href: '/suivi/',      icon: '📈', label: 'Suivi de saison' },
       ]
     },
     { href: '/podcast/', icon: '🎙', label: 'Podcast' },

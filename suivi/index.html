@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang='fr'>
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9PE65ZKRE4"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-9PE65ZKRE4');
+</script>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'>
+<title>Suivi de saison — 100% Pool</title>
+<meta property='og:type' content='website'>
+<meta property='og:url' content='https://100pool.ca/suivi/'>
+<meta property='og:title' content='Suivi de saison NHL 2026-27 — 100% Pool'>
+<meta property='og:image' content='https://100pool.ca/100pool_large.png'>
+<link rel='icon' type='image/png' href='../100pool.jpg'>
+<link rel='apple-touch-icon' href='../100pool.jpg'>
+<script src='../sidebar.js' defer></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { overflow-x: hidden; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f4f2; color: #1e293b; min-height: 100vh; }
+
+/* ── LAYOUT ── */
+.page-wrap { max-width: 1200px; margin: 0 auto; padding: 28px 24px 80px; }
+
+/* ── HEADER ── */
+.page-header { margin-bottom: 24px; }
+.page-title { font-size: 1.5em; font-weight: 900; color: #0f172a; letter-spacing: -0.4px; }
+.page-subtitle { font-size: 0.85em; color: #64748b; margin-top: 4px; }
+.page-meta { display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+.update-badge { display: inline-flex; align-items: center; gap: 5px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 99px; padding: 4px 10px; font-size: 0.75em; font-weight: 700; color: #166534; }
+.season-badge { display: inline-flex; align-items: center; gap: 5px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 99px; padding: 4px 10px; font-size: 0.75em; font-weight: 700; color: #1d4ed8; }
+
+/* ── SUMMARY CARDS ── */
+.summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+.summary-card { background: white; border-radius: 14px; border: 1px solid #e2e8f0; padding: 16px 18px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+.summary-val { font-size: 1.6em; font-weight: 900; color: #0f172a; letter-spacing: -0.5px; }
+.summary-lbl { font-size: 0.72em; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 3px; }
+.summary-card.green .summary-val { color: #16a34a; }
+.summary-card.red .summary-val { color: #dc2626; }
+.summary-card.orange .summary-val { color: #d97706; }
+
+/* ── CONTROLS ── */
+.controls { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.ctrl-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 9px; border: 1.5px solid #e2e8f0; background: white; font-size: 0.82em; font-weight: 700; color: #475569; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.ctrl-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
+.ctrl-btn.active { background: #f0fdf4; border-color: #86efac; color: #166534; }
+.ctrl-select { padding: 8px 12px; border-radius: 9px; border: 1.5px solid #e2e8f0; background: white; font-size: 0.82em; font-weight: 600; color: #374151; cursor: pointer; outline: none; }
+.ctrl-select:focus { border-color: #2d8a3e; }
+.search-wrap { position: relative; flex: 1; min-width: 180px; max-width: 280px; }
+.search-wrap input { width: 100%; padding: 8px 12px 8px 32px; border-radius: 9px; border: 1.5px solid #e2e8f0; background: white; font-size: 0.82em; color: #374151; outline: none; }
+.search-wrap input:focus { border-color: #2d8a3e; }
+.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.85em; pointer-events: none; }
+
+/* ── TABLE ── */
+.table-wrap { background: white; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 1px 6px rgba(0,0,0,0.05); overflow: hidden; }
+.suivi-table { width: 100%; border-collapse: collapse; font-size: 0.84em; }
+.suivi-table thead th { background: #f8fafc; padding: 10px 12px; text-align: left; font-size: 0.68em; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.8px; border-bottom: 1px solid #e2e8f0; white-space: nowrap; cursor: pointer; user-select: none; }
+.suivi-table thead th:hover { color: #475569; }
+.suivi-table thead th.sort-asc::after { content: ' ↑'; }
+.suivi-table thead th.sort-desc::after { content: ' ↓'; }
+.suivi-table tbody tr { border-bottom: 1px solid #f1f5f9; transition: background 0.1s; }
+.suivi-table tbody tr:last-child { border-bottom: none; }
+.suivi-table tbody tr:hover { background: #f8fafc; }
+.suivi-table td { padding: 10px 12px; vertical-align: middle; }
+
+/* ── PLAYER CELL ── */
+.player-cell { display: flex; align-items: center; gap: 10px; }
+.player-photo { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1.5px solid #e2e8f0; background: linear-gradient(135deg, #1a5c28, #2d8a3e); flex-shrink: 0; }
+.player-name { font-weight: 700; color: #0f172a; font-size: 0.92em; white-space: nowrap; }
+.player-meta { font-size: 0.72em; color: #64748b; margin-top: 1px; }
+.team-tag { display: inline-block; background: #f1f5f9; color: #475569; border-radius: 4px; padding: 1px 5px; font-size: 0.78em; font-weight: 700; }
+.pos-tag { display: inline-block; border-radius: 4px; padding: 1px 5px; font-size: 0.78em; font-weight: 700; }
+.pos-C { background: #dbeafe; color: #1d4ed8; }
+.pos-LW, .pos-RW, .pos-W { background: #ede9fe; color: #6d28d9; }
+.pos-D { background: #fef3c7; color: #b45309; }
+.pos-G { background: #fee2e2; color: #dc2626; }
+
+/* ── STAT CELLS ── */
+td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; color: #374151; }
+td.dim { color: #94a3b8; }
+
+/* ── ÉCART BADGE ── */
+.ecart { display: inline-flex; align-items: center; gap: 3px; font-size: 0.82em; font-weight: 800; padding: 3px 8px; border-radius: 99px; white-space: nowrap; }
+.ecart-up { background: #dcfce7; color: #15803d; }
+.ecart-down { background: #fee2e2; color: #dc2626; }
+.ecart-neutral { background: #f1f5f9; color: #64748b; }
+
+/* ── STATUT BADGE ── */
+.statut { display: inline-flex; align-items: center; gap: 4px; font-size: 0.75em; font-weight: 800; padding: 3px 8px; border-radius: 99px; white-space: nowrap; }
+.statut-fire { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+.statut-ok { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+.statut-warn { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+.statut-cold { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+
+/* ── PROGRESS BAR ── */
+.progress-wrap { display: flex; align-items: center; gap: 8px; }
+.progress-track { flex: 1; height: 6px; background: #f1f5f9; border-radius: 99px; overflow: hidden; min-width: 60px; }
+.progress-fill { height: 100%; border-radius: 99px; }
+.progress-fill.over { background: linear-gradient(90deg, #2d8a3e, #4ade80); }
+.progress-fill.under { background: linear-gradient(90deg, #ef4444, #fca5a5); }
+.progress-fill.on { background: linear-gradient(90deg, #3b82f6, #93c5fd); }
+.progress-lbl { font-size: 0.75em; font-weight: 700; color: #64748b; white-space: nowrap; min-width: 32px; text-align: right; }
+
+/* ── TABS ── */
+.tabs { display: flex; gap: 4px; background: white; border-radius: 12px; border: 1px solid #e2e8f0; padding: 4px; margin-bottom: 16px; width: fit-content; }
+.tab { padding: 7px 16px; border-radius: 9px; font-size: 0.82em; font-weight: 700; color: #64748b; cursor: pointer; transition: all 0.15s; border: none; background: none; }
+.tab.active { background: #f0fdf4; color: #166534; }
+
+/* ── EMPTY ── */
+.empty-state { text-align: center; padding: 60px 20px; color: #94a3b8; }
+.empty-icon { font-size: 2.5em; margin-bottom: 12px; }
+.empty-title { font-size: 1em; font-weight: 700; color: #64748b; margin-bottom: 6px; }
+.empty-sub { font-size: 0.83em; }
+
+/* ── SAISON PAS COMMENCEE ── */
+.preseason-banner { background: linear-gradient(135deg, #1e3a5f, #1d4ed8); border-radius: 16px; padding: 32px; text-align: center; margin-bottom: 24px; color: white; }
+.preseason-icon { font-size: 2.5em; margin-bottom: 12px; }
+.preseason-title { font-size: 1.2em; font-weight: 900; margin-bottom: 8px; }
+.preseason-sub { font-size: 0.88em; opacity: 0.8; line-height: 1.6; }
+.countdown-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; max-width: 360px; margin-left: auto; margin-right: auto; }
+.countdown-item { background: rgba(255,255,255,0.12); border-radius: 10px; padding: 12px 8px; }
+.countdown-val { font-size: 1.6em; font-weight: 900; }
+.countdown-lbl { font-size: 0.65em; font-weight: 700; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; }
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  .page-wrap { padding: 16px 12px 80px; }
+  .summary-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .suivi-table { font-size: 0.78em; }
+  .suivi-table td, .suivi-table th { padding: 8px 8px; }
+  .player-photo { width: 28px; height: 28px; }
+  td.hide-mobile { display: none; }
+  th.hide-mobile { display: none; }
+  .controls { gap: 6px; }
+  .search-wrap { min-width: 140px; }
+}
+</style>
+</head>
+<body>
+<div class='page-wrap'>
+
+  <!-- Header -->
+  <div class='page-header'>
+    <div class='page-title'>📈 Suivi de saison 2026-27</div>
+    <div class='page-subtitle'>Compare les projections du guide avec les stats réelles en cours de saison.</div>
+    <div class='page-meta'>
+      <span class='update-badge' id='updateBadge'>🕐 Mis à jour chaque nuit</span>
+      <span class='season-badge' id='seasonBadge'>⏳ Saison pas encore commencée</span>
+    </div>
+  </div>
+
+  <!-- Countdown / preseason -->
+  <div class='preseason-banner' id='preseasonBanner'>
+    <div class='preseason-icon'>🏒</div>
+    <div class='preseason-title'>La saison commence bientôt !</div>
+    <div class='preseason-sub'>Le suivi se mettra à jour automatiquement dès le premier match joué.<br>En attendant, voici un aperçu avec des données simulées.</div>
+    <div class='countdown-grid'>
+      <div class='countdown-item'><div class='countdown-val' id='cd-days'>—</div><div class='countdown-lbl'>Jours</div></div>
+      <div class='countdown-item'><div class='countdown-val' id='cd-hours'>—</div><div class='countdown-lbl'>Heures</div></div>
+      <div class='countdown-item'><div class='countdown-val' id='cd-min'>—</div><div class='countdown-lbl'>Min</div></div>
+      <div class='countdown-item'><div class='countdown-val' id='cd-sec'>—</div><div class='countdown-lbl'>Sec</div></div>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class='summary-grid' id='summaryGrid'>
+    <div class='summary-card green'>
+      <div class='summary-val' id='sum-fire'>—</div>
+      <div class='summary-lbl'>🔥 En feu (+15%)</div>
+    </div>
+    <div class='summary-card'>
+      <div class='summary-val' id='sum-ok'>—</div>
+      <div class='summary-lbl'>✅ On track (±10%)</div>
+    </div>
+    <div class='summary-card orange'>
+      <div class='summary-val' id='sum-warn'>—</div>
+      <div class='summary-lbl'>⚠️ Attention (−10%)</div>
+    </div>
+    <div class='summary-card red'>
+      <div class='summary-val' id='sum-cold'>—</div>
+      <div class='summary-lbl'>❄️ Décevant (−15%)</div>
+    </div>
+  </div>
+
+  <!-- Tabs + controls -->
+  <div class='tabs'>
+    <button class='tab active' onclick='switchTab("skaters",this)'>Patineurs</button>
+    <button class='tab' onclick='switchTab("goalies",this)'>Gardiens</button>
+  </div>
+
+  <div class='controls'>
+    <div class='search-wrap'>
+      <span class='search-icon'>🔍</span>
+      <input type='text' id='searchInput' placeholder='Chercher un joueur…' oninput='applyFilters()'>
+    </div>
+    <select class='ctrl-select' id='posFilter' onchange='applyFilters()'>
+      <option value='ALL'>Toutes positions</option>
+      <option value='C'>Centre</option>
+      <option value='LW'>Ailier G</option>
+      <option value='RW'>Ailier D</option>
+      <option value='D'>Défenseur</option>
+    </select>
+    <select class='ctrl-select' id='statusFilter' onchange='applyFilters()'>
+      <option value='ALL'>Tous les statuts</option>
+      <option value='fire'>🔥 En feu</option>
+      <option value='ok'>✅ On track</option>
+      <option value='warn'>⚠️ Attention</option>
+      <option value='cold'>❄️ Décevant</option>
+    </select>
+    <button class='ctrl-btn' id='topBtn' onclick='toggleTop25()'>Top 25</button>
+  </div>
+
+  <!-- Table -->
+  <div class='table-wrap'>
+    <table class='suivi-table' id='suiviTable'>
+      <thead id='suiviThead'></thead>
+      <tbody id='suiviTbody'></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+// ── AUTH ────────────────────────────────────────────────────
+const IS_DEMO = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+async function checkAuth() {
+  if (IS_DEMO) return;
+  const pwToken = localStorage.getItem('pool_pw_token');
+  if (pwToken) {
+    try {
+      const payload = JSON.parse(atob(pwToken.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+      if (payload.role === 'guide' && payload.email && payload.exp > Math.floor(Date.now() / 1000)) return;
+    } catch(e) {}
+    localStorage.removeItem('pool_pw_token');
+  }
+  const stored = localStorage.getItem('pool_token');
+  if (stored) {
+    const res = await fetch('https://fifurqlitkywtmhgtzeu.supabase.co/functions/v1/guide-auth', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: stored })
+    }).catch(() => null);
+    if (res && res.ok) return;
+    localStorage.removeItem('pool_token');
+  }
+  // Show login overlay
+  return new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#163d1c 0%,#1e6b2e 40%,#2d8a3e 100%);display:flex;align-items:center;justify-content:center;padding:24px;';
+    overlay.innerHTML = `
+      <div style='background:white;border-radius:22px;padding:40px 36px;max-width:380px;width:100%;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,0.3);'>
+        <img src='../100pool.jpg' alt='100% Pool' style='width:72px;height:72px;border-radius:18px;object-fit:cover;margin:0 auto 20px;display:block;box-shadow:0 8px 24px rgba(0,0,0,0.15);'>
+        <h2 style='font-size:1.3em;font-weight:900;color:#0f172a;margin-bottom:8px;'>Suivi de saison 2026-27</h2>
+        <p style='color:#64748b;font-size:0.88em;margin-bottom:24px;line-height:1.6;'>Entre l'adresse courriel utilisée lors de ton achat pour accéder au suivi.</p>
+        <input id='pw-input' type='email' inputmode='email' autocomplete='email' placeholder='ton@email.com'
+          style='width:100%;padding:13px 16px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:1em;outline:none;color:#0f172a;margin-bottom:8px;font-family:inherit;'>
+        <div id='pw-error' style='color:#e11d48;font-size:0.8em;margin-bottom:12px;min-height:18px;'></div>
+        <button id='pw-btn' style='width:100%;background:#f5c842;color:#1a3d10;font-weight:800;font-size:1em;padding:14px;border-radius:10px;border:none;cursor:pointer;'>Accéder →</button>
+      </div>`;
+    document.body.appendChild(overlay);
+    const input = overlay.querySelector('#pw-input');
+    const btn   = overlay.querySelector('#pw-btn');
+    const err   = overlay.querySelector('#pw-error');
+    const EDGE_AUTH = 'https://fifurqlitkywtmhgtzeu.supabase.co/functions/v1/guide-auth';
+    input.focus();
+    async function attempt() {
+      const email = input.value.trim().toLowerCase();
+      if (!email) return;
+      btn.disabled = true; btn.textContent = 'Vérification…';
+      err.textContent = '';
+      try {
+        const res = await fetch(EDGE_AUTH, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+        const data = await res.json();
+        if (res.ok && data.token) {
+          localStorage.setItem('pool_pw_token', data.token);
+          localStorage.setItem('pool_user_email', email);
+          overlay.remove(); resolve();
+        } else {
+          err.textContent = data.error === 'expired' ? 'Ton accès est expiré.' : 'Aucun achat trouvé pour cet email.';
+          input.style.borderColor = '#e11d48';
+          btn.disabled = false; btn.textContent = 'Accéder →';
+        }
+      } catch { err.textContent = 'Erreur réseau. Réessaie.'; btn.disabled = false; btn.textContent = 'Accéder →'; }
+    }
+    btn.onclick = attempt;
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') attempt(); });
+  });
+}
+
+// ── MOCK DATA ────────────────────────────────────────────────
+// Données simulées — seront remplacées par l'API quand la saison commence
+const MOCK_SKATERS = [
+  { id:1, name:'Connor McDavid',    team:'EDM', pos:'C',  age:29, nhl_id:8478402, proj_pts:110, proj_gp:80, live_pts:18, live_g:6,  live_a:12, live_gp:14 },
+  { id:2, name:'Nathan MacKinnon',  team:'COL', pos:'C',  age:30, nhl_id:8477492, proj_pts:105, proj_gp:79, live_pts:16, live_g:5,  live_a:11, live_gp:14 },
+  { id:3, name:'Leon Draisaitl',    team:'EDM', pos:'C',  age:29, nhl_id:8477934, proj_pts:100, proj_gp:79, live_pts:20, live_g:9,  live_a:11, live_gp:14 },
+  { id:4, name:'Auston Matthews',   team:'TOR', pos:'C',  age:28, nhl_id:8479318, proj_pts:95,  proj_gp:78, live_pts:8,  live_g:3,  live_a:5,  live_gp:14 },
+  { id:5, name:'Nikita Kucherov',   team:'TBL', pos:'RW', age:33, nhl_id:8476453, proj_pts:95,  proj_gp:78, live_pts:19, live_g:4,  live_a:15, live_gp:14 },
+  { id:6, name:'David Pastrnak',    team:'BOS', pos:'RW', age:30, nhl_id:8477956, proj_pts:90,  proj_gp:78, live_pts:15, live_g:7,  live_a:8,  live_gp:14 },
+  { id:7, name:'Cale Makar',        team:'COL', pos:'D',  age:26, nhl_id:8480069, proj_pts:88,  proj_gp:78, live_pts:17, live_g:4,  live_a:13, live_gp:14 },
+  { id:8, name:'Mikko Rantanen',    team:'CAR', pos:'RW', age:29, nhl_id:8478420, proj_pts:88,  proj_gp:78, live_pts:11, live_g:4,  live_a:7,  live_gp:14 },
+  { id:9, name:'Elias Pettersson',  team:'VAN', pos:'C',  age:26, nhl_id:8481522, proj_pts:85,  proj_gp:77, live_pts:10, live_g:3,  live_a:7,  live_gp:14 },
+  { id:10,name:'Brayden Point',     team:'TBL', pos:'C',  age:28, nhl_id:8478010, proj_pts:85,  proj_gp:75, live_pts:14, live_g:6,  live_a:8,  live_gp:14 },
+  { id:11,name:'Roman Josi',        team:'NSH', pos:'D',  age:34, nhl_id:8474590, proj_pts:72,  proj_gp:78, live_pts:12, live_g:3,  live_a:9,  live_gp:14 },
+  { id:12,name:'Quinn Hughes',      team:'VAN', pos:'D',  age:25, nhl_id:8481533, proj_pts:80,  proj_gp:78, live_pts:7,  live_g:1,  live_a:6,  live_gp:14 },
+  { id:13,name:'Mitch Marner',      team:'TOR', pos:'RW', age:28, nhl_id:8478483, proj_pts:82,  proj_gp:77, live_pts:16, live_g:3,  live_a:13, live_gp:14 },
+  { id:14,name:'Jake Guentzel',     team:'TBL', pos:'LW', age:30, nhl_id:8478694, proj_pts:72,  proj_gp:76, live_pts:9,  live_g:4,  live_a:5,  live_gp:14 },
+  { id:15,name:'William Nylander',  team:'TOR', pos:'RW', age:28, nhl_id:8477939, proj_pts:78,  proj_gp:77, live_pts:13, live_g:5,  live_a:8,  live_gp:14 },
+];
+
+const MOCK_GOALIES = [
+  { id:101, name:'Connor Hellebuyck', team:'WPG', pos:'G', age:32, nhl_id:8476945, proj_g:38, proj_gp:62, live_g:7, live_gp:12, live_gaa:2.21, live_svp:.921 },
+  { id:102, name:'Igor Shesterkin',   team:'NYR', pos:'G', age:28, nhl_id:8481533, proj_g:36, proj_gp:60, live_g:8, live_gp:13, live_gaa:2.05, live_svp:.931 },
+  { id:103, name:'Andrei Vasilevskiy',team:'TBL', pos:'G', age:31, nhl_id:8476883, proj_g:34, proj_gp:58, live_g:5, live_gp:11, live_gaa:2.68, live_svp:.908 },
+  { id:104, name:'Jake Oettinger',    team:'DAL', pos:'G', age:26, nhl_id:8480382, proj_g:34, proj_gp:58, live_g:6, live_gp:12, live_gaa:2.45, live_svp:.916 },
+  { id:105, name:'Linus Ullmark',     team:'OTT', pos:'G', age:31, nhl_id:8476976, proj_g:30, proj_gp:54, live_g:4, live_gp:10, live_gaa:3.10, live_svp:.895 },
+];
+
+// ── STATE ────────────────────────────────────────────────────
+let currentTab = 'skaters';
+let sortCol = 'ecart';
+let sortDir = 'desc';
+let showTop25 = false;
+let searchQ = '';
+
+// ── SEASON START DATE (1er octobre 2026) ─────────────────────
+const SEASON_START = new Date('2026-10-07T19:00:00-04:00');
+
+function calcPace(live_pts, live_gp, proj_gp) {
+  if (!live_gp) return null;
+  return Math.round(live_pts / live_gp * (proj_gp || 82));
+}
+
+function calcEcart(pace, proj) {
+  if (pace == null || !proj) return null;
+  return pace - proj;
+}
+
+function calcEcartPct(pace, proj) {
+  if (pace == null || !proj) return null;
+  return (pace - proj) / proj * 100;
+}
+
+function getStatut(pct) {
+  if (pct == null) return 'ok';
+  if (pct >= 15) return 'fire';
+  if (pct >= -10) return 'ok';
+  if (pct >= -15) return 'warn';
+  return 'cold';
+}
+
+function statutLabel(s) {
+  return { fire: '🔥 En feu', ok: '✅ On track', warn: '⚠️ Attention', cold: '❄️ Décevant' }[s] || '';
+}
+
+function statutClass(s) {
+  return { fire: 'statut-fire', ok: 'statut-ok', warn: 'statut-warn', cold: 'statut-cold' }[s] || '';
+}
+
+function ecartClass(e) {
+  if (e == null) return 'ecart-neutral';
+  if (e > 0) return 'ecart-up';
+  if (e < 0) return 'ecart-down';
+  return 'ecart-neutral';
+}
+
+function enrichSkater(p) {
+  const pace = calcPace(p.live_pts, p.live_gp, p.proj_gp);
+  const ecart = calcEcart(pace, p.proj_pts);
+  const ecartPct = calcEcartPct(pace, p.proj_pts);
+  return { ...p, pace, ecart, ecartPct, statut: getStatut(ecartPct) };
+}
+
+function enrichGoalie(p) {
+  const pace = calcPace(p.live_g, p.live_gp, p.proj_gp);
+  const ecart = calcEcart(pace, p.proj_g);
+  const ecartPct = calcEcartPct(pace, p.proj_g);
+  return { ...p, pace, ecart, ecartPct, statut: getStatut(ecartPct) };
+}
+
+// ── RENDER ────────────────────────────────────────────────────
+function getRows() {
+  const raw = currentTab === 'skaters' ? MOCK_SKATERS : MOCK_GOALIES;
+  let rows = (currentTab === 'skaters' ? raw.map(enrichSkater) : raw.map(enrichGoalie));
+
+  // Filters
+  const q = searchQ.toLowerCase();
+  if (q) rows = rows.filter(r => r.name.toLowerCase().includes(q) || r.team.toLowerCase().includes(q));
+  const pos = document.getElementById('posFilter')?.value || 'ALL';
+  if (pos !== 'ALL' && currentTab === 'skaters') rows = rows.filter(r => r.pos === pos);
+  const st = document.getElementById('statusFilter')?.value || 'ALL';
+  if (st !== 'ALL') rows = rows.filter(r => r.statut === st);
+  if (showTop25) rows = rows.slice(0, 25);
+
+  // Sort
+  rows.sort((a, b) => {
+    let av = a[sortCol], bv = b[sortCol];
+    if (av == null) av = sortDir === 'desc' ? -Infinity : Infinity;
+    if (bv == null) bv = sortDir === 'desc' ? -Infinity : Infinity;
+    return sortDir === 'desc' ? bv - av : av - bv;
+  });
+
+  return rows;
+}
+
+function renderTable() {
+  const rows = getRows();
+  const tbody = document.getElementById('suiviTbody');
+
+  // Update summary
+  const all = (currentTab === 'skaters' ? MOCK_SKATERS.map(enrichSkater) : MOCK_GOALIES.map(enrichGoalie));
+  document.getElementById('sum-fire').textContent = all.filter(r => r.statut === 'fire').length;
+  document.getElementById('sum-ok').textContent   = all.filter(r => r.statut === 'ok').length;
+  document.getElementById('sum-warn').textContent = all.filter(r => r.statut === 'warn').length;
+  document.getElementById('sum-cold').textContent = all.filter(r => r.statut === 'cold').length;
+
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan='10'><div class='empty-state'><div class='empty-icon'>🔍</div><div class='empty-title'>Aucun joueur trouvé</div><div class='empty-sub'>Modifie les filtres.</div></div></td></tr>`;
+    return;
+  }
+
+  if (currentTab === 'skaters') {
+    tbody.innerHTML = rows.map((p, i) => {
+      const progressPct = Math.min(p.pace != null ? (p.pace / p.proj_pts * 100) : 100, 150);
+      const fillClass = p.ecartPct >= 10 ? 'over' : p.ecartPct <= -10 ? 'under' : 'on';
+      const ecartSign = p.ecart > 0 ? '+' : '';
+      return `<tr>
+        <td style='width:28px;color:#94a3b8;font-size:0.78em;font-weight:700'>${i+1}</td>
+        <td>
+          <div class='player-cell'>
+            <img class='player-photo' src='https://assets.nhle.com/mugs/nhl/20262027/${p.team}/${p.nhl_id}.png' alt='${p.name}' onerror="this.style.display='none'">
+            <div>
+              <div class='player-name'>${p.name}</div>
+              <div class='player-meta'><span class='team-tag'>${p.team}</span> <span class='pos-tag pos-${p.pos}'>${p.pos}</span></div>
+            </div>
+          </div>
+        </td>
+        <td class='num hide-mobile'>${p.live_gp}</td>
+        <td class='num'>${p.live_pts}<span style='font-size:0.78em;color:#94a3b8'> (${p.live_g}G ${p.live_a}A)</span></td>
+        <td class='num hide-mobile'>${p.proj_pts}</td>
+        <td class='num'>${p.pace ?? '—'}</td>
+        <td>
+          <div class='progress-wrap'>
+            <div class='progress-track'><div class='progress-fill ${fillClass}' style='width:${Math.min(progressPct, 100)}%'></div></div>
+            <span class='progress-lbl'>${progressPct.toFixed(0)}%</span>
+          </div>
+        </td>
+        <td><span class='ecart ${ecartClass(p.ecart)}'>${p.ecart != null ? ecartSign + p.ecart + ' pts' : '—'}</span></td>
+        <td class='hide-mobile'><span class='statut ${statutClass(p.statut)}'>${statutLabel(p.statut)}</span></td>
+      </tr>`;
+    }).join('');
+  } else {
+    tbody.innerHTML = rows.map((p, i) => {
+      const progressPct = Math.min(p.pace != null ? (p.pace / p.proj_g * 100) : 100, 150);
+      const fillClass = p.ecartPct >= 10 ? 'over' : p.ecartPct <= -10 ? 'under' : 'on';
+      const ecartSign = p.ecart > 0 ? '+' : '';
+      return `<tr>
+        <td style='width:28px;color:#94a3b8;font-size:0.78em;font-weight:700'>${i+1}</td>
+        <td>
+          <div class='player-cell'>
+            <img class='player-photo' src='https://assets.nhle.com/mugs/nhl/20262027/${p.team}/${p.nhl_id}.png' alt='${p.name}' onerror="this.style.display='none'">
+            <div>
+              <div class='player-name'>${p.name}</div>
+              <div class='player-meta'><span class='team-tag'>${p.team}</span> <span class='pos-tag pos-G'>G</span></div>
+            </div>
+          </div>
+        </td>
+        <td class='num hide-mobile'>${p.live_gp}</td>
+        <td class='num'>${p.live_g}V<span style='font-size:0.78em;color:#94a3b8'> · ${p.live_gaa} GAA · .${String(Math.round(p.live_svp*1000)).padStart(3,'0')} SV%</span></td>
+        <td class='num hide-mobile'>${p.proj_g}V</td>
+        <td class='num'>${p.pace ?? '—'}V</td>
+        <td>
+          <div class='progress-wrap'>
+            <div class='progress-track'><div class='progress-fill ${fillClass}' style='width:${Math.min(progressPct, 100)}%'></div></div>
+            <span class='progress-lbl'>${progressPct.toFixed(0)}%</span>
+          </div>
+        </td>
+        <td><span class='ecart ${ecartClass(p.ecart)}'>${p.ecart != null ? ecartSign + p.ecart + 'V' : '—'}</span></td>
+        <td class='hide-mobile'><span class='statut ${statutClass(p.statut)}'>${statutLabel(p.statut)}</span></td>
+      </tr>`;
+    }).join('');
+  }
+}
+
+function renderThead() {
+  const thead = document.getElementById('suiviThead');
+  const cols = currentTab === 'skaters'
+    ? [
+        { key: null,       label: '#',        cls: '' },
+        { key: 'name',     label: 'Joueur',   cls: '' },
+        { key: 'live_gp',  label: 'MJ',       cls: 'hide-mobile' },
+        { key: 'live_pts', label: 'PTS réels',cls: '' },
+        { key: 'proj_pts', label: 'Proj',     cls: 'hide-mobile' },
+        { key: 'pace',     label: 'Rythme',   cls: '' },
+        { key: 'ecartPct', label: 'Pace %',   cls: '' },
+        { key: 'ecart',    label: 'Écart',    cls: '' },
+        { key: 'statut',   label: 'Statut',   cls: 'hide-mobile' },
+      ]
+    : [
+        { key: null,       label: '#',        cls: '' },
+        { key: 'name',     label: 'Gardien',  cls: '' },
+        { key: 'live_gp',  label: 'MJ',       cls: 'hide-mobile' },
+        { key: 'live_g',   label: 'V réelles',cls: '' },
+        { key: 'proj_g',   label: 'Proj V',   cls: 'hide-mobile' },
+        { key: 'pace',     label: 'Rythme V', cls: '' },
+        { key: 'ecartPct', label: 'Pace %',   cls: '' },
+        { key: 'ecart',    label: 'Écart',    cls: '' },
+        { key: 'statut',   label: 'Statut',   cls: 'hide-mobile' },
+      ];
+
+  thead.innerHTML = `<tr>${cols.map(c => {
+    if (!c.key) return `<th class='${c.cls}'>${c.label}</th>`;
+    const sortCls = sortCol === c.key ? (sortDir === 'desc' ? 'sort-desc' : 'sort-asc') : '';
+    return `<th class='${c.cls} ${sortCls}' onclick='setSort("${c.key}")'>${c.label}</th>`;
+  }).join('')}</tr>`;
+}
+
+function setSort(col) {
+  if (sortCol === col) sortDir = sortDir === 'desc' ? 'asc' : 'desc';
+  else { sortCol = col; sortDir = 'desc'; }
+  renderThead();
+  renderTable();
+}
+
+function switchTab(tab, btn) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const posFilter = document.getElementById('posFilter');
+  if (posFilter) posFilter.style.display = tab === 'skaters' ? '' : 'none';
+  sortCol = 'ecart'; sortDir = 'desc';
+  renderThead();
+  renderTable();
+}
+
+function applyFilters() {
+  searchQ = document.getElementById('searchInput')?.value || '';
+  renderTable();
+}
+
+function toggleTop25() {
+  showTop25 = !showTop25;
+  document.getElementById('topBtn').classList.toggle('active', showTop25);
+  document.getElementById('topBtn').textContent = showTop25 ? 'Tous' : 'Top 25';
+  renderTable();
+}
+
+// ── COUNTDOWN ────────────────────────────────────────────────
+function updateCountdown() {
+  const now = new Date();
+  const diff = SEASON_START - now;
+  if (diff <= 0) {
+    document.getElementById('preseasonBanner').style.display = 'none';
+    document.getElementById('seasonBadge').textContent = '🟢 Saison en cours';
+    return;
+  }
+  const days  = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const mins  = Math.floor((diff % 3600000) / 60000);
+  const secs  = Math.floor((diff % 60000) / 1000);
+  document.getElementById('cd-days').textContent  = days;
+  document.getElementById('cd-hours').textContent = hours;
+  document.getElementById('cd-min').textContent   = mins;
+  document.getElementById('cd-sec').textContent   = String(secs).padStart(2, '0');
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+async function init() {
+  await checkAuth();
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+  renderThead();
+  renderTable();
+}
+
+init();
+</script>
+</body>
+</html>
