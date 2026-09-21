@@ -127,7 +127,8 @@
   <div class="da-header-actions">
     <span class="sync-badge" id="syncBadge">⬤ Sync</span>
     <button class="btn-sync" onclick="syncNow()">🔄 Rafraîchir</button>
-    <button class="btn-reset-all" onclick="resetAll()">✕ Tout effacer</button>
+    <button class="btn-reset-all" onclick="resetDraft()">✕ Tout de-rayer</button>
+    <button class="btn-reset-all" onclick="resetAll()" style="background:rgba(100,116,139,0.2);border-color:rgba(100,116,139,0.4)">✕ Mes picks</button>
   </div>
 </div>
 
@@ -292,6 +293,16 @@ function resetAll() {
   saveKeepers(); savePicks();
   recompute();
   showToast('✕ Réinitialisé');
+}
+
+function resetDraft() {
+  if (!confirm('Dé-rayer tous les joueurs (keepers et picks adverses) ?')) return;
+  draftedIds.clear();
+  keeperIds.clear(); pickedIds.clear();
+  localStorage.removeItem('pool_drafted');
+  saveKeepers(); savePicks();
+  recompute();
+  showToast('✕ Tout le draft effacé');
 }
 
 function setPos(pos, btn) {
