@@ -351,9 +351,8 @@ function calcPoolPts(p, scoring) {
   return g * scoring.fwd_g + a * scoring.fwd_a;
 }
 
-// Greedy cap-constrained optimizer
-// Strategy: iterate over all goalie combos × all def combos, greedy-fill fwds
-// Candidate pools are the top-N by pool_pts (large enough to find good solutions)
+// Cap-constrained optimizer — fully greedy, O(n) per position
+// Sorts by pool_pts/aav (efficiency), picks greedily within cap
 function optimize(players, scoring, cap, nFwd, nDef, nGoal) {
   const fwdPos = ['C','LW','RW','F'];
 
@@ -361,57 +360,61 @@ function optimize(players, scoring, cap, nFwd, nDef, nGoal) {
     .filter(p => p.aav > 0 && p.proj_pts != null)
     .map(p => ({ ...p, pool_pts: calcPoolPts(p, scoring) }));
 
-  const fwds  = withPts.filter(p => fwdPos.includes(p.pos))
-                       .sort((a,b) => b.pool_pts - a.pool_pts).slice(0, Math.max(nFwd * 5, 60));
-  const defs  = withPts.filter(p => p.pos === 'D')
-                       .sort((a,b) => b.pool_pts - a.pool_pts).slice(0, Math.max(nDef * 5, 30));
-  const goals = withPts.filter(p => p.pos === 'G')
-                       .sort((a,b) => b.pool_pts - a.pool_pts).slice(0, Math.max(nGoal * 6, 20));
+  // Sort by efficiency (pts per $M) descending
+  const byEff = arr => [...arr].sort((a, b) => (b.pool_pts / b.aav) - (a.pool_pts / a.aav));
 
-  // Combinations generator
-  function* combos(arr, k) {
-    if (k === 0) { yield []; return; }
-    for (let i = 0; i <= arr.length - k; i++) {
-      for (const rest of combos(arr.slice(i + 1), k - 1)) {
-        yield [arr[i], ...rest];
-      }
+  const fwds  = byEff(withPts.filter(p => fwdPos.includes(p.pos)));
+  const defs  = byEff(withPts.filter(p => p.pos === 'D'));
+  const goals = byEff(withPts.filter(p => p.pos === 'G'));
+
+  // Greedy pick: take top-efficiency players that fit in cap
+  function greedyPick(pool, n, budget) {
+    const picked = [];
+    let spent = 0;
+    for (const p of pool) {
+      if (picked.length === n) break;
+      if (spent + p.aav <= budget) { picked.push(p); spent += p.aav; }
     }
+    return picked.length === n ? { picked, spent } : null;
   }
 
+  // Try multiple splits of the cap across positions:
+  // Allocate cap proportionally to each position's "fair share",
+  // then try several variations around that to find best total pts.
   let best = null, bestPts = -1;
 
-  for (const gSel of combos(goals, nGoal)) {
-    const gCost = gSel.reduce((s, p) => s + p.aav, 0);
-    const gPts  = gSel.reduce((s, p) => s + p.pool_pts, 0);
-    const remG  = cap - gCost;
-    if (remG < 0) continue;
+  // Generate candidate cap splits: vary goal% from 1% to 20%, def% from 15% to 50%
+  const goalPcts = [0.01, 0.02, 0.03, 0.05, 0.08, 0.12, 0.15, 0.20];
+  const defPcts  = [0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50];
 
-    for (const dSel of combos(defs, nDef)) {
-      const dCost = dSel.reduce((s, p) => s + p.aav, 0);
-      const dPts  = dSel.reduce((s, p) => s + p.pool_pts, 0);
-      const remD  = remG - dCost;
-      if (remD < 0) continue;
+  for (const gPct of goalPcts) {
+    const gBudget = cap * gPct;
+    const gRes = greedyPick(goals, nGoal, gBudget);
+    if (!gRes) continue;
+    const remAfterG = cap - gRes.spent;
 
-      // Greedy fwds: pick best pool_pts within remaining cap
-      const picked = [], usedIds = new Set([...gSel, ...dSel].map(p => p.id));
-      let fCost = 0;
-      for (const p of fwds) {
-        if (picked.length === nFwd) break;
-        if (usedIds.has(p.id)) continue;
-        if (fCost + p.aav <= remD) {
-          picked.push(p);
-          fCost += p.aav;
-        }
-      }
-      if (picked.length < nFwd) continue;
+    for (const dPct of defPcts) {
+      const dBudget = remAfterG * dPct;
+      const dRes = greedyPick(defs, nDef, dBudget);
+      if (!dRes) continue;
+      const remAfterD = remAfterG - dRes.spent;
 
-      const total = gPts + dPts + picked.reduce((s, p) => s + p.pool_pts, 0);
-      if (total > bestPts) {
-        bestPts = total;
-        best = { fwd: picked, def: dSel, goal: gSel, totalCost: gCost + dCost + fCost };
+      const fRes = greedyPick(fwds, nFwd, remAfterD);
+      if (!fRes) continue;
+
+      const totalPts = gRes.picked.reduce((s,p) => s+p.pool_pts, 0)
+                     + dRes.picked.reduce((s,p) => s+p.pool_pts, 0)
+                     + fRes.picked.reduce((s,p) => s+p.pool_pts, 0);
+      if (totalPts > bestPts) {
+        bestPts = totalPts;
+        best = {
+          fwd: fRes.picked, def: dRes.picked, goal: gRes.picked,
+          totalCost: gRes.spent + dRes.spent + fRes.spent,
+        };
       }
     }
   }
+
   return best;
 }
 
