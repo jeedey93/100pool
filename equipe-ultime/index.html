@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang='fr'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+<title>L'équipe ultime 2026-27 — 100% Pool</title>
+<meta name='description' content='Le meilleur alignement possible pour un pool de hockey 2026-27 : 12 attaquants, 6 défenseurs et 2 gardiens basé sur les projections du guide 100% Pool.'>
+<meta property='og:type' content='website'>
+<meta property='og:url' content='https://100pool.ca/equipe-ultime/'>
+<meta property='og:title' content='L'équipe ultime 2026-27 — 100% Pool'>
+<meta property='og:description' content='12 ATT · 6 DEF · 2 G — 2 091 pts projetés. Le meilleur alignement possible basé sur les projections du guide.'>
+<meta property='og:image' content='https://100pool.ca/100pool_large.png'>
+<meta name='twitter:card' content='summary_large_image'>
+<link rel='icon' type='image/png' href='../100pool.jpg'>
+<link rel='apple-touch-icon' href='../100pool.jpg'>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { overflow-x: hidden; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f4f8; color: #1e293b; min-height: 100vh; }
+
+nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; height: 56px; display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); position: sticky; top: 0; z-index: 200; }
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.nav-logo span { color: white; font-weight: 800; font-size: 1.05em; }
+.nav-links { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.nav-link { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.85em; font-weight: 600; padding: 7px 14px; border-radius: 8px; transition: all 0.2s; }
+.nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
+.nav-btn { background: #f5c842; color: #1a3d10 !important; font-weight: 800; }
+.nav-btn:hover { background: #f9d55a !important; }
+@media (max-width: 640px) { nav:not(#sharedSidebar) { padding: 0 16px; } .nav-links { display: none; } }
+
+.page-wrap { max-width: 860px; margin: 0 auto; padding: 40px 20px 80px; }
+
+/* ── HERO ── */
+.hero { text-align: center; margin-bottom: 40px; }
+.hero-badge { display: inline-flex; align-items: center; gap: 7px; background: #e8f5ec; color: #1a5c28; font-size: 0.75em; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; padding: 6px 14px; border-radius: 99px; margin-bottom: 18px; border: 1px solid #c6e8cf; }
+.hero h1 { font-size: 2.2em; font-weight: 900; color: #0f172a; letter-spacing: -0.5px; line-height: 1.1; margin-bottom: 12px; }
+.hero h1 span { color: #2d8a3e; }
+.hero p { color: #64748b; font-size: 1em; line-height: 1.6; max-width: 560px; margin: 0 auto 24px; }
+.hero-total { display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #1a5c28, #2d8a3e); color: white; border-radius: 16px; padding: 18px 32px; font-weight: 900; font-size: 1.1em; box-shadow: 0 8px 24px rgba(26,92,40,0.3); }
+.hero-total .big { font-size: 1.8em; letter-spacing: -1px; }
+
+/* ── FORMAT BADGE ── */
+.format-row { display: flex; justify-content: center; gap: 12px; margin-bottom: 36px; flex-wrap: wrap; }
+.format-pill { background: white; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 10px 20px; font-size: 0.82em; font-weight: 700; color: #475569; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.format-pill .fp-num { font-size: 1.6em; font-weight: 900; color: #0f172a; line-height: 1; }
+.format-pill .fp-sub { font-size: 0.75em; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* ── SECTION ── */
+.section { background: white; border-radius: 20px; border: 1px solid #e2eae5; box-shadow: 0 2px 12px rgba(0,0,0,0.05); margin-bottom: 20px; overflow: hidden; }
+.section-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px 14px; border-bottom: 1px solid #f1f5f9; }
+.section-title { display: flex; align-items: center; gap: 10px; }
+.section-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1em; flex-shrink: 0; }
+.section-icon.fwd { background: #eff6ff; }
+.section-icon.def { background: #f0fdf4; }
+.section-icon.goal { background: #fef9ec; }
+.section-title h2 { font-size: 1em; font-weight: 800; color: #0f172a; }
+.section-title p { font-size: 0.75em; color: #94a3b8; font-weight: 600; margin-top: 1px; }
+.section-total { font-size: 1.05em; font-weight: 900; color: #2d8a3e; background: #f0fdf4; padding: 6px 14px; border-radius: 8px; }
+
+/* ── PLAYER ROW ── */
+.player-list { padding: 8px 0; }
+.player-row { display: flex; align-items: center; gap: 12px; padding: 10px 22px; transition: background 0.15s; }
+.player-row:hover { background: #f8fafc; }
+.player-rank { width: 22px; font-size: 0.72em; font-weight: 800; color: #cbd5e1; text-align: right; flex-shrink: 0; }
+.player-rank.gold { color: #f59e0b; }
+.player-rank.silver { color: #94a3b8; }
+.player-rank.bronze { color: #cd7c3a; }
+.player-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.72em; font-weight: 900; color: white; flex-shrink: 0; letter-spacing: -0.3px; }
+.player-info { flex: 1; min-width: 0; }
+.player-name { font-size: 0.9em; font-weight: 700; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.player-meta { font-size: 0.72em; color: #94a3b8; font-weight: 600; margin-top: 1px; }
+.player-tag { display: inline-block; background: #f1f5f9; color: #475569; font-size: 0.78em; font-weight: 700; padding: 2px 7px; border-radius: 5px; margin-right: 4px; }
+.player-pts { text-align: right; flex-shrink: 0; }
+.player-pts .pts-val { font-size: 1.05em; font-weight: 900; color: #1a5c28; }
+.player-pts .pts-lbl { font-size: 0.65em; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+.player-pts .pts-proj { font-size: 0.72em; color: #94a3b8; font-weight: 600; margin-top: 1px; }
+
+/* ── NOTE ── */
+.note-bar { background: #f8fafc; border-top: 1px solid #f1f5f9; padding: 14px 22px; font-size: 0.76em; color: #94a3b8; line-height: 1.6; }
+.note-bar strong { color: #64748b; }
+
+/* ── CTA ── */
+.cta-block { text-align: center; background: linear-gradient(135deg, #1a5c28, #2d8a3e); border-radius: 20px; padding: 40px 28px; color: white; margin-top: 32px; }
+.cta-block h3 { font-size: 1.3em; font-weight: 900; margin-bottom: 10px; }
+.cta-block p { font-size: 0.88em; opacity: 0.8; line-height: 1.6; margin-bottom: 24px; max-width: 440px; margin-left: auto; margin-right: auto; }
+.btn-cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #f5c842; color: #1a3d10; font-weight: 800; font-size: 1em; padding: 14px 28px; border-radius: 12px; text-decoration: none; transition: all 0.2s; }
+.btn-cta:hover { background: #f9d55a; transform: translateY(-2px); box-shadow: 0 10px 28px rgba(0,0,0,0.25); }
+
+/* ── BARÈME ── */
+.bareme { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 36px; }
+.bareme-pill { background: white; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 7px 14px; font-size: 0.78em; font-weight: 700; color: #475569; }
+.bareme-pill span { color: #1a5c28; font-weight: 900; }
+
+@media (max-width: 600px) {
+  .hero h1 { font-size: 1.6em; }
+  .hero-total { padding: 14px 20px; font-size: 0.95em; }
+  .hero-total .big { font-size: 1.5em; }
+  .player-row { padding: 10px 14px; gap: 10px; }
+  .player-avatar { width: 30px; height: 30px; font-size: 0.65em; }
+  .section-header { padding: 14px 14px 12px; }
+  .note-bar { padding: 12px 14px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class='nav-logo' href='/'>
+    <img src='/100pool.jpg' alt='100% Pool'>
+    <span>100% Pool</span>
+  </a>
+  <div class='nav-links'>
+    <a class='nav-link' href='/guide-poolers/2026-2027/'>Guide</a>
+    <a class='nav-link' href='/podcast/'>Podcast</a>
+    <a class='nav-link nav-btn' href='/#acheter'>Obtenir le guide →</a>
+  </div>
+</nav>
+
+<div class='page-wrap'>
+
+  <div class='hero'>
+    <div class='hero-badge'>🏒 Saison 2026-27</div>
+    <h1>L'équipe <span>ultime</span> du pool</h1>
+    <p>Le meilleur alignement possible basé sur les projections de notre guide — 447 joueurs analysés, barème de pool standard.</p>
+    <div class='hero-total'>
+      <span>Total projeté</span>
+      <span class='big'>2 091</span>
+      <span>pts pool</span>
+    </div>
+  </div>
+
+  <div class='format-row'>
+    <div class='format-pill'><span class='fp-num'>12</span><span class='fp-sub'>Attaquants</span></div>
+    <div class='format-pill'><span class='fp-num'>6</span><span class='fp-sub'>Défenseurs</span></div>
+    <div class='format-pill'><span class='fp-num'>2</span><span class='fp-sub'>Gardiens</span></div>
+  </div>
+
+  <div class='bareme'>
+    <div class='bareme-pill'>ATT But <span>×1</span></div>
+    <div class='bareme-pill'>ATT Passe <span>×1</span></div>
+    <div class='bareme-pill'>DEF But <span>×2</span></div>
+    <div class='bareme-pill'>DEF Passe <span>×1</span></div>
+    <div class='bareme-pill'>G Victoire <span>×2</span></div>
+    <div class='bareme-pill'>G Blanchissage <span>×3</span></div>
+  </div>
+
+  <!-- ATTAQUANTS -->
+  <div class='section'>
+    <div class='section-header'>
+      <div class='section-title'>
+        <div class='section-icon fwd'>⚡</div>
+        <div>
+          <h2>Attaquants</h2>
+          <p>12 joueurs · G×1 + A×1</p>
+        </div>
+      </div>
+      <div class='section-total'>1 301 pts</div>
+    </div>
+    <div class='player-list' id='list-fwd'></div>
+    <div class='note-bar'>Projection pts pool = Buts + Passes. <strong>McDavid (138)</strong> et <strong>Celebrini (127)</strong> forment le duo de tête.</div>
+  </div>
+
+  <!-- DÉFENSEURS -->
+  <div class='section'>
+    <div class='section-header'>
+      <div class='section-title'>
+        <div class='section-icon def'>🛡</div>
+        <div>
+          <h2>Défenseurs</h2>
+          <p>6 joueurs · G×2 + A×1</p>
+        </div>
+      </div>
+      <div class='section-total'>626 pts</div>
+    </div>
+    <div class='player-list' id='list-def'></div>
+    <div class='note-bar'>Le multiplicateur ×2 sur les buts avantage les défenseurs offensifs. <strong>Bouchard (120 pts)</strong> dépasse plusieurs top attaquants.</div>
+  </div>
+
+  <!-- GARDIENS -->
+  <div class='section'>
+    <div class='section-header'>
+      <div class='section-title'>
+        <div class='section-icon goal'>🧤</div>
+        <div>
+          <h2>Gardiens</h2>
+          <p>2 joueurs · V×2 + BL×3</p>
+        </div>
+      </div>
+      <div class='section-total'>164 pts</div>
+    </div>
+    <div class='player-list' id='list-goal'></div>
+    <div class='note-bar'><strong>Oettinger</strong> et <strong>Vasilevskiy</strong> à égalité parfaite — deux franchises stables avec un volume élevé de victoires projetées.</div>
+  </div>
+
+  <!-- CTA -->
+  <div class='cta-block'>
+    <h3>Veux-tu construire la tienne ?</h3>
+    <p>447 joueurs analysés avec projections, tiers, valeur pool et comparables. Prépare ton repêchage en 30 minutes.</p>
+    <a class='btn-cta' href='/#acheter'>📋 Obtenir le guide — 5 $</a>
+  </div>
+
+</div>
+
+<script>
+const PLAYERS = {
+  fwd: [
+    { name: 'Connor McDavid',    team: 'EDM', pos: 'C',  pool_pts: 138, proj_g: 46, proj_a: 92 },
+    { name: 'Macklin Celebrini', team: 'SJS', pos: 'C',  pool_pts: 127, proj_g: 49, proj_a: 78 },
+    { name: 'Nathan MacKinnon',  team: 'COL', pos: 'C',  pool_pts: 123, proj_g: 48, proj_a: 75 },
+    { name: 'Nikita Kucherov',   team: 'TBL', pos: 'RW', pool_pts: 118, proj_g: 34, proj_a: 84 },
+    { name: 'David Pastrnak',    team: 'BOS', pos: 'RW', pool_pts: 106, proj_g: 35, proj_a: 71 },
+    { name: 'Leon Draisaitl',    team: 'EDM', pos: 'C',  pool_pts: 102, proj_g: 38, proj_a: 64 },
+    { name: 'Nick Suzuki',       team: 'MTL', pos: 'C',  pool_pts: 101, proj_g: 31, proj_a: 70 },
+    { name: 'Mikko Rantanen',    team: 'DAL', pos: 'RW', pool_pts:  98, proj_g: 31, proj_a: 67 },
+    { name: 'Mark Scheifele',    team: 'WPG', pos: 'C',  pool_pts:  98, proj_g: 39, proj_a: 59 },
+    { name: 'Kyle Connor',       team: 'WPG', pos: 'LW', pool_pts:  98, proj_g: 42, proj_a: 56 },
+    { name: 'Jason Robertson',   team: 'DAL', pos: 'LW', pool_pts:  97, proj_g: 44, proj_a: 53 },
+    { name: 'William Nylander',  team: 'TOR', pos: 'RW', pool_pts:  95, proj_g: 40, proj_a: 55 },
+  ],
+  def: [
+    { name: 'Evan Bouchard',   team: 'EDM', pos: 'D', pool_pts: 120, proj_g: 21, proj_a: 78 },
+    { name: 'Cale Makar',      team: 'COL', pos: 'D', pool_pts: 108, proj_g: 22, proj_a: 64 },
+    { name: 'Quinn Hughes',    team: 'MIN', pos: 'D', pool_pts: 106, proj_g: 17, proj_a: 72 },
+    { name: 'Zach Werenski',   team: 'CBJ', pos: 'D', pool_pts: 103, proj_g: 20, proj_a: 63 },
+    { name: 'Rasmus Dahlin',   team: 'BUF', pos: 'D', pool_pts:  97, proj_g: 18, proj_a: 61 },
+    { name: 'Lane Hutson',     team: 'MTL', pos: 'D', pool_pts:  92, proj_g: 10, proj_a: 72 },
+  ],
+  goal: [
+    { name: 'Jake Oettinger',       team: 'DAL', pos: 'G', pool_pts: 82, proj_g: 35, proj_a: 4 },
+    { name: 'Andrei Vasilevskiy',   team: 'TBL', pos: 'G', pool_pts: 82, proj_g: 38, proj_a: 2 },
+  ],
+};
+
+const TEAM_COLORS = {
+  EDM:'#FF4C00',COL:'#6F263D',SJS:'#006D75',TBL:'#002868',BOS:'#FFB81C',
+  MTL:'#AF1E2D',DAL:'#006847',WPG:'#041E42',TOR:'#003E7E',MIN:'#154734',
+  BUF:'#002654',CBJ:'#002654',
+};
+
+function initials(name) {
+  return name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+}
+
+function rankClass(i) {
+  if (i === 0) return 'gold';
+  if (i === 1) return 'silver';
+  if (i === 2) return 'bronze';
+  return '';
+}
+
+function renderList(id, players, isGoalie) {
+  const el = document.getElementById(id);
+  el.innerHTML = players.map((p, i) => {
+    const color = TEAM_COLORS[p.team] || '#2d8a3e';
+    const statLine = isGoalie
+      ? `${p.proj_g} V · ${p.proj_a} BL proj.`
+      : `${p.proj_g} G · ${p.proj_a} A proj.`;
+    return `<div class='player-row'>
+      <div class='player-rank ${rankClass(i)}'>${i + 1}</div>
+      <div class='player-avatar' style='background:${color}'>${initials(p.name)}</div>
+      <div class='player-info'>
+        <div class='player-name'>${p.name}</div>
+        <div class='player-meta'>
+          <span class='player-tag'>${p.team}</span>
+          <span class='player-tag'>${p.pos}</span>
+          ${statLine}
+        </div>
+      </div>
+      <div class='player-pts'>
+        <div class='pts-val'>${p.pool_pts}</div>
+        <div class='pts-lbl'>pts pool</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+renderList('list-fwd', PLAYERS.fwd, false);
+renderList('list-def', PLAYERS.def, false);
+renderList('list-goal', PLAYERS.goal, true);
+</script>
+
+<script src='/sidebar.js?v=15'></script>
+</body>
+</html>
