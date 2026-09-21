@@ -1199,7 +1199,7 @@ async function loadFeedback() {
           const resolved = r.resolved === true;
           return `<tr class='${resolved ? 'fb-resolved' : ''}' data-feedback-id='${r.id}'>
             <td class='fb-msg'>
-              ${r.rating ? `<div style='color:#f59e0b;font-size:1em;letter-spacing:1px;margin-bottom:4px'>${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>` : ''}
+              <div style='letter-spacing:1px;margin-bottom:4px'>${r.rating ? `<span style='color:#f59e0b'>${'★'.repeat(r.rating)}</span><span style='color:#e2e8f0'>${'★'.repeat(5 - r.rating)}</span>` : `<span style='color:#e2e8f0'>${'★'.repeat(5)}</span>`}</div>
               ${r.message ?? ''}
             </td>
             <td class='fb-meta'>
