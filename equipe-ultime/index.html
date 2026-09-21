@@ -138,7 +138,8 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
 
 /* ── SHARE CARD (hors-écran, pour html2canvas) ── */
 #shareCard { position: fixed; left: -9999px; top: 0; width: 600px; background: #ffffff; padding: 32px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; border: 1px solid #e2e8f0; }
-#shareCard .sc-title { font-size: 1.35em; font-weight: 900; color: #0f172a; text-align: center; margin-bottom: 20px; letter-spacing: -0.3px; }
+#shareCard .sc-title { font-size: 1.35em; font-weight: 900; color: #0f172a; text-align: center; margin-bottom: 6px; letter-spacing: -0.3px; }
+#shareCard .sc-subtitle { font-size: 0.78em; font-weight: 600; color: #64748b; text-align: center; margin-bottom: 20px; }
 #shareCard .sc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; background: linear-gradient(135deg, #1a5c28, #2d8a3e); border-radius: 12px; padding: 14px 18px; }
 #shareCard .sc-logo { display: flex; align-items: center; gap: 10px; }
 #shareCard .sc-logo-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.4); flex-shrink: 0; }
@@ -146,6 +147,7 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
 #shareCard .sc-logo-sub  { color: rgba(255,255,255,0.7); font-size: 0.72em; font-weight: 600; }
 #shareCard .sc-total { text-align: right; }
 #shareCard .sc-total-pts { font-size: 1.8em; font-weight: 900; color: #ffffff; line-height: 1; }
+#shareCard .sc-total-cap { font-size: 1.3em; font-weight: 900; color: rgba(255,255,255,0.85); line-height: 1; margin-top: 8px; }
 #shareCard .sc-total-lbl { font-size: 0.7em; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
 #shareCard .sc-section-lbl { font-size: 0.65em; font-weight: 800; color: #1a5c28; text-transform: uppercase; letter-spacing: 1.2px; margin: 16px 0 8px; }
 #shareCard .sc-grid { display: flex; flex-direction: column; gap: 6px; }
@@ -237,6 +239,7 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
 <!-- SHARE CARD (off-screen, rendered by html2canvas) -->
 <div id='shareCard'>
   <div class='sc-title'>L'équipe ultime par 100% Pool</div>
+  <div class='sc-subtitle'>Proposée par 100% Pool · Basée sur nos prédictions 2026-27</div>
   <div class='sc-header'>
     <div class='sc-logo'>
       <img class='sc-logo-img' id='sc-logo-img' src='' alt='100% Pool'>
@@ -248,6 +251,8 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
     <div class='sc-total'>
       <div class='sc-total-pts' id='sc-pts'>—</div>
       <div class='sc-total-lbl'>pts pool projetés</div>
+      <div class='sc-total-cap' id='sc-cap'>—</div>
+      <div class='sc-total-lbl'>masse utilisée</div>
     </div>
   </div>
   <div class='sc-section-lbl' id='sc-lbl-fwd'>⚡ Attaquants</div>
@@ -278,7 +283,7 @@ const LOGO_B64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4QBWRXhpZgA
 
 function initials(name) { return name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase(); }
 function rankClass(i) { return i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : ''; }
-function fmtSal(aav) { return aav < 1 ? `${(aav * 1000).toFixed(0)} k$` : `${aav.toFixed(2).replace('.', ',')} M$`; }
+function fmtSal(aav) { return `${aav.toFixed(3).replace('.', ',')} M$`; }
 function fmtPts(n) { return n.toLocaleString('fr-CA'); }
 
 function renderList(id, players, isGoalie) {
@@ -354,8 +359,10 @@ async function shareRef() {
 
 function buildShareCard(result) {
   const { fwd, def, goal, totalPts } = result;
+  const totalCap = [...fwd, ...def, ...goal].reduce((s, p) => s + p.aav, 0);
   document.getElementById('sc-logo-img').src = LOGO_B64;
-  document.getElementById('sc-pts').textContent = totalPts;
+  document.getElementById('sc-pts').textContent = fmtPts(totalPts);
+  document.getElementById('sc-cap').textContent = `${totalCap.toFixed(2).replace('.', ',')} M$`;
   document.getElementById('sc-lbl-fwd').textContent  = `⚡ Attaquants (${fwd.length})`;
   document.getElementById('sc-lbl-def').textContent  = `🛡 Défenseurs (${def.length})`;
   document.getElementById('sc-lbl-goal').textContent = `🧤 Gardiens (${goal.length})`;
