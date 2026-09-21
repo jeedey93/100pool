@@ -407,7 +407,7 @@ function getVal(id) { return parseFloat(document.getElementById(id).value) || 0;
 function initials(name) { return name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase(); }
 function rankClass(i) { return i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : ''; }
 function fmtSal(aav) { return aav < 1 ? `${(aav * 1000).toFixed(0)} k$` : `${aav.toFixed(2).replace('.', ',')} M$`; }
-function fmtPts(n) { return n >= 1000 ? (Math.floor(n/100)/10).toFixed(1).replace('.', ' ') + ' ' + String(n).slice(-3) : String(n); }
+function fmtPts(n) { return n.toLocaleString('fr-CA'); }
 
 function calcPoolPts(p, scoring) {
   const g = p.proj_g || 0, a = p.proj_a || 0;
@@ -491,23 +491,18 @@ function optimize(players, scoring, cap, nFwd, nDef, nGoal) {
   const defsByPts  = byPts(withPts.filter(p => p.pos === 'D'));
   const goalsByPts = byPts(withPts.filter(p => p.pos === 'G'));
 
-  function upgrade(slot, pool) {
+  function upgrade(slot, pool, allSlots) {
     let improved = true;
     while (improved) {
       improved = false;
-      const used = new Set([...best.fwd, ...best.def, ...best.goal].map(p => p.id));
-      const remaining = cap - best.totalCost;
-      // Find the worst player in this slot
+      const used = new Set(allSlots.flat().map(p => p.id));
+      const remaining = cap - allSlots.flat().reduce((s,p) => s+p.aav, 0);
       const worst = [...slot].sort((a, b) => a.pool_pts - b.pool_pts)[0];
-      // Try to find a better player not already selected that fits
       for (const candidate of pool) {
         if (used.has(candidate.id)) continue;
-        const budgetGain = worst.aav - candidate.aav; // freed if we swap
-        const canAfford = remaining + budgetGain >= 0;
-        if (canAfford && candidate.pool_pts > worst.pool_pts) {
-          const idx = slot.indexOf(worst);
-          slot[idx] = candidate;
-          best.totalCost = best.totalCost - worst.aav + candidate.aav;
+        const budgetGain = worst.aav - candidate.aav;
+        if (remaining + budgetGain >= 0 && candidate.pool_pts > worst.pool_pts) {
+          slot[slot.indexOf(worst)] = candidate;
           improved = true;
           break;
         }
@@ -515,10 +510,21 @@ function optimize(players, scoring, cap, nFwd, nDef, nGoal) {
     }
   }
 
-  upgrade(best.fwd,  fwdsByPts);
-  upgrade(best.def,  defsByPts);
-  upgrade(best.goal, goalsByPts);
+  // Multi-pass interleaved upgrades: rotate through all positions until no more improvement
+  let anyImproved = true;
+  while (anyImproved) {
+    anyImproved = false;
+    const allSlots = [best.fwd, best.def, best.goal];
+    const pools    = [fwdsByPts, defsByPts, goalsByPts];
+    for (let i = 0; i < 3; i++) {
+      const before = allSlots[i].reduce((s,p) => s+p.pool_pts, 0);
+      upgrade(allSlots[i], pools[i], allSlots);
+      const after  = allSlots[i].reduce((s,p) => s+p.pool_pts, 0);
+      if (after > before) anyImproved = true;
+    }
+  }
 
+  best.totalCost = [...best.fwd, ...best.def, ...best.goal].reduce((s,p) => s+p.aav, 0);
   return best;
 }
 
