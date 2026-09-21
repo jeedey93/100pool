@@ -198,22 +198,25 @@ function optimize() {
   const available = allPlayers.filter(p =>
     !lockedIds.has(p.id) &&
     !draftedIds.has(p.id) &&
-    POS_GROUP(p) !== null
+    POS_GROUP(p) !== null &&
+    p.aav != null && parseFloat(p.aav) > 0
   ).sort((a, b) => (b.proj_pts ?? 0) - (a.proj_pts ?? 0));
 
   const result = [];
   let remCap = capLeft;
   const tempSlots = { ...slots };
 
-  for (const p of available) {
-    const g = POS_GROUP(p);
-    if (tempSlots[g] <= 0) continue;
-    const aav = parseFloat(p.aav || 0);
-    if (aav > remCap) continue;
-    result.push(p);
-    tempSlots[g]--;
-    remCap -= aav;
-    if (tempSlots.F <= 0 && tempSlots.D <= 0 && tempSlots.G <= 0) break;
+  // Deux passes : d'abord remplir chaque groupe avec les meilleurs qui rentrent dans le cap
+  for (const grp of ['F', 'D', 'G']) {
+    const grpPlayers = available.filter(p => POS_GROUP(p) === grp);
+    for (const p of grpPlayers) {
+      if (tempSlots[grp] <= 0) break;
+      const aav = parseFloat(p.aav);
+      if (aav > remCap) continue;
+      result.push(p);
+      tempSlots[grp]--;
+      remCap -= aav;
+    }
   }
 
   suggestions = result;
