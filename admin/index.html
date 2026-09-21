@@ -1233,9 +1233,20 @@ async function loadTrafic() {
   const sinceStr = since.toISOString().slice(0, 10);
 
   try {
-    const res = await fetch(`${SB_URL}/rest/v1/page_views?select=visited_at&page=eq.guide&visited_at=gte.${sinceStr}T00:00:00Z&order=visited_at.asc&limit=5000`, { headers });
-    if (!res.ok) throw new Error(await res.text());
-    const rows = await res.json();
+    // Paginate through all rows (Supabase default max is 1000 per request)
+    let rows = [];
+    let from = 0;
+    const PAGE = 1000;
+    while (true) {
+      const res = await fetch(`${SB_URL}/rest/v1/page_views?select=visited_at&page=eq.guide&visited_at=gte.${sinceStr}T00:00:00Z&order=visited_at.asc`, {
+        headers: { ...headers, 'Range': `${from}-${from + PAGE - 1}`, 'Range-Unit': 'items', 'Prefer': 'count=none' }
+      });
+      if (!res.ok) throw new Error(await res.text());
+      const page = await res.json();
+      rows = rows.concat(page);
+      if (page.length < PAGE) break;
+      from += PAGE;
+    }
 
     // Group by local date (America/Toronto)
     const counts = {};
