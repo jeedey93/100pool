@@ -418,29 +418,26 @@ async function shareLineup() {
       logging: false,
     });
 
-    canvas.toBlob(async blob => {
-      const file = new File([blob], 'equipe-ultime-100pool.png', { type: 'image/png' });
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          title: 'Mon équipe ultime — 100% Pool',
-          text: `${lastResult.totalPts} pts pool projetés · 100pool.ca/equipe-ultime`,
-        });
-      } else {
-        // Fallback: download
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'equipe-ultime-100pool.png';
-        a.click();
-      }
-      btn.textContent = '📸 Partager cet alignement';
-      btn.disabled = false;
-    }, 'image/png');
+    const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+    const file = new File([blob], 'equipe-ultime-100pool.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({
+        files: [file],
+        title: 'L\'équipe ultime par 100% Pool',
+        text: `${fmtPts(lastResult.totalPts)} pts pool projetés · 100pool.ca/equipe-ultime`,
+      });
+    } else {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'equipe-ultime-100pool.png';
+      a.click();
+    }
 
   } catch (e) {
+    if (e.name !== 'AbortError') alert('Erreur lors de la génération : ' + e.message);
+  } finally {
     btn.textContent = '📸 Partager cet alignement';
     btn.disabled = false;
-    if (e.name !== 'AbortError') alert('Erreur lors de la génération : ' + e.message);
   }
 }
 </script>
