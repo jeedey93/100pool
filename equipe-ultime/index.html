@@ -129,6 +129,15 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
 .lineup-label h2 { font-size: 1em; font-weight: 900; color: #0f172a; }
 .lineup-label p { font-size: 0.75em; color: #94a3b8; font-weight: 600; margin-top: 1px; }
 
+/* ── LINEUP TABS ── */
+.lineup-tabs { display: flex; gap: 8px; margin-bottom: 24px; background: white; border: 1px solid #e2eae5; border-radius: 16px; padding: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+.lineup-tab { flex: 1; padding: 10px 8px; border: none; background: transparent; border-radius: 11px; cursor: pointer; font-family: inherit; font-size: 0.82em; font-weight: 700; color: #64748b; transition: all 0.18s; text-align: center; }
+.lineup-tab .tab-rank { font-size: 1.1em; font-weight: 900; display: block; letter-spacing: -0.3px; }
+.lineup-tab .tab-pts { font-size: 0.72em; font-weight: 600; color: #94a3b8; display: block; margin-top: 1px; }
+.lineup-tab.active { background: linear-gradient(135deg, #1a5c28, #2d8a3e); color: white; box-shadow: 0 4px 12px rgba(26,92,40,0.3); }
+.lineup-tab.active .tab-pts { color: rgba(255,255,255,0.75); }
+@media (max-width: 480px) { .lineup-tab { padding: 8px 4px; font-size: 0.75em; } }
+
 /* ── ERROR ── */
 .error-box { background: #fff1f2; border: 1px solid #fecdd3; border-radius: 14px; padding: 18px 20px; color: #be123c; font-size: 0.85em; font-weight: 600; text-align: center; margin-bottom: 20px; }
 
@@ -186,27 +195,42 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
   <div class='hero'>
     <div class='hero-badge'>🏒 Saison 2026-27</div>
     <h1>L'équipe <span>ultime</span> du pool</h1>
-    <p>Le meilleur alignement possible sous 104 M$ — calculé sur les 438 joueurs du guide.</p>
+    <p>Les 3 meilleurs alignements possibles sous 104 M$ — calculés sur les 438 joueurs du guide.</p>
     <button id='btnShare' class='btn-share-result' style='margin-top:16px' onclick='shareRef()'>
       📸 Partager cet alignement
     </button>
   </div>
 
+  <div class='lineup-tabs' id='lineupTabs'>
+    <button class='lineup-tab active' onclick='selectLineup(0)'>
+      <span class='tab-rank'>🥇 Combinaison #1</span>
+      <span class='tab-pts' id='tab-pts-0'>— pts</span>
+    </button>
+    <button class='lineup-tab' onclick='selectLineup(1)'>
+      <span class='tab-rank'>🥈 Combinaison #2</span>
+      <span class='tab-pts' id='tab-pts-1'>— pts</span>
+    </button>
+    <button class='lineup-tab' onclick='selectLineup(2)'>
+      <span class='tab-rank'>🥉 Combinaison #3</span>
+      <span class='tab-pts' id='tab-pts-2'>— pts</span>
+    </button>
+  </div>
+
   <div class='hero-stats' id='ref-stats'>
-    <div class='hero-stat accent'><div class='hs-val'>1 802</div><div class='hs-lbl'>pts pool projetés</div></div>
-    <div class='hero-stat'><div class='hs-val'>103,95 M$</div><div class='hs-lbl'>masse utilisée</div></div>
+    <div class='hero-stat accent'><div class='hs-val' id='stat-pts'>—</div><div class='hs-lbl'>pts pool projetés</div></div>
+    <div class='hero-stat'><div class='hs-val' id='stat-cap'>—</div><div class='hs-lbl'>masse utilisée</div></div>
     <div class='hero-stat'><div class='hs-val'>20</div><div class='hs-lbl'>joueurs</div></div>
   </div>
 
   <div class='cap-bar-wrap' style='margin-bottom:20px'>
-    <div class='cap-bar-label'><span>Masse utilisée</span><span>103,95 M$ / 104 M$</span></div>
-    <div class='cap-bar-track'><div class='cap-bar-fill' style='width:99.95%'></div></div>
+    <div class='cap-bar-label'><span>Masse utilisée</span><span id='cap-bar-lbl'>— / 104 M$</span></div>
+    <div class='cap-bar-track'><div class='cap-bar-fill' id='cap-bar-fill' style='width:0%'></div></div>
   </div>
 
   <div class='section'>
     <div class='section-header'>
       <div class='section-title'><div class='section-icon fwd'>⚡</div><div><h2>Attaquants</h2><p>12 joueurs · G×1 + A×1</p></div></div>
-      <div class='section-total'><div class='st-pts'>1 150 pts</div><div class='st-sal'>63,85 M$</div></div>
+      <div class='section-total'><div class='st-pts' id='st-pts-fwd'>— pts</div><div class='st-sal' id='st-sal-fwd'>— M$</div></div>
     </div>
     <div class='player-list' id='ref-list-fwd'></div>
   </div>
@@ -214,7 +238,7 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
   <div class='section'>
     <div class='section-header'>
       <div class='section-title'><div class='section-icon def'>🛡</div><div><h2>Défenseurs</h2><p>6 joueurs · G×2 + A×1</p></div></div>
-      <div class='section-total'><div class='st-pts'>531 pts</div><div class='st-sal'>37,64 M$</div></div>
+      <div class='section-total'><div class='st-pts' id='st-pts-def'>— pts</div><div class='st-sal' id='st-sal-def'>— M$</div></div>
     </div>
     <div class='player-list' id='ref-list-def'></div>
   </div>
@@ -222,7 +246,7 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
   <div class='section' style='margin-bottom:0'>
     <div class='section-header'>
       <div class='section-title'><div class='section-icon goal'>🧤</div><div><h2>Gardiens</h2><p>2 joueurs · V×2 + BL×3</p></div></div>
-      <div class='section-total'><div class='st-pts'>121 pts</div><div class='st-sal'>2,47 M$</div></div>
+      <div class='section-total'><div class='st-pts' id='st-pts-goal'>— pts</div><div class='st-sal' id='st-sal-goal'>— M$</div></div>
     </div>
     <div class='player-list' id='ref-list-goal'></div>
   </div>
@@ -318,43 +342,152 @@ function renderList(id, players, isGoalie) {
 }
 
 // ── Alignement de référence (hardcodé) ────────────────────────────────────
-const REF = {
+const REF1 = {
+  totalPts: 1844, totalCap: 103.996,
+  nFwd: 12, nDef: 6, nGoal: 2,
+  scoring: {fwd_g:1,fwd_a:1,def_g:2,def_a:1,g_w:2,g_so:3},
   fwd: [
-    { name:'Connor McDavid',    team:'EDM', pos:'C',  pool_pts:138, proj_g:46, proj_a:92,  aav:12.500, headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/EDM/8478402.png' },
-    { name:'Macklin Celebrini', team:'SJS', pos:'C',  pool_pts:127, proj_g:49, proj_a:78,  aav:0.975,  headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/SJS/8484801.png' },
-    { name:'Nathan MacKinnon',  team:'COL', pos:'C',  pool_pts:123, proj_g:48, proj_a:75,  aav:12.604, headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/COL/8477492.png' },
-    { name:'Nikita Kucherov',   team:'TBL', pos:'RW', pool_pts:118, proj_g:34, proj_a:84,  aav:9.500,  headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/TBL/8476453.png' },
-    { name:'Nick Suzuki',       team:'MTL', pos:'C',  pool_pts:101, proj_g:31, proj_a:70,  aav:7.875,  headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MTL/8480018.png' },
-    { name:'Mark Scheifele',    team:'WPG', pos:'C',  pool_pts: 98, proj_g:39, proj_a:59,  aav:8.500,  headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/WPG/8476460.png' },
-    { name:'Clayton Keller',    team:'UTA', pos:'LW', pool_pts: 91, proj_g:28, proj_a:63,  aav:7.150,  headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/UTA/8479343.png' },
-    { name:'Beckett Sennecke',  team:'ANA', pos:'RW', pool_pts: 78, proj_g:32, proj_a:46,  aav:0.954,  headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/ANA/8484762.png' },
-    { name:'Jimmy Snuggerud',   team:'STL', pos:'RW', pool_pts: 71, proj_g:30, proj_a:41,  aav:0.950,  headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/STL/8483516.png' },
-    { name:'Will Smith',        team:'SJS', pos:'RW', pool_pts: 69, proj_g:28, proj_a:41,  aav:0.950,  headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/SJS/8484227.png' },
-    { name:'Ivan Demidov',      team:'MTL', pos:'RW', pool_pts: 68, proj_g:21, proj_a:47,  aav:0.941,  headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MTL/8484984.png' },
-    { name:'Matvei Michkov',    team:'PHI', pos:'LW', pool_pts: 68, proj_g:29, proj_a:39,  aav:0.950,  headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/PHI/8484387.png' },
+    {name:'Connor McDavid',team:'EDM',pos:'C',pool_pts:138,proj_g:46,proj_a:92,aav:12.5,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/EDM/8478402.png'},
+    {name:'Macklin Celebrini',team:'SJS',pos:'C',pool_pts:127,proj_g:49,proj_a:78,aav:0.975,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/SJS/8484801.png'},
+    {name:'Nathan MacKinnon',team:'COL',pos:'C',pool_pts:123,proj_g:48,proj_a:75,aav:12.604,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/COL/8477492.png'},
+    {name:'Nikita Kucherov',team:'TBL',pos:'RW',pool_pts:118,proj_g:34,proj_a:84,aav:9.5,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/TBL/8476453.png'},
+    {name:'Nick Suzuki',team:'MTL',pos:'C',pool_pts:101,proj_g:31,proj_a:70,aav:7.875,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MTL/8480018.png'},
+    {name:'Beckett Sennecke',team:'ANA',pos:'RW',pool_pts:78,proj_g:32,proj_a:46,aav:0.954,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/ANA/8484762.png'},
+    {name:'Kirill Marchenko',team:'CBJ',pos:'LW',pool_pts:73,proj_g:30,proj_a:43,aav:3.85,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/CBJ/8480893.png'},
+    {name:'Jimmy Snuggerud',team:'STL',pos:'RW',pool_pts:71,proj_g:30,proj_a:41,aav:0.95,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/STL/8483516.png'},
+    {name:'Will Smith',team:'SJS',pos:'RW',pool_pts:69,proj_g:28,proj_a:41,aav:0.95,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/SJS/8484227.png'},
+    {name:'Ivan Demidov',team:'MTL',pos:'RW',pool_pts:68,proj_g:21,proj_a:47,aav:0.941,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MTL/8484984.png'},
+    {name:'Matvei Michkov',team:'PHI',pos:'LW',pool_pts:68,proj_g:29,proj_a:39,aav:0.95,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/PHI/8484387.png'},
+    {name:'Porter Martone',team:'PHI',pos:'RW',pool_pts:59,proj_g:26,proj_a:33,aav:0.978,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/PHI/8485406.png'},
   ],
   def: [
-    { name:'Evan Bouchard',       team:'EDM', pos:'D', pool_pts:120, proj_g:21, proj_a:78, aav:10.500, headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/EDM/8480803.png' },
-    { name:'Quinn Hughes',        team:'MIN', pos:'D', pool_pts:106, proj_g:17, proj_a:72, aav:7.850,  headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MIN/8480800.png' },
-    { name:'Lane Hutson',         team:'MTL', pos:'D', pool_pts: 92, proj_g:10, proj_a:72, aav:8.850,  headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MTL/8483457.png' },
-    { name:'Matthew Schaefer',    team:'NYI', pos:'D', pool_pts: 83, proj_g:17, proj_a:49, aav:0.986,  headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/NYI/8485366.png' },
-    { name:'Josh Morrissey',      team:'WPG', pos:'D', pool_pts: 73, proj_g:14, proj_a:45, aav:6.250,  headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/WPG/8477504.png' },
-    { name:'Shayne Gostisbehere', team:'CAR', pos:'D', pool_pts: 57, proj_g: 8, proj_a:41, aav:3.200,  headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/CAR/8476906.png' },
+    {name:'Evan Bouchard',team:'EDM',pos:'D',pool_pts:120,proj_g:21,proj_a:78,aav:10.5,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/EDM/8480803.png'},
+    {name:'Cale Makar',team:'COL',pos:'D',pool_pts:108,proj_g:22,proj_a:64,aav:9.0,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/COL/8480069.png'},
+    {name:'Quinn Hughes',team:'MIN',pos:'D',pool_pts:106,proj_g:17,proj_a:72,aav:7.85,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MIN/8480800.png'},
+    {name:'Zach Werenski',team:'CBJ',pos:'D',pool_pts:103,proj_g:20,proj_a:63,aav:9.583,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/CBJ/8478460.png'},
+    {name:'Lane Hutson',team:'MTL',pos:'D',pool_pts:92,proj_g:10,proj_a:72,aav:8.85,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MTL/8483457.png'},
+    {name:'Matthew Schaefer',team:'NYI',pos:'D',pool_pts:83,proj_g:17,proj_a:49,aav:0.986,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/NYI/8485366.png'},
   ],
   goal: [
-    { name:'Jakub Dobes', team:'MTL', pos:'G', pool_pts:66, proj_g:30, proj_a:2, aav:0.965, headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MTL/8482487.png' },
-    { name:'Alex Lyon',   team:'BUF', pos:'G', pool_pts:55, proj_g:23, proj_a:3, aav:1.500, headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/BUF/8479312.png' },
+    {name:'Jesper Wallstedt',team:'MIN',pos:'G',pool_pts:70,proj_g:29,proj_a:4,aav:2.2,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MIN/8482661.png'},
+    {name:'Pyotr Kochetkov',team:'CAR',pos:'G',pool_pts:69,proj_g:30,proj_a:3,aav:2.0,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/CAR/8481611.png'},
   ],
-  totalPts: 1802,
 };
 
-// Render reference lineup on load
-renderList('ref-list-fwd',  REF.fwd,  false);
-renderList('ref-list-def',  REF.def,  false);
-renderList('ref-list-goal', REF.goal, true);
+const REF2 = {
+  totalPts: 1753, totalCap: 103.307,
+  nFwd: 12, nDef: 6, nGoal: 2,
+  scoring: {fwd_g:1,fwd_a:1,def_g:2,def_a:1,g_w:2,g_so:3},
+  fwd: [
+    {name:'Nathan MacKinnon',team:'COL',pos:'C',pool_pts:123,proj_g:48,proj_a:75,aav:12.604,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/COL/8477492.png'},
+    {name:'Nikita Kucherov',team:'TBL',pos:'RW',pool_pts:118,proj_g:34,proj_a:84,aav:9.5,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/TBL/8476453.png'},
+    {name:'Nick Suzuki',team:'MTL',pos:'C',pool_pts:101,proj_g:31,proj_a:70,aav:7.875,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MTL/8480018.png'},
+    {name:'Mark Scheifele',team:'WPG',pos:'C',pool_pts:98,proj_g:39,proj_a:59,aav:8.5,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/WPG/8476460.png'},
+    {name:'Clayton Keller',team:'UTA',pos:'LW',pool_pts:91,proj_g:28,proj_a:63,aav:7.15,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/UTA/8479343.png'},
+    {name:'Beckett Sennecke',team:'ANA',pos:'RW',pool_pts:78,proj_g:32,proj_a:46,aav:0.954,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/ANA/8484762.png'},
+    {name:'Jimmy Snuggerud',team:'STL',pos:'RW',pool_pts:71,proj_g:30,proj_a:41,aav:0.95,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/STL/8483516.png'},
+    {name:'Will Smith',team:'SJS',pos:'RW',pool_pts:69,proj_g:28,proj_a:41,aav:0.95,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/SJS/8484227.png'},
+    {name:'Ivan Demidov',team:'MTL',pos:'RW',pool_pts:68,proj_g:21,proj_a:47,aav:0.941,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MTL/8484984.png'},
+    {name:'Matvei Michkov',team:'PHI',pos:'LW',pool_pts:68,proj_g:29,proj_a:39,aav:0.95,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/PHI/8484387.png'},
+    {name:'Porter Martone',team:'PHI',pos:'RW',pool_pts:59,proj_g:26,proj_a:33,aav:0.978,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/PHI/8485406.png'},
+    {name:'Anton Frondell',team:'CHI',pos:'C',pool_pts:58,proj_g:24,proj_a:34,aav:0.986,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/CHI/8485391.png'},
+  ],
+  def: [
+    {name:'Evan Bouchard',team:'EDM',pos:'D',pool_pts:120,proj_g:21,proj_a:78,aav:10.5,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/EDM/8480803.png'},
+    {name:'Cale Makar',team:'COL',pos:'D',pool_pts:108,proj_g:22,proj_a:64,aav:9.0,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/COL/8480069.png'},
+    {name:'Quinn Hughes',team:'MIN',pos:'D',pool_pts:106,proj_g:17,proj_a:72,aav:7.85,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MIN/8480800.png'},
+    {name:'Zach Werenski',team:'CBJ',pos:'D',pool_pts:103,proj_g:20,proj_a:63,aav:9.583,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/CBJ/8478460.png'},
+    {name:'Lane Hutson',team:'MTL',pos:'D',pool_pts:92,proj_g:10,proj_a:72,aav:8.85,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MTL/8483457.png'},
+    {name:'Matthew Schaefer',team:'NYI',pos:'D',pool_pts:83,proj_g:17,proj_a:49,aav:0.986,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/NYI/8485366.png'},
+  ],
+  goal: [
+    {name:'Jesper Wallstedt',team:'MIN',pos:'G',pool_pts:70,proj_g:29,proj_a:4,aav:2.2,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MIN/8482661.png'},
+    {name:'Pyotr Kochetkov',team:'CAR',pos:'G',pool_pts:69,proj_g:30,proj_a:3,aav:2.0,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/CAR/8481611.png'},
+  ],
+};
 
-// Pre-generate share image in background so share is instant on click
-lastResult = { ...REF, nFwd:12, nDef:6, nGoal:2, scoring:{fwd_g:1,fwd_a:1,def_g:2,def_a:1,g_w:2,g_so:3} };
+const REF3 = {
+  totalPts: 1720, totalCap: 103.993,
+  nFwd: 12, nDef: 6, nGoal: 2,
+  scoring: {fwd_g:1,fwd_a:1,def_g:2,def_a:1,g_w:2,g_so:3},
+  fwd: [
+    {name:'David Pastrnak',team:'BOS',pos:'RW',pool_pts:106,proj_g:35,proj_a:71,aav:11.25,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/BOS/8477956.png'},
+    {name:'Nick Suzuki',team:'MTL',pos:'C',pool_pts:101,proj_g:31,proj_a:70,aav:7.875,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MTL/8480018.png'},
+    {name:'Mark Scheifele',team:'WPG',pos:'C',pool_pts:98,proj_g:39,proj_a:59,aav:8.5,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/WPG/8476460.png'},
+    {name:'Clayton Keller',team:'UTA',pos:'LW',pool_pts:91,proj_g:28,proj_a:63,aav:7.15,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/UTA/8479343.png'},
+    {name:'Brandon Hagel',team:'TBL',pos:'LW',pool_pts:82,proj_g:35,proj_a:47,aav:6.5,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/TBL/8479542.png'},
+    {name:'Beckett Sennecke',team:'ANA',pos:'RW',pool_pts:78,proj_g:32,proj_a:46,aav:0.954,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/ANA/8484762.png'},
+    {name:'Kirill Marchenko',team:'CBJ',pos:'LW',pool_pts:73,proj_g:30,proj_a:43,aav:3.85,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/CBJ/8480893.png'},
+    {name:'Jimmy Snuggerud',team:'STL',pos:'RW',pool_pts:71,proj_g:30,proj_a:41,aav:0.95,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/STL/8483516.png'},
+    {name:'Will Smith',team:'SJS',pos:'RW',pool_pts:69,proj_g:28,proj_a:41,aav:0.95,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/SJS/8484227.png'},
+    {name:'Ivan Demidov',team:'MTL',pos:'RW',pool_pts:68,proj_g:21,proj_a:47,aav:0.941,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MTL/8484984.png'},
+    {name:'Matvei Michkov',team:'PHI',pos:'LW',pool_pts:68,proj_g:29,proj_a:39,aav:0.95,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/PHI/8484387.png'},
+    {name:'John Tavares',team:'TOR',pos:'C',pool_pts:68,proj_g:29,proj_a:39,aav:4.389,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/TOR/8475166.png'},
+  ],
+  def: [
+    {name:'Evan Bouchard',team:'EDM',pos:'D',pool_pts:120,proj_g:21,proj_a:78,aav:10.5,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/EDM/8480803.png'},
+    {name:'Cale Makar',team:'COL',pos:'D',pool_pts:108,proj_g:22,proj_a:64,aav:9.0,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/COL/8480069.png'},
+    {name:'Quinn Hughes',team:'MIN',pos:'D',pool_pts:106,proj_g:17,proj_a:72,aav:7.85,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MIN/8480800.png'},
+    {name:'Zach Werenski',team:'CBJ',pos:'D',pool_pts:103,proj_g:20,proj_a:63,aav:9.583,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/CBJ/8478460.png'},
+    {name:'Lane Hutson',team:'MTL',pos:'D',pool_pts:92,proj_g:10,proj_a:72,aav:8.85,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MTL/8483457.png'},
+    {name:'Matthew Schaefer',team:'NYI',pos:'D',pool_pts:83,proj_g:17,proj_a:49,aav:0.986,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/NYI/8485366.png'},
+  ],
+  goal: [
+    {name:'Pyotr Kochetkov',team:'CAR',pos:'G',pool_pts:69,proj_g:30,proj_a:3,aav:2.0,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/CAR/8481611.png'},
+    {name:'Jakub Dobes',team:'MTL',pos:'G',pool_pts:66,proj_g:30,proj_a:2,aav:0.965,headshot_url:'https://assets.nhle.com/mugs/nhl/20262027/MTL/8482487.png'},
+  ],
+};
+
+const LINEUPS = [REF1, REF2, REF3];
+let activeLineup = 0;
+
+function selectLineup(idx) {
+  activeLineup = idx;
+  const ref = LINEUPS[idx];
+
+  // Update tabs
+  document.querySelectorAll('.lineup-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+
+  // Update stats
+  const totalCap = [...ref.fwd, ...ref.def, ...ref.goal].reduce((s, p) => s + p.aav, 0);
+  const fwdPts  = ref.fwd.reduce((s, p) => s + p.pool_pts, 0);
+  const defPts  = ref.def.reduce((s, p) => s + p.pool_pts, 0);
+  const goalPts = ref.goal.reduce((s, p) => s + p.pool_pts, 0);
+  const fwdCap  = ref.fwd.reduce((s, p) => s + p.aav, 0);
+  const defCap  = ref.def.reduce((s, p) => s + p.aav, 0);
+  const goalCap = ref.goal.reduce((s, p) => s + p.aav, 0);
+
+  document.getElementById('stat-pts').textContent = fmtPts(ref.totalPts);
+  document.getElementById('stat-cap').textContent = `${totalCap.toFixed(2).replace('.', ',')} M$`;
+  document.getElementById('cap-bar-lbl').textContent = `${totalCap.toFixed(2).replace('.', ',')} M$ / 104 M$`;
+  document.getElementById('cap-bar-fill').style.width = `${(totalCap / 104 * 100).toFixed(2)}%`;
+  document.getElementById('st-pts-fwd').textContent  = `${fmtPts(fwdPts)} pts`;
+  document.getElementById('st-sal-fwd').textContent  = `${fwdCap.toFixed(2).replace('.', ',')} M$`;
+  document.getElementById('st-pts-def').textContent  = `${fmtPts(defPts)} pts`;
+  document.getElementById('st-sal-def').textContent  = `${defCap.toFixed(2).replace('.', ',')} M$`;
+  document.getElementById('st-pts-goal').textContent = `${fmtPts(goalPts)} pts`;
+  document.getElementById('st-sal-goal').textContent = `${goalCap.toFixed(2).replace('.', ',')} M$`;
+
+  // Update lists
+  renderList('ref-list-fwd',  ref.fwd,  false);
+  renderList('ref-list-def',  ref.def,  false);
+  renderList('ref-list-goal', ref.goal, true);
+
+  // Update share
+  lastResult = { ...ref };
+  cachedShareFile = null;
+  const btn = document.getElementById('btnShare');
+  btn.textContent = '📸 Partager cet alignement';
+  btn.disabled = false;
+}
+
+// Init tab pts labels
+LINEUPS.forEach((r, i) => {
+  document.getElementById(`tab-pts-${i}`).textContent = `${fmtPts(r.totalPts)} pts`;
+});
+
+// Initial render (without pre-generating share — wait for load)
+selectLineup(0);
 window.addEventListener('load', () => prepareShareFile().catch(() => {}));
 
 async function shareRef() {
