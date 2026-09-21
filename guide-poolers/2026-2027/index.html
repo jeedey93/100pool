@@ -323,6 +323,15 @@ tr.drafted { background: #f8f9fa !important; }
 .pool-settings-divider { border: none; border-top: 1px solid #f1f5f9; margin: 14px 0; }
 .pool-settings-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
 .col-pool { color: #7c3aed; font-weight: 800; }
+.pool-pts-help-btn { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; background: #ede9fe; color: #7c3aed; border-radius: 50%; font-size: 0.62em; font-weight: 900; cursor: pointer; margin-left: 4px; vertical-align: middle; border: none; line-height: 1; flex-shrink: 0; }
+.pool-pts-help-btn:hover { background: #7c3aed; color: white; }
+.pool-pts-popover { position: fixed; z-index: 7000; background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); padding: 14px 16px; min-width: 220px; max-width: 280px; font-size: 0.82em; color: #1e293b; }
+.pool-pts-popover.hidden { display: none; }
+.pool-pts-popover-title { font-weight: 800; color: #7c3aed; margin-bottom: 8px; font-size: 0.9em; }
+.pool-pts-popover-row { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid #f1f5f9; gap: 12px; }
+.pool-pts-popover-row:last-child { border-bottom: none; }
+.pool-pts-popover-lbl { color: #64748b; }
+.pool-pts-popover-val { font-weight: 700; color: #7c3aed; white-space: nowrap; }
 .player-inline-badges { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; align-items: center; }
 .bandaid-inline { font-size: 0.9em; }
 .trend-badge { display: inline-block; font-size: 0.7em; font-weight: 700; padding: 1px 6px; border-radius: 99px; white-space: nowrap; }
@@ -1054,6 +1063,7 @@ td.star-cell { padding: 0; width: 36px; }
 
 <!-- SCOUTING MODAL -->
 <div class='modal-overlay hidden' id='scoutingModal' onclick='closeModal(event)'>
+<div class='pool-pts-popover hidden' id='poolPtsPopover'></div>
   <div class='modal-box'>
     <div class='modal-hero'>
       <img class='modal-hero-team-bg' id='modalTeamLogo' src='' alt=''>
@@ -2289,7 +2299,7 @@ function goalieHeaderHTML() {
     <th onclick='sortGoalieBy("_goalie_otl")'       data-col='_goalie_otl' class='col-group-proj'>OTL<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("proj_a")'            data-col='proj_a'   class='col-group-proj'>SO<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("_goalie_wpct")'      data-col='_goalie_wpct' class='col-group-proj' style='border-right:2px solid #bbf7d0;'>W%<span class='sort-icon'></span></th>
-    <th onclick='sortGoalieBy("_pool_pts")' data-col='_pool_pts' class='col-group-proj col-pool' style='border-left:2px solid #ddd6fe;color:#7c3aed;font-weight:800;'>Pts Pool<span class='sort-icon'></span></th>
+    <th onclick='sortGoalieBy("_pool_pts")' data-col='_pool_pts' class='col-group-proj col-pool' style='border-left:2px solid #ddd6fe;color:#7c3aed;font-weight:800;'>Pts Pool<button class='pool-pts-help-btn' onclick='event.stopPropagation();togglePoolPtsHelp(this)' title='Voir le barème'>?</button><span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("aav")'               data-col='aav'  class='cg-salary'>💰 AAV<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("tier")'              data-col='tier' class='cg-tier'>Tier<span class='sort-icon'></span></th>
     <th onclick='sortGoalieBy("_pv")'               data-col='_pv'  class='cg-value'>Valeur<span class='sort-icon'></span></th>
@@ -2321,7 +2331,7 @@ function skaterHeaderHTML() {
     <th onclick='sortBy("proj_a")'  data-col='proj_a'  class='col-group-proj' style='color:#15803d;'>A<span class='sort-icon'></span></th>
     <th onclick='sortBy("proj_pts")' data-col='proj_pts' class='col-group-proj' style='color:#15803d;font-weight:800;'>PTS<span class='sort-icon'></span></th>
     <th onclick='sortBy("_ppg_proj")' data-col='_ppg_proj' class='col-group-proj cg-ppg-proj' style='border-right:2px solid #bbf7d0;color:#15803d;'>PPG<span class='sort-icon'></span></th>
-    <th onclick='sortBy("_pool_pts")' data-col='_pool_pts' class='col-group-proj col-pool' style='border-left:2px solid #ddd6fe;color:#7c3aed;font-weight:800;'>Pts Pool<span class='sort-icon'></span></th>
+    <th onclick='sortBy("_pool_pts")' data-col='_pool_pts' class='col-group-proj col-pool' style='border-left:2px solid #ddd6fe;color:#7c3aed;font-weight:800;'>Pts Pool<button class='pool-pts-help-btn' onclick='event.stopPropagation();togglePoolPtsHelp(this)' title='Voir le barème'>?</button><span class='sort-icon'></span></th>
     <th onclick='sortBy("aav")'     data-col='aav'     class='cg-salary'>💰 AAV<span class='sort-icon'></span></th>
     <th onclick='sortBy("tier")'    data-col='tier'     class='cg-tier'>Tier<span class='sort-icon'></span></th>
     <th onclick='sortBy("_pv")'     data-col='_pv'      class='cg-value'>Valeur<span class='sort-icon'></span></th>
@@ -3132,6 +3142,30 @@ function updateModalDraftActions(id) {
     </button>`;
 }
 
+function togglePoolPtsHelp(btn) {
+  const pop = document.getElementById('poolPtsPopover');
+  if (!pop.classList.contains('hidden')) { pop.classList.add('hidden'); return; }
+  const s = poolScoring;
+  pop.innerHTML = `
+    <div class='pool-pts-popover-title'>📊 Barème Pts Pool</div>
+    <div class='pool-pts-popover-row'><span class='pool-pts-popover-lbl'>Attaquant — But</span><span class='pool-pts-popover-val'>${s.fwd_g} pt${s.fwd_g>1?'s':''}</span></div>
+    <div class='pool-pts-popover-row'><span class='pool-pts-popover-lbl'>Attaquant — Passe</span><span class='pool-pts-popover-val'>${s.fwd_a} pt${s.fwd_a>1?'s':''}</span></div>
+    <div class='pool-pts-popover-row'><span class='pool-pts-popover-lbl'>Défenseur — But</span><span class='pool-pts-popover-val'>${s.def_g} pt${s.def_g>1?'s':''}</span></div>
+    <div class='pool-pts-popover-row'><span class='pool-pts-popover-lbl'>Défenseur — Passe</span><span class='pool-pts-popover-val'>${s.def_a} pt${s.def_a>1?'s':''}</span></div>
+    <div class='pool-pts-popover-row'><span class='pool-pts-popover-lbl'>Gardien — Victoire</span><span class='pool-pts-popover-val'>${s.g_w} pt${s.g_w>1?'s':''}</span></div>
+    <div class='pool-pts-popover-row'><span class='pool-pts-popover-lbl'>Gardien — Jeu blanc</span><span class='pool-pts-popover-val'>${s.g_so} pt${s.g_so>1?'s':''}</span></div>
+    <div style='margin-top:8px;font-size:0.85em;color:#94a3b8'>Modifiable dans ⚙️ Mon pool</div>`;
+  const rect = btn.getBoundingClientRect();
+  pop.classList.remove('hidden');
+  const popW = pop.offsetWidth;
+  let left = rect.left + window.scrollX;
+  if (left + popW > window.innerWidth - 12) left = window.innerWidth - popW - 12;
+  pop.style.top = (rect.bottom + window.scrollY + 6) + 'px';
+  pop.style.left = left + 'px';
+  const close = e => { if (!pop.contains(e.target) && e.target !== btn) { pop.classList.add('hidden'); document.removeEventListener('click', close); } };
+  setTimeout(() => document.addEventListener('click', close), 0);
+}
+
 function closeModal(e) {
   if (e.target === document.getElementById('scoutingModal')) closeModalDirect();
 }
@@ -3288,6 +3322,12 @@ th.cg-ppg-last, td.cg-ppg-last, th.cg-ppg-proj, td.cg-ppg-proj { display: none; 
 </div>
 <table><thead>${thead}</thead><tbody>${tbody}</tbody></table>
 ${gtbody.trim() ? `<div class="section-title">🥅 Gardiens</div><table><thead>${gthead}</thead><tbody>${gtbody}</tbody></table>` : ''}
+<div style="margin-top:18px;padding:10px 14px;background:#f8f4ff;border:1px solid #ddd6fe;border-radius:8px;font-size:8pt;color:#5b21b6;page-break-inside:avoid;">
+  <strong>📊 Barème Pts Pool :</strong>
+  Attaquant — But ×${poolScoring.fwd_g}, Passe ×${poolScoring.fwd_a} &nbsp;|&nbsp;
+  Défenseur — But ×${poolScoring.def_g}, Passe ×${poolScoring.def_a} &nbsp;|&nbsp;
+  Gardien — Victoire ×${poolScoring.g_w}, Jeu blanc ×${poolScoring.g_so}
+</div>
 <script>window.onload = function() { window.print(); window.onafterprint = function() { window.close(); }; }<\/script>
 </body></html>`);
   win.document.close();
