@@ -198,7 +198,7 @@ body.has-shared-sidebar.shared-sb-collapsed { padding-left: 52px; }
   #sbFeedbackMsg { width: 100%; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; font-size: 0.88em; font-family: inherit; resize: vertical; min-height: 160px; outline: none; transition: border 0.15s; color: #1e293b; box-sizing: border-box; }
   #sbFeedbackMsg:focus { border-color: #2d8a3e; }
   .sb-rating { display: flex; gap: 6px; margin-bottom: 14px; }
-  .sb-star { font-size: 1.6em; cursor: pointer; color: #e2e8f0; transition: color 0.1s, transform 0.1s; line-height: 1; user-select: none; }
+  .sb-star { font-size: 1.6em; cursor: pointer; color: #cbd5e1; transition: color 0.1s, transform 0.1s; line-height: 1; user-select: none; }
   .sb-star:hover, .sb-star.active { color: #f59e0b; transform: scale(1.15); }
   .sb-rating-label { font-size: 0.78em; color: #94a3b8; margin-bottom: 10px; font-weight: 600; }
   .sb-feedback-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }
