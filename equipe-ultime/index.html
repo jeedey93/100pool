@@ -8,7 +8,7 @@
 <meta property='og:type' content='website'>
 <meta property='og:url' content='https://100pool.ca/equipe-ultime/'>
 <meta property='og:title' content='L'équipe ultime 2026-27 — 100% Pool'>
-<meta property='og:description' content='12 ATT · 6 DEF · 2 G · 104 M$ — 1 802 pts projetés. Le meilleur alignement possible sous la masse salariale NHL.'>
+<meta property='og:description' content='12 ATT · 6 DEF · 2 G · 104 M$ — Le meilleur alignement calculé en temps réel depuis les projections du guide.'>
 <meta property='og:image' content='https://100pool.ca/100pool_large.png'>
 <meta name='twitter:card' content='summary_large_image'>
 <link rel='icon' type='image/png' href='../100pool.jpg'>
@@ -32,42 +32,59 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
 .page-wrap { max-width: 860px; margin: 0 auto; padding: 40px 20px 80px; }
 
 /* ── HERO ── */
-.hero { text-align: center; margin-bottom: 36px; }
-.hero-badge { display: inline-flex; align-items: center; gap: 7px; background: #e8f5ec; color: #1a5c28; font-size: 0.75em; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; padding: 6px 14px; border-radius: 99px; margin-bottom: 18px; border: 1px solid #c6e8cf; }
-.hero h1 { font-size: 2.2em; font-weight: 900; color: #0f172a; letter-spacing: -0.5px; line-height: 1.1; margin-bottom: 12px; }
+.hero { text-align: center; margin-bottom: 28px; }
+.hero-badge { display: inline-flex; align-items: center; gap: 7px; background: #e8f5ec; color: #1a5c28; font-size: 0.75em; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; padding: 6px 14px; border-radius: 99px; margin-bottom: 16px; border: 1px solid #c6e8cf; }
+.hero h1 { font-size: 2.2em; font-weight: 900; color: #0f172a; letter-spacing: -0.5px; line-height: 1.1; margin-bottom: 10px; }
 .hero h1 span { color: #2d8a3e; }
-.hero p { color: #64748b; font-size: 1em; line-height: 1.6; max-width: 560px; margin: 0 auto 24px; }
-.hero-stats { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
-.hero-stat { background: white; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 14px 22px; text-align: center; }
-.hero-stat .hs-val { font-size: 1.7em; font-weight: 900; color: #0f172a; line-height: 1; letter-spacing: -0.5px; }
-.hero-stat .hs-lbl { font-size: 0.72em; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; margin-top: 4px; }
+.hero p { color: #64748b; font-size: 0.95em; line-height: 1.6; max-width: 520px; margin: 0 auto 22px; }
+
+/* ── PARAMS CARD ── */
+.params-card { background: white; border-radius: 18px; border: 1px solid #e2eae5; box-shadow: 0 2px 12px rgba(0,0,0,0.05); padding: 20px 22px; margin-bottom: 20px; }
+.params-card h3 { font-size: 0.82em; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 16px; }
+.params-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 18px; }
+.param-field { display: flex; flex-direction: column; gap: 5px; }
+.param-field label { font-size: 0.72em; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+.param-field input { padding: 8px 12px; border: 1.5px solid #e2e8f0; border-radius: 9px; font-size: 0.9em; font-weight: 700; color: #0f172a; outline: none; font-family: inherit; transition: border-color 0.15s; }
+.param-field input:focus { border-color: #2d8a3e; }
+.params-divider { height: 1px; background: #f1f5f9; margin: 16px 0; }
+.params-bareme { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
+.bareme-field { display: flex; flex-direction: column; gap: 4px; }
+.bareme-field label { font-size: 0.7em; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.4px; }
+.bareme-field input { padding: 7px 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.9em; font-weight: 700; color: #0f172a; outline: none; font-family: inherit; text-align: center; transition: border-color 0.15s; }
+.bareme-field input:focus { border-color: #2d8a3e; }
+.btn-recalc { width: 100%; padding: 13px; background: linear-gradient(135deg, #1a5c28, #2d8a3e); color: white; border: none; border-radius: 12px; font-size: 0.95em; font-weight: 800; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-recalc:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,92,40,0.3); }
+.btn-recalc:disabled { opacity: 0.6; cursor: default; transform: none; }
+.btn-recalc .spin { animation: spin 0.8s linear infinite; display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── HERO STATS ── */
+.hero-stats { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+.hero-stat { background: white; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 12px 20px; text-align: center; min-width: 110px; }
+.hero-stat .hs-val { font-size: 1.55em; font-weight: 900; color: #0f172a; line-height: 1; letter-spacing: -0.5px; }
+.hero-stat .hs-lbl { font-size: 0.68em; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; margin-top: 4px; }
 .hero-stat.accent { background: linear-gradient(135deg, #1a5c28, #2d8a3e); border-color: transparent; }
 .hero-stat.accent .hs-val { color: white; }
 .hero-stat.accent .hs-lbl { color: rgba(255,255,255,0.7); }
 
-/* ── FORMAT ── */
-.format-row { display: flex; justify-content: center; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; }
-.format-pill { background: white; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 8px 18px; font-size: 0.82em; font-weight: 700; color: #475569; display: flex; align-items: center; gap: 6px; }
-.format-pill strong { font-size: 1.15em; color: #0f172a; }
-
-/* ── BARÈME ── */
-.bareme { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; margin-bottom: 32px; }
-.bareme-pill { background: white; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 6px 13px; font-size: 0.77em; font-weight: 700; color: #64748b; }
-.bareme-pill span { color: #1a5c28; font-weight: 900; }
+/* ── CAP BAR ── */
+.cap-bar-wrap { background: white; border-radius: 14px; border: 1px solid #e2eae5; padding: 14px 18px; margin-bottom: 20px; }
+.cap-bar-label { display: flex; justify-content: space-between; font-size: 0.74em; font-weight: 700; color: #64748b; margin-bottom: 8px; }
+.cap-bar-track { height: 10px; background: #f1f5f9; border-radius: 99px; overflow: hidden; }
+.cap-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #2d8a3e, #4ade80); transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1); }
 
 /* ── SECTION ── */
 .section { background: white; border-radius: 20px; border: 1px solid #e2eae5; box-shadow: 0 2px 12px rgba(0,0,0,0.05); margin-bottom: 20px; overflow: hidden; }
 .section-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 14px; border-bottom: 1px solid #f1f5f9; }
 .section-title { display: flex; align-items: center; gap: 10px; }
 .section-icon { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1em; flex-shrink: 0; }
-.section-icon.fwd { background: #eff6ff; }
-.section-icon.def { background: #f0fdf4; }
+.section-icon.fwd  { background: #eff6ff; }
+.section-icon.def  { background: #f0fdf4; }
 .section-icon.goal { background: #fef9ec; }
 .section-title h2 { font-size: 0.98em; font-weight: 800; color: #0f172a; }
-.section-title p { font-size: 0.73em; color: #94a3b8; font-weight: 600; margin-top: 1px; }
-.section-total { text-align: right; }
-.section-total .st-pts { font-size: 1.05em; font-weight: 900; color: #2d8a3e; }
-.section-total .st-sal { font-size: 0.72em; color: #94a3b8; font-weight: 600; margin-top: 2px; }
+.section-title p  { font-size: 0.73em; color: #94a3b8; font-weight: 600; margin-top: 1px; }
+.section-total .st-pts { font-size: 1.05em; font-weight: 900; color: #2d8a3e; text-align: right; }
+.section-total .st-sal { font-size: 0.72em; color: #94a3b8; font-weight: 600; text-align: right; margin-top: 2px; }
 
 /* ── PLAYER ROW ── */
 .player-list { padding: 4px 0; }
@@ -83,22 +100,19 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
 .player-info { flex: 1; min-width: 0; }
 .player-name { font-size: 0.9em; font-weight: 700; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .player-meta { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; margin-top: 3px; }
-.player-tag { display: inline-block; background: #f1f5f9; color: #475569; font-size: 0.72em; font-weight: 700; padding: 2px 7px; border-radius: 5px; }
+.player-tag  { display: inline-block; background: #f1f5f9; color: #475569; font-size: 0.72em; font-weight: 700; padding: 2px 7px; border-radius: 5px; }
 .player-stat { font-size: 0.72em; color: #94a3b8; font-weight: 600; }
 .player-right { text-align: right; flex-shrink: 0; }
 .player-right .pts-val { font-size: 1.1em; font-weight: 900; color: #1a5c28; line-height: 1; }
 .player-right .pts-lbl { font-size: 0.62em; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
 .player-right .sal-val { font-size: 0.75em; font-weight: 700; color: #64748b; margin-top: 3px; }
 
-/* ── NOTE ── */
-.note-bar { background: #f8fafc; border-top: 1px solid #f1f5f9; padding: 12px 20px; font-size: 0.76em; color: #94a3b8; line-height: 1.6; }
-.note-bar strong { color: #64748b; }
-
-/* ── CAP BAR ── */
-.cap-bar-wrap { margin: 0 20px 16px; padding-top: 14px; }
-.cap-bar-label { display: flex; justify-content: space-between; font-size: 0.73em; font-weight: 700; color: #64748b; margin-bottom: 6px; }
-.cap-bar-track { height: 8px; background: #f1f5f9; border-radius: 99px; overflow: hidden; }
-.cap-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #2d8a3e, #4ade80); transition: width 0.5s ease; }
+/* ── SKELETON ── */
+.skeleton { background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite; border-radius: 8px; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+.skeleton-row { display: flex; align-items: center; gap: 12px; padding: 9px 20px; }
+.sk-circle { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; }
+.sk-line { height: 12px; border-radius: 6px; }
 
 /* ── CTA ── */
 .cta-block { text-align: center; background: linear-gradient(135deg, #1a5c28, #2d8a3e); border-radius: 20px; padding: 40px 28px; color: white; margin-top: 32px; }
@@ -107,9 +121,12 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
 .btn-cta { display: inline-flex; align-items: center; gap: 8px; background: #f5c842; color: #1a3d10; font-weight: 800; font-size: 1em; padding: 14px 28px; border-radius: 12px; text-decoration: none; transition: all 0.2s; }
 .btn-cta:hover { background: #f9d55a; transform: translateY(-2px); box-shadow: 0 10px 28px rgba(0,0,0,0.25); }
 
+/* ── ERROR ── */
+.error-box { background: #fff1f2; border: 1px solid #fecdd3; border-radius: 14px; padding: 18px 20px; color: #be123c; font-size: 0.85em; font-weight: 600; text-align: center; margin-bottom: 20px; }
+
 @media (max-width: 600px) {
   .hero h1 { font-size: 1.6em; }
-  .hero-stat .hs-val { font-size: 1.4em; }
+  .params-bareme { grid-template-columns: repeat(2, 1fr); }
   .player-row { padding: 9px 14px; gap: 9px; }
   .player-photo { width: 38px; height: 38px; }
   .section-header { padding: 14px 14px 12px; }
@@ -135,94 +152,115 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
   <div class='hero'>
     <div class='hero-badge'>🏒 Saison 2026-27</div>
     <h1>L'équipe <span>ultime</span> du pool</h1>
-    <p>Le meilleur alignement possible sous la masse salariale NHL de 104 M$, basé sur les projections de notre guide — 438 joueurs analysés.</p>
+    <p>Le meilleur alignement calculé en temps réel à partir des projections du guide — ajuste les paramètres et recalcule.</p>
+  </div>
+
+  <!-- PARAMÈTRES -->
+  <div class='params-card'>
+    <h3>⚙️ Paramètres du pool</h3>
+    <div class='params-grid'>
+      <div class='param-field'>
+        <label>Masse salariale (M$)</label>
+        <input type='number' id='p-cap' value='104' min='50' max='300' step='0.5'>
+      </div>
+      <div class='param-field'>
+        <label>Nb attaquants</label>
+        <input type='number' id='p-fwd' value='12' min='1' max='20'>
+      </div>
+      <div class='param-field'>
+        <label>Nb défenseurs</label>
+        <input type='number' id='p-def' value='6' min='1' max='12'>
+      </div>
+      <div class='param-field'>
+        <label>Nb gardiens</label>
+        <input type='number' id='p-goal' value='2' min='1' max='6'>
+      </div>
+    </div>
+    <div class='params-divider'></div>
+    <div style='font-size:0.72em;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px'>Barème de points</div>
+    <div class='params-bareme'>
+      <div class='bareme-field'><label>ATT But ×</label><input type='number' id='b-fwd-g' value='1' min='0' max='10'></div>
+      <div class='bareme-field'><label>ATT Passe ×</label><input type='number' id='b-fwd-a' value='1' min='0' max='10'></div>
+      <div class='bareme-field'><label>DEF But ×</label><input type='number' id='b-def-g' value='2' min='0' max='10'></div>
+      <div class='bareme-field'><label>DEF Passe ×</label><input type='number' id='b-def-a' value='1' min='0' max='10'></div>
+      <div class='bareme-field'><label>G Victoire ×</label><input type='number' id='b-g-w' value='2' min='0' max='10'></div>
+      <div class='bareme-field'><label>G Blanchissage ×</label><input type='number' id='b-g-so' value='3' min='0' max='10'></div>
+    </div>
+    <button class='btn-recalc' id='btnRecalc' onclick='recalculate()'>
+      <span id='recalcIcon'>🔄</span> Calculer le meilleur alignement
+    </button>
+  </div>
+
+  <div id='errorBox' class='error-box' style='display:none'></div>
+
+  <!-- RÉSULTATS -->
+  <div id='results' style='display:none'>
     <div class='hero-stats'>
       <div class='hero-stat accent'>
-        <div class='hs-val'>1 802</div>
+        <div class='hs-val' id='stat-total-pts'>—</div>
         <div class='hs-lbl'>pts pool projetés</div>
       </div>
       <div class='hero-stat'>
-        <div class='hs-val'>103,95 M$</div>
+        <div class='hs-val' id='stat-cap-used'>—</div>
         <div class='hs-lbl'>masse utilisée</div>
       </div>
       <div class='hero-stat'>
-        <div class='hs-val'>20</div>
+        <div class='hs-val' id='stat-players'>20</div>
         <div class='hs-lbl'>joueurs</div>
       </div>
     </div>
-  </div>
 
-  <div class='format-row'>
-    <div class='format-pill'><strong>12</strong> Attaquants</div>
-    <div class='format-pill'><strong>6</strong> Défenseurs</div>
-    <div class='format-pill'><strong>2</strong> Gardiens</div>
-    <div class='format-pill'><strong>104 M$</strong> Masse max</div>
-  </div>
-
-  <div class='bareme'>
-    <div class='bareme-pill'>ATT But <span>×1</span></div>
-    <div class='bareme-pill'>ATT Passe <span>×1</span></div>
-    <div class='bareme-pill'>DEF But <span>×2</span></div>
-    <div class='bareme-pill'>DEF Passe <span>×1</span></div>
-    <div class='bareme-pill'>G Victoire <span>×2</span></div>
-    <div class='bareme-pill'>G Blanchissage <span>×3</span></div>
-  </div>
-
-  <!-- ATTAQUANTS -->
-  <div class='section'>
-    <div class='section-header'>
-      <div class='section-title'>
-        <div class='section-icon fwd'>⚡</div>
-        <div>
-          <h2>Attaquants</h2>
-          <p>12 joueurs · G×1 + A×1</p>
-        </div>
+    <div class='cap-bar-wrap'>
+      <div class='cap-bar-label'>
+        <span>Masse utilisée</span>
+        <span id='cap-bar-text'>— / — M$</span>
       </div>
-      <div class='section-total'>
-        <div class='st-pts'>1 150 pts</div>
-        <div class='st-sal'>63,85 M$</div>
+      <div class='cap-bar-track'>
+        <div class='cap-bar-fill' id='cap-bar-fill' style='width:0%'></div>
       </div>
     </div>
-    <div class='player-list' id='list-fwd'></div>
-    <div class='note-bar'><strong>McDavid, Celebrini et MacKinnon</strong> forment le trio de tête. Les contrats de recrues de Celebrini, Sennecke, Snuggerud, Smith, Demidov et Michkov (~1 M$ chacun) libèrent de l'espace pour les stars.</div>
-  </div>
 
-  <!-- DÉFENSEURS -->
-  <div class='section'>
-    <div class='section-header'>
-      <div class='section-title'>
-        <div class='section-icon def'>🛡</div>
-        <div>
-          <h2>Défenseurs</h2>
-          <p>6 joueurs · G×2 + A×1</p>
+    <div class='section'>
+      <div class='section-header'>
+        <div class='section-title'>
+          <div class='section-icon fwd'>⚡</div>
+          <div><h2>Attaquants</h2><p id='sub-fwd'>12 joueurs · G×1 + A×1</p></div>
+        </div>
+        <div class='section-total'>
+          <div class='st-pts' id='tot-fwd-pts'>—</div>
+          <div class='st-sal' id='tot-fwd-sal'>—</div>
         </div>
       </div>
-      <div class='section-total'>
-        <div class='st-pts'>531 pts</div>
-        <div class='st-sal'>37,64 M$</div>
-      </div>
+      <div class='player-list' id='list-fwd'></div>
     </div>
-    <div class='player-list' id='list-def'></div>
-    <div class='note-bar'><strong>Bouchard (120 pts)</strong> est le meilleur défenseur en valeur pool grâce au multiplicateur ×2 sur les buts. <strong>Schaefer</strong> à contrat de recrue (~1 M$) est une valeur exceptionnelle.</div>
-  </div>
 
-  <!-- GARDIENS -->
-  <div class='section'>
-    <div class='section-header'>
-      <div class='section-title'>
-        <div class='section-icon goal'>🧤</div>
-        <div>
-          <h2>Gardiens</h2>
-          <p>2 joueurs · V×2 + BL×3</p>
+    <div class='section'>
+      <div class='section-header'>
+        <div class='section-title'>
+          <div class='section-icon def'>🛡</div>
+          <div><h2>Défenseurs</h2><p id='sub-def'>6 joueurs · G×2 + A×1</p></div>
+        </div>
+        <div class='section-total'>
+          <div class='st-pts' id='tot-def-pts'>—</div>
+          <div class='st-sal' id='tot-def-sal'>—</div>
         </div>
       </div>
-      <div class='section-total'>
-        <div class='st-pts'>121 pts</div>
-        <div class='st-sal'>2,47 M$</div>
-      </div>
+      <div class='player-list' id='list-def'></div>
     </div>
-    <div class='player-list' id='list-goal'></div>
-    <div class='note-bar'>Les grands gardiens coûtent cher — sous 104 M$, <strong>Dobes</strong> et <strong>Lyon</strong> offrent la meilleure valeur par dollar investi en filet.</div>
+
+    <div class='section'>
+      <div class='section-header'>
+        <div class='section-title'>
+          <div class='section-icon goal'>🧤</div>
+          <div><h2>Gardiens</h2><p id='sub-goal'>2 joueurs · V×2 + BL×3</p></div>
+        </div>
+        <div class='section-total'>
+          <div class='st-pts' id='tot-goal-pts'>—</div>
+          <div class='st-sal' id='tot-goal-sal'>—</div>
+        </div>
+      </div>
+      <div class='player-list' id='list-goal'></div>
+    </div>
   </div>
 
   <!-- CTA -->
@@ -235,85 +273,232 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
 </div>
 
 <script>
+const SUPABASE_URL = 'https://fifurqlitkywtmhgtzeu.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpZnVycWxpdGt5d3RtaGd0emV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDIyMjQsImV4cCI6MjA5MjI3ODIyNH0.KPVPj1qwbSJJMyLR_-AhDcRs0vi2sUU6qbFQ-kH53C0';
+
 const TEAM_COLORS = {
   EDM:'#FF4C00',COL:'#6F263D',SJS:'#006D75',TBL:'#002868',BOS:'#FFB81C',
   MTL:'#AF1E2D',DAL:'#006847',WPG:'#041E42',TOR:'#003E7E',MIN:'#154734',
   BUF:'#002654',CBJ:'#002654',NYI:'#00539B',PHI:'#F74902',STL:'#002F87',
-  UTA:'#6CACE4',CAR:'#CE1126',ANA:'#F47A38',
+  UTA:'#6CACE4',CAR:'#CE1126',ANA:'#F47A38',VGK:'#B4975A',WSH:'#041E42',
+  NYR:'#0038A8',PIT:'#FCB514',OTT:'#E31837',DET:'#CE1126',CGY:'#C8102E',
+  VAN:'#00843D',SEA:'#99D9D9',NSH:'#FFB81C',CHI:'#CF0A2C',FLA:'#041E42',
+  NJD:'#CE1126',LAK:'#A2AAAD',
 };
 
-const PLAYERS = {
-  fwd: [
-    { name:'Connor McDavid',    team:'EDM', pos:'C',  pool_pts:138, proj_g:46, proj_a:92,  aav:12.5,  headshot:'https://assets.nhle.com/mugs/nhl/20262027/EDM/8478402.png' },
-    { name:'Macklin Celebrini', team:'SJS', pos:'C',  pool_pts:127, proj_g:49, proj_a:78,  aav:0.975, headshot:'https://assets.nhle.com/mugs/nhl/20262027/SJS/8484801.png' },
-    { name:'Nathan MacKinnon',  team:'COL', pos:'C',  pool_pts:123, proj_g:48, proj_a:75,  aav:12.604,headshot:'https://assets.nhle.com/mugs/nhl/20262027/COL/8477492.png' },
-    { name:'Nikita Kucherov',   team:'TBL', pos:'RW', pool_pts:118, proj_g:34, proj_a:84,  aav:9.5,   headshot:'https://assets.nhle.com/mugs/nhl/20262027/TBL/8476453.png' },
-    { name:'Nick Suzuki',       team:'MTL', pos:'C',  pool_pts:101, proj_g:31, proj_a:70,  aav:7.875, headshot:'https://assets.nhle.com/mugs/nhl/20262027/MTL/8480018.png' },
-    { name:'Mark Scheifele',    team:'WPG', pos:'C',  pool_pts: 98, proj_g:39, proj_a:59,  aav:8.5,   headshot:'https://assets.nhle.com/mugs/nhl/20262027/WPG/8476460.png' },
-    { name:'Clayton Keller',    team:'UTA', pos:'LW', pool_pts: 91, proj_g:28, proj_a:63,  aav:7.15,  headshot:'https://assets.nhle.com/mugs/nhl/20262027/UTA/8479343.png' },
-    { name:'Beckett Sennecke',  team:'ANA', pos:'RW', pool_pts: 78, proj_g:32, proj_a:46,  aav:0.954, headshot:'https://assets.nhle.com/mugs/nhl/20262027/ANA/8484762.png' },
-    { name:'Jimmy Snuggerud',   team:'STL', pos:'RW', pool_pts: 71, proj_g:30, proj_a:41,  aav:0.95,  headshot:'https://assets.nhle.com/mugs/nhl/20262027/STL/8483516.png' },
-    { name:'Will Smith',        team:'SJS', pos:'RW', pool_pts: 69, proj_g:28, proj_a:41,  aav:0.95,  headshot:'https://assets.nhle.com/mugs/nhl/20262027/SJS/8484227.png' },
-    { name:'Ivan Demidov',      team:'MTL', pos:'RW', pool_pts: 68, proj_g:21, proj_a:47,  aav:0.941, headshot:'https://assets.nhle.com/mugs/nhl/20262027/MTL/8484984.png' },
-    { name:'Matvei Michkov',    team:'PHI', pos:'LW', pool_pts: 68, proj_g:29, proj_a:39,  aav:0.95,  headshot:'https://assets.nhle.com/mugs/nhl/20262027/PHI/8484387.png' },
-  ],
-  def: [
-    { name:'Evan Bouchard',        team:'EDM', pos:'D', pool_pts:120, proj_g:21, proj_a:78, aav:10.5,  headshot:'https://assets.nhle.com/mugs/nhl/20262027/EDM/8480803.png' },
-    { name:'Quinn Hughes',         team:'MIN', pos:'D', pool_pts:106, proj_g:17, proj_a:72, aav:7.85,  headshot:'https://assets.nhle.com/mugs/nhl/20262027/MIN/8480800.png' },
-    { name:'Lane Hutson',          team:'MTL', pos:'D', pool_pts: 92, proj_g:10, proj_a:72, aav:8.85,  headshot:'https://assets.nhle.com/mugs/nhl/20262027/MTL/8483457.png' },
-    { name:'Matthew Schaefer',     team:'NYI', pos:'D', pool_pts: 83, proj_g:17, proj_a:49, aav:0.986, headshot:'https://assets.nhle.com/mugs/nhl/20262027/NYI/8485366.png' },
-    { name:'Josh Morrissey',       team:'WPG', pos:'D', pool_pts: 73, proj_g:14, proj_a:45, aav:6.25,  headshot:'https://assets.nhle.com/mugs/nhl/20262027/WPG/8477504.png' },
-    { name:'Shayne Gostisbehere',  team:'CAR', pos:'D', pool_pts: 57, proj_g: 8, proj_a:41, aav:3.2,   headshot:'https://assets.nhle.com/mugs/nhl/20262027/CAR/8476906.png' },
-  ],
-  goal: [
-    { name:'Jakub Dobes',     team:'MTL', pos:'G', pool_pts:66, proj_g:30, proj_a:2, aav:0.965, headshot:'https://assets.nhle.com/mugs/nhl/20262027/MTL/8482487.png' },
-    { name:'Alex Lyon',       team:'BUF', pos:'G', pool_pts:55, proj_g:23, proj_a:3, aav:1.5,   headshot:'https://assets.nhle.com/mugs/nhl/20262027/BUF/8479312.png' },
-  ],
-};
+let allPlayers = null;
 
-function initials(name) {
-  return name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+function getVal(id) { return parseFloat(document.getElementById(id).value) || 0; }
+function initials(name) { return name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase(); }
+function rankClass(i) { return i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : ''; }
+function fmtSal(aav) { return aav < 1 ? `${(aav * 1000).toFixed(0)} k$` : `${aav.toFixed(2).replace('.', ',')} M$`; }
+function fmtPts(n) { return n >= 1000 ? (Math.floor(n/100)/10).toFixed(1).replace('.', ' ') + ' ' + String(n).slice(-3) : String(n); }
+
+function calcPoolPts(p, scoring) {
+  const g = p.proj_g || 0, a = p.proj_a || 0;
+  if (p.pos === 'G') return g * scoring.g_w + a * scoring.g_so;
+  if (p.pos === 'D') return g * scoring.def_g + a * scoring.def_a;
+  return g * scoring.fwd_g + a * scoring.fwd_a;
 }
-function rankClass(i) {
-  return i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+
+// Greedy cap-constrained optimizer
+// Strategy: iterate over all goalie combos × all def combos, greedy-fill fwds
+// Candidate pools are the top-N by pool_pts (large enough to find good solutions)
+function optimize(players, scoring, cap, nFwd, nDef, nGoal) {
+  const fwdPos = ['C','LW','RW','F'];
+
+  const withPts = players
+    .filter(p => p.aav > 0 && p.proj_pts != null)
+    .map(p => ({ ...p, pool_pts: calcPoolPts(p, scoring) }));
+
+  const fwds  = withPts.filter(p => fwdPos.includes(p.pos) && p.pool_pts >= 50)
+                       .sort((a,b) => b.pool_pts - a.pool_pts).slice(0, Math.max(nFwd * 4, 40));
+  const defs  = withPts.filter(p => p.pos === 'D' && p.pool_pts >= 40)
+                       .sort((a,b) => b.pool_pts - a.pool_pts).slice(0, Math.max(nDef * 4, 20));
+  const goals = withPts.filter(p => p.pos === 'G' && p.pool_pts >= 30)
+                       .sort((a,b) => b.pool_pts - a.pool_pts).slice(0, Math.max(nGoal * 6, 15));
+
+  // Combinations generator
+  function* combos(arr, k) {
+    if (k === 0) { yield []; return; }
+    for (let i = 0; i <= arr.length - k; i++) {
+      for (const rest of combos(arr.slice(i + 1), k - 1)) {
+        yield [arr[i], ...rest];
+      }
+    }
+  }
+
+  let best = null, bestPts = -1;
+
+  for (const gSel of combos(goals, nGoal)) {
+    const gCost = gSel.reduce((s, p) => s + p.aav, 0);
+    const gPts  = gSel.reduce((s, p) => s + p.pool_pts, 0);
+    const remG  = cap - gCost;
+    if (remG < 0) continue;
+
+    for (const dSel of combos(defs, nDef)) {
+      const dCost = dSel.reduce((s, p) => s + p.aav, 0);
+      const dPts  = dSel.reduce((s, p) => s + p.pool_pts, 0);
+      const remD  = remG - dCost;
+      if (remD < 0) continue;
+
+      // Greedy fwds: pick best pool_pts within remaining cap
+      const picked = [], usedIds = new Set([...gSel, ...dSel].map(p => p.id));
+      let fCost = 0;
+      for (const p of fwds) {
+        if (picked.length === nFwd) break;
+        if (usedIds.has(p.id)) continue;
+        if (fCost + p.aav <= remD) {
+          picked.push(p);
+          fCost += p.aav;
+        }
+      }
+      if (picked.length < nFwd) continue;
+
+      const total = gPts + dPts + picked.reduce((s, p) => s + p.pool_pts, 0);
+      if (total > bestPts) {
+        bestPts = total;
+        best = { fwd: picked, def: dSel, goal: gSel, totalCost: gCost + dCost + fCost };
+      }
+    }
+  }
+  return best;
 }
-function fmtSal(aav) {
-  return aav < 1 ? `${(aav * 1000).toFixed(0)} k$` : `${aav.toFixed(2).replace('.', ',')} M$`;
+
+function showSkeleton(listId, n) {
+  document.getElementById(listId).innerHTML = Array.from({length: n}, () =>
+    `<div class='skeleton-row'>
+      <div class='skeleton sk-circle'></div>
+      <div style='flex:1;display:flex;flex-direction:column;gap:6px'>
+        <div class='skeleton sk-line' style='width:60%'></div>
+        <div class='skeleton sk-line' style='width:40%'></div>
+      </div>
+      <div class='skeleton sk-line' style='width:40px;height:24px'></div>
+    </div>`
+  ).join('');
 }
 
 function renderList(id, players, isGoalie) {
-  const el = document.getElementById(id);
-  el.innerHTML = players.map((p, i) => {
-    const color = TEAM_COLORS[p.team] || '#2d8a3e';
-    const statLine = isGoalie
-      ? `${p.proj_g} V · ${p.proj_a} BL proj.`
-      : `${p.proj_g} G · ${p.proj_a} A proj.`;
-    const photoEl = p.headshot
-      ? `<img class='player-photo' src='${p.headshot}' alt='${p.name}' onerror="this.outerHTML='<div class=\\'player-photo fallback\\' style=\\'background:${color}\\'>${initials(p.name)}</div>'">`
-      : `<div class='player-photo fallback' style='background:${color}'>${initials(p.name)}</div>`;
-    return `<div class='player-row'>
-      <div class='player-rank ${rankClass(i)}'>${i + 1}</div>
-      ${photoEl}
-      <div class='player-info'>
-        <div class='player-name'>${p.name}</div>
-        <div class='player-meta'>
-          <span class='player-tag'>${p.team}</span>
-          <span class='player-tag'>${p.pos}</span>
-          <span class='player-stat'>${statLine}</span>
+  document.getElementById(id).innerHTML = players
+    .sort((a, b) => b.pool_pts - a.pool_pts)
+    .map((p, i) => {
+      const color = TEAM_COLORS[p.team] || '#2d8a3e';
+      const statLine = isGoalie ? `${p.proj_g} V · ${p.proj_a} BL proj.` : `${p.proj_g} G · ${p.proj_a} A proj.`;
+      const esc = s => s.replace(/'/g, "\\'");
+      const photoEl = p.headshot_url
+        ? `<img class='player-photo' src='${p.headshot_url}' alt='${p.name}' onerror="this.outerHTML='<div class=\\'player-photo fallback\\' style=\\'background:${color}\\'>${initials(p.name)}</div>'">`
+        : `<div class='player-photo fallback' style='background:${color}'>${initials(p.name)}</div>`;
+      return `<div class='player-row'>
+        <div class='player-rank ${rankClass(i)}'>${i + 1}</div>
+        ${photoEl}
+        <div class='player-info'>
+          <div class='player-name'>${p.name}</div>
+          <div class='player-meta'>
+            <span class='player-tag'>${p.team}</span>
+            <span class='player-tag'>${p.pos}</span>
+            <span class='player-stat'>${statLine}</span>
+          </div>
         </div>
-      </div>
-      <div class='player-right'>
-        <div class='pts-val'>${p.pool_pts}</div>
-        <div class='pts-lbl'>pts pool</div>
-        <div class='sal-val'>${fmtSal(p.aav)}</div>
-      </div>
-    </div>`;
-  }).join('');
+        <div class='player-right'>
+          <div class='pts-val'>${p.pool_pts}</div>
+          <div class='pts-lbl'>pts pool</div>
+          <div class='sal-val'>${fmtSal(p.aav)}</div>
+        </div>
+      </div>`;
+    }).join('');
 }
 
-renderList('list-fwd',  PLAYERS.fwd,  false);
-renderList('list-def',  PLAYERS.def,  false);
-renderList('list-goal', PLAYERS.goal, true);
+async function fetchPlayers() {
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/poolers_players?select=id,name,team,pos,proj_pts,proj_g,proj_a,aav,headshot_url&order=proj_pts.desc&limit=500`,
+    { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
+  );
+  if (!res.ok) throw new Error('Erreur de chargement des données');
+  return res.json();
+}
+
+async function recalculate() {
+  const btn = document.getElementById('btnRecalc');
+  const icon = document.getElementById('recalcIcon');
+  const errBox = document.getElementById('errorBox');
+  errBox.style.display = 'none';
+
+  const cap   = getVal('p-cap');
+  const nFwd  = Math.round(getVal('p-fwd'));
+  const nDef  = Math.round(getVal('p-def'));
+  const nGoal = Math.round(getVal('p-goal'));
+  const scoring = {
+    fwd_g: getVal('b-fwd-g'), fwd_a: getVal('b-fwd-a'),
+    def_g: getVal('b-def-g'), def_a: getVal('b-def-a'),
+    g_w:   getVal('b-g-w'),   g_so:  getVal('b-g-so'),
+  };
+
+  btn.disabled = true;
+  icon.textContent = '⏳';
+  icon.classList.add('spin');
+
+  // Show skeletons
+  document.getElementById('results').style.display = 'block';
+  showSkeleton('list-fwd', nFwd);
+  showSkeleton('list-def', nDef);
+  showSkeleton('list-goal', nGoal);
+  document.getElementById('sub-fwd').textContent  = `${nFwd} joueurs · G×${scoring.fwd_g} + A×${scoring.fwd_a}`;
+  document.getElementById('sub-def').textContent  = `${nDef} joueurs · G×${scoring.def_g} + A×${scoring.def_a}`;
+  document.getElementById('sub-goal').textContent = `${nGoal} joueurs · V×${scoring.g_w} + BL×${scoring.g_so}`;
+
+  try {
+    if (!allPlayers) allPlayers = await fetchPlayers();
+
+    // Run optimizer in next tick to let skeletons render
+    await new Promise(r => setTimeout(r, 50));
+    const result = optimize(allPlayers, scoring, cap, nFwd, nDef, nGoal);
+
+    if (!result) {
+      errBox.textContent = `Aucun alignement valide trouvé sous ${cap} M$. Essaie d'augmenter la masse ou de réduire le nombre de joueurs.`;
+      errBox.style.display = 'block';
+      document.getElementById('results').style.display = 'none';
+    } else {
+      const totalPts  = result.fwd.reduce((s,p) => s+p.pool_pts,0) + result.def.reduce((s,p) => s+p.pool_pts,0) + result.goal.reduce((s,p) => s+p.pool_pts,0);
+      const totalSal  = result.totalCost;
+      const pct       = Math.min(100, Math.round(totalSal / cap * 100));
+
+      document.getElementById('stat-total-pts').textContent = fmtPts(totalPts);
+      document.getElementById('stat-cap-used').textContent  = `${totalSal.toFixed(2).replace('.', ',')} M$`;
+      document.getElementById('stat-players').textContent   = nFwd + nDef + nGoal;
+      document.getElementById('cap-bar-fill').style.width   = pct + '%';
+      document.getElementById('cap-bar-text').textContent   = `${totalSal.toFixed(2)} M$ / ${cap} M$`;
+
+      const fwdPts = result.fwd.reduce((s,p) => s+p.pool_pts,0);
+      const defPts = result.def.reduce((s,p) => s+p.pool_pts,0);
+      const goalPts= result.goal.reduce((s,p) => s+p.pool_pts,0);
+      const fwdSal = result.fwd.reduce((s,p) => s+p.aav,0);
+      const defSal = result.def.reduce((s,p) => s+p.aav,0);
+      const goalSal= result.goal.reduce((s,p) => s+p.aav,0);
+
+      document.getElementById('tot-fwd-pts').textContent  = fwdPts + ' pts';
+      document.getElementById('tot-fwd-sal').textContent  = fwdSal.toFixed(2).replace('.', ',') + ' M$';
+      document.getElementById('tot-def-pts').textContent  = defPts + ' pts';
+      document.getElementById('tot-def-sal').textContent  = defSal.toFixed(2).replace('.', ',') + ' M$';
+      document.getElementById('tot-goal-pts').textContent = goalPts + ' pts';
+      document.getElementById('tot-goal-sal').textContent = goalSal.toFixed(2).replace('.', ',') + ' M$';
+
+      renderList('list-fwd',  result.fwd,  false);
+      renderList('list-def',  result.def,  false);
+      renderList('list-goal', result.goal, true);
+    }
+  } catch (e) {
+    errBox.textContent = 'Erreur : ' + e.message;
+    errBox.style.display = 'block';
+    document.getElementById('results').style.display = 'none';
+  } finally {
+    btn.disabled = false;
+    icon.textContent = '🔄';
+    icon.classList.remove('spin');
+  }
+}
+
+// Auto-calculate on load
+recalculate();
 </script>
 
 <script src='/sidebar.js?v=15'></script>
