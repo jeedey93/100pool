@@ -762,6 +762,9 @@ async function init() {
     return;
   }
   allPlayers = await res.json();
+  allPlayers.forEach(p => {
+    if (p.pos === 'G') p.proj_pts = (p.proj_g || 0) * 2 + (p.proj_a || 0) * 3;
+  });
 
   if (!loadTeamFromUrl()) {
     team = loadTeamFromStorage().filter(id => allPlayers.find(p => p.id === id));
