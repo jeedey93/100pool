@@ -34,7 +34,7 @@
     .slot-chip.over { background: #fef2f2; color: #dc2626; border-color: #fca5a5; }
 
     /* ── Layout 2 colonnes ── */
-    .da-body { display: grid; grid-template-columns: 340px 1fr; gap: 0; min-height: calc(100vh - 130px); }
+    .da-body { display: grid; grid-template-columns: 420px 1fr; gap: 0; min-height: calc(100vh - 130px); }
     @media (max-width: 900px) { .da-body { grid-template-columns: 1fr; } }
 
     /* ── Colonne gauche : mon équipe ── */
@@ -206,17 +206,36 @@ function optimize() {
   let remCap = capLeft;
   const tempSlots = { ...slots };
 
-  // Deux passes : d'abord remplir chaque groupe avec les meilleurs qui rentrent dans le cap
+  // Calculer le cap minimum nécessaire par groupe (AAV du joueur le moins cher disponible)
+  const minCapNeeded = { F: 0, D: 0, G: 0 };
   for (const grp of ['F', 'D', 'G']) {
-    const grpPlayers = available.filter(p => POS_GROUP(p) === grp);
-    for (const p of grpPlayers) {
-      if (tempSlots[grp] <= 0) break;
-      const aav = parseFloat(p.aav);
-      if (aav > remCap) continue;
-      result.push(p);
-      tempSlots[grp]--;
-      remCap -= aav;
-    }
+    if (tempSlots[grp] <= 0) continue;
+    const cheapest = available
+      .filter(p => POS_GROUP(p) === grp)
+      .sort((a, b) => parseFloat(a.aav) - parseFloat(b.aav))
+      .slice(0, tempSlots[grp]);
+    minCapNeeded[grp] = cheapest.reduce((s, p) => s + parseFloat(p.aav), 0);
+  }
+
+  for (const p of available) {
+    const g = POS_GROUP(p);
+    if (tempSlots[g] <= 0) continue;
+    const aav = parseFloat(p.aav);
+    // Cap disponible = cap restant moins le minimum réservé pour les autres groupes
+    const reserved = Object.entries(minCapNeeded)
+      .filter(([grp]) => grp !== g)
+      .reduce((s, [, v]) => s + v, 0);
+    if (aav > remCap - reserved) continue;
+    result.push(p);
+    // Mettre à jour le minimum requis pour ce groupe
+    const remaining = available
+      .filter(q => !result.includes(q) && POS_GROUP(q) === g)
+      .sort((a, b) => parseFloat(a.aav) - parseFloat(b.aav))
+      .slice(0, tempSlots[g] - 1);
+    minCapNeeded[g] = remaining.reduce((s, q) => s + parseFloat(q.aav), 0);
+    tempSlots[g]--;
+    remCap -= aav;
+    if (tempSlots.F <= 0 && tempSlots.D <= 0 && tempSlots.G <= 0) break;
   }
 
   suggestions = result;
