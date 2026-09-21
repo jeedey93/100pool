@@ -837,6 +837,11 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
           <div class='stat-val' id='trafic-week'>—</div>
           <div class='stat-lbl'>7 derniers jours</div>
         </div>
+        <div class='stat-card' style='--accent:#d97706'>
+          <div class='stat-card-top'><div class='stat-icon-wrap'>📊</div></div>
+          <div class='stat-val' id='trafic-avg'>—</div>
+          <div class='stat-lbl'>Moy. / jour (30j)</div>
+        </div>
       </div>
       <div class='chart-wrap'>
         <div class='chart-head'>
@@ -1268,10 +1273,14 @@ async function loadTrafic() {
     const total = rows.length;
     const todayCount = counts[todayKey] || 0;
     const weekCount = days.slice(-7).reduce((s, d) => s + d.count, 0);
+    const pastDays = days.slice(0, 29); // exclude today (incomplete day)
+    const daysWithData = pastDays.filter(d => d.count > 0).length;
+    const avgPerDay = daysWithData > 0 ? Math.round(pastDays.reduce((s, d) => s + d.count, 0) / daysWithData) : 0;
 
     document.getElementById('trafic-total').textContent = total;
     document.getElementById('trafic-today').textContent = todayCount;
     document.getElementById('trafic-week').textContent = weekCount;
+    document.getElementById('trafic-avg').textContent = avgPerDay;
     document.getElementById('trafic-chart-label').textContent = `${total} visites au total`;
 
     // Bar chart — only days with visits (plus today even if 0)
