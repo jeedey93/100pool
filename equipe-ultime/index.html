@@ -184,16 +184,10 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
   <div class='hero'>
     <div class='hero-badge'>🏒 Saison 2026-27</div>
     <h1>L'équipe <span>ultime</span> du pool</h1>
-    <p>Le meilleur alignement calculé en temps réel à partir des projections du guide — ajuste les paramètres et recalcule.</p>
-  </div>
-
-  <!-- ══ ALIGNEMENT #1 — RÉFÉRENCE ══ -->
-  <div class='lineup-label'>
-    <div>
-      <div class='lineup-badge gold'>🏆 Alignement #1 — Référence</div>
-      <h2 style='margin-top:8px'>Le meilleur sous 104 M$</h2>
-      <p>Calculé hors-ligne sur l'ensemble des 438 joueurs · Barème standard</p>
-    </div>
+    <p>Le meilleur alignement possible sous 104 M$ — calculé sur les 438 joueurs du guide.</p>
+    <button class='btn-share-result' style='margin-top:16px' onclick='shareRef()'>
+      📸 Partager cet alignement
+    </button>
   </div>
 
   <div class='hero-stats' id='ref-stats'>
@@ -229,126 +223,6 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
       <div class='section-total'><div class='st-pts'>121 pts</div><div class='st-sal'>2,47 M$</div></div>
     </div>
     <div class='player-list' id='ref-list-goal'></div>
-  </div>
-
-  <button class='btn-share-result' style='margin-top:14px;margin-bottom:0' onclick='shareRef()'>
-    📸 Partager cet alignement
-  </button>
-
-  <!-- ══ ALIGNEMENT #2 — EXPLORATEUR ══ -->
-  <div class='lineup-label' style='margin-top:44px'>
-    <div>
-      <div class='lineup-badge blue'>🔄 Alignement #2 — Explorateur</div>
-      <h2 style='margin-top:8px'>Trouve ton propre alignement</h2>
-      <p>Modifie le format et le barème, recalcule à la demande</p>
-    </div>
-  </div>
-
-  <!-- PARAMÈTRES -->
-  <div class='params-card'>
-    <h3>⚙️ Paramètres du pool</h3>
-    <div class='params-grid'>
-      <div class='param-field'>
-        <label>Nb attaquants</label>
-        <input type='number' id='p-fwd' value='12' min='1' max='20'>
-      </div>
-      <div class='param-field'>
-        <label>Nb défenseurs</label>
-        <input type='number' id='p-def' value='6' min='1' max='12'>
-      </div>
-      <div class='param-field'>
-        <label>Nb gardiens</label>
-        <input type='number' id='p-goal' value='2' min='1' max='6'>
-      </div>
-    </div>
-    <div class='params-divider'></div>
-    <div style='font-size:0.72em;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px'>Barème de points</div>
-    <div class='params-bareme'>
-      <div class='bareme-field'><label>ATT But ×</label><input type='number' id='b-fwd-g' value='1' min='0' max='10'></div>
-      <div class='bareme-field'><label>ATT Passe ×</label><input type='number' id='b-fwd-a' value='1' min='0' max='10'></div>
-      <div class='bareme-field'><label>DEF But ×</label><input type='number' id='b-def-g' value='2' min='0' max='10'></div>
-      <div class='bareme-field'><label>DEF Passe ×</label><input type='number' id='b-def-a' value='1' min='0' max='10'></div>
-      <div class='bareme-field'><label>G Victoire ×</label><input type='number' id='b-g-w' value='2' min='0' max='10'></div>
-      <div class='bareme-field'><label>G Blanchissage ×</label><input type='number' id='b-g-so' value='3' min='0' max='10'></div>
-    </div>
-    <button class='btn-recalc' id='btnRecalc' onclick='recalculate()'>
-      <span id='recalcIcon'>🔄</span> Calculer le meilleur alignement
-    </button>
-  </div>
-
-  <div id='errorBox' class='error-box' style='display:none'></div>
-
-  <!-- RÉSULTATS -->
-  <div id='results' style='display:none'>
-    <button class='btn-share-result' id='btnShare' onclick='shareLineup()'>
-      📸 Partager cet alignement
-    </button>
-    <div class='hero-stats'>
-      <div class='hero-stat accent'>
-        <div class='hs-val' id='stat-total-pts'>—</div>
-        <div class='hs-lbl'>pts pool projetés</div>
-      </div>
-      <div class='hero-stat'>
-        <div class='hs-val' id='stat-cap-used'>—</div>
-        <div class='hs-lbl'>masse utilisée</div>
-      </div>
-      <div class='hero-stat'>
-        <div class='hs-val' id='stat-players'>20</div>
-        <div class='hs-lbl'>joueurs</div>
-      </div>
-    </div>
-
-    <div class='cap-bar-wrap'>
-      <div class='cap-bar-label'>
-        <span>Masse utilisée</span>
-        <span id='cap-bar-text'>— / — M$</span>
-      </div>
-      <div class='cap-bar-track'>
-        <div class='cap-bar-fill' id='cap-bar-fill' style='width:0%'></div>
-      </div>
-    </div>
-
-    <div class='section'>
-      <div class='section-header'>
-        <div class='section-title'>
-          <div class='section-icon fwd'>⚡</div>
-          <div><h2>Attaquants</h2><p id='sub-fwd'>12 joueurs · G×1 + A×1</p></div>
-        </div>
-        <div class='section-total'>
-          <div class='st-pts' id='tot-fwd-pts'>—</div>
-          <div class='st-sal' id='tot-fwd-sal'>—</div>
-        </div>
-      </div>
-      <div class='player-list' id='list-fwd'></div>
-    </div>
-
-    <div class='section'>
-      <div class='section-header'>
-        <div class='section-title'>
-          <div class='section-icon def'>🛡</div>
-          <div><h2>Défenseurs</h2><p id='sub-def'>6 joueurs · G×2 + A×1</p></div>
-        </div>
-        <div class='section-total'>
-          <div class='st-pts' id='tot-def-pts'>—</div>
-          <div class='st-sal' id='tot-def-sal'>—</div>
-        </div>
-      </div>
-      <div class='player-list' id='list-def'></div>
-    </div>
-
-    <div class='section'>
-      <div class='section-header'>
-        <div class='section-title'>
-          <div class='section-icon goal'>🧤</div>
-          <div><h2>Gardiens</h2><p id='sub-goal'>2 joueurs · V×2 + BL×3</p></div>
-        </div>
-        <div class='section-total'>
-          <div class='st-pts' id='tot-goal-pts'>—</div>
-          <div class='st-sal' id='tot-goal-sal'>—</div>
-        </div>
-      </div>
-      <div class='player-list' id='list-goal'></div>
-    </div>
   </div>
 
   <!-- CTA -->
