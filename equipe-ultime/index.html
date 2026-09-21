@@ -137,23 +137,24 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
 .btn-share-result:hover { border-color: #2d8a3e; color: #1a5c28; background: #f0fdf4; }
 
 /* ── SHARE CARD (hors-écran, pour html2canvas) ── */
-#shareCard { position: fixed; left: -9999px; top: 0; width: 600px; background: #0f1a12; padding: 32px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-#shareCard .sc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+#shareCard { position: fixed; left: -9999px; top: 0; width: 600px; background: #ffffff; padding: 32px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; border: 1px solid #e2e8f0; }
+#shareCard .sc-title { font-size: 1.35em; font-weight: 900; color: #0f172a; text-align: center; margin-bottom: 20px; letter-spacing: -0.3px; }
+#shareCard .sc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; background: linear-gradient(135deg, #1a5c28, #2d8a3e); border-radius: 12px; padding: 14px 18px; }
 #shareCard .sc-logo { display: flex; align-items: center; gap: 10px; }
-#shareCard .sc-logo-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.2); flex-shrink: 0; }
+#shareCard .sc-logo-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.4); flex-shrink: 0; }
 #shareCard .sc-logo-text { color: white; font-weight: 900; font-size: 1em; }
-#shareCard .sc-logo-sub  { color: rgba(255,255,255,0.5); font-size: 0.72em; font-weight: 600; }
+#shareCard .sc-logo-sub  { color: rgba(255,255,255,0.7); font-size: 0.72em; font-weight: 600; }
 #shareCard .sc-total { text-align: right; }
-#shareCard .sc-total-pts { font-size: 1.8em; font-weight: 900; color: #4ade80; line-height: 1; }
-#shareCard .sc-total-lbl { font-size: 0.7em; color: rgba(255,255,255,0.5); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
-#shareCard .sc-section-lbl { font-size: 0.65em; font-weight: 800; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1.2px; margin: 16px 0 8px; }
+#shareCard .sc-total-pts { font-size: 1.8em; font-weight: 900; color: #ffffff; line-height: 1; }
+#shareCard .sc-total-lbl { font-size: 0.7em; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+#shareCard .sc-section-lbl { font-size: 0.65em; font-weight: 800; color: #1a5c28; text-transform: uppercase; letter-spacing: 1.2px; margin: 16px 0 8px; }
 #shareCard .sc-grid { display: flex; flex-direction: column; gap: 6px; }
-#shareCard .sc-player { background: rgba(255,255,255,0.06); border-radius: 10px; padding: 8px 12px; display: flex; align-items: center; gap: 8px; }
+#shareCard .sc-player { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 8px 12px; display: flex; align-items: center; gap: 8px; }
 #shareCard .sc-avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6em; font-weight: 900; color: white; flex-shrink: 0; }
-#shareCard .sc-name { font-size: 0.78em; font-weight: 700; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-#shareCard .sc-meta { font-size: 0.62em; color: rgba(255,255,255,0.45); font-weight: 600; margin-top: 1px; }
-#shareCard .sc-pts { margin-left: auto; font-size: 0.85em; font-weight: 900; color: #4ade80; flex-shrink: 0; }
-#shareCard .sc-footer { margin-top: 20px; text-align: center; font-size: 0.65em; color: rgba(255,255,255,0.3); font-weight: 600; letter-spacing: 0.5px; }
+#shareCard .sc-name { font-size: 0.78em; font-weight: 700; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#shareCard .sc-meta { font-size: 0.62em; color: #64748b; font-weight: 600; margin-top: 1px; }
+#shareCard .sc-pts { margin-left: auto; font-size: 0.85em; font-weight: 900; color: #1a5c28; flex-shrink: 0; }
+#shareCard .sc-footer { margin-top: 20px; text-align: center; font-size: 0.65em; color: #94a3b8; font-weight: 600; letter-spacing: 0.5px; }
 
 @media (max-width: 600px) {
   .hero h1 { font-size: 1.6em; }
@@ -235,6 +236,7 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
 
 <!-- SHARE CARD (off-screen, rendered by html2canvas) -->
 <div id='shareCard'>
+  <div class='sc-title'>L'équipe ultime par 100% Pool</div>
   <div class='sc-header'>
     <div class='sc-logo'>
       <img class='sc-logo-img' id='sc-logo-img' src='' alt='100% Pool'>
@@ -403,7 +405,7 @@ async function shareLineup() {
     card.style.left = '-9999px';
 
     const canvas = await html2canvas(card, {
-      backgroundColor: '#0f1a12',
+      backgroundColor: '#ffffff',
       scale: 2,
       useCORS: false,
       logging: false,
