@@ -124,6 +124,30 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
 /* ── ERROR ── */
 .error-box { background: #fff1f2; border: 1px solid #fecdd3; border-radius: 14px; padding: 18px 20px; color: #be123c; font-size: 0.85em; font-weight: 600; text-align: center; margin-bottom: 20px; }
 
+/* ── SHARE ── */
+.btn-share-result { display: flex; align-items: center; gap: 8px; background: white; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 9px 18px; font-size: 0.85em; font-weight: 700; color: #475569; cursor: pointer; transition: all 0.15s; margin-bottom: 20px; }
+.btn-share-result:hover { border-color: #2d8a3e; color: #1a5c28; background: #f0fdf4; }
+
+/* ── SHARE CARD (hors-écran, pour html2canvas) ── */
+#shareCard { position: fixed; left: -9999px; top: 0; width: 600px; background: #0f1a12; padding: 32px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+#shareCard .sc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+#shareCard .sc-logo { display: flex; align-items: center; gap: 10px; }
+#shareCard .sc-logo-dot { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#2d8a3e,#4ade80); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.75em; color: white; }
+#shareCard .sc-logo-text { color: white; font-weight: 900; font-size: 1em; }
+#shareCard .sc-logo-sub  { color: rgba(255,255,255,0.5); font-size: 0.72em; font-weight: 600; }
+#shareCard .sc-total { text-align: right; }
+#shareCard .sc-total-pts { font-size: 1.8em; font-weight: 900; color: #4ade80; line-height: 1; }
+#shareCard .sc-total-lbl { font-size: 0.7em; color: rgba(255,255,255,0.5); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+#shareCard .sc-section-lbl { font-size: 0.65em; font-weight: 800; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1.2px; margin: 16px 0 8px; }
+#shareCard .sc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+#shareCard .sc-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+#shareCard .sc-player { background: rgba(255,255,255,0.06); border-radius: 10px; padding: 8px 12px; display: flex; align-items: center; gap: 8px; }
+#shareCard .sc-avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6em; font-weight: 900; color: white; flex-shrink: 0; }
+#shareCard .sc-name { font-size: 0.78em; font-weight: 700; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#shareCard .sc-meta { font-size: 0.62em; color: rgba(255,255,255,0.45); font-weight: 600; margin-top: 1px; }
+#shareCard .sc-pts { margin-left: auto; font-size: 0.85em; font-weight: 900; color: #4ade80; flex-shrink: 0; }
+#shareCard .sc-footer { margin-top: 20px; text-align: center; font-size: 0.65em; color: rgba(255,255,255,0.3); font-weight: 600; letter-spacing: 0.5px; }
+
 @media (max-width: 600px) {
   .hero h1 { font-size: 1.6em; }
   .params-bareme { grid-template-columns: repeat(2, 1fr); }
@@ -160,10 +184,6 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
     <h3>⚙️ Paramètres du pool</h3>
     <div class='params-grid'>
       <div class='param-field'>
-        <label>Masse salariale (M$)</label>
-        <input type='number' id='p-cap' value='104' min='50' max='300' step='0.5'>
-      </div>
-      <div class='param-field'>
         <label>Nb attaquants</label>
         <input type='number' id='p-fwd' value='12' min='1' max='20'>
       </div>
@@ -195,6 +215,9 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
 
   <!-- RÉSULTATS -->
   <div id='results' style='display:none'>
+    <button class='btn-share-result' id='btnShare' onclick='shareLineup()'>
+      📸 Partager cet alignement
+    </button>
     <div class='hero-stats'>
       <div class='hero-stat accent'>
         <div class='hs-val' id='stat-total-pts'>—</div>
@@ -272,6 +295,30 @@ nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e);
 
 </div>
 
+<!-- SHARE CARD (off-screen, rendered by html2canvas) -->
+<div id='shareCard'>
+  <div class='sc-header'>
+    <div class='sc-logo'>
+      <div class='sc-logo-dot'>100%</div>
+      <div>
+        <div class='sc-logo-text'>100% Pool</div>
+        <div class='sc-logo-sub'>Guide 2026-27</div>
+      </div>
+    </div>
+    <div class='sc-total'>
+      <div class='sc-total-pts' id='sc-pts'>—</div>
+      <div class='sc-total-lbl'>pts pool projetés</div>
+    </div>
+  </div>
+  <div class='sc-section-lbl' id='sc-lbl-fwd'>⚡ Attaquants</div>
+  <div class='sc-grid' id='sc-fwd'></div>
+  <div class='sc-section-lbl' id='sc-lbl-def'>🛡 Défenseurs</div>
+  <div class='sc-grid' id='sc-def'></div>
+  <div class='sc-section-lbl' id='sc-lbl-goal'>🧤 Gardiens</div>
+  <div class='sc-grid three' id='sc-goal'></div>
+  <div class='sc-footer'>100pool.ca/equipe-ultime · Masse 104 M$</div>
+</div>
+
 <script>
 const SUPABASE_URL = 'https://fifurqlitkywtmhgtzeu.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpZnVycWxpdGt5d3RtaGd0emV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDIyMjQsImV4cCI6MjA5MjI3ODIyNH0.KPVPj1qwbSJJMyLR_-AhDcRs0vi2sUU6qbFQ-kH53C0';
@@ -287,6 +334,8 @@ const TEAM_COLORS = {
 };
 
 let allPlayers = null;
+let lastResult = null;
+const CAP = 104;
 
 function getVal(id) { return parseFloat(document.getElementById(id).value) || 0; }
 function initials(name) { return name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase(); }
@@ -423,7 +472,7 @@ async function recalculate() {
   const errBox = document.getElementById('errorBox');
   errBox.style.display = 'none';
 
-  const cap   = getVal('p-cap');
+  const cap   = CAP;
   const nFwd  = Math.round(getVal('p-fwd'));
   const nDef  = Math.round(getVal('p-def'));
   const nGoal = Math.round(getVal('p-goal'));
@@ -485,6 +534,7 @@ async function recalculate() {
       renderList('list-fwd',  result.fwd,  false);
       renderList('list-def',  result.def,  false);
       renderList('list-goal', result.goal, true);
+      lastResult = { ...result, totalPts, nFwd, nDef, nGoal, scoring };
     }
   } catch (e) {
     errBox.textContent = 'Erreur : ' + e.message;
@@ -499,6 +549,90 @@ async function recalculate() {
 
 // Auto-calculate on load
 recalculate();
+
+function buildShareCard(result) {
+  const { fwd, def, goal, totalPts, scoring } = result;
+  document.getElementById('sc-pts').textContent = totalPts;
+  document.getElementById('sc-lbl-fwd').textContent  = `⚡ Attaquants (${fwd.length})`;
+  document.getElementById('sc-lbl-def').textContent  = `🛡 Défenseurs (${def.length})`;
+  document.getElementById('sc-lbl-goal').textContent = `🧤 Gardiens (${goal.length})`;
+
+  function playerCard(p) {
+    const color = TEAM_COLORS[p.team] || '#2d8a3e';
+    return `<div class='sc-player'>
+      <div class='sc-avatar' style='background:${color}'>${initials(p.name)}</div>
+      <div style='flex:1;min-width:0'>
+        <div class='sc-name'>${p.name}</div>
+        <div class='sc-meta'>${p.team} · ${fmtSal(p.aav)}</div>
+      </div>
+      <div class='sc-pts'>${p.pool_pts}</div>
+    </div>`;
+  }
+
+  const sorted = arr => [...arr].sort((a,b) => b.pool_pts - a.pool_pts);
+  document.getElementById('sc-fwd').innerHTML  = sorted(fwd).map(playerCard).join('');
+  document.getElementById('sc-def').innerHTML  = sorted(def).map(playerCard).join('');
+  document.getElementById('sc-goal').innerHTML = sorted(goal).map(playerCard).join('');
+
+  // Adjust grid cols based on count
+  document.getElementById('sc-fwd').className  = `sc-grid${fwd.length >= 9 ? ' three' : ''}`;
+  document.getElementById('sc-def').className  = `sc-grid${def.length >= 4 ? '' : ' three'}`;
+}
+
+async function shareLineup() {
+  if (!lastResult) return;
+  const btn = document.getElementById('btnShare');
+  btn.textContent = '⏳ Génération…';
+  btn.disabled = true;
+
+  try {
+    // Load html2canvas if not loaded
+    if (!window.html2canvas) {
+      await new Promise((res, rej) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+        s.onload = res; s.onerror = rej;
+        document.head.appendChild(s);
+      });
+    }
+
+    buildShareCard(lastResult);
+
+    const card = document.getElementById('shareCard');
+    card.style.left = '-9999px';
+
+    const canvas = await html2canvas(card, {
+      backgroundColor: '#0f1a12',
+      scale: 2,
+      useCORS: false,
+      logging: false,
+    });
+
+    canvas.toBlob(async blob => {
+      const file = new File([blob], 'equipe-ultime-100pool.png', { type: 'image/png' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: 'Mon équipe ultime — 100% Pool',
+          text: `${lastResult.totalPts} pts pool projetés · 100pool.ca/equipe-ultime`,
+        });
+      } else {
+        // Fallback: download
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'equipe-ultime-100pool.png';
+        a.click();
+      }
+      btn.textContent = '📸 Partager cet alignement';
+      btn.disabled = false;
+    }, 'image/png');
+
+  } catch (e) {
+    btn.textContent = '📸 Partager cet alignement';
+    btn.disabled = false;
+    if (e.name !== 'AbortError') alert('Erreur lors de la génération : ' + e.message);
+  }
+}
 </script>
 
 <script src='/sidebar.js?v=15'></script>
