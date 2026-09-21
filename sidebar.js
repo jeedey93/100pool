@@ -21,7 +21,6 @@
         { href: '/mon-equipe/', icon: '👥', label: 'Mon équipe' },
       ]
     },
-    { href: '/equipe-ultime/', icon: '🏆', label: 'Équipe ultime' },
     { href: '/podcast/', icon: '🎙', label: 'Podcast' },
     { href: '/faq/',     icon: '❓', label: 'FAQ' },
   ];
