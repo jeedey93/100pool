@@ -3266,8 +3266,11 @@ function doPrint() {
 @page { @bottom-center { content: '100pool.ca · Guide des poolers 2026-27'; font-size: 7pt; color: #94a3b8; } }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 7pt; color: #111; background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 h1 { font-size: 11pt; font-weight: 900; color: white; }
-.header { background: #1a5c28; padding: 8px 14px; border-radius: 6px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+.header { background: #1a5c28; padding: 8px 14px; border-radius: 6px; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
 .header p { font-size: 7pt; color: rgba(255,255,255,0.8); margin-top: 2px; }
+.bareme { background: #f8f4ff; border: 1px solid #ddd6fe; border-radius: 6px; padding: 5px 12px; font-size: 7pt; color: #5b21b6; margin-bottom: 10px; }
+.bareme strong { font-weight: 800; }
+thead tr.bareme-row th { background: #f8f4ff; color: #5b21b6; font-size: 6.5pt; font-weight: 700; padding: 4px 12px; border-bottom: 1px solid #ddd6fe; white-space: normal; }
 .section-title { font-size: 9pt; font-weight: 800; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.04em; border-top: 2px solid #15803d; padding-top: 8px; margin: 16px 0 6px; }
 table { width: 100%; border-collapse: collapse; font-size: 6.8pt; }
 thead th { background: #f1f5f9; color: #333; padding: 3px 4px; border-bottom: 1.5px solid #ccc; white-space: nowrap; text-align: left; }
@@ -3319,14 +3322,9 @@ th.cg-ppg-last, td.cg-ppg-last, th.cg-ppg-proj, td.cg-ppg-proj { display: none; 
     <p>100pool.ca · Imprimé le ${new Date().toLocaleDateString('fr-CA')}</p>
   </div>
 </div>
-<table><thead>${thead}</thead><tbody>${tbody}</tbody></table>
-${gtbody.trim() ? `<div class="section-title">🥅 Gardiens</div><table><thead>${gthead}</thead><tbody>${gtbody}</tbody></table>` : ''}
-<div style="margin-top:18px;padding:10px 14px;background:#f8f4ff;border:1px solid #ddd6fe;border-radius:8px;font-size:8pt;color:#5b21b6;page-break-inside:avoid;">
-  <strong>📊 Barème Pts Pool :</strong>
-  Attaquant — But ×${poolScoring.fwd_g}, Passe ×${poolScoring.fwd_a} &nbsp;|&nbsp;
-  Défenseur — But ×${poolScoring.def_g}, Passe ×${poolScoring.def_a} &nbsp;|&nbsp;
-  Gardien — Victoire ×${poolScoring.g_w}, Jeu blanc ×${poolScoring.g_so}
-</div>
+<div class="bareme"><strong>📊 Pts Pool :</strong> Attaquant G×${poolScoring.fwd_g} A×${poolScoring.fwd_a} &nbsp;|&nbsp; Défenseur G×${poolScoring.def_g} A×${poolScoring.def_a} &nbsp;|&nbsp; Gardien V×${poolScoring.g_w} BL×${poolScoring.g_so}</div>
+<table><thead><tr class="bareme-row"><th colspan="99"><strong>📊 Pts Pool :</strong> ATT G×${poolScoring.fwd_g} A×${poolScoring.fwd_a} &nbsp;|&nbsp; DEF G×${poolScoring.def_g} A×${poolScoring.def_a} &nbsp;|&nbsp; G V×${poolScoring.g_w} BL×${poolScoring.g_so}</th></tr>${thead}</thead><tbody>${tbody}</tbody></table>
+${gtbody.trim() ? `<div class="section-title">🥅 Gardiens</div><table><thead><tr class="bareme-row"><th colspan="99"><strong>📊 Pts Pool :</strong> ATT G×${poolScoring.fwd_g} A×${poolScoring.fwd_a} &nbsp;|&nbsp; DEF G×${poolScoring.def_g} A×${poolScoring.def_a} &nbsp;|&nbsp; G V×${poolScoring.g_w} BL×${poolScoring.g_so}</th></tr>${gthead}</thead><tbody>${gtbody}</tbody></table>` : ''}
 <script>window.onload = function() { window.print(); window.onafterprint = function() { window.close(); }; }<\/script>
 </body></html>`);
   win.document.close();
