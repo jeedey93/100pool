@@ -415,6 +415,45 @@ function optimize(players, scoring, cap, nFwd, nDef, nGoal) {
     }
   }
 
+  if (!best) return null;
+
+  // ── Cap-fill pass ──────────────────────────────────────────────────────────
+  // For each position, try to upgrade the worst player to a better one
+  // that fits in the remaining cap. Repeat until no improvement possible.
+  const allById = Object.fromEntries(withPts.map(p => [p.id, p]));
+  const byPts = arr => [...arr].sort((a, b) => b.pool_pts - a.pool_pts);
+  const fwdsByPts  = byPts(withPts.filter(p => fwdPos.includes(p.pos)));
+  const defsByPts  = byPts(withPts.filter(p => p.pos === 'D'));
+  const goalsByPts = byPts(withPts.filter(p => p.pos === 'G'));
+
+  function upgrade(slot, pool) {
+    let improved = true;
+    while (improved) {
+      improved = false;
+      const used = new Set([...best.fwd, ...best.def, ...best.goal].map(p => p.id));
+      const remaining = cap - best.totalCost;
+      // Find the worst player in this slot
+      const worst = [...slot].sort((a, b) => a.pool_pts - b.pool_pts)[0];
+      // Try to find a better player not already selected that fits
+      for (const candidate of pool) {
+        if (used.has(candidate.id)) continue;
+        const budgetGain = worst.aav - candidate.aav; // freed if we swap
+        const canAfford = remaining + budgetGain >= 0;
+        if (canAfford && candidate.pool_pts > worst.pool_pts) {
+          const idx = slot.indexOf(worst);
+          slot[idx] = candidate;
+          best.totalCost = best.totalCost - worst.aav + candidate.aav;
+          improved = true;
+          break;
+        }
+      }
+    }
+  }
+
+  upgrade(best.fwd,  fwdsByPts);
+  upgrade(best.def,  defsByPts);
+  upgrade(best.goal, goalsByPts);
+
   return best;
 }
 
