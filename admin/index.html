@@ -1273,7 +1273,7 @@ async function loadTrafic() {
     const total = rows.length;
     const todayCount = counts[todayKey] || 0;
     const weekCount = days.slice(-7).reduce((s, d) => s + d.count, 0);
-    const pastDays = days.slice(0, 29); // exclude today (incomplete day)
+    const pastDays = days.slice(0, 29).filter(d => d.key !== '2026-09-15'); // exclude today + Sept 15 (partial day)
     const daysWithData = pastDays.filter(d => d.count > 0).length;
     const avgPerDay = daysWithData > 0 ? Math.round(pastDays.reduce((s, d) => s + d.count, 0) / daysWithData) : 0;
 
