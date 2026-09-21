@@ -191,51 +191,50 @@ function optimize() {
   const lockedIds = new Set([...keeperIds, ...pickedIds]);
   const locked = allPlayers.filter(p => lockedIds.has(p.id));
   const capUsed = locked.reduce((s, p) => s + parseFloat(p.aav || 0), 0);
-  const capLeft = CAP_MAX - capUsed;
-  const slots = { F: LIMITS.F - 0, D: LIMITS.D - 0, G: LIMITS.G - 0 };
-  locked.forEach(p => { const g = POS_GROUP(p); if (g) slots[g]--; });
+  let remCap = CAP_MAX - capUsed;
 
-  const available = allPlayers.filter(p =>
-    !lockedIds.has(p.id) &&
-    !draftedIds.has(p.id) &&
-    POS_GROUP(p) !== null &&
-    p.aav != null && parseFloat(p.aav) > 0
-  ).sort((a, b) => (b.proj_pts ?? 0) - (a.proj_pts ?? 0));
+  const slotsNeeded = { F: LIMITS.F, D: LIMITS.D, G: LIMITS.G };
+  locked.forEach(p => { const g = POS_GROUP(p); if (g && slotsNeeded[g] > 0) slotsNeeded[g]--; });
 
-  const result = [];
-  let remCap = capLeft;
-  const tempSlots = { ...slots };
-
-  // Calculer le cap minimum nécessaire par groupe (AAV du joueur le moins cher disponible)
-  const minCapNeeded = { F: 0, D: 0, G: 0 };
-  for (const grp of ['F', 'D', 'G']) {
-    if (tempSlots[grp] <= 0) continue;
-    const cheapest = available
-      .filter(p => POS_GROUP(p) === grp)
-      .sort((a, b) => parseFloat(a.aav) - parseFloat(b.aav))
-      .slice(0, tempSlots[grp]);
-    minCapNeeded[grp] = cheapest.reduce((s, p) => s + parseFloat(p.aav), 0);
+  const byGrp = { F: [], D: [], G: [] };
+  allPlayers.forEach(p => {
+    const g = POS_GROUP(p);
+    if (!g) return;
+    if (lockedIds.has(p.id)) return;
+    if (draftedIds.has(p.id)) return;
+    if (!p.aav || parseFloat(p.aav) <= 0) return;
+    byGrp[g].push(p);
+  });
+  for (const g of ['F', 'D', 'G']) {
+    byGrp[g].sort((a, b) => (b.proj_pts ?? 0) - (a.proj_pts ?? 0));
   }
 
-  for (const p of available) {
-    const g = POS_GROUP(p);
-    if (tempSlots[g] <= 0) continue;
-    const aav = parseFloat(p.aav);
-    // Cap disponible = cap restant moins le minimum réservé pour les autres groupes
-    const reserved = Object.entries(minCapNeeded)
-      .filter(([grp]) => grp !== g)
-      .reduce((s, [, v]) => s + v, 0);
-    if (aav > remCap - reserved) continue;
-    result.push(p);
-    // Mettre à jour le minimum requis pour ce groupe
-    const remaining = available
-      .filter(q => !result.includes(q) && POS_GROUP(q) === g)
-      .sort((a, b) => parseFloat(a.aav) - parseFloat(b.aav))
-      .slice(0, tempSlots[g] - 1);
-    minCapNeeded[g] = remaining.reduce((s, q) => s + parseFloat(q.aav), 0);
-    tempSlots[g]--;
-    remCap -= aav;
-    if (tempSlots.F <= 0 && tempSlots.D <= 0 && tempSlots.G <= 0) break;
+  // Calculer le cap minimum requis pour remplir chaque groupe (n joueurs les moins chers)
+  function minCap(grp, n) {
+    return byGrp[grp]
+      .slice().sort((a, b) => parseFloat(a.aav) - parseFloat(b.aav))
+      .slice(0, n)
+      .reduce((s, p) => s + parseFloat(p.aav), 0);
+  }
+
+  const result = [];
+  const tempSlots = { ...slotsNeeded };
+  const used = { F: new Set(), D: new Set(), G: new Set() };
+
+  for (const g of ['F', 'D', 'G']) {
+    for (const p of byGrp[g]) {
+      if (tempSlots[g] <= 0) break;
+      const aav = parseFloat(p.aav);
+      // Réserver le cap minimum pour les autres groupes encore à remplir
+      const otherReserved = ['F', 'D', 'G']
+        .filter(og => og !== g)
+        .reduce((s, og) => s + minCap(og, tempSlots[og]), 0);
+      if (aav > remCap - otherReserved) continue;
+      result.push(p);
+      used[g].add(p.id);
+      tempSlots[g]--;
+      remCap -= aav;
+    }
   }
 
   suggestions = result;
