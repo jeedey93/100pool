@@ -512,6 +512,9 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
     <button class='nav-item' onclick='switchTab("goalies",this)'>
       <span class='nav-icon'>🥅</span><span>Gardiens</span>
     </button>
+    <button class='nav-item' onclick='switchTab("projections",this)'>
+      <span class='nav-icon'>📈</span><span>Projections</span>
+    </button>
   </div>
 
   <div class='sidebar-bottom'>
@@ -864,6 +867,68 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
       </div>
     </div>
 
+    <div id='tab-projections' style='display:none'>
+      <div class='section-header'>
+        <h2>📈 Modifier une projection</h2>
+        <p>Recherche un joueur, ajuste ses points projetés et documente la raison du changement.</p>
+      </div>
+
+      <div style='display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px'>
+
+        <!-- Formulaire -->
+        <div style='background:white;border-radius:14px;border:1px solid #e2e8f0;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,0.06)'>
+          <div style='font-size:0.72em;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:16px'>Nouveau changement</div>
+
+          <div style='margin-bottom:14px'>
+            <label style='font-size:0.8em;font-weight:700;color:#475569;display:block;margin-bottom:5px'>Joueur</label>
+            <input type='search' id='proj-search' placeholder='Rechercher par nom…' oninput='projSearch()' autocomplete='off'
+              style='width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;outline:none;transition:border 0.15s'>
+            <div id='proj-results' style='background:white;border:1.5px solid #e2e8f0;border-radius:9px;margin-top:4px;display:none;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,0.1)'></div>
+          </div>
+
+          <div id='proj-selected' style='display:none;background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px'>
+            <img id='proj-team-logo' src='' style='width:28px;height:28px;object-fit:contain'>
+            <div>
+              <div id='proj-player-name' style='font-size:0.88em;font-weight:800;color:#0f172a'></div>
+              <div id='proj-player-meta' style='font-size:0.72em;color:#64748b'></div>
+            </div>
+          </div>
+
+          <div style='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px'>
+            <div>
+              <label style='font-size:0.8em;font-weight:700;color:#475569;display:block;margin-bottom:5px'>Anciens pts</label>
+              <input type='number' id='proj-old-pts' readonly
+                style='width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;background:#f8fafc;color:#94a3b8;outline:none'>
+            </div>
+            <div>
+              <label style='font-size:0.8em;font-weight:700;color:#475569;display:block;margin-bottom:5px'>Nouveaux pts</label>
+              <input type='number' id='proj-new-pts' placeholder='Ex: 75'
+                style='width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;outline:none;transition:border 0.15s'>
+            </div>
+          </div>
+
+          <div style='margin-bottom:18px'>
+            <label style='font-size:0.8em;font-weight:700;color:#475569;display:block;margin-bottom:5px'>Raison</label>
+            <textarea id='proj-note' placeholder='Ex: Changement d'équipe, joue sur la top line…' rows='3'
+              style='width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;resize:vertical;outline:none;transition:border 0.15s'></textarea>
+          </div>
+
+          <button onclick='submitProjectionChange()' id='proj-submit-btn'
+            style='width:100%;padding:11px;background:linear-gradient(135deg,#0f5c23,#2d8a3e);color:white;border:none;border-radius:10px;font-size:0.88em;font-weight:800;cursor:pointer;transition:all 0.15s'>
+            💾 Enregistrer le changement
+          </button>
+          <div id='proj-feedback' style='margin-top:10px;font-size:0.8em;font-weight:600;text-align:center;min-height:18px'></div>
+        </div>
+
+        <!-- Historique récent -->
+        <div style='background:white;border-radius:14px;border:1px solid #e2e8f0;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,0.06)'>
+          <div style='font-size:0.72em;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:16px'>Historique récent</div>
+          <div id='proj-history'><div style='color:#94a3b8;font-size:0.85em;text-align:center;padding:24px'>Chargement…</div></div>
+        </div>
+
+      </div>
+    </div>
+
   </div><!-- /content -->
 </div><!-- /main -->
 
@@ -884,6 +949,9 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
   </button>
   <button class='mobile-nav-item' onclick='switchTab("goalies",this)'>
     <span class='mn-icon'>🥅</span>Gardiens<span class='mn-dot'></span>
+  </button>
+  <button class='mobile-nav-item' onclick='switchTab("projections",this)'>
+    <span class='mn-icon'>📈</span>Projections<span class='mn-dot'></span>
   </button>
   <button class='mobile-nav-item' onclick='switchTab("feedback",this)'>
     <span class='mn-icon'>💬</span>Commentaires<span class='mn-dot'></span><span class='nav-badge' id='mobile-feedback-count' style='margin-left:4px'></span>
@@ -988,20 +1056,21 @@ let TIERS = [];
 const TIER_COLORS = { 'Tier 1': '#92400e', 'Tier 2': '#1e40af', 'Tier 3': '#065f46', 'Tier 4': '#475569', 'Tier 5': '#475569', 'Tier 6': '#475569', 'Tier 7': '#94a3b8', 'Tier 8': '#94a3b8', 'Tier 9': '#94a3b8', 'Tier 10': '#94a3b8', 'Tier 11': '#94a3b8' };
 
 // ── TABS ─────────────────────────────────────────────────
-const TAB_TITLES = { dashboard: '📊 Dashboard', acces: '💳 Accès & Achats', skaters: '⛸ Patineurs 2026-27', goalies: '🥅 Gardiens 2026-27', feedback: '💬 Commentaires', trafic: '📈 Trafic' };
+const TAB_TITLES = { dashboard: '📊 Dashboard', acces: '💳 Accès & Achats', skaters: '⛸ Patineurs 2026-27', goalies: '🥅 Gardiens 2026-27', projections: '📈 Projections', feedback: '💬 Commentaires', trafic: '📈 Trafic' };
 
 function switchTab(tab, btn) {
   document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(b => {
     if (b.getAttribute('onclick')?.includes(`"${tab}"`)) b.classList.add('active');
   });
-  ['dashboard','acces','skaters','goalies','feedback','trafic'].forEach(t => {
+  ['dashboard','acces','skaters','goalies','projections','feedback','trafic'].forEach(t => {
     document.getElementById(`tab-${t}`).style.display = t === tab ? '' : 'none';
   });
   document.getElementById('topbar-title').textContent = TAB_TITLES[tab];
   const saveBtn = document.getElementById('saveAllBtn');
   saveBtn.style.display = ['skaters','goalies'].includes(tab) ? '' : 'none';
   if (tab === 'trafic' && !window._traficLoaded) loadTrafic();
+  if (tab === 'projections') loadProjectionTab();
 }
 
 // ── ACCÈS ─────────────────────────────────────────────────
@@ -1776,6 +1845,146 @@ async function shareTraficSnapshot() {
     btn.disabled = false;
     btn.innerHTML = '📸 Partager';
   }
+}
+
+// ── PROJECTIONS ──────────────────────────────────────────────────────────────
+let projAllPlayers = [];
+let projSelectedPlayer = null;
+
+async function loadProjectionTab() {
+  if (projAllPlayers.length) { loadProjHistory(); return; }
+  const res = await dbFetch('/rest/v1/poolers_players?select=id,name,team,pos,proj_pts,proj_g,proj_a&order=name.asc');
+  if (!res.ok) return;
+  projAllPlayers = await res.json();
+  projAllPlayers.forEach(p => {
+    if (p.pos === 'G') p.proj_pts = (p.proj_g || 0) * 2 + (p.proj_a || 0) * 3;
+  });
+  loadProjHistory();
+}
+
+function projSearch() {
+  const q = document.getElementById('proj-search').value.toLowerCase().trim();
+  const results = document.getElementById('proj-results');
+  if (!q) { results.style.display = 'none'; return; }
+  const matches = projAllPlayers.filter(p => p.name.toLowerCase().includes(q)).slice(0, 8);
+  if (!matches.length) { results.style.display = 'none'; return; }
+  results.innerHTML = matches.map(p => `
+    <div onclick='selectProjPlayer(${p.id})' style='padding:9px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid #f1f5f9;transition:background 0.1s' onmouseover='this.style.background="#f8fafc"' onmouseout='this.style.background=""'>
+      <img src='https://assets.nhle.com/logos/nhl/svg/${p.team}_light.svg' style='width:22px;height:22px;object-fit:contain'>
+      <div>
+        <div style='font-size:0.84em;font-weight:700;color:#0f172a'>${p.name}</div>
+        <div style='font-size:0.68em;color:#94a3b8'>${p.team} · ${p.pos} · ${p.proj_pts ?? '—'} pts</div>
+      </div>
+    </div>`).join('');
+  results.style.display = '';
+}
+
+function selectProjPlayer(id) {
+  projSelectedPlayer = projAllPlayers.find(p => p.id === id);
+  if (!projSelectedPlayer) return;
+  document.getElementById('proj-results').style.display = 'none';
+  document.getElementById('proj-search').value = projSelectedPlayer.name;
+  document.getElementById('proj-old-pts').value = projSelectedPlayer.proj_pts ?? '';
+  document.getElementById('proj-new-pts').value = '';
+  document.getElementById('proj-note').value = '';
+  document.getElementById('proj-feedback').textContent = '';
+  const sel = document.getElementById('proj-selected');
+  sel.style.display = 'flex';
+  document.getElementById('proj-team-logo').src = `https://assets.nhle.com/logos/nhl/svg/${projSelectedPlayer.team}_light.svg`;
+  document.getElementById('proj-player-name').textContent = projSelectedPlayer.name;
+  document.getElementById('proj-player-meta').textContent = `${projSelectedPlayer.team} · ${projSelectedPlayer.pos} · ${projSelectedPlayer.proj_pts ?? '—'} pts actuels`;
+  document.getElementById('proj-new-pts').focus();
+}
+
+async function submitProjectionChange() {
+  if (!projSelectedPlayer) { showToast('Sélectionne un joueur d\'abord'); return; }
+  const newPts = parseInt(document.getElementById('proj-new-pts').value);
+  const oldPts = projSelectedPlayer.proj_pts ?? 0;
+  const note = document.getElementById('proj-note').value.trim();
+  if (isNaN(newPts)) { showToast('Entre une valeur valide pour les nouveaux pts'); return; }
+
+  const btn = document.getElementById('proj-submit-btn');
+  btn.disabled = true; btn.textContent = 'Enregistrement…';
+  const fb = document.getElementById('proj-feedback');
+
+  try {
+    // 1. Mettre à jour proj_pts dans poolers_players
+    const updateField = projSelectedPlayer.pos === 'G' ? {} : { proj_pts: newPts };
+    if (projSelectedPlayer.pos !== 'G') {
+      const r1 = await dbFetch(`/rest/v1/poolers_players?id=eq.${projSelectedPlayer.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ proj_pts: newPts })
+      });
+      if (!r1.ok) throw new Error(await r1.text());
+    }
+
+    // 2. Insérer dans projection_changes
+    const r2 = await dbFetch('/rest/v1/projection_changes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({
+        player_id: projSelectedPlayer.id,
+        player_name: projSelectedPlayer.name,
+        old_pts: oldPts,
+        new_pts: newPts,
+        note: note || null
+      })
+    });
+    if (!r2.ok) throw new Error(await r2.text());
+
+    // Mise à jour locale
+    projSelectedPlayer.proj_pts = newPts;
+    const p = projAllPlayers.find(p => p.id === projSelectedPlayer.id);
+    if (p) p.proj_pts = newPts;
+    document.getElementById('proj-old-pts').value = newPts;
+    document.getElementById('proj-player-meta').textContent = `${projSelectedPlayer.team} · ${projSelectedPlayer.pos} · ${newPts} pts actuels`;
+
+    fb.style.color = '#15803d';
+    fb.textContent = `✓ ${projSelectedPlayer.name} mis à jour : ${oldPts} → ${newPts} pts`;
+    document.getElementById('proj-new-pts').value = '';
+    document.getElementById('proj-note').value = '';
+    loadProjHistory();
+    showToast('✓ Projection mise à jour');
+  } catch (e) {
+    fb.style.color = '#dc2626';
+    fb.textContent = 'Erreur : ' + e.message;
+  }
+  btn.disabled = false; btn.textContent = '💾 Enregistrer le changement';
+}
+
+async function loadProjHistory() {
+  const res = await dbFetch('/rest/v1/projection_changes?select=*&order=changed_at.desc&limit=20');
+  if (!res.ok) return;
+  const changes = await res.json();
+  const container = document.getElementById('proj-history');
+  if (!changes.length) {
+    container.innerHTML = '<div style="color:#94a3b8;font-size:0.85em;text-align:center;padding:24px">Aucun changement enregistré</div>';
+    return;
+  }
+  // Grouper par date
+  const groups = {};
+  changes.forEach(c => {
+    const d = new Date(c.changed_at).toLocaleDateString('fr-CA', { day: 'numeric', month: 'long' });
+    if (!groups[d]) groups[d] = [];
+    groups[d].push(c);
+  });
+  container.innerHTML = Object.entries(groups).map(([date, items]) => `
+    <div style='margin-bottom:16px'>
+      <div style='font-size:0.68em;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:#94a3b8;margin-bottom:6px'>${date}</div>
+      ${items.map(c => {
+        const diff = c.new_pts - c.old_pts;
+        const diffColor = diff > 0 ? '#15803d' : '#dc2626';
+        const diffSign = diff > 0 ? '+' : '';
+        return `<div style='padding:8px 10px;border-radius:9px;background:#f8fafc;border:1px solid #f1f5f9;margin-bottom:4px'>
+          <div style='display:flex;align-items:center;justify-content:space-between;gap:8px'>
+            <span style='font-size:0.84em;font-weight:700;color:#0f172a'>${c.player_name}</span>
+            <span style='font-size:0.82em;font-weight:800;color:${diffColor}'>${c.old_pts} → ${c.new_pts} <span style='font-size:0.85em'>(${diffSign}${diff})</span></span>
+          </div>
+          ${c.note ? `<div style='font-size:0.72em;color:#64748b;margin-top:3px'>${c.note}</div>` : ''}
+        </div>`;
+      }).join('')}
+    </div>`).join('');
 }
 </script>
 <div class='confirm-overlay hidden' id='confirmOverlay'>

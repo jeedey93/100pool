@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Changements de projections — 100% Pool</title>
+  <link rel="icon" type="image/png" href="../100pool.jpg">
+  <meta name="description" content="Historique des changements de projections NHL 2026-27 — 100% Pool">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
+
+    nav:not(#sharedSidebar) { background: linear-gradient(135deg, #1a5c28, #2d8a3e); padding: 0 32px; height: 56px; display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); position: sticky; top: 0; z-index: 200; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+    .nav-logo span { color: white; font-weight: 800; font-size: 1.05em; }
+    .nav-links { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+    .nav-link { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.85em; font-weight: 600; padding: 7px 14px; border-radius: 8px; transition: all 0.2s; }
+    .nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
+    @media (max-width: 640px) { nav:not(#sharedSidebar) { padding: 0 16px; } .nav-links { display: none; } }
+
+    .page-header { background: linear-gradient(160deg, #163d1c 0%, #1e6b2e 40%, #2d8a3e 75%, #1a7a32 100%); padding: 28px 24px 24px; }
+    .page-header-inner { max-width: 780px; margin: 0 auto; }
+    .page-header h1 { font-size: 1.6em; font-weight: 900; color: white; margin-bottom: 4px; }
+    .page-header p { color: rgba(255,255,255,0.7); font-size: 0.85em; }
+
+    .content { max-width: 780px; margin: 28px auto; padding: 0 16px 60px; }
+
+    .date-group { margin-bottom: 28px; }
+    .date-label { font-size: 0.75em; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; color: #94a3b8; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #e2e8f0; }
+
+    .change-card { background: white; border-radius: 12px; border: 1px solid #e8edf2; box-shadow: 0 1px 3px rgba(0,0,0,0.05); padding: 14px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+    .change-logo { width: 32px; height: 32px; object-fit: contain; flex-shrink: 0; }
+    .change-info { flex: 1; min-width: 0; }
+    .change-name { font-size: 0.92em; font-weight: 800; color: #0f172a; }
+    .change-note { font-size: 0.78em; color: #64748b; margin-top: 3px; line-height: 1.4; }
+    .change-pts { text-align: right; flex-shrink: 0; }
+    .change-pts-values { font-size: 0.88em; font-weight: 800; color: #475569; white-space: nowrap; }
+    .change-pts-values .arrow { color: #94a3b8; margin: 0 4px; }
+    .change-pts-values .new { color: #0f172a; }
+    .change-diff { font-size: 0.72em; font-weight: 800; margin-top: 3px; text-align: right; }
+    .change-diff.up { color: #15803d; }
+    .change-diff.down { color: #dc2626; }
+    .change-diff.same { color: #94a3b8; }
+
+    .empty-state { text-align: center; padding: 64px 24px; color: #94a3b8; }
+    .empty-state p { font-size: 0.9em; margin-top: 8px; }
+    .loading { text-align: center; padding: 48px; color: #94a3b8; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">
+    <img src="../100pool.jpg" alt="100% Pool">
+    <span>100% Pool</span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="/guide-poolers/2026-2027/">Guide</a>
+    <a class="nav-link" href="/mon-equipe/">Mon équipe</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <h1>📈 Changements de projections</h1>
+    <p>Historique des mises à jour de projections pour la saison 2026-27</p>
+  </div>
+</div>
+
+<div class="content">
+  <div id="changesList"><div class="loading">Chargement…</div></div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://fifurqlitkywtmhgtzeu.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpZnVycWxpdGt5d3RtaGd0emV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDIyMjQsImV4cCI6MjA5MjI3ODIyNH0.KPVPj1qwbSJJMyLR_-AhDcRs0vi2sUU6qbFQ-kH53C0';
+const SB_HEADERS = { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` };
+
+async function loadChanges() {
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/projection_changes?select=*,poolers_players(team,pos)&order=changed_at.desc`,
+    { headers: SB_HEADERS }
+  );
+  const container = document.getElementById('changesList');
+  if (!res.ok) { container.innerHTML = '<div class="empty-state"><p>Erreur de chargement.</p></div>'; return; }
+  const changes = await res.json();
+
+  if (!changes.length) {
+    container.innerHTML = '<div class="empty-state">📋<p>Aucun changement enregistré pour le moment.</p></div>';
+    return;
+  }
+
+  // Grouper par date
+  const groups = {};
+  changes.forEach(c => {
+    const d = new Date(c.changed_at).toLocaleDateString('fr-CA', { weekday: 'long', day: 'numeric', month: 'long' });
+    const dKey = new Date(c.changed_at).toISOString().slice(0, 10);
+    if (!groups[dKey]) groups[dKey] = { label: d, items: [] };
+    groups[dKey].items.push(c);
+  });
+
+  container.innerHTML = Object.entries(groups).map(([, group]) => {
+    const items = group.items.map(c => {
+      const team = c.poolers_players?.team || 'NHL';
+      const pos = c.poolers_players?.pos || '';
+      const diff = c.new_pts - c.old_pts;
+      const diffCls = diff > 0 ? 'up' : diff < 0 ? 'down' : 'same';
+      const diffLabel = diff > 0 ? `▲ +${diff} pts` : diff < 0 ? `▼ ${diff} pts` : '= inchangé';
+      return `<div class="change-card">
+        <img class="change-logo" src="https://assets.nhle.com/logos/nhl/svg/${team}_light.svg" alt="${team}" loading="lazy">
+        <div class="change-info">
+          <div class="change-name">${c.player_name} <span style="font-size:0.72em;font-weight:600;color:#94a3b8">${pos}</span></div>
+          ${c.note ? `<div class="change-note">${c.note}</div>` : ''}
+        </div>
+        <div class="change-pts">
+          <div class="change-pts-values">
+            <span style="color:#94a3b8">${c.old_pts}</span>
+            <span class="arrow">→</span>
+            <span class="new">${c.new_pts} pts</span>
+          </div>
+          <div class="change-diff ${diffCls}">${diffLabel}</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    return `<div class="date-group">
+      <div class="date-label">${group.label}</div>
+      ${items}
+    </div>`;
+  }).join('');
+}
+
+loadChanges();
+</script>
+<script src="/sidebar.js?v=15"></script>
+</body>
+</html>
