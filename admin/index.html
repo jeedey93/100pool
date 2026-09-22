@@ -1926,18 +1926,14 @@ async function loadProjectionTab() {
 }
 
 function buildProjTierOptions() {
-  // Use TIERS global if already populated by skaters tab, otherwise derive from projAllPlayers
-  let tiers = TIERS.length ? TIERS : (() => {
-    const tierMap = {}, orphans = new Set();
-    projAllPlayers.forEach(p => {
-      if (!p.tier) return;
-      const m = p.tier.match(/Tier\s*(\d+)/i);
-      if (m) tierMap[parseInt(m[1])] = p.tier;
-      else orphans.add(p.tier);
-    });
-    return [...Object.keys(tierMap).sort((a,b) => a-b).map(n => tierMap[n]), ...orphans];
-  })();
-
+  const tierMap = {}, orphans = new Set();
+  projAllPlayers.forEach(p => {
+    if (!p.tier) return;
+    const m = p.tier.match(/Tier\s*(\d+)/i);
+    if (m) tierMap[parseInt(m[1])] = p.tier;
+    else orphans.add(p.tier);
+  });
+  const tiers = [...Object.keys(tierMap).sort((a,b) => a-b).map(n => tierMap[n]), ...orphans];
   const opts = `<option value=''>— Aucun —</option>` + tiers.map(v => `<option value='${v}'>${v}</option>`).join('');
   document.getElementById('proj-f-tier').innerHTML = opts;
   document.getElementById('proj-g-tier').innerHTML = opts;
@@ -1976,8 +1972,7 @@ function selectProjPlayer(id) {
   projSelectedPlayer = projAllPlayers.find(p => p.id === id);
   if (!projSelectedPlayer) return;
   const p = projSelectedPlayer;
-  // Ensure tier options are populated (handles case where skaters tab was never opened)
-  if (document.getElementById('proj-f-tier').options.length <= 1) buildProjTierOptions();
+  buildProjTierOptions();
   document.getElementById('proj-results').style.display = 'none';
   document.getElementById('proj-search').value = p.name;
   document.getElementById('proj-feedback').textContent = '';
