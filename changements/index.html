@@ -71,7 +71,9 @@
     .change-body { display: flex; align-items: center; gap: 14px; padding: 14px 16px; flex: 1; min-width: 0; }
 
     /* Logo */
-    .change-logo { width: 40px; height: 40px; object-fit: contain; flex-shrink: 0; }
+    .change-avatar-wrap { position: relative; flex-shrink: 0; width: 48px; height: 48px; }
+    .change-face { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; background: #f1f5f9; display: block; }
+    .change-team-badge { position: absolute; bottom: -2px; right: -4px; width: 22px; height: 22px; object-fit: contain; background: white; border-radius: 50%; padding: 2px; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
 
     /* Info */
     .change-info { flex: 1; min-width: 0; }
@@ -107,7 +109,9 @@
 
     @media (max-width: 600px) {
       .header-stats { grid-template-columns: 1fr 1fr; }
-      .change-logo { width: 32px; height: 32px; }
+      .change-avatar-wrap { width: 38px; height: 38px; }
+      .change-face { width: 38px; height: 38px; }
+      .change-team-badge { width: 18px; height: 18px; }
       .pts-old, .pts-arrow { display: none; }
       .change-body { gap: 10px; padding: 12px 12px; }
       .change-note { display: none; }
@@ -198,7 +202,7 @@ function setFilter(f, btn) {
 
 async function loadChanges() {
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/projection_changes?select=*,poolers_players(name,team,pos,proj_g,proj_a,proj_gp)&order=changed_at.desc`,
+    `${SUPABASE_URL}/rest/v1/projection_changes?select=*,poolers_players(name,team,pos,proj_g,proj_a,proj_gp,nhl_id)&order=changed_at.desc`,
     { headers: SB_HEADERS }
   );
   const container = document.getElementById('changesList');
@@ -236,8 +240,11 @@ async function loadChanges() {
 
     const items = group.items.map(c => {
       const isNew = c.old_pts === 0;
-      const team  = c.poolers_players?.team || 'NHL';
-      const pos   = c.poolers_players?.pos  || '';
+      const team   = c.poolers_players?.team   || 'NHL';
+      const pos    = c.poolers_players?.pos    || '';
+      const nhlId  = c.poolers_players?.nhl_id || '';
+      const faceUrl = nhlId ? `https://assets.nhle.com/mugs/nhl/408x408/${nhlId}.png` : '';
+      const teamLogoUrl = `https://assets.nhle.com/logos/nhl/svg/${team}_light.svg`;
       const diff  = c.new_pts - c.old_pts;
       const type  = isNew ? 'new' : diff > 0 ? 'up' : diff < 0 ? 'down' : 'same';
 
@@ -265,7 +272,13 @@ async function loadChanges() {
       return `<div class="change-card" data-type="${type}">
         <div class="change-accent ${type}"></div>
         <div class="change-body">
-          <img class="change-logo" src="https://assets.nhle.com/logos/nhl/svg/${team}_light.svg" alt="${team}" loading="lazy" onerror="this.style.opacity='0.2'">
+          <div class="change-avatar-wrap">
+            ${faceUrl
+              ? `<img class="change-face" src="${faceUrl}" alt="${c.player_name}" loading="lazy" onerror="this.src='${teamLogoUrl}';this.style.objectFit='contain';this.style.padding='4px'">`
+              : `<img class="change-face" src="${teamLogoUrl}" alt="${team}" loading="lazy" style="object-fit:contain;padding:4px">`
+            }
+            <img class="change-team-badge" src="${teamLogoUrl}" alt="${team}" loading="lazy">
+          </div>
           <div class="change-info">
             <div class="change-name">${c.player_name}${isNew ? ' <span class="new-badge">NOUVEAU</span>' : ''}</div>
             <div class="change-meta">
