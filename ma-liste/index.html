@@ -638,6 +638,7 @@ async function init() {
     const res = await fetch(PLAYERS_URL, { headers: SB_HEADERS });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     allPlayers = await res.json();
+    allPlayers.forEach(p => { if (p.pos === 'G') p.proj_pts = (p.proj_g || 0) * 2 + (p.proj_a || 0) * 3; });
     render();
   } catch (err) {
     document.getElementById('pageWrap').innerHTML = `
