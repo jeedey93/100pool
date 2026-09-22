@@ -925,13 +925,6 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
                 <select id='proj-f-tier'
                   style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;outline:none;background:white;transition:border 0.15s'>
                   <option value=''>— Aucun —</option>
-                  <option value='Elite'>Elite</option>
-                  <option value='Tier 1'>Tier 1</option>
-                  <option value='Tier 2'>Tier 2</option>
-                  <option value='Tier 3'>Tier 3</option>
-                  <option value='Tier 4'>Tier 4</option>
-                  <option value='Sleeper'>Sleeper</option>
-                </select>
               </div>
             </div>
           </div>
@@ -967,12 +960,6 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
                 <select id='proj-g-tier'
                   style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;outline:none;background:white;transition:border 0.15s'>
                   <option value=''>— Aucun —</option>
-                  <option value='Elite'>Elite</option>
-                  <option value='Tier 1'>Tier 1</option>
-                  <option value='Tier 2'>Tier 2</option>
-                  <option value='Tier 3'>Tier 3</option>
-                  <option value='Tier 4'>Tier 4</option>
-                  <option value='Sleeper'>Sleeper</option>
                 </select>
               </div>
             </div>
@@ -1933,7 +1920,26 @@ async function loadProjectionTab() {
   projAllPlayers.forEach(p => {
     if (p.pos === 'G') p.proj_pts = (p.proj_g || 0) * 2 + (p.proj_a || 0) * 3;
   });
+  buildProjTierOptions();
   loadProjHistory();
+}
+
+function buildProjTierOptions() {
+  // Use TIERS global if already populated by skaters tab, otherwise derive from projAllPlayers
+  let tiers = TIERS.length ? TIERS : (() => {
+    const tierMap = {}, orphans = new Set();
+    projAllPlayers.forEach(p => {
+      if (!p.tier) return;
+      const m = p.tier.match(/Tier\s*(\d+)/i);
+      if (m) tierMap[parseInt(m[1])] = p.tier;
+      else orphans.add(p.tier);
+    });
+    return [...Object.keys(tierMap).sort((a,b) => a-b).map(n => tierMap[n]), ...orphans];
+  })();
+
+  const opts = `<option value=''>— Aucun —</option>` + tiers.map(v => `<option value='${v}'>${v}</option>`).join('');
+  document.getElementById('proj-f-tier').innerHTML = opts;
+  document.getElementById('proj-g-tier').innerHTML = opts;
 }
 
 function projSearch() {
@@ -1969,6 +1975,8 @@ function selectProjPlayer(id) {
   projSelectedPlayer = projAllPlayers.find(p => p.id === id);
   if (!projSelectedPlayer) return;
   const p = projSelectedPlayer;
+  // Ensure tier options are populated (handles case where skaters tab was never opened)
+  if (document.getElementById('proj-f-tier').options.length <= 1) buildProjTierOptions();
   document.getElementById('proj-results').style.display = 'none';
   document.getElementById('proj-search').value = p.name;
   document.getElementById('proj-feedback').textContent = '';
