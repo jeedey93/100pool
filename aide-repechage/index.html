@@ -266,22 +266,47 @@ function optimize() {
   const takenIds = new Set();
   const tempSlots = { ...slotsNeeded };
 
-  // Traiter chaque groupe séparément, trié par proj_pts desc
+  // Allouer un budget cap par groupe proportionnel aux slots restants
+  // puis optimiser chaque groupe dans son budget (meilleur pts pool possible)
+  const totalSlots = tempSlots.F + tempSlots.D + tempSlots.G;
+  const capBudget = {};
+  if (totalSlots > 0) {
+    // Budget initial proportionnel, mais ajusté au minimum requis par groupe
+    for (const grp of ['F', 'D', 'G']) {
+      capBudget[grp] = tempSlots[grp] > 0 ? (remCap * tempSlots[grp] / totalSlots) : 0;
+    }
+    // S'assurer que chaque groupe peut au moins prendre ses joueurs les moins chers
+    for (const grp of ['F', 'D', 'G']) {
+      const minNeeded = minCap(grp, tempSlots[grp]);
+      if (capBudget[grp] < minNeeded) {
+        const deficit = minNeeded - capBudget[grp];
+        capBudget[grp] = minNeeded;
+        // Réduire le surplus des autres groupes
+        const others = ['F', 'D', 'G'].filter(g => g !== grp);
+        for (const og of others) {
+          const surplus = capBudget[og] - minCap(og, tempSlots[og]);
+          const take = Math.min(deficit, Math.max(0, surplus));
+          capBudget[og] -= take;
+        }
+      }
+    }
+  }
+
   for (const grp of ['F', 'D', 'G']) {
     if (tempSlots[grp] <= 0) continue;
+    let grpCap = capBudget[grp] ?? remCap;
     const candidates = [...byGrp[grp]].sort((a, b) => calcPoolPts(b) - calcPoolPts(a));
     for (const p of candidates) {
       if (tempSlots[grp] <= 0) break;
       const aav = parseFloat(p.aav);
+      // Réserver le cap minimum pour les slots restants dans ce groupe
       const excl = new Set([...takenIds, p.id]);
-      const reserved = ['F', 'D', 'G'].reduce((s, og) => {
-        const n = og === grp ? tempSlots[og] - 1 : tempSlots[og];
-        return s + minCap(og, n, excl);
-      }, 0);
-      if (aav > remCap - reserved) continue;
+      const reserved = minCap(grp, tempSlots[grp] - 1, excl);
+      if (aav > grpCap - reserved) continue;
       result.push(p);
       takenIds.add(p.id);
       tempSlots[grp]--;
+      grpCap -= aav;
       remCap -= aav;
     }
   }
