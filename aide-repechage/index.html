@@ -241,8 +241,8 @@ const POS_LABEL = { F: 'Attaquants', D: 'Défenseurs', G: 'Gardiens' };
 const TEAM_KEY = 'draft_assist_team';
 
 let allPlayers = [];
-let draftedIds = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]'));
-let myTeamIds = new Set(JSON.parse(localStorage.getItem(TEAM_KEY) || '[]'));
+let draftedIds = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]').map(Number));
+let myTeamIds = new Set(JSON.parse(localStorage.getItem(TEAM_KEY) || '[]').map(Number));
 let suggestions = [];
 let posFilter = 'ALL';
 
@@ -365,7 +365,7 @@ function saveMyTeam() {
   prev.forEach(id => { if (!myTeamIds.has(id)) drafted.delete(id); });
   myTeamIds.forEach(id => drafted.add(id));
   localStorage.setItem('pool_drafted', JSON.stringify([...drafted]));
-  draftedIds = new Set([...drafted]);
+  draftedIds = new Set([...drafted].map(Number));
 }
 
 // ── Actions ───────────────────────────────────────────────────────────────────
@@ -390,6 +390,7 @@ function toggleDrafted(id) {
   const drafted = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]'));
   if (draftedIds.has(id)) drafted.add(id); else drafted.delete(id);
   localStorage.setItem('pool_drafted', JSON.stringify([...drafted]));
+  draftedIds = new Set([...drafted].map(Number));
   recompute();
 }
 
@@ -407,7 +408,7 @@ function confirmSuggestion(id) {
 }
 
 function syncNow() {
-  draftedIds = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]'));
+  draftedIds = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]').map(Number));
   myTeamIds.forEach(id => draftedIds.delete(id));
   recompute();
   showToast('🔄 Synchronisé avec le guide');
@@ -600,7 +601,7 @@ function showToast(msg) {
 // ── Cross-tab sync ────────────────────────────────────────────────────────────
 window.addEventListener('storage', e => {
   if (e.key === 'pool_drafted') {
-    draftedIds = new Set(JSON.parse(e.newValue || '[]'));
+    draftedIds = new Set(JSON.parse(e.newValue || '[]').map(Number));
     myTeamIds.forEach(id => draftedIds.delete(id));
     recompute();
     showToast('🔄 Disponibilité mise à jour');
