@@ -159,10 +159,10 @@
       <p>Optimise ton équipe en temps réel selon les picks adverses</p>
     </div>
     <div class="header-actions">
-      <span class="sync-pill" id="syncBadge">⬤ 0 draftés</span>
-      <button class="btn-action sync" onclick="syncNow()">🔄 Rafraîchir</button>
-      <button class="btn-action danger" onclick="resetDraft()">✕ Tout de-rayer</button>
-      <button class="btn-action muted" onclick="resetAll()">✕ Mon équipe</button>
+      <span class="sync-pill" id="syncBadge">⬤ 0 rayés</span>
+      <button class="btn-action sync" onclick="syncNow()" title="Relit le localStorage du guide pour mettre à jour les rayés">🔄 Sync guide</button>
+      <button class="btn-action danger" onclick="resetDraft()" title="Remet tous les joueurs adverses dans le pool">✕ Effacer les rayés</button>
+      <button class="btn-action muted" onclick="resetAll()" title="Retire tous les joueurs de ton équipe">✕ Vider mon équipe</button>
     </div>
   </div>
 </div>
@@ -413,25 +413,25 @@ function syncNow() {
   draftedIds = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]').map(Number));
   myTeamIds.forEach(id => draftedIds.delete(id));
   recompute();
-  showToast('🔄 Synchronisé avec le guide');
+  showToast('🔄 Rayés synchronisés depuis le guide');
 }
 
 function resetAll() {
-  if (!confirm('Retirer tous les joueurs de ton équipe ?')) return;
+  if (!confirm('Retirer tous les joueurs de ton équipe et recommencer à zéro ?')) return;
   myTeamIds.clear();
   saveMyTeam();
   recompute();
-  showToast('✕ Équipe réinitialisée');
+  showToast('✕ Équipe vidée');
 }
 
 function resetDraft() {
-  if (!confirm('Dé-rayer tous les joueurs adverses ?')) return;
+  if (!confirm('Remettre tous les joueurs adverses rayés dans le pool ?')) return;
   const teamArr = [...myTeamIds];
   draftedIds.clear();
   teamArr.forEach(id => draftedIds.add(id));
   localStorage.setItem('pool_drafted', JSON.stringify(teamArr));
   recompute();
-  showToast('✕ Rayés adverses effacés');
+  showToast('✕ Joueurs adverses remis dans le pool');
 }
 
 function setPos(pos, btn) {
