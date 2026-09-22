@@ -2110,12 +2110,35 @@ async function loadProjHistory() {
         return `<div style='padding:8px 10px;border-radius:9px;background:#f8fafc;border:1px solid #f1f5f9;margin-bottom:4px'>
           <div style='display:flex;align-items:center;justify-content:space-between;gap:8px'>
             <span style='font-size:0.84em;font-weight:700;color:#0f172a'>${c.player_name}</span>
-            <span style='font-size:0.82em;font-weight:800;color:${diffColor}'>${c.old_pts} → ${c.new_pts} <span style='font-size:0.85em'>(${diffSign}${diff})</span></span>
+            <div style='display:flex;align-items:center;gap:8px'>
+              <span style='font-size:0.82em;font-weight:800;color:${diffColor}'>${c.old_pts} → ${c.new_pts} <span style='font-size:0.85em'>(${diffSign}${diff})</span></span>
+              <button onclick='deleteProjChange(${c.id})' style='background:none;border:none;cursor:pointer;color:#cbd5e1;font-size:0.9em;padding:2px 4px;border-radius:4px;transition:all 0.12s' onmouseover='this.style.color="#dc2626";this.style.background="#fef2f2"' onmouseout='this.style.color="#cbd5e1";this.style.background="none"' title='Supprimer'>🗑</button>
+            </div>
           </div>
           ${c.note ? `<div style='font-size:0.72em;color:#64748b;margin-top:3px'>${c.note}</div>` : ''}
         </div>`;
       }).join('')}
     </div>`).join('');
+}
+
+function deleteProjChange(id) {
+  document.getElementById('confirmDeleteBtn').onclick = async () => {
+    try {
+      const res = await dbFetch(`/rest/v1/projection_changes?id=eq.${id}`, { method: 'DELETE' });
+      if (res.ok || res.status === 204) {
+        closeAdminConfirm();
+        loadProjHistory();
+        showToast('✓ Entrée supprimée');
+      } else {
+        closeAdminConfirm();
+        showToast('Erreur suppression : ' + res.status, 'error');
+      }
+    } catch(e) {
+      closeAdminConfirm();
+      showToast('Erreur : ' + e.message, 'error');
+    }
+  };
+  document.getElementById('confirmOverlay').classList.remove('hidden');
 }
 </script>
 <div class='confirm-overlay hidden' id='confirmOverlay'>
