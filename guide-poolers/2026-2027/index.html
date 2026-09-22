@@ -410,6 +410,18 @@ tr.drafted { background: #f8f9fa !important; }
 .modal-history-table tr.proj-row td:first-child { border-radius: 6px 0 0 6px; color: #15803d; }
 .modal-history-table tr.proj-row td:last-child { border-radius: 0 6px 6px 0; }
 .modal-history-loading { text-align: center; color: #94a3b8; font-size: 0.82em; padding: 16px; }
+.proj-change-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+.proj-change-row:last-child { border-bottom: none; }
+.proj-change-date { font-size: 0.72em; font-weight: 700; color: #94a3b8; white-space: nowrap; min-width: 56px; padding-top: 2px; }
+.proj-change-pts { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+.proj-change-old { font-size: 0.8em; color: #94a3b8; text-decoration: line-through; }
+.proj-change-arrow { color: #cbd5e1; font-size: 0.7em; }
+.proj-change-new { font-size: 0.95em; font-weight: 900; color: #0f172a; }
+.proj-change-badge { font-size: 0.68em; font-weight: 800; padding: 2px 8px; border-radius: 99px; white-space: nowrap; }
+.proj-change-badge.up   { background: #dcfce7; color: #15803d; }
+.proj-change-badge.down { background: #fee2e2; color: #dc2626; }
+.proj-change-badge.new  { background: #dbeafe; color: #1d4ed8; }
+.proj-change-note { font-size: 0.78em; color: #64748b; font-style: italic; margin-top: 3px; line-height: 1.4; }
 
 /* Modal body */
 .modal-body { padding: 18px 22px 24px; background: white; border-radius: 0 0 24px 24px; display: flex; flex-direction: column; gap: 16px; }
@@ -1081,6 +1093,10 @@ td.star-cell { padding: 0; width: 36px; }
     <div class='modal-history'>
       <div class='modal-section-title'>Historique NHL</div>
       <div id='modalHistory'><div class='modal-history-loading'>Chargement…</div></div>
+    </div>
+    <div id='modalProjChanges' style='display:none' class='modal-history'>
+      <div class='modal-section-title'>Historique des projections</div>
+      <div id='modalProjChangesList'></div>
     </div>
     <div id='modalStatsRow'></div>
     <div id='modalContract' style='display:none'></div>
@@ -3093,6 +3109,39 @@ function openModal(id) {
   loadNhlHistory(nhlId, p.pos, p).then(html => {
     document.getElementById('modalHistory').innerHTML = html;
   });
+
+  // Projection changes history
+  const projChangesEl = document.getElementById('modalProjChanges');
+  const projChangesListEl = document.getElementById('modalProjChangesList');
+  projChangesEl.style.display = 'none';
+  projChangesListEl.innerHTML = '';
+  fetch(`${SUPABASE_URL}/rest/v1/projection_changes?player_id=eq.${p.id}&order=changed_at.desc`, { headers: SB_HEADERS })
+    .then(r => r.json())
+    .then(changes => {
+      if (!changes || !changes.length) return;
+      projChangesEl.style.display = '';
+      projChangesListEl.innerHTML = changes.map(c => {
+        const isNew = c.old_pts === 0;
+        const diff = c.new_pts - c.old_pts;
+        const type = isNew ? 'new' : diff > 0 ? 'up' : 'down';
+        const badge = isNew ? '✨ Nouveau' : diff > 0 ? `▲ +${diff} pts` : `▼ ${diff} pts`;
+        const dateStr = new Date(c.changed_at).toLocaleDateString('fr-CA', { day: 'numeric', month: 'short' });
+        const ptsHtml = isNew
+          ? `<span class="proj-change-new">${c.new_pts} pts</span>`
+          : `<span class="proj-change-old">${c.old_pts}</span><span class="proj-change-arrow">→</span><span class="proj-change-new">${c.new_pts} pts</span>`;
+        return `<div class="proj-change-row">
+          <span class="proj-change-date">${dateStr}</span>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <div class="proj-change-pts">${ptsHtml}</div>
+              <span class="proj-change-badge ${type}">${badge}</span>
+            </div>
+            ${c.note ? `<div class="proj-change-note">${c.note}</div>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+    })
+    .catch(() => {});
 }
 
 function renderSimilarList(playerId) {
