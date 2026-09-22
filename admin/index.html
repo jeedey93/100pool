@@ -870,10 +870,10 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
     <div id='tab-projections' style='display:none'>
       <div class='section-header'>
         <h2>📈 Modifier une projection</h2>
-        <p>Recherche un joueur, ajuste ses points projetés et documente la raison du changement.</p>
+        <p>Recherche un joueur, ajuste ses statistiques projetées et documente la raison du changement.</p>
       </div>
 
-      <div style='display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px'>
+      <div style='display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:1000px'>
 
         <!-- Formulaire -->
         <div style='background:white;border-radius:14px;border:1px solid #e2e8f0;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,0.06)'>
@@ -886,7 +886,7 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
             <div id='proj-results' style='background:white;border:1.5px solid #e2e8f0;border-radius:9px;margin-top:4px;display:none;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,0.1)'></div>
           </div>
 
-          <div id='proj-selected' style='display:none;background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px'>
+          <div id='proj-selected' style='display:none;background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:10px 14px;margin-bottom:16px;align-items:center;gap:10px'>
             <img id='proj-team-logo' src='' style='width:28px;height:28px;object-fit:contain'>
             <div>
               <div id='proj-player-name' style='font-size:0.88em;font-weight:800;color:#0f172a'></div>
@@ -894,27 +894,101 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
             </div>
           </div>
 
-          <div style='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px'>
-            <div>
-              <label style='font-size:0.8em;font-weight:700;color:#475569;display:block;margin-bottom:5px'>Anciens pts</label>
-              <input type='number' id='proj-old-pts' readonly
-                style='width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;background:#f8fafc;color:#94a3b8;outline:none'>
+          <!-- Champs stats (skaters) -->
+          <div id='proj-fields-skater' style='display:none'>
+            <div style='font-size:0.72em;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:#94a3b8;margin-bottom:8px'>Statistiques projetées</div>
+            <div style='display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px'>
+              <div>
+                <label style='font-size:0.76em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>PJ</label>
+                <input type='number' id='proj-f-gp' min='0' max='82'
+                  style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;outline:none;transition:border 0.15s'>
+              </div>
+              <div>
+                <label style='font-size:0.76em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>B</label>
+                <input type='number' id='proj-f-g' min='0' oninput='projCalcSkaterPts()'
+                  style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;outline:none;transition:border 0.15s'>
+              </div>
+              <div>
+                <label style='font-size:0.76em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>A</label>
+                <input type='number' id='proj-f-a' min='0' oninput='projCalcSkaterPts()'
+                  style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;outline:none;transition:border 0.15s'>
+              </div>
             </div>
-            <div>
-              <label style='font-size:0.8em;font-weight:700;color:#475569;display:block;margin-bottom:5px'>Nouveaux pts</label>
-              <input type='number' id='proj-new-pts' placeholder='Ex: 75'
-                style='width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;outline:none;transition:border 0.15s'>
+            <div style='display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px'>
+              <div>
+                <label style='font-size:0.76em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>Pts (calculés auto)</label>
+                <input type='number' id='proj-f-pts' min='0'
+                  style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;background:#f8fafc;outline:none;font-weight:700;color:#059669'>
+              </div>
+              <div>
+                <label style='font-size:0.76em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>Tier</label>
+                <select id='proj-f-tier'
+                  style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;outline:none;background:white;transition:border 0.15s'>
+                  <option value=''>— Aucun —</option>
+                  <option value='Elite'>Elite</option>
+                  <option value='Tier 1'>Tier 1</option>
+                  <option value='Tier 2'>Tier 2</option>
+                  <option value='Tier 3'>Tier 3</option>
+                  <option value='Tier 4'>Tier 4</option>
+                  <option value='Sleeper'>Sleeper</option>
+                </select>
+              </div>
             </div>
           </div>
 
-          <div style='margin-bottom:18px'>
-            <label style='font-size:0.8em;font-weight:700;color:#475569;display:block;margin-bottom:5px'>Raison</label>
-            <textarea id='proj-note' placeholder='Ex: Changement d'équipe, joue sur la top line…' rows='3'
+          <!-- Champs stats (gardiens) -->
+          <div id='proj-fields-goalie' style='display:none'>
+            <div style='font-size:0.72em;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:#94a3b8;margin-bottom:8px'>Statistiques projetées</div>
+            <div style='display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px'>
+              <div>
+                <label style='font-size:0.76em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>PJ</label>
+                <input type='number' id='proj-g-gp' min='0' max='82'
+                  style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;outline:none;transition:border 0.15s'>
+              </div>
+              <div>
+                <label style='font-size:0.76em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>V (wins)</label>
+                <input type='number' id='proj-g-w' min='0' oninput='projCalcGoaliePts()'
+                  style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;outline:none;transition:border 0.15s'>
+              </div>
+              <div>
+                <label style='font-size:0.76em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>BL (shutouts)</label>
+                <input type='number' id='proj-g-so' min='0' oninput='projCalcGoaliePts()'
+                  style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;outline:none;transition:border 0.15s'>
+              </div>
+            </div>
+            <div style='display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px'>
+              <div>
+                <label style='font-size:0.76em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>Pts pool (2×V + 3×BL)</label>
+                <input type='number' id='proj-g-pts' readonly
+                  style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;background:#f8fafc;color:#94a3b8;outline:none;font-weight:700'>
+              </div>
+              <div>
+                <label style='font-size:0.76em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>Tier</label>
+                <select id='proj-g-tier'
+                  style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;outline:none;background:white;transition:border 0.15s'>
+                  <option value=''>— Aucun —</option>
+                  <option value='Elite'>Elite</option>
+                  <option value='Tier 1'>Tier 1</option>
+                  <option value='Tier 2'>Tier 2</option>
+                  <option value='Tier 3'>Tier 3</option>
+                  <option value='Tier 4'>Tier 4</option>
+                  <option value='Sleeper'>Sleeper</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notes (commun) -->
+          <div id='proj-fields-common' style='display:none;margin-bottom:18px'>
+            <label style='font-size:0.8em;font-weight:700;color:#475569;display:block;margin-bottom:5px'>Notes scouting</label>
+            <textarea id='proj-notes-field' rows='3' placeholder='Ex: Changement d'équipe, joue sur la top line…'
+              style='width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;resize:vertical;outline:none;transition:border 0.15s'></textarea>
+            <label style='font-size:0.8em;font-weight:700;color:#475569;display:block;margin-bottom:5px;margin-top:10px'>Raison du changement (historique public)</label>
+            <textarea id='proj-note' rows='2' placeholder='Ex: Changement d'équipe, top line avec le CH…'
               style='width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;resize:vertical;outline:none;transition:border 0.15s'></textarea>
           </div>
 
-          <button onclick='submitProjectionChange()' id='proj-submit-btn'
-            style='width:100%;padding:11px;background:linear-gradient(135deg,#0f5c23,#2d8a3e);color:white;border:none;border-radius:10px;font-size:0.88em;font-weight:800;cursor:pointer;transition:all 0.15s'>
+          <button onclick='submitProjectionChange()' id='proj-submit-btn' style='display:none;width:100%;padding:11px;background:linear-gradient(135deg,#0f5c23,#2d8a3e);color:white;border:none;border-radius:10px;font-size:0.88em;font-weight:800;cursor:pointer;transition:all 0.15s'>
             💾 Enregistrer le changement
           </button>
           <div id='proj-feedback' style='margin-top:10px;font-size:0.8em;font-weight:600;text-align:center;min-height:18px'></div>
@@ -1853,7 +1927,7 @@ let projSelectedPlayer = null;
 
 async function loadProjectionTab() {
   if (projAllPlayers.length) { loadProjHistory(); return; }
-  const res = await dbFetch('/rest/v1/poolers_players?select=id,name,team,pos,proj_pts,proj_g,proj_a&order=name.asc');
+  const res = await dbFetch('/rest/v1/poolers_players?select=id,name,team,pos,proj_gp,proj_g,proj_a,proj_pts,tier,notes&order=name.asc');
   if (!res.ok) return;
   projAllPlayers = await res.json();
   projAllPlayers.forEach(p => {
@@ -1879,70 +1953,123 @@ function projSearch() {
   results.style.display = '';
 }
 
+function projCalcSkaterPts() {
+  const g = parseInt(document.getElementById('proj-f-g').value) || 0;
+  const a = parseInt(document.getElementById('proj-f-a').value) || 0;
+  document.getElementById('proj-f-pts').value = g + a;
+}
+
+function projCalcGoaliePts() {
+  const w = parseInt(document.getElementById('proj-g-w').value) || 0;
+  const so = parseInt(document.getElementById('proj-g-so').value) || 0;
+  document.getElementById('proj-g-pts').value = w * 2 + so * 3;
+}
+
 function selectProjPlayer(id) {
   projSelectedPlayer = projAllPlayers.find(p => p.id === id);
   if (!projSelectedPlayer) return;
+  const p = projSelectedPlayer;
   document.getElementById('proj-results').style.display = 'none';
-  document.getElementById('proj-search').value = projSelectedPlayer.name;
-  document.getElementById('proj-old-pts').value = projSelectedPlayer.proj_pts ?? '';
-  document.getElementById('proj-new-pts').value = '';
-  document.getElementById('proj-note').value = '';
+  document.getElementById('proj-search').value = p.name;
   document.getElementById('proj-feedback').textContent = '';
+
   const sel = document.getElementById('proj-selected');
   sel.style.display = 'flex';
-  document.getElementById('proj-team-logo').src = `https://assets.nhle.com/logos/nhl/svg/${projSelectedPlayer.team}_light.svg`;
-  document.getElementById('proj-player-name').textContent = projSelectedPlayer.name;
-  document.getElementById('proj-player-meta').textContent = `${projSelectedPlayer.team} · ${projSelectedPlayer.pos} · ${projSelectedPlayer.proj_pts ?? '—'} pts actuels`;
-  document.getElementById('proj-new-pts').focus();
+  document.getElementById('proj-team-logo').src = `https://assets.nhle.com/logos/nhl/svg/${p.team}_light.svg`;
+  document.getElementById('proj-player-name').textContent = p.name;
+  document.getElementById('proj-player-meta').textContent = `${p.team} · ${p.pos} · ${p.proj_pts ?? '—'} pts actuels`;
+
+  const isGoalie = p.pos === 'G';
+  document.getElementById('proj-fields-skater').style.display = isGoalie ? 'none' : 'block';
+  document.getElementById('proj-fields-goalie').style.display = isGoalie ? 'block' : 'none';
+  document.getElementById('proj-fields-common').style.display = 'block';
+  document.getElementById('proj-submit-btn').style.display = 'block';
+
+  if (isGoalie) {
+    document.getElementById('proj-g-gp').value = p.proj_gp ?? '';
+    document.getElementById('proj-g-w').value = p.proj_g ?? '';
+    document.getElementById('proj-g-so').value = p.proj_a ?? '';
+    document.getElementById('proj-g-pts').value = p.proj_pts ?? '';
+    document.getElementById('proj-g-tier').value = p.tier ?? '';
+  } else {
+    document.getElementById('proj-f-gp').value = p.proj_gp ?? '';
+    document.getElementById('proj-f-g').value = p.proj_g ?? '';
+    document.getElementById('proj-f-a').value = p.proj_a ?? '';
+    document.getElementById('proj-f-pts').value = p.proj_pts ?? '';
+    document.getElementById('proj-f-tier').value = p.tier ?? '';
+  }
+  document.getElementById('proj-notes-field').value = p.notes ?? '';
+  document.getElementById('proj-note').value = '';
 }
 
 async function submitProjectionChange() {
   if (!projSelectedPlayer) { showToast('Sélectionne un joueur d\'abord'); return; }
-  const newPts = parseInt(document.getElementById('proj-new-pts').value);
-  const oldPts = projSelectedPlayer.proj_pts ?? 0;
+  const p = projSelectedPlayer;
+  const isGoalie = p.pos === 'G';
   const note = document.getElementById('proj-note').value.trim();
-  if (isNaN(newPts)) { showToast('Entre une valeur valide pour les nouveaux pts'); return; }
+
+  let patch = {};
+  let newPts;
+  if (isGoalie) {
+    const gp = document.getElementById('proj-g-gp').value;
+    const w = document.getElementById('proj-g-w').value;
+    const so = document.getElementById('proj-g-so').value;
+    const tier = document.getElementById('proj-g-tier').value;
+    if (gp !== '') patch.proj_gp = parseInt(gp);
+    if (w !== '') patch.proj_g = parseInt(w);
+    if (so !== '') patch.proj_a = parseInt(so);
+    if (tier !== '') patch.tier = tier;
+    newPts = (parseInt(w) || 0) * 2 + (parseInt(so) || 0) * 3;
+  } else {
+    const gp = document.getElementById('proj-f-gp').value;
+    const g = document.getElementById('proj-f-g').value;
+    const a = document.getElementById('proj-f-a').value;
+    const pts = document.getElementById('proj-f-pts').value;
+    const tier = document.getElementById('proj-f-tier').value;
+    if (gp !== '') patch.proj_gp = parseInt(gp);
+    if (g !== '') patch.proj_g = parseInt(g);
+    if (a !== '') patch.proj_a = parseInt(a);
+    if (pts !== '') patch.proj_pts = parseInt(pts);
+    if (tier !== '') patch.tier = tier;
+    newPts = pts !== '' ? parseInt(pts) : p.proj_pts;
+  }
+  const notesVal = document.getElementById('proj-notes-field').value.trim();
+  if (notesVal !== (p.notes ?? '')) patch.notes = notesVal || null;
+
+  if (!Object.keys(patch).length) { showToast('Aucun changement à enregistrer'); return; }
 
   const btn = document.getElementById('proj-submit-btn');
   btn.disabled = true; btn.textContent = 'Enregistrement…';
   const fb = document.getElementById('proj-feedback');
 
   try {
-    // 1. Mettre à jour proj_pts dans poolers_players
-    const updateField = projSelectedPlayer.pos === 'G' ? {} : { proj_pts: newPts };
-    if (projSelectedPlayer.pos !== 'G') {
-      const r1 = await dbFetch(`/rest/v1/poolers_players?id=eq.${projSelectedPlayer.id}`, {
-        method: 'PATCH',
+    const r1 = await dbFetch(`/rest/v1/poolers_players?id=eq.${p.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify(patch)
+    });
+    if (!r1.ok) throw new Error(await r1.text());
+
+    const oldPts = p.proj_pts ?? 0;
+    if (newPts !== oldPts || note) {
+      const r2 = await dbFetch('/rest/v1/projection_changes', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ proj_pts: newPts })
+        body: JSON.stringify({ player_id: p.id, player_name: p.name, old_pts: oldPts, new_pts: newPts, note: note || null })
       });
-      if (!r1.ok) throw new Error(await r1.text());
+      if (!r2.ok) throw new Error(await r2.text());
     }
 
-    // 2. Insérer dans projection_changes
-    const r2 = await dbFetch('/rest/v1/projection_changes', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-      body: JSON.stringify({
-        player_id: projSelectedPlayer.id,
-        player_name: projSelectedPlayer.name,
-        old_pts: oldPts,
-        new_pts: newPts,
-        note: note || null
-      })
-    });
-    if (!r2.ok) throw new Error(await r2.text());
-
     // Mise à jour locale
-    projSelectedPlayer.proj_pts = newPts;
-    const p = projAllPlayers.find(p => p.id === projSelectedPlayer.id);
-    if (p) p.proj_pts = newPts;
-    document.getElementById('proj-old-pts').value = newPts;
-    document.getElementById('proj-player-meta').textContent = `${projSelectedPlayer.team} · ${projSelectedPlayer.pos} · ${newPts} pts actuels`;
+    Object.assign(p, patch);
+    if (isGoalie) p.proj_pts = newPts;
+    const cached = projAllPlayers.find(x => x.id === p.id);
+    if (cached) Object.assign(cached, patch, { proj_pts: newPts });
+    document.getElementById('proj-player-meta').textContent = `${p.team} · ${p.pos} · ${newPts} pts actuels`;
+    document.getElementById(isGoalie ? 'proj-g-pts' : 'proj-f-pts').value = newPts;
 
     fb.style.color = '#15803d';
-    fb.textContent = `✓ ${projSelectedPlayer.name} mis à jour : ${oldPts} → ${newPts} pts`;
-    document.getElementById('proj-new-pts').value = '';
+    fb.textContent = `✓ ${p.name} mis à jour`;
     document.getElementById('proj-note').value = '';
     loadProjHistory();
     showToast('✓ Projection mise à jour');
