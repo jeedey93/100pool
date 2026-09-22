@@ -51,8 +51,9 @@
     .slot-chip.full { background: #dcfce7; color: #15803d; border-color: #4ade80; }
     .slot-chip.over { background: #fef2f2; color: #dc2626; border-color: #fca5a5; }
 
-    /* ── Layout 2 colonnes ── */
-    .da-body { max-width: 1400px; margin: 20px auto; padding: 0 16px 60px; display: grid; grid-template-columns: 400px 1fr; gap: 20px; align-items: start; }
+    /* ── Layout 3 colonnes ── */
+    .da-body { max-width: 1600px; margin: 20px auto; padding: 0 16px 60px; display: grid; grid-template-columns: 360px 1fr 320px; gap: 16px; align-items: start; }
+    @media (max-width: 1200px) { .da-body { grid-template-columns: 320px 1fr 280px; } }
     @media (max-width: 960px) { .da-body { grid-template-columns: 1fr; } }
 
     /* ── Panels communs ── */
@@ -203,17 +204,16 @@
     </div>
     <div class="player-list" id="playerList"><div class="loading-wrap">Chargement…</div></div>
   </div>
-</div>
 
-<!-- Panneau rayés -->
-<div id="rayesPanel" style="display:none;max-width:1400px;margin:0 auto 20px;padding:0 16px">
-  <div class="panel">
+  <!-- Colonne droite : rayés -->
+  <div class="panel" id="rayesPanel">
     <div class="panel-header">
       <span class="panel-title">Joueurs rayés</span>
       <span class="panel-subtitle" id="rayesSubtitle"></span>
     </div>
     <div id="rayesList" style="padding:8px;display:flex;flex-direction:column;gap:3px"></div>
   </div>
+
 </div>
 
 <div id="daToast"></div>
@@ -334,9 +334,7 @@ function recompute() {
 
 function renderRayes() {
   const rayesPlayers = allPlayers.filter(p => draftedIds.has(p.id) && !myTeamIds.has(p.id));
-  const panel = document.getElementById('rayesPanel');
   const subtitle = document.getElementById('rayesSubtitle');
-  panel.style.display = '';
   if (!rayesPlayers.length) {
     subtitle.textContent = 'Aucun joueur rayé — utilise ✕ dans la liste pour rayer un adversaire';
     document.getElementById('rayesList').innerHTML = `<div style="padding:12px 8px;font-size:0.82em;color:#94a3b8;font-style:italic">Clique ✕ sur un joueur à droite pour le marquer comme repêché par un adversaire.</div>`;
