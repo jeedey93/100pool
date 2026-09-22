@@ -19,6 +19,7 @@
       children: [
         { href: '/ma-liste/',     icon: '⭐', label: 'Ma liste' },
         { href: '/mon-equipe/',   icon: '👥', label: 'Mon équipe' },
+        { href: '/changements/',  icon: '📈', label: 'Mises à jour' },
       ]
     },
     { href: '/podcast/', icon: '🎙', label: 'Podcast' },
@@ -151,7 +152,7 @@ body.has-shared-sidebar.shared-sb-collapsed { padding-left: 52px; }
     { href: '/guide-poolers/2026-2027/', icon: '📋', label: 'Guide' },
     { href: '/ma-liste/',               icon: '⭐', label: 'Ma liste' },
     { href: '/mon-equipe/',              icon: '👥', label: 'Équipe' },
-    { href: '/podcast/',                 icon: '🎙', label: 'Podcast' },
+    { href: '/changements/',             icon: '📈', label: 'Mises à jour' },
   ];
   const bottomNavHtml = `<div id="sbBottomNav">${bottomNavLinks.map(l =>
     `<a href="${l.href}" class="${isActive(l.href) ? 'active' : ''}">
