@@ -1557,6 +1557,14 @@ function resetDraft() {
   if (resetBtn) resetBtn.style.display = 'none';
   renderAll();
 }
+
+window.addEventListener('storage', e => {
+  if (e.key === 'pool_drafted') {
+    draftedIds = new Set(JSON.parse(e.newValue || '[]'));
+    renderAll();
+  }
+});
+
 let sortDir = 'desc';
 let goalieSortCol = 'proj_g';
 let goalieSortDir = 'desc';
