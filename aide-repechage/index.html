@@ -200,9 +200,19 @@
         <button class="pos-btn" onclick="setPos('D',this)">Déf</button>
         <button class="pos-btn" onclick="setPos('G',this)">Gard</button>
       </div>
-      <button class="drafted-toggle" id="showDraftedBtn" onclick="toggleShowDrafted()">👁 Draftés</button>
     </div>
     <div class="player-list" id="playerList"><div class="loading-wrap">Chargement…</div></div>
+  </div>
+</div>
+
+<!-- Panneau rayés -->
+<div id="rayesPanel" style="display:none;max-width:1400px;margin:0 auto 20px;padding:0 16px">
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Joueurs rayés</span>
+      <span class="panel-subtitle" id="rayesSubtitle"></span>
+    </div>
+    <div id="rayesList" style="padding:8px;display:flex;flex-direction:column;gap:3px"></div>
   </div>
 </div>
 
@@ -235,7 +245,6 @@ let draftedIds = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]'
 let myTeamIds = new Set(JSON.parse(localStorage.getItem(TEAM_KEY) || '[]'));
 let suggestions = [];
 let posFilter = 'ALL';
-let showDrafted = false;
 
 // ── Optimizer greedy ──────────────────────────────────────────────────────────
 function optimize() {
@@ -319,7 +328,33 @@ function recompute() {
   renderTeam();
   renderPool();
   renderCapBar();
+  renderRayes();
   updateSyncBadge();
+}
+
+function renderRayes() {
+  // Rayés = draftedIds SANS mon équipe
+  const rayesPlayers = allPlayers.filter(p => draftedIds.has(p.id) && !myTeamIds.has(p.id));
+  const panel = document.getElementById('rayesPanel');
+  if (!rayesPlayers.length) { panel.style.display = 'none'; return; }
+  panel.style.display = '';
+  document.getElementById('rayesSubtitle').textContent = `${rayesPlayers.length} joueur${rayesPlayers.length > 1 ? 's' : ''} — cliquer ✕ pour remettre dans le pool`;
+  document.getElementById('rayesList').innerHTML = rayesPlayers
+    .sort((a, b) => calcPoolPts(b) - calcPoolPts(a))
+    .map(p => {
+      const aav = p.aav ? `${parseFloat(p.aav).toFixed(2)}M$` : 'Libre';
+      const pts = p.proj_pts != null ? `${calcPoolPts(p)} pts` : '—';
+      return `<div class="player-row is-drafted" style="opacity:1">
+        <img class="player-logo" src="https://assets.nhle.com/logos/nhl/svg/${p.team}_light.svg" alt="${p.team}" loading="lazy">
+        <div class="player-info">
+          <div class="player-name" style="text-decoration:line-through;color:#94a3b8">${p.name}</div>
+          <div class="player-meta">${p.team} · ${p.pos}</div>
+        </div>
+        <div class="player-pts" style="color:#94a3b8">${pts}</div>
+        <div class="player-aav">${aav}</div>
+        <button class="btn-raye active" onclick="toggleDrafted(${p.id})" title="Remettre dans le pool">✕ Dé-rayer</button>
+      </div>`;
+    }).join('');
 }
 
 // ── Persist ───────────────────────────────────────────────────────────────────
@@ -403,13 +438,7 @@ function setPos(pos, btn) {
   renderPool();
 }
 
-function toggleShowDrafted() {
-  showDrafted = !showDrafted;
-  const btn = document.getElementById('showDraftedBtn');
-  btn.classList.toggle('active', showDrafted);
-  btn.textContent = showDrafted ? '👁 Masquer draftés' : '👁 Draftés';
-  renderPool();
-}
+function toggleShowDrafted() {}
 
 // ── Cap bar ───────────────────────────────────────────────────────────────────
 function renderCapBar() {
@@ -509,7 +538,7 @@ function renderPool() {
 
   let list = allPlayers.filter(p => {
     if (posFilter !== 'ALL' && POS_GROUP(p) !== posFilter) return false;
-    if (!showDrafted && draftedIds.has(p.id) && !myTeamIds.has(p.id)) return false;
+    if (draftedIds.has(p.id) && !myTeamIds.has(p.id)) return false;
     if (q && !p.name.toLowerCase().includes(q) && !p.team.toLowerCase().includes(q)) return false;
     return true;
   });
