@@ -68,8 +68,7 @@
     .group-pts { color: #2563eb; font-weight: 800; font-size: 0.95em; }
 
     .team-slot { display: flex; align-items: center; gap: 8px; padding: 7px 9px; border-radius: 10px; margin-bottom: 3px; border: 1.5px solid transparent; transition: all 0.15s; }
-    .team-slot.slot-keeper { background: #f0fdf4; border-color: #86efac; }
-    .team-slot.slot-pick { background: #eff6ff; border-color: #bfdbfe; }
+    .team-slot.slot-myteam { background: #f0fdf4; border-color: #86efac; }
     .team-slot.slot-suggestion { background: #fffbeb; border: 1.5px dashed #fcd34d; }
     .team-slot.slot-empty { background: #f8fafc; border: 1.5px dashed #e2e8f0; opacity: 0.55; }
 
@@ -80,8 +79,7 @@
     .slot-meta { font-size: 0.67em; color: #94a3b8; }
     .slot-pts { font-size: 0.78em; font-weight: 800; color: #475569; white-space: nowrap; flex-shrink: 0; }
     .slot-badge { font-size: 0.58em; font-weight: 800; padding: 2px 6px; border-radius: 99px; white-space: nowrap; flex-shrink: 0; letter-spacing: 0.2px; }
-    .badge-keeper { background: #dcfce7; color: #15803d; }
-    .badge-pick { background: #dbeafe; color: #1d4ed8; }
+    .badge-myteam { background: #dcfce7; color: #15803d; }
     .badge-suggest { background: #fef3c7; color: #92400e; }
     .slot-remove { background: none; border: none; cursor: pointer; font-size: 0.88em; color: #cbd5e1; padding: 2px 4px; border-radius: 4px; flex-shrink: 0; transition: all 0.12s; }
     .slot-remove:hover { color: #dc2626; background: #fef2f2; }
@@ -106,8 +104,7 @@
     .player-row:hover { border-color: #cbd5e1; background: #f8fafc; }
     .player-row.is-drafted { opacity: 0.32; }
     .player-row.is-drafted .player-name { text-decoration: line-through; color: #94a3b8; }
-    .player-row.is-keeper { background: #f0fdf4; border-color: #86efac; }
-    .player-row.is-pick { background: #eff6ff; border-color: #bfdbfe; }
+    .player-row.is-myteam { background: #f0fdf4; border-color: #86efac; }
     .player-row.is-suggested { background: #fffbeb; border-color: #fcd34d; }
 
     .player-logo { width: 28px; height: 28px; object-fit: contain; flex-shrink: 0; }
@@ -117,12 +114,12 @@
     .player-pts { font-size: 0.82em; font-weight: 900; color: #2563eb; white-space: nowrap; }
     .player-aav { font-size: 0.75em; color: #64748b; white-space: nowrap; }
     .player-actions { display: flex; gap: 5px; flex-shrink: 0; }
-    .btn-keeper { background: #f0fdf4; color: #15803d; border: 1.5px solid #86efac; border-radius: 7px; padding: 4px 9px; font-size: 0.7em; font-weight: 800; cursor: pointer; white-space: nowrap; transition: all 0.15s; }
-    .btn-keeper:hover { background: #dcfce7; }
-    .btn-keeper.active { background: #15803d; color: white; border-color: #15803d; }
-    .btn-mypick { background: #eff6ff; color: #1d4ed8; border: 1.5px solid #bfdbfe; border-radius: 7px; padding: 4px 9px; font-size: 0.7em; font-weight: 800; cursor: pointer; white-space: nowrap; transition: all 0.15s; }
-    .btn-mypick:hover { background: #dbeafe; }
-    .btn-mypick.active { background: #1d4ed8; color: white; border-color: #1d4ed8; }
+    .btn-myteam { background: #f0fdf4; color: #15803d; border: 1.5px solid #86efac; border-radius: 7px; padding: 4px 9px; font-size: 0.7em; font-weight: 800; cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+    .btn-myteam:hover { background: #dcfce7; }
+    .btn-myteam.active { background: #15803d; color: white; border-color: #15803d; }
+    .btn-raye { background: #fef2f2; color: #dc2626; border: 1.5px solid #fca5a5; border-radius: 7px; padding: 4px 9px; font-size: 0.7em; font-weight: 800; cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+    .btn-raye:hover { background: #fee2e2; }
+    .btn-raye.active { background: #dc2626; color: white; border-color: #dc2626; }
     .suggest-tag { font-size: 0.64em; font-weight: 800; color: #92400e; background: #fef3c7; border: 1px solid #fcd34d; padding: 2px 7px; border-radius: 99px; white-space: nowrap; flex-shrink: 0; }
 
     .empty-state { text-align: center; padding: 48px 24px; color: #94a3b8; font-size: 0.88em; }
@@ -164,7 +161,7 @@
       <span class="sync-pill" id="syncBadge">⬤ 0 draftés</span>
       <button class="btn-action sync" onclick="syncNow()">🔄 Rafraîchir</button>
       <button class="btn-action danger" onclick="resetDraft()">✕ Tout de-rayer</button>
-      <button class="btn-action muted" onclick="resetAll()">✕ Mes picks</button>
+      <button class="btn-action muted" onclick="resetAll()">✕ Mon équipe</button>
     </div>
   </div>
 </div>
@@ -222,21 +219,18 @@ const IS_FWD = pos => pos && /^(C|LW|RW|AG|AD|F)(\/.*)?$/.test(pos);
 const POS_GROUP = p => IS_FWD(p.pos) ? 'F' : p.pos === 'D' ? 'D' : p.pos === 'G' ? 'G' : null;
 const POS_LABEL = { F: 'Attaquants', D: 'Défenseurs', G: 'Gardiens' };
 
-const KEEPER_KEY = 'draft_assist_keepers';
-const PICKS_KEY = 'draft_assist_picks';
+const TEAM_KEY = 'draft_assist_team';
 
 let allPlayers = [];
 let draftedIds = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]'));
-let keeperIds = new Set(JSON.parse(localStorage.getItem(KEEPER_KEY) || '[]'));
-let pickedIds = new Set(JSON.parse(localStorage.getItem(PICKS_KEY) || '[]'));
+let myTeamIds = new Set(JSON.parse(localStorage.getItem(TEAM_KEY) || '[]'));
 let suggestions = [];
 let posFilter = 'ALL';
 let showDrafted = false;
 
 // ── Optimizer greedy ──────────────────────────────────────────────────────────
 function optimize() {
-  const lockedIds = new Set([...keeperIds, ...pickedIds]);
-  const locked = allPlayers.filter(p => lockedIds.has(p.id));
+  const locked = allPlayers.filter(p => myTeamIds.has(p.id));
   const capUsed = locked.reduce((s, p) => s + parseFloat(p.aav || 0), 0);
   let remCap = CAP_MAX - capUsed;
 
@@ -246,12 +240,11 @@ function optimize() {
   const byGrp = { F: [], D: [], G: [] };
   allPlayers.forEach(p => {
     const g = POS_GROUP(p);
-    if (!g || lockedIds.has(p.id) || draftedIds.has(p.id)) return;
+    if (!g || myTeamIds.has(p.id) || draftedIds.has(p.id)) return;
     if (!p.aav || parseFloat(p.aav) <= 0) return;
     byGrp[g].push(p);
   });
 
-  // Cap minimum pour remplir n slots d'un groupe avec les joueurs les moins chers
   function minCap(grp, n, excluded = new Set()) {
     return byGrp[grp]
       .filter(p => !excluded.has(p.id))
@@ -260,7 +253,6 @@ function optimize() {
       .reduce((s, p) => s + parseFloat(p.aav), 0);
   }
 
-  // Liste globale triée par pts desc — pas groupe par groupe
   const allAvailable = [...byGrp.F, ...byGrp.D, ...byGrp.G]
     .sort((a, b) => (b.proj_pts ?? 0) - (a.proj_pts ?? 0));
 
@@ -273,7 +265,6 @@ function optimize() {
     if (tempSlots[g] <= 0) continue;
     const aav = parseFloat(p.aav);
 
-    // Réserver le cap minimum pour compléter tous les slots restants après ce pick
     const excl = new Set([...takenIds, p.id]);
     const reserved = ['F', 'D', 'G'].reduce((s, og) => {
       const n = og === g ? tempSlots[og] - 1 : tempSlots[og];
@@ -301,81 +292,77 @@ function recompute() {
 }
 
 // ── Persist ───────────────────────────────────────────────────────────────────
-function saveKeepers() {
-  const prev = new Set(JSON.parse(localStorage.getItem(KEEPER_KEY) || '[]'));
-  localStorage.setItem(KEEPER_KEY, JSON.stringify([...keeperIds]));
-  // Sync vers pool_drafted : ajouter les nouveaux keepers, retirer ceux qui ne le sont plus
+function saveMyTeam() {
+  const prev = new Set(JSON.parse(localStorage.getItem(TEAM_KEY) || '[]'));
+  localStorage.setItem(TEAM_KEY, JSON.stringify([...myTeamIds]));
   const drafted = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]'));
-  prev.forEach(id => { if (!keeperIds.has(id)) drafted.delete(id); });
-  keeperIds.forEach(id => drafted.add(id));
+  prev.forEach(id => { if (!myTeamIds.has(id)) drafted.delete(id); });
+  myTeamIds.forEach(id => drafted.add(id));
   localStorage.setItem('pool_drafted', JSON.stringify([...drafted]));
   draftedIds = new Set([...drafted]);
 }
-function savePicks() { localStorage.setItem(PICKS_KEY, JSON.stringify([...pickedIds])); }
 
 // ── Actions ───────────────────────────────────────────────────────────────────
-function toggleKeeper(id) {
-  if (pickedIds.has(id)) pickedIds.delete(id), savePicks();
-  if (keeperIds.has(id)) {
-    keeperIds.delete(id);
+function toggleMyTeam(id) {
+  if (myTeamIds.has(id)) {
+    myTeamIds.delete(id);
   } else {
-    keeperIds.add(id);
+    myTeamIds.add(id);
     draftedIds.delete(id);
   }
-  saveKeepers();
+  saveMyTeam();
   recompute();
 }
 
-function togglePick(id) {
-  if (keeperIds.has(id)) keeperIds.delete(id), saveKeepers();
-  if (pickedIds.has(id)) {
-    pickedIds.delete(id);
-  } else {
-    pickedIds.add(id);
+function toggleDrafted(id) {
+  if (myTeamIds.has(id)) return;
+  if (draftedIds.has(id)) {
     draftedIds.delete(id);
+  } else {
+    draftedIds.add(id);
   }
-  savePicks();
+  const drafted = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]'));
+  if (draftedIds.has(id)) drafted.add(id); else drafted.delete(id);
+  localStorage.setItem('pool_drafted', JSON.stringify([...drafted]));
   recompute();
 }
 
-function removeLocked(id) {
-  keeperIds.delete(id);
-  pickedIds.delete(id);
-  saveKeepers();
-  savePicks();
+function removeMyTeam(id) {
+  myTeamIds.delete(id);
+  saveMyTeam();
   recompute();
 }
 
 function confirmSuggestion(id) {
-  pickedIds.add(id);
-  savePicks();
+  myTeamIds.add(id);
+  saveMyTeam();
   recompute();
   showToast('✓ Joueur ajouté à ton équipe');
 }
 
 function syncNow() {
   draftedIds = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]'));
-  pickedIds.forEach(id => draftedIds.delete(id));
+  myTeamIds.forEach(id => draftedIds.delete(id));
   recompute();
   showToast('🔄 Synchronisé avec le guide');
 }
 
 function resetAll() {
-  if (!confirm('Effacer tous les keepers et picks ?')) return;
-  keeperIds.clear(); pickedIds.clear();
-  saveKeepers(); savePicks();
+  if (!confirm('Retirer tous les joueurs de ton équipe ?')) return;
+  myTeamIds.clear();
+  saveMyTeam();
   recompute();
-  showToast('✕ Réinitialisé');
+  showToast('✕ Équipe réinitialisée');
 }
 
 function resetDraft() {
-  if (!confirm('Dé-rayer tous les joueurs (keepers et picks adverses) ?')) return;
+  if (!confirm('Dé-rayer tous les joueurs adverses ?')) return;
+  const teamArr = [...myTeamIds];
   draftedIds.clear();
-  keeperIds.clear(); pickedIds.clear();
-  localStorage.removeItem('pool_drafted');
-  saveKeepers(); savePicks();
+  teamArr.forEach(id => draftedIds.add(id));
+  localStorage.setItem('pool_drafted', JSON.stringify(teamArr));
   recompute();
-  showToast('✕ Tout le draft effacé');
+  showToast('✕ Rayés adverses effacés');
 }
 
 function setPos(pos, btn) {
@@ -395,7 +382,7 @@ function toggleShowDrafted() {
 
 // ── Cap bar ───────────────────────────────────────────────────────────────────
 function renderCapBar() {
-  const teamIds = new Set([...keeperIds, ...pickedIds, ...suggestions.map(p => p.id)]);
+  const teamIds = new Set([...myTeamIds, ...suggestions.map(p => p.id)]);
   const team = allPlayers.filter(p => teamIds.has(p.id));
   const capUsed = team.reduce((s, p) => s + parseFloat(p.aav || 0), 0);
   const totalPts = team.reduce((s, p) => s + (p.proj_pts ?? 0), 0);
@@ -430,13 +417,12 @@ function renderTeam() {
 
   let html = '';
   for (const grp of ['F', 'D', 'G']) {
-    const keepers = allPlayers.filter(p => keeperIds.has(p.id) && POS_GROUP(p) === grp);
-    const picks = allPlayers.filter(p => pickedIds.has(p.id) && POS_GROUP(p) === grp);
+    const myTeam = allPlayers.filter(p => myTeamIds.has(p.id) && POS_GROUP(p) === grp);
     const suggs = suggestions.filter(p => POS_GROUP(p) === grp);
-    const total = keepers.length + picks.length + suggs.length;
+    const total = myTeam.length + suggs.length;
     const max = LIMITS[grp];
     const empty = Math.max(0, max - total);
-    const groupPts = [...keepers, ...picks, ...suggs].reduce((s, p) => s + (p.proj_pts ?? 0), 0);
+    const groupPts = [...myTeam, ...suggs].reduce((s, p) => s + (p.proj_pts ?? 0), 0);
 
     html += `<div class="group-section">
       <div class="group-header">
@@ -444,8 +430,7 @@ function renderTeam() {
         <span class="group-pts">${groupPts} pts</span>
       </div>`;
 
-    for (const p of keepers) html += slotHTML(p, 'keeper');
-    for (const p of picks) html += slotHTML(p, 'pick');
+    for (const p of myTeam) html += slotHTML(p, 'myteam');
     for (const p of suggs) html += slotHTML(p, 'suggestion');
     for (let i = 0; i < empty; i++) {
       html += `<div class="team-slot slot-empty">
@@ -458,21 +443,21 @@ function renderTeam() {
 
   panel.innerHTML = html;
 
-  const locked = [...keeperIds].length, picked = [...pickedIds].length, sugg = suggestions.length;
+  const myCount = myTeamIds.size, sugg = suggestions.length;
   document.getElementById('teamSubtitle').textContent =
-    `${locked} keeper${locked !== 1 ? 's' : ''} · ${picked} pick${picked !== 1 ? 's' : ''} · ${sugg} suggestions`;
+    `${myCount} joueur${myCount !== 1 ? 's' : ''} · ${sugg} suggestion${sugg !== 1 ? 's' : ''}`;
 }
 
 function slotHTML(p, type) {
   const aav = p.aav ? `${parseFloat(p.aav).toFixed(2)}M$` : 'Libre';
   const pts = p.proj_pts != null ? `${p.proj_pts} pts` : '—';
-  const badgeLabel = type === 'keeper' ? 'Keeper' : type === 'pick' ? 'Mon pick' : 'Suggéré';
-  const badgeCls = type === 'keeper' ? 'badge-keeper' : type === 'pick' ? 'badge-pick' : 'badge-suggest';
-  const slotCls = type === 'keeper' ? 'slot-keeper' : type === 'pick' ? 'slot-pick' : 'slot-suggestion';
+  const badgeLabel = type === 'myteam' ? 'Mon équipe' : 'Suggéré';
+  const badgeCls = type === 'myteam' ? 'badge-myteam' : 'badge-suggest';
+  const slotCls = type === 'myteam' ? 'slot-myteam' : 'slot-suggestion';
   const confirmBtn = type === 'suggestion'
     ? `<button class="slot-confirm-btn" onclick="confirmSuggestion(${p.id})">✓ Confirmer</button>` : '';
-  const removeBtn = (type === 'keeper' || type === 'pick')
-    ? `<button class="slot-remove" onclick="removeLocked(${p.id})" title="Retirer">✕</button>` : '';
+  const removeBtn = type === 'myteam'
+    ? `<button class="slot-remove" onclick="removeMyTeam(${p.id})" title="Retirer">✕</button>` : '';
 
   return `<div class="team-slot ${slotCls}">
     <img class="slot-logo" src="https://assets.nhle.com/logos/nhl/svg/${p.team}_light.svg" alt="${p.team}" loading="lazy">
@@ -490,18 +475,17 @@ function slotHTML(p, type) {
 function renderPool() {
   const q = (document.getElementById('poolSearch').value || '').toLowerCase().trim();
   const suggIds = new Set(suggestions.map(p => p.id));
-  const lockedIds = new Set([...keeperIds, ...pickedIds]);
 
   let list = allPlayers.filter(p => {
     if (posFilter !== 'ALL' && POS_GROUP(p) !== posFilter) return false;
-    if (!showDrafted && draftedIds.has(p.id) && !lockedIds.has(p.id)) return false;
+    if (!showDrafted && draftedIds.has(p.id) && !myTeamIds.has(p.id)) return false;
     if (q && !p.name.toLowerCase().includes(q) && !p.team.toLowerCase().includes(q)) return false;
     return true;
   });
 
   list.sort((a, b) => {
-    const rankA = lockedIds.has(a.id) ? 0 : suggIds.has(a.id) ? 1 : draftedIds.has(a.id) ? 3 : 2;
-    const rankB = lockedIds.has(b.id) ? 0 : suggIds.has(b.id) ? 1 : draftedIds.has(b.id) ? 3 : 2;
+    const rankA = myTeamIds.has(a.id) ? 0 : suggIds.has(a.id) ? 1 : draftedIds.has(a.id) ? 3 : 2;
+    const rankB = myTeamIds.has(b.id) ? 0 : suggIds.has(b.id) ? 1 : draftedIds.has(b.id) ? 3 : 2;
     if (rankA !== rankB) return rankA - rankB;
     return (b.proj_pts ?? 0) - (a.proj_pts ?? 0);
   });
@@ -512,20 +496,18 @@ function renderPool() {
   }
 
   const html = list.map(p => {
-    const isKeeper = keeperIds.has(p.id);
-    const isPick = pickedIds.has(p.id);
+    const isMyTeam = myTeamIds.has(p.id);
     const isSugg = suggIds.has(p.id);
     const isDrafted = draftedIds.has(p.id);
 
     let rowCls = 'player-row';
-    if (isKeeper) rowCls += ' is-keeper';
-    else if (isPick) rowCls += ' is-pick';
+    if (isMyTeam) rowCls += ' is-myteam';
     else if (isSugg) rowCls += ' is-suggested';
     else if (isDrafted) rowCls += ' is-drafted';
 
     const aav = p.aav ? `${parseFloat(p.aav).toFixed(2)}M$` : 'Libre';
     const pts = p.proj_pts != null ? `${p.proj_pts}` : '—';
-    const suggTag = isSugg && !isKeeper && !isPick ? `<span class="suggest-tag">✨ Suggéré</span>` : '';
+    const suggTag = isSugg && !isMyTeam ? `<span class="suggest-tag">✨ Suggéré</span>` : '';
 
     return `<div class="${rowCls}">
       <img class="player-logo" src="https://assets.nhle.com/logos/nhl/svg/${p.team}_light.svg" alt="${p.team}" loading="lazy">
@@ -537,8 +519,8 @@ function renderPool() {
       <div class="player-aav">${aav}</div>
       ${suggTag}
       <div class="player-actions">
-        <button class="btn-keeper${isKeeper ? ' active' : ''}" onclick="toggleKeeper(${p.id})" title="Keeper">🔒</button>
-        <button class="btn-mypick${isPick ? ' active' : ''}" onclick="togglePick(${p.id})" title="Mon pick">✓</button>
+        <button class="btn-myteam${isMyTeam ? ' active' : ''}" onclick="toggleMyTeam(${p.id})" title="Mon équipe">✓</button>
+        <button class="btn-raye${isDrafted && !isMyTeam ? ' active' : ''}" onclick="toggleDrafted(${p.id})" title="Rayé" ${isMyTeam ? 'disabled' : ''}>✕</button>
       </div>
     </div>`;
   }).join('');
@@ -559,7 +541,7 @@ function showToast(msg) {
 window.addEventListener('storage', e => {
   if (e.key === 'pool_drafted') {
     draftedIds = new Set(JSON.parse(e.newValue || '[]'));
-    pickedIds.forEach(id => draftedIds.delete(id));
+    myTeamIds.forEach(id => draftedIds.delete(id));
     recompute();
     showToast('🔄 Disponibilité mise à jour');
   }
@@ -580,8 +562,7 @@ async function init() {
     if (p.pos === 'G') p.proj_pts = (p.proj_g || 0) * 2 + (p.proj_a || 0) * 3;
   });
 
-  keeperIds.forEach(id => { if (!allPlayers.find(p => p.id === id)) keeperIds.delete(id); });
-  pickedIds.forEach(id => { if (!allPlayers.find(p => p.id === id)) pickedIds.delete(id); });
+  myTeamIds.forEach(id => { if (!allPlayers.find(p => p.id === id)) myTeamIds.delete(id); });
 
   recompute();
 }
