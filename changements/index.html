@@ -202,7 +202,7 @@ function setFilter(f, btn) {
 
 async function loadChanges() {
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/projection_changes?select=*,poolers_players(name,team,pos,proj_g,proj_a,proj_gp,nhl_id)&order=changed_at.desc`,
+    `${SUPABASE_URL}/rest/v1/projection_changes?select=*,poolers_players(name,team,pos,proj_g,proj_a,proj_gp,nhl_id,headshot_url)&order=changed_at.desc`,
     { headers: SB_HEADERS }
   );
   const container = document.getElementById('changesList');
@@ -242,8 +242,7 @@ async function loadChanges() {
       const isNew = c.old_pts === 0;
       const team   = c.poolers_players?.team   || 'NHL';
       const pos    = c.poolers_players?.pos    || '';
-      const nhlId  = c.poolers_players?.nhl_id || '';
-      const faceUrl = nhlId ? `https://assets.nhle.com/mugs/nhl/408x408/${nhlId}.png` : '';
+      const faceUrl = c.poolers_players?.headshot_url || '';
       const teamLogoUrl = `https://assets.nhle.com/logos/nhl/svg/${team}_light.svg`;
       const diff  = c.new_pts - c.old_pts;
       const type  = isNew ? 'new' : diff > 0 ? 'up' : diff < 0 ? 'down' : 'same';
