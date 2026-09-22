@@ -916,9 +916,9 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
             </div>
             <div style='display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px'>
               <div>
-                <label style='font-size:0.76em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>Pts (calculés auto)</label>
-                <input type='number' id='proj-f-pts' min='0'
-                  style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;background:#f8fafc;outline:none;font-weight:700;color:#059669'>
+                <label style='font-size:0.76em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>Pts <span style="font-weight:500;color:#94a3b8">(auto ou manuel)</span></label>
+                <input type='number' id='proj-f-pts' min='0' oninput='projPtsManualEdit()'
+                  style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;background:white;outline:none;font-weight:700;color:#059669;transition:border 0.15s'>
               </div>
               <div>
                 <label style='font-size:0.76em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>Tier</label>
@@ -1958,10 +1958,17 @@ function projSearch() {
   results.style.display = '';
 }
 
+let projPtsManual = false;
+
 function projCalcSkaterPts() {
+  if (projPtsManual) return;
   const g = parseInt(document.getElementById('proj-f-g').value) || 0;
   const a = parseInt(document.getElementById('proj-f-a').value) || 0;
   document.getElementById('proj-f-pts').value = g + a;
+}
+
+function projPtsManualEdit() {
+  projPtsManual = true;
 }
 
 function projCalcGoaliePts() {
@@ -1974,6 +1981,7 @@ function selectProjPlayer(id) {
   projSelectedPlayer = projAllPlayers.find(p => p.id === id);
   if (!projSelectedPlayer) return;
   const p = projSelectedPlayer;
+  projPtsManual = false;
   buildProjTierOptions();
   document.getElementById('proj-results').style.display = 'none';
   document.getElementById('proj-search').value = p.name;
