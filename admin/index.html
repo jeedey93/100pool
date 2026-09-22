@@ -2212,6 +2212,7 @@ async function submitAddPlayer() {
     pos,
     aav: aav ? parseFloat(aav) : null,
     tier: tier || null,
+    rank: players.length ? Math.max(...players.map(p => p.rank || 0)) + 1 : 999,
   };
 
   if (isGoalie) {
