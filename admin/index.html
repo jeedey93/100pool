@@ -1926,14 +1926,16 @@ async function loadProjectionTab() {
 }
 
 function buildProjTierOptions() {
-  const tierMap = {}, orphans = new Set();
+  const seen = new Set();
+  const tierMap = {}, orphans = [];
   projAllPlayers.forEach(p => {
-    if (!p.tier) return;
+    if (!p.tier || seen.has(p.tier)) return;
+    seen.add(p.tier);
     const m = p.tier.match(/Tier\s*(\d+)/i);
-    if (m) tierMap[parseInt(m[1])] = p.tier;
-    else orphans.add(p.tier);
+    if (m) { if (!tierMap[parseInt(m[1])]) tierMap[parseInt(m[1])] = []; tierMap[parseInt(m[1])].push(p.tier); }
+    else orphans.push(p.tier);
   });
-  const tiers = [...Object.keys(tierMap).sort((a,b) => a-b).map(n => tierMap[n]), ...orphans];
+  const tiers = [...Object.keys(tierMap).sort((a,b) => a-b).flatMap(n => tierMap[n]), ...orphans];
   const opts = `<option value=''>— Aucun —</option>` + tiers.map(v => `<option value='${v}'>${v}</option>`).join('');
   document.getElementById('proj-f-tier').innerHTML = opts;
   document.getElementById('proj-g-tier').innerHTML = opts;
