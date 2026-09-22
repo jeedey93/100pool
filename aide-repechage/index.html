@@ -333,12 +333,16 @@ function recompute() {
 }
 
 function renderRayes() {
-  // Rayés = draftedIds SANS mon équipe
   const rayesPlayers = allPlayers.filter(p => draftedIds.has(p.id) && !myTeamIds.has(p.id));
   const panel = document.getElementById('rayesPanel');
-  if (!rayesPlayers.length) { panel.style.display = 'none'; return; }
+  const subtitle = document.getElementById('rayesSubtitle');
   panel.style.display = '';
-  document.getElementById('rayesSubtitle').textContent = `${rayesPlayers.length} joueur${rayesPlayers.length > 1 ? 's' : ''} — cliquer ✕ pour remettre dans le pool`;
+  if (!rayesPlayers.length) {
+    subtitle.textContent = 'Aucun joueur rayé — utilise ✕ dans la liste pour rayer un adversaire';
+    document.getElementById('rayesList').innerHTML = `<div style="padding:12px 8px;font-size:0.82em;color:#94a3b8;font-style:italic">Clique ✕ sur un joueur à droite pour le marquer comme repêché par un adversaire.</div>`;
+    return;
+  }
+  subtitle.textContent = `${rayesPlayers.length} joueur${rayesPlayers.length > 1 ? 's' : ''} — cliquer ✕ pour remettre dans le pool`;
   document.getElementById('rayesList').innerHTML = rayesPlayers
     .sort((a, b) => calcPoolPts(b) - calcPoolPts(a))
     .map(p => {
@@ -468,8 +472,11 @@ function renderCapBar() {
 }
 
 function updateSyncBadge() {
-  const n = JSON.parse(localStorage.getItem('pool_drafted') || '[]').length;
-  document.getElementById('syncBadge').textContent = `⬤ ${n} draftés`;
+  const allDrafted = JSON.parse(localStorage.getItem('pool_drafted') || '[]').map(Number);
+  const adverses = allDrafted.filter(id => !myTeamIds.has(id));
+  const badge = document.getElementById('syncBadge');
+  badge.textContent = `⬤ ${adverses.length} rayés`;
+  badge.style.background = adverses.length ? 'rgba(239,68,68,0.18)' : 'rgba(255,255,255,0.1)';
 }
 
 // ── Render équipe ─────────────────────────────────────────────────────────────
