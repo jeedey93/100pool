@@ -253,31 +253,28 @@ function optimize() {
       .reduce((s, p) => s + parseFloat(p.aav), 0);
   }
 
-  const allAvailable = [...byGrp.F, ...byGrp.D, ...byGrp.G]
-    .sort((a, b) => (b.proj_pts ?? 0) - (a.proj_pts ?? 0));
-
   const result = [];
   const takenIds = new Set();
   const tempSlots = { ...slotsNeeded };
 
-  for (const p of allAvailable) {
-    const g = POS_GROUP(p);
-    if (tempSlots[g] <= 0) continue;
-    const aav = parseFloat(p.aav);
-
-    const excl = new Set([...takenIds, p.id]);
-    const reserved = ['F', 'D', 'G'].reduce((s, og) => {
-      const n = og === g ? tempSlots[og] - 1 : tempSlots[og];
-      return s + minCap(og, n, excl);
-    }, 0);
-
-    if (aav > remCap - reserved) continue;
-
-    result.push(p);
-    takenIds.add(p.id);
-    tempSlots[g]--;
-    remCap -= aav;
-    if (tempSlots.F <= 0 && tempSlots.D <= 0 && tempSlots.G <= 0) break;
+  // Traiter chaque groupe séparément, trié par proj_pts desc
+  for (const grp of ['F', 'D', 'G']) {
+    if (tempSlots[grp] <= 0) continue;
+    const candidates = [...byGrp[grp]].sort((a, b) => (b.proj_pts ?? 0) - (a.proj_pts ?? 0));
+    for (const p of candidates) {
+      if (tempSlots[grp] <= 0) break;
+      const aav = parseFloat(p.aav);
+      const excl = new Set([...takenIds, p.id]);
+      const reserved = ['F', 'D', 'G'].reduce((s, og) => {
+        const n = og === grp ? tempSlots[og] - 1 : tempSlots[og];
+        return s + minCap(og, n, excl);
+      }, 0);
+      if (aav > remCap - reserved) continue;
+      result.push(p);
+      takenIds.add(p.id);
+      tempSlots[grp]--;
+      remCap -= aav;
+    }
   }
 
   suggestions = result;
