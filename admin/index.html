@@ -2024,8 +2024,10 @@ async function submitProjectionChange() {
     if (gp !== '') patch.proj_gp = parseInt(gp);
     if (w !== '') patch.proj_g = parseInt(w);
     if (so !== '') patch.proj_a = parseInt(so);
-    if (tier !== '') patch.tier = tier;
-    newPts = (parseInt(w) || 0) * 2 + (parseInt(so) || 0) * 3;
+    if (tier !== '' && tier !== (p.tier ?? '')) patch.tier = tier;
+    const curW = w !== '' ? parseInt(w) : (p.proj_g ?? 0);
+    const curSO = so !== '' ? parseInt(so) : (p.proj_a ?? 0);
+    newPts = curW * 2 + curSO * 3;
   } else {
     const gp = document.getElementById('proj-f-gp').value;
     const g = document.getElementById('proj-f-g').value;
@@ -2036,7 +2038,7 @@ async function submitProjectionChange() {
     if (g !== '') patch.proj_g = parseInt(g);
     if (a !== '') patch.proj_a = parseInt(a);
     if (pts !== '') patch.proj_pts = parseInt(pts);
-    if (tier !== '') patch.tier = tier;
+    if (tier !== '' && tier !== (p.tier ?? '')) patch.tier = tier;
     newPts = pts !== '' ? parseInt(pts) : p.proj_pts;
   }
   const notesVal = document.getElementById('proj-notes-field').value.trim();
