@@ -2009,7 +2009,7 @@ function selectProjPlayer(id) {
 }
 
 async function submitProjectionChange() {
-  if (!projSelectedPlayer) { showToast('Sélectionne un joueur d\'abord'); return; }
+  if (!projSelectedPlayer) { toast('Sélectionne un joueur d\'abord'); return; }
   const p = projSelectedPlayer;
   const isGoalie = p.pos === 'G';
   const note = document.getElementById('proj-note').value.trim();
@@ -2044,7 +2044,7 @@ async function submitProjectionChange() {
   const notesVal = document.getElementById('proj-notes-field').value.trim();
   if (notesVal !== (p.notes ?? '')) patch.notes = notesVal || null;
 
-  if (!Object.keys(patch).length) { showToast('Aucun changement à enregistrer'); return; }
+  if (!Object.keys(patch).length) { toast('Aucun changement à enregistrer'); return; }
 
   const btn = document.getElementById('proj-submit-btn');
   btn.disabled = true; btn.textContent = 'Enregistrement…';
@@ -2080,7 +2080,7 @@ async function submitProjectionChange() {
     fb.textContent = `✓ ${p.name} mis à jour`;
     document.getElementById('proj-note').value = '';
     loadProjHistory();
-    showToast('✓ Projection mise à jour');
+    toast('✓ Projection mise à jour');
   } catch (e) {
     fb.style.color = '#dc2626';
     fb.textContent = 'Erreur : ' + e.message;
@@ -2132,14 +2132,14 @@ function deleteProjChange(id) {
       if (res.ok || res.status === 204) {
         closeAdminConfirm();
         loadProjHistory();
-        showToast('✓ Entrée supprimée');
+        toast('✓ Entrée supprimée');
       } else {
         closeAdminConfirm();
-        showToast('Erreur suppression : ' + res.status, 'error');
+        toast('Erreur suppression : ' + res.status, 'error');
       }
     } catch(e) {
       closeAdminConfirm();
-      showToast('Erreur : ' + e.message, 'error');
+      toast('Erreur : ' + e.message, 'error');
     }
   };
   document.getElementById('confirmOverlay').classList.remove('hidden');
