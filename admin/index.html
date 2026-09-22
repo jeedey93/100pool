@@ -713,9 +713,12 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 
     <!-- TAB PATINEURS -->
     <div id='tab-skaters' style='display:none'>
-      <div class='section-header'>
-        <h2>⛸ Patineurs 2026-27</h2>
-        <p>Modifier les projections, paliers, risques et notes</p>
+      <div class='section-header' style='display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px'>
+        <div>
+          <h2>⛸ Patineurs 2026-27</h2>
+          <p>Modifier les projections, paliers, risques et notes</p>
+        </div>
+        <button class='btn btn-green' onclick='openAddPlayer("skater")'>+ Ajouter un joueur</button>
       </div>
       <div class='card'>
         <div class='toolbar'>
@@ -759,9 +762,12 @@ tbody tr.dirty td:first-child { border-left: 3px solid #f59e0b; }
 
     <!-- TAB GARDIENS -->
     <div id='tab-goalies' style='display:none'>
-      <div class='section-header'>
-        <h2>🥅 Gardiens 2026-27</h2>
-        <p>Modifier les projections et paliers des gardiens</p>
+      <div class='section-header' style='display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px'>
+        <div>
+          <h2>🥅 Gardiens 2026-27</h2>
+          <p>Modifier les projections et paliers des gardiens</p>
+        </div>
+        <button class='btn btn-green' onclick='openAddPlayer("goalie")'>+ Ajouter un gardien</button>
       </div>
       <div class='card'>
         <div class='table-wrap'>
@@ -2129,6 +2135,126 @@ async function loadProjHistory() {
     </div>`).join('');
 }
 
+// ── ADD PLAYER ────────────────────────────────────────────────────────────────
+let addPlayerType = 'skater';
+
+function openAddPlayer(type) {
+  addPlayerType = type;
+  const isGoalie = type === 'goalie';
+  document.getElementById('addPlayerTitle').textContent = isGoalie ? '+ Ajouter un gardien' : '+ Ajouter un joueur';
+  document.getElementById('ap-stats-skater').style.display = isGoalie ? 'none' : 'grid';
+  document.getElementById('ap-stats-goalie').style.display = isGoalie ? 'grid' : 'none';
+
+  // Position options
+  const posEl = document.getElementById('ap-pos');
+  posEl.innerHTML = isGoalie
+    ? `<option value='G' selected>G</option>`
+    : `<option value=''>— Position —</option><option value='C'>C</option><option value='LW'>LW</option><option value='RW'>RW</option><option value='D'>D</option>`;
+
+  // Teams
+  document.getElementById('ap-team').innerHTML =
+    `<option value=''>— Équipe —</option>` + ALL_TEAMS.map(t => `<option value='${t}'>${t}</option>`).join('');
+
+  // Tiers
+  const tiers = TIERS.length ? TIERS : (() => {
+    const tm = {}, orph = new Set();
+    players.forEach(p => { if (!p.tier) return; const m = p.tier.match(/Tier\s*(\d+)/i); if (m) tm[parseInt(m[1])] = p.tier; else orph.add(p.tier); });
+    return [...Object.keys(tm).sort((a,b)=>a-b).map(n=>tm[n]), ...orph];
+  })();
+  document.getElementById('ap-tier').innerHTML =
+    `<option value=''>— Aucun —</option>` + tiers.map(v => `<option value='${v}'>${v}</option>`).join('');
+
+  // Reset fields
+  ['ap-name','ap-aav','ap-gp','ap-g','ap-a','ap-pts','ap-g-gp','ap-g-w','ap-g-so'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.getElementById('ap-team').value = '';
+  document.getElementById('ap-tier').value = '';
+  document.getElementById('ap-feedback').textContent = '';
+  document.getElementById('ap-submit-btn').disabled = false;
+  document.getElementById('ap-submit-btn').textContent = '+ Ajouter';
+  document.getElementById('addPlayerOverlay').classList.remove('hidden');
+  setTimeout(() => document.getElementById('ap-name').focus(), 50);
+}
+
+function closeAddPlayer() {
+  document.getElementById('addPlayerOverlay').classList.add('hidden');
+}
+
+function apCalcPts() {
+  const g = parseInt(document.getElementById('ap-g').value) || 0;
+  const a = parseInt(document.getElementById('ap-a').value) || 0;
+  document.getElementById('ap-pts').value = g + a;
+}
+
+function apCalcGoaliePts() {
+  const w = parseInt(document.getElementById('ap-g-w').value) || 0;
+  const so = parseInt(document.getElementById('ap-g-so').value) || 0;
+  document.getElementById('ap-pts') && (document.getElementById('ap-pts').value = w * 2 + so * 3);
+}
+
+async function submitAddPlayer() {
+  const isGoalie = addPlayerType === 'goalie';
+  const name = document.getElementById('ap-name').value.trim();
+  const team = document.getElementById('ap-team').value;
+  const pos = document.getElementById('ap-pos').value;
+  const aav = document.getElementById('ap-aav').value;
+  const tier = document.getElementById('ap-tier').value;
+  const fb = document.getElementById('ap-feedback');
+
+  if (!name) { fb.style.color = '#dc2626'; fb.textContent = 'Le nom est obligatoire.'; return; }
+  if (!team) { fb.style.color = '#dc2626'; fb.textContent = 'L\'équipe est obligatoire.'; return; }
+  if (!pos)  { fb.style.color = '#dc2626'; fb.textContent = 'La position est obligatoire.'; return; }
+
+  const data = {
+    name,
+    team,
+    pos,
+    aav: aav ? parseFloat(aav) : null,
+    tier: tier || null,
+  };
+
+  if (isGoalie) {
+    const gp = document.getElementById('ap-g-gp').value;
+    const w  = document.getElementById('ap-g-w').value;
+    const so = document.getElementById('ap-g-so').value;
+    if (gp) data.proj_gp = parseInt(gp);
+    if (w)  data.proj_g  = parseInt(w);
+    if (so) data.proj_a  = parseInt(so);
+  } else {
+    const gp  = document.getElementById('ap-gp').value;
+    const g   = document.getElementById('ap-g').value;
+    const a   = document.getElementById('ap-a').value;
+    const pts = document.getElementById('ap-pts').value;
+    if (gp)  data.proj_gp  = parseInt(gp);
+    if (g)   data.proj_g   = parseInt(g);
+    if (a)   data.proj_a   = parseInt(a);
+    if (pts) data.proj_pts = parseInt(pts);
+  }
+
+  const btn = document.getElementById('ap-submit-btn');
+  btn.disabled = true; btn.textContent = 'Ajout…';
+
+  try {
+    const res = await dbFetch('/rest/v1/poolers_players', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error(await res.text());
+    const [newPlayer] = await res.json();
+    closeAddPlayer();
+    // Reload players list
+    players = [];
+    await loadPlayers();
+    toast(`✓ ${name} ajouté avec succès`);
+  } catch(e) {
+    fb.style.color = '#dc2626';
+    fb.textContent = 'Erreur : ' + e.message;
+    btn.disabled = false; btn.textContent = '+ Ajouter';
+  }
+}
+
 function deleteProjChange(id) {
   document.getElementById('confirmDeleteBtn').onclick = async () => {
     try {
@@ -2149,6 +2275,90 @@ function deleteProjChange(id) {
   document.getElementById('confirmOverlay').classList.remove('hidden');
 }
 </script>
+<!-- ADD PLAYER MODAL -->
+<div id='addPlayerOverlay' class='confirm-overlay hidden' onclick='if(event.target===this)closeAddPlayer()'>
+  <div class='confirm-box' style='max-width:520px;width:100%;text-align:left;padding:28px 28px 24px'>
+    <div style='font-size:1.05em;font-weight:900;color:#0f172a;margin-bottom:4px' id='addPlayerTitle'>+ Ajouter un joueur</div>
+    <div style='font-size:0.78em;color:#64748b;margin-bottom:20px'>Les champs marqués * sont obligatoires</div>
+
+    <div style='display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px'>
+      <div style='grid-column:1/-1'>
+        <label style='font-size:0.76em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>Nom *</label>
+        <input type='text' id='ap-name' placeholder='Ex: Sidney Crosby'
+          style='width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;outline:none;transition:border 0.15s'>
+      </div>
+      <div>
+        <label style='font-size:0.76em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>Équipe *</label>
+        <select id='ap-team' style='width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;outline:none;background:white'>
+          <option value=''>— Équipe —</option>
+        </select>
+      </div>
+      <div>
+        <label style='font-size:0.76em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>Position *</label>
+        <select id='ap-pos' style='width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;outline:none;background:white'>
+          <option value=''>— Position —</option>
+          <option value='C'>C</option>
+          <option value='LW'>LW</option>
+          <option value='RW'>RW</option>
+          <option value='D'>D</option>
+          <option value='G'>G</option>
+        </select>
+      </div>
+      <div>
+        <label style='font-size:0.76em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>AAV ($M)</label>
+        <input type='number' id='ap-aav' min='0' step='0.01' placeholder='Ex: 8.70'
+          style='width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;outline:none;transition:border 0.15s'>
+      </div>
+      <div>
+        <label style='font-size:0.76em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>Tier</label>
+        <select id='ap-tier' style='width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.88em;font-family:inherit;outline:none;background:white'>
+          <option value=''>— Aucun —</option>
+        </select>
+      </div>
+    </div>
+
+    <div style='font-size:0.72em;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:#94a3b8;margin-bottom:8px' id='ap-stats-label'>Projections</div>
+    <div style='display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:20px' id='ap-stats-skater'>
+      <div>
+        <label style='font-size:0.72em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>PJ</label>
+        <input type='number' id='ap-gp' min='0' max='82' style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:0.88em;font-family:inherit;outline:none'>
+      </div>
+      <div>
+        <label style='font-size:0.72em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>B</label>
+        <input type='number' id='ap-g' min='0' oninput='apCalcPts()' style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:0.88em;font-family:inherit;outline:none'>
+      </div>
+      <div>
+        <label style='font-size:0.72em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>A</label>
+        <input type='number' id='ap-a' min='0' oninput='apCalcPts()' style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:0.88em;font-family:inherit;outline:none'>
+      </div>
+      <div>
+        <label style='font-size:0.72em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>Pts</label>
+        <input type='number' id='ap-pts' readonly style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:0.88em;font-family:inherit;background:#f8fafc;color:#059669;font-weight:700;outline:none'>
+      </div>
+    </div>
+    <div style='display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:20px;display:none' id='ap-stats-goalie'>
+      <div>
+        <label style='font-size:0.72em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>PJ</label>
+        <input type='number' id='ap-g-gp' min='0' max='82' style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:0.88em;font-family:inherit;outline:none'>
+      </div>
+      <div>
+        <label style='font-size:0.72em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>V (wins)</label>
+        <input type='number' id='ap-g-w' min='0' oninput='apCalcGoaliePts()' style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:0.88em;font-family:inherit;outline:none'>
+      </div>
+      <div>
+        <label style='font-size:0.72em;font-weight:700;color:#475569;display:block;margin-bottom:4px'>BL</label>
+        <input type='number' id='ap-g-so' min='0' oninput='apCalcGoaliePts()' style='width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:0.88em;font-family:inherit;outline:none'>
+      </div>
+    </div>
+
+    <div id='ap-feedback' style='font-size:0.8em;font-weight:600;min-height:18px;margin-bottom:12px'></div>
+    <div style='display:flex;gap:10px;justify-content:flex-end'>
+      <button onclick='closeAddPlayer()' style='padding:10px 20px;background:#f1f5f9;color:#475569;border:none;border-radius:9px;font-size:0.88em;font-weight:700;cursor:pointer'>Annuler</button>
+      <button onclick='submitAddPlayer()' id='ap-submit-btn' style='padding:10px 20px;background:linear-gradient(135deg,#0f5c23,#2d8a3e);color:white;border:none;border-radius:9px;font-size:0.88em;font-weight:800;cursor:pointer'>+ Ajouter</button>
+    </div>
+  </div>
+</div>
+
 <div class='confirm-overlay hidden' id='confirmOverlay'>
   <div class='confirm-box'>
     <div class='confirm-icon'>🗑</div>
