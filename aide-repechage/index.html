@@ -52,9 +52,10 @@
     .slot-chip.over { background: #fef2f2; color: #dc2626; border-color: #fca5a5; }
 
     /* ── Layout 3 colonnes ── */
-    .da-body { max-width: 1600px; margin: 20px auto; padding: 0 16px 60px; display: grid; grid-template-columns: 360px 1fr 320px; gap: 16px; align-items: start; }
+    .da-body { max-width: 1600px; margin: 20px auto; padding: 0 16px 60px; display: grid; grid-template-columns: 360px 1fr 320px; gap: 16px; align-items: stretch; }
     .da-body > .panel { display: flex; flex-direction: column; }
     #playerList { flex: 1; }
+    #rayesList { flex: 1; }
     @media (max-width: 1200px) { .da-body { grid-template-columns: 320px 1fr 280px; } }
     @media (max-width: 960px) { .da-body { grid-template-columns: 1fr; } }
 
