@@ -563,14 +563,15 @@ function renderPool() {
 
   let list = allPlayers.filter(p => {
     if (posFilter !== 'ALL' && POS_GROUP(p) !== posFilter) return false;
-    if (draftedIds.has(p.id) && !myTeamIds.has(p.id)) return false;
+    if (myTeamIds.has(p.id)) return false;
+    if (draftedIds.has(p.id)) return false;
     if (q && !p.name.toLowerCase().includes(q) && !p.team.toLowerCase().includes(q)) return false;
     return true;
   });
 
   list.sort((a, b) => {
-    const rankA = myTeamIds.has(a.id) ? 0 : suggIds.has(a.id) ? 1 : draftedIds.has(a.id) ? 3 : 2;
-    const rankB = myTeamIds.has(b.id) ? 0 : suggIds.has(b.id) ? 1 : draftedIds.has(b.id) ? 3 : 2;
+    const rankA = suggIds.has(a.id) ? 0 : 1;
+    const rankB = suggIds.has(b.id) ? 0 : 1;
     if (rankA !== rankB) return rankA - rankB;
     return calcPoolPts(b) - calcPoolPts(a);
   });
