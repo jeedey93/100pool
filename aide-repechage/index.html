@@ -345,7 +345,9 @@ function syncPanelHeights() {
   const rayesPanel = document.getElementById('rayesList').closest('.panel');
   const h = teamPanel.offsetHeight;
   poolPanel.style.minHeight = h + 'px';
+  poolPanel.style.maxHeight = h + 'px';
   rayesPanel.style.minHeight = h + 'px';
+  rayesPanel.style.maxHeight = h + 'px';
 }
 
 function recompute() {
