@@ -640,6 +640,8 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   /* controls */
   .controls { gap: 8px; }
   .controls-row { gap: 6px; }
+  .desktop-only { display: none !important; }
+  .col-toggle-desktop { display: none !important; }
   .search-box { width: 100%; min-width: unset; flex: unset; max-width: unset; }
   .search-box input { font-size: 16px; }
   .filter-select { font-size: 16px; padding: 7px 8px; }
@@ -919,9 +921,9 @@ td.star-cell { padding: 0; width: 36px; }
         <div class='filter-group'>
           <span class='filter-label'>Pos</span>
           <button class='pill active' data-filter='pos' data-value='' onclick='setPill(this,"pos")'>Tous</button>
-          <button class='pill' data-filter='pos' data-value='F' onclick='setPill(this,"pos")'>Attaquants</button>
-          <button class='pill' data-filter='pos' data-value='D' onclick='setPill(this,"pos")'>Défenseurs</button>
-          <button class='pill' data-filter='pos' data-value='G' onclick='setPill(this,"pos")'>Gardiens</button>
+          <button class='pill' data-filter='pos' data-value='F' onclick='setPill(this,"pos")'><span class='btn-long'>Attaquants</span><span class='btn-short'>Att</span></button>
+          <button class='pill' data-filter='pos' data-value='D' onclick='setPill(this,"pos")'><span class='btn-long'>Défenseurs</span><span class='btn-short'>Déf</span></button>
+          <button class='pill' data-filter='pos' data-value='G' onclick='setPill(this,"pos")'><span class='btn-long'>Gardiens</span><span class='btn-short'>Gard</span></button>
         </div>
         <div class='filter-divider'></div>
         <!-- Team popover -->
@@ -931,7 +933,7 @@ td.star-cell { padding: 0; width: 36px; }
         </div>
         <!-- Actions -->
         <div style='margin-left:auto;display:flex;gap:6px;align-items:center;'>
-          <div class='col-toggle-wrap'>
+          <div class='col-toggle-wrap col-toggle-desktop'>
             <button class='ctrl-btn' onclick='toggleColMenu(event)'>⚙ Colonnes</button>
             <div class='col-toggle-menu' id='colMenu'>
               <div class='menu-title'>Afficher / Masquer</div>
@@ -945,8 +947,8 @@ td.star-cell { padding: 0; width: 36px; }
               <button class='col-sort-btn' onclick='sortBy("scouting_category");this.closest(".col-toggle-menu").classList.remove("open")'>🏷 Catégorie (A→Z)</button>
             </div>
           </div>
-          <button class='ctrl-btn btn-primary' onclick='doPrint()'>🖨 Imprimer</button>
-          <button class='ctrl-btn' onclick='exportExcel()'>📥 Exporter</button>
+          <button class='ctrl-btn btn-primary desktop-only' onclick='doPrint()'>🖨 Imprimer</button>
+          <button class='ctrl-btn desktop-only' onclick='exportExcel()'>📥 Exporter</button>
           <button class='ctrl-btn btn-reset-draft' id='resetNotesBtn' onclick='resetUserNotes()' style='display:none'><span class='btn-long'>🗑 Effacer mes notes</span><span class='btn-short'>🗑 Notes</span></button>
         </div>
       </div>
