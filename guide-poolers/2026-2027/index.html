@@ -613,8 +613,11 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
 .card-footer { padding: 8px 14px; background: #fafafa; border-top: 1px solid #f1f5f9; }
 .card-footer-row1 { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
 .card-footer-row2 { display: flex; align-items: center; gap: 8px; }
+.btn-short { display: none; }
 
 @media (max-width: 768px) {
+  .btn-short { display: inline; }
+  .btn-long { display: none; }
   .table-wrap { display: none; }
   .card-list  { display: flex; width: 100%; }
   /* Compact list style on mobile */
@@ -637,7 +640,6 @@ td.col-proj-last  { border-right: 2px solid #bbf7d0 !important; }
   /* controls */
   .controls { gap: 8px; }
   .controls-row { gap: 6px; }
-  .filter-divider { display: none; }
   .search-box { width: 100%; min-width: unset; flex: unset; max-width: unset; }
   .search-box input { font-size: 16px; }
   .filter-select { font-size: 16px; padding: 7px 8px; }
@@ -945,7 +947,7 @@ td.star-cell { padding: 0; width: 36px; }
           </div>
           <button class='ctrl-btn btn-primary' onclick='doPrint()'>🖨 Imprimer</button>
           <button class='ctrl-btn' onclick='exportExcel()'>📥 Exporter</button>
-          <button class='ctrl-btn btn-reset-draft' id='resetNotesBtn' onclick='resetUserNotes()' style='display:none'>🗑 Effacer mes notes</button>
+          <button class='ctrl-btn btn-reset-draft' id='resetNotesBtn' onclick='resetUserNotes()' style='display:none'><span class='btn-long'>🗑 Effacer mes notes</span><span class='btn-short'>🗑 Notes</span></button>
         </div>
       </div>
 
@@ -986,20 +988,20 @@ td.star-cell { padding: 0; width: 36px; }
         <div class='pills-row3'>
           <!-- Draft mode -->
           <div class='filter-group' style='flex-shrink:0'>
-            <button class='ctrl-btn btn-draft-toggle' id='draftToggleBtn' onclick='toggleDraftMode()' style='margin:0' title='Activer le mode draft pour barrer les joueurs au fur et à mesure'>🏒 Mode draft</button>
-            <button class='ctrl-btn btn-reset-draft' id='resetDraftBtn' onclick='resetDraft()' style='display:none;margin:0'>✕ Reset draft</button>
-            <button class='ctrl-btn btn-hide-drafted' id='hideDraftedBtn' onclick='toggleHideDrafted()' style='display:none;margin:0'>👁 Cacher les draftés</button>
+            <button class='ctrl-btn btn-draft-toggle' id='draftToggleBtn' onclick='toggleDraftMode()' style='margin:0' title='Activer le mode draft pour barrer les joueurs au fur et à mesure'><span class='btn-long'>🏒 Mode draft</span><span class='btn-short'>🏒 Draft</span></button>
+            <button class='ctrl-btn btn-reset-draft' id='resetDraftBtn' onclick='resetDraft()' style='display:none;margin:0'><span class='btn-long'>✕ Reset draft</span><span class='btn-short'>✕ Reset</span></button>
+            <button class='ctrl-btn btn-hide-drafted' id='hideDraftedBtn' onclick='toggleHideDrafted()' style='display:none;margin:0'><span class='btn-long'>👁 Cacher les draftés</span><span class='btn-short'>👁 Cacher</span></button>
           </div>
           <div id='draftPosCounter' style='display:none;font-size:0.75em;color:#64748b;font-weight:600;padding:4px 8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;white-space:nowrap'></div>
           <div class='filter-divider'></div>
           <!-- Watchlist -->
           <div class='filter-group' style='flex-shrink:0'>
-            <button class='btn-watchlist' id='watchlistBtn' onclick='toggleWatchlistPanel()'>⭐ Ma liste</button>
+            <button class='btn-watchlist' id='watchlistBtn' onclick='toggleWatchlistPanel()'><span class='btn-long'>⭐ Ma liste</span><span class='btn-short'>⭐</span></button>
           </div>
           <div class='filter-divider'></div>
           <!-- Pool scoring -->
           <div class='filter-group' style='flex-shrink:0'>
-            <button class='ctrl-btn btn-pool-settings' id='poolSettingsBtn' onclick='openPoolSettings()' style='margin:0'>⚙️ Mon pool</button>
+            <button class='ctrl-btn btn-pool-settings' id='poolSettingsBtn' onclick='openPoolSettings()' style='margin:0'><span class='btn-long'>⚙️ Mon pool</span><span class='btn-short'>⚙️</span></button>
           </div>
         </div>
     </div>
