@@ -109,6 +109,8 @@
     .pos-filter { display: flex; gap: 4px; }
     .pos-btn { background: #f1f5f9; border: 1.5px solid #e2e8f0; color: #475569; border-radius: 8px; padding: 5px 12px; font-size: 0.78em; font-weight: 700; cursor: pointer; transition: all 0.15s; }
     .pos-btn.active { background: #eff6ff; border-color: #93c5fd; color: #1d4ed8; }
+    .pos-btn-priority { border-color: #fcd34d !important; }
+    .pos-btn-priority.active { background: #fef3c7 !important; border-color: #f59e0b !important; color: #92400e !important; }
     .drafted-toggle { background: #f1f5f9; border: 1.5px solid #e2e8f0; color: #64748b; border-radius: 8px; padding: 5px 11px; font-size: 0.78em; font-weight: 700; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
     .drafted-toggle.active { background: #fef3c7; border-color: #f59e0b; color: #92400e; }
 
@@ -138,6 +140,7 @@
     .btn-raye:hover { background: #fee2e2; }
     .btn-raye.active { background: #dc2626; color: white; border-color: #dc2626; }
     .suggest-tag { font-size: 0.64em; font-weight: 800; color: #92400e; background: #fef3c7; border: 1px solid #fcd34d; padding: 2px 7px; border-radius: 99px; white-space: nowrap; flex-shrink: 0; }
+    .value-tag { font-size: 0.64em; font-weight: 800; color: #5b21b6; background: #ede9fe; border: 1px solid #c4b5fd; padding: 2px 7px; border-radius: 99px; white-space: nowrap; flex-shrink: 0; }
 
     .empty-state { text-align: center; padding: 48px 24px; color: #94a3b8; font-size: 0.88em; }
     .loading-wrap { display: flex; align-items: center; justify-content: center; height: 180px; color: #94a3b8; font-size: 0.88em; }
@@ -216,6 +219,7 @@
         <button class="pos-btn" onclick="setPos('F',this)">Att</button>
         <button class="pos-btn" onclick="setPos('D',this)">Déf</button>
         <button class="pos-btn" onclick="setPos('G',this)">Gard</button>
+        <button class="pos-btn pos-btn-priority" onclick="setPos('PRIORITY',this)" title="Meilleurs joueurs disponibles par pts pool, toutes positions">⭐ Priorité</button>
       </div>
     </div>
     <div class="player-list" id="playerList"><div class="loading-wrap">Chargement…</div></div>
@@ -575,19 +579,27 @@ function renderPool() {
   const suggIds = new Set(suggestions.map(p => p.id));
 
   let list = allPlayers.filter(p => {
-    if (posFilter !== 'ALL' && POS_GROUP(p) !== posFilter) return false;
+    if (posFilter !== 'ALL' && posFilter !== 'PRIORITY' && POS_GROUP(p) !== posFilter) return false;
     if (myTeamIds.has(p.id)) return false;
     if (draftedIds.has(p.id)) return false;
     if (q && !p.name.toLowerCase().includes(q) && !p.team.toLowerCase().includes(q)) return false;
     return true;
   });
 
-  list.sort((a, b) => {
-    const rankA = suggIds.has(a.id) ? 0 : 1;
-    const rankB = suggIds.has(b.id) ? 0 : 1;
-    if (rankA !== rankB) return rankA - rankB;
-    return calcPoolPts(b) - calcPoolPts(a);
-  });
+  if (posFilter === 'PRIORITY') {
+    list.sort((a, b) => {
+      const scoreA = parseFloat(a.aav) > 0 ? calcPoolPts(a) / Math.sqrt(parseFloat(a.aav)) : 0;
+      const scoreB = parseFloat(b.aav) > 0 ? calcPoolPts(b) / Math.sqrt(parseFloat(b.aav)) : 0;
+      return scoreB - scoreA;
+    });
+  } else {
+    list.sort((a, b) => {
+      const rankA = suggIds.has(a.id) ? 0 : 1;
+      const rankB = suggIds.has(b.id) ? 0 : 1;
+      if (rankA !== rankB) return rankA - rankB;
+      return calcPoolPts(b) - calcPoolPts(a);
+    });
+  }
 
   if (!list.length) {
     document.getElementById('playerList').innerHTML = `<div class="empty-state">Aucun joueur trouvé</div>`;
@@ -608,7 +620,9 @@ function renderPool() {
     const pts = p.proj_pts != null ? `${calcPoolPts(p)}` : '—';
     const grp = POS_GROUP(p) || '';
     const posBadge = `<span class="pos-badge ${grp}">${p.pos}</span>`;
-    const suggTag = isSugg && !isMyTeam ? `<span class="suggest-tag">✨ Suggéré</span>` : '';
+    const suggTag = isSugg && !isMyTeam && posFilter !== 'PRIORITY' ? `<span class="suggest-tag">✨ Suggéré</span>` : '';
+    const valueTag = posFilter === 'PRIORITY' && parseFloat(p.aav) > 0
+      ? `<span class="value-tag">${(calcPoolPts(p) / Math.sqrt(parseFloat(p.aav))).toFixed(1)} val</span>` : '';
 
     return `<div class="${rowCls}">
       <img class="player-logo" src="https://assets.nhle.com/logos/nhl/svg/${p.team}_light.svg" alt="${p.team}" loading="lazy">
@@ -618,7 +632,7 @@ function renderPool() {
       </div>
       <div class="player-pts">${pts} pts</div>
       <div class="player-aav">${aav}</div>
-      ${suggTag}
+      ${suggTag}${valueTag}
       <div class="player-actions">
         <button class="btn-myteam${isMyTeam ? ' active' : ''}" onclick="toggleMyTeam(${p.id})" title="Mon équipe">✓</button>
         <button class="btn-raye${isDrafted && !isMyTeam ? ' active' : ''}" onclick="toggleDrafted(${p.id})" title="Rayé" ${isMyTeam ? 'disabled' : ''}>✕</button>
