@@ -113,7 +113,12 @@ td.dim { color: #94a3b8; }
 .tab { padding: 7px 16px; border-radius: 9px; font-size: 0.82em; font-weight: 700; color: #64748b; cursor: pointer; transition: all 0.15s; border: none; background: none; }
 .tab.active { background: #f0fdf4; color: #166534; }
 
-/* ── EMPTY ── */
+/* ── COPY LINK BUTTON ── */
+.copy-link { display: none; background: none; border: none; cursor: pointer; padding: 2px 4px; border-radius: 4px; color: #94a3b8; font-size: 0.78em; vertical-align: middle; }
+.copy-link:hover { color: #2d8a3e; }
+tr:hover .copy-link { display: inline-block; }
+.copy-toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #0f172a; color: white; font-size: 0.82em; font-weight: 700; padding: 8px 16px; border-radius: 8px; z-index: 9999; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+.copy-toast.show { opacity: 1; }
 .empty-state { text-align: center; padding: 60px 20px; color: #94a3b8; }
 .empty-icon { font-size: 2.5em; margin-bottom: 12px; }
 .empty-title { font-size: 1em; font-weight: 700; color: #64748b; margin-bottom: 6px; }
@@ -225,13 +230,17 @@ td.dim { color: #94a3b8; }
     </table>
   </div>
 
+  <div class='copy-toast' id='copyToast'>🔗 Lien copié !</div>
+
 </div>
 
 <script>
 // ── AUTH ────────────────────────────────────────────────────
 const IS_DEMO = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+// ?public=1 gives read-only access without email login (for podcast hosts, sharing links, etc.)
+const IS_PUBLIC = new URLSearchParams(location.search).get('public') === '1';
 async function checkAuth() {
-  if (IS_DEMO) return;
+  if (IS_DEMO || IS_PUBLIC) return;
   const pwToken = localStorage.getItem('pool_pw_token');
   if (pwToken) {
     try {
@@ -422,22 +431,21 @@ function renderTable() {
       const progressPct = Math.min(p.pace != null ? (p.pace / p.proj_pts * 100) : 100, 150);
       const fillClass = p.ecartPct >= 10 ? 'over' : p.ecartPct <= -10 ? 'under' : 'on';
       const ecartSign = p.ecart > 0 ? '+' : '';
-      return `<tr>
+      const mjLabel = p.live_gp != null ? `${p.live_gp} MJ` : '';
+      return `<tr data-name='${p.name.toLowerCase()}'>
         <td style='width:28px;color:#94a3b8;font-size:0.78em;font-weight:700'>${i+1}</td>
         <td>
           <div class='player-cell'>
             <img class='player-photo' src='https://assets.nhle.com/mugs/nhl/20262027/${p.team}/${p.nhl_id}.png' alt='${p.name}' onerror="this.style.display='none'">
             <div>
-              <div class='player-name'>${p.name}</div>
-              <div class='player-meta'><span class='team-tag'>${p.team}</span> <span class='pos-tag pos-${p.pos}'>${p.pos}</span></div>
+              <div class='player-name'>${p.name} <button class='copy-link' onclick='copyPlayerLink("${p.name.replace(/"/g,"&quot;")}")' title='Copier le lien'>🔗</button></div>
+              <div class='player-meta'><span class='team-tag'>${p.team}</span> <span class='pos-tag pos-${p.pos}'>${p.pos}</span>${mjLabel ? ` <span style='color:#94a3b8;font-size:0.78em;font-weight:600'>${mjLabel}</span>` : ''}</div>
             </div>
           </div>
         </td>
-        <td class='num hide-mobile'>${p.live_gp}</td>
-        <td class='num'>${p.live_pts}<span style='font-size:0.78em;color:#94a3b8'> (${p.live_g}G ${p.live_a}A)</span></td>
-        <td class='num hide-mobile'>${p.proj_pts}</td>
-        <td class='num'>${p.pace ?? '—'}</td>
-        <td>
+        <td class='num'>${p.live_pts != null ? p.live_pts : '—'}<span style='font-size:0.78em;color:#94a3b8'> (${p.live_g ?? '—'}G ${p.live_a ?? '—'}A)</span></td>
+        <td class='num'><span style='font-weight:800;color:#0f172a'>${p.pace ?? '—'}</span><span style='color:#94a3b8;font-weight:500'> / ${p.proj_pts}</span></td>
+        <td class='hide-mobile'>
           <div class='progress-wrap'>
             <div class='progress-track'><div class='progress-fill ${fillClass}' style='width:${Math.min(progressPct, 100)}%'></div></div>
             <span class='progress-lbl'>${progressPct.toFixed(0)}%</span>
@@ -452,22 +460,21 @@ function renderTable() {
       const progressPct = Math.min(p.pace != null ? (p.pace / p.proj_g * 100) : 100, 150);
       const fillClass = p.ecartPct >= 10 ? 'over' : p.ecartPct <= -10 ? 'under' : 'on';
       const ecartSign = p.ecart > 0 ? '+' : '';
-      return `<tr>
+      const mjLabel = p.live_gp != null ? `${p.live_gp} MJ` : '';
+      return `<tr data-name='${p.name.toLowerCase()}'>
         <td style='width:28px;color:#94a3b8;font-size:0.78em;font-weight:700'>${i+1}</td>
         <td>
           <div class='player-cell'>
             <img class='player-photo' src='https://assets.nhle.com/mugs/nhl/20262027/${p.team}/${p.nhl_id}.png' alt='${p.name}' onerror="this.style.display='none'">
             <div>
-              <div class='player-name'>${p.name}</div>
-              <div class='player-meta'><span class='team-tag'>${p.team}</span> <span class='pos-tag pos-G'>G</span></div>
+              <div class='player-name'>${p.name} <button class='copy-link' onclick='copyPlayerLink("${p.name.replace(/"/g,"&quot;")}")' title='Copier le lien'>🔗</button></div>
+              <div class='player-meta'><span class='team-tag'>${p.team}</span> <span class='pos-tag pos-G'>G</span>${mjLabel ? ` <span style='color:#94a3b8;font-size:0.78em;font-weight:600'>${mjLabel}</span>` : ''}</div>
             </div>
           </div>
         </td>
-        <td class='num hide-mobile'>${p.live_gp}</td>
-        <td class='num'>${p.live_g}V<span style='font-size:0.78em;color:#94a3b8'> · ${p.live_gaa} GAA · .${String(Math.round(p.live_svp*1000)).padStart(3,'0')} SV%</span></td>
-        <td class='num hide-mobile'>${p.proj_g}V</td>
-        <td class='num'>${p.pace ?? '—'}V</td>
-        <td>
+        <td class='num'>${p.live_g != null ? p.live_g + 'V' : '—'}<span style='font-size:0.78em;color:#94a3b8'> · ${p.live_gaa ?? '—'} GAA · .${p.live_svp != null ? String(Math.round(p.live_svp*1000)).padStart(3,'0') : '—'} SV%</span></td>
+        <td class='num'><span style='font-weight:800;color:#0f172a'>${p.pace ?? '—'}V</span><span style='color:#94a3b8;font-weight:500'> / ${p.proj_g}V</span></td>
+        <td class='hide-mobile'>
           <div class='progress-wrap'>
             <div class='progress-track'><div class='progress-fill ${fillClass}' style='width:${Math.min(progressPct, 100)}%'></div></div>
             <span class='progress-lbl'>${progressPct.toFixed(0)}%</span>
@@ -484,26 +491,22 @@ function renderThead() {
   const thead = document.getElementById('suiviThead');
   const cols = currentTab === 'skaters'
     ? [
-        { key: null,       label: '#',        cls: '' },
-        { key: 'name',     label: 'Joueur',   cls: '' },
-        { key: 'live_gp',  label: 'MJ',       cls: 'hide-mobile' },
-        { key: 'live_pts', label: 'PTS réels',cls: '' },
-        { key: 'proj_pts', label: 'Proj',     cls: 'hide-mobile' },
-        { key: 'pace',     label: 'Rythme',   cls: '' },
-        { key: 'ecartPct', label: 'Pace %',   cls: '' },
-        { key: 'ecart',    label: 'Écart',    cls: '' },
-        { key: 'statut',   label: 'Statut',   cls: 'hide-mobile' },
+        { key: null,       label: '#',           cls: '' },
+        { key: 'name',     label: 'Joueur',      cls: '' },
+        { key: 'live_pts', label: 'PTS réels',   cls: '' },
+        { key: 'pace',     label: 'Rythme / Proj', cls: '' },
+        { key: 'ecartPct', label: 'Pace %',      cls: 'hide-mobile' },
+        { key: 'ecart',    label: 'Écart',       cls: '' },
+        { key: 'statut',   label: 'Statut',      cls: 'hide-mobile' },
       ]
     : [
-        { key: null,       label: '#',        cls: '' },
-        { key: 'name',     label: 'Gardien',  cls: '' },
-        { key: 'live_gp',  label: 'MJ',       cls: 'hide-mobile' },
-        { key: 'live_g',   label: 'V réelles',cls: '' },
-        { key: 'proj_g',   label: 'Proj V',   cls: 'hide-mobile' },
-        { key: 'pace',     label: 'Rythme V', cls: '' },
-        { key: 'ecartPct', label: 'Pace %',   cls: '' },
-        { key: 'ecart',    label: 'Écart',    cls: '' },
-        { key: 'statut',   label: 'Statut',   cls: 'hide-mobile' },
+        { key: null,       label: '#',           cls: '' },
+        { key: 'name',     label: 'Gardien',     cls: '' },
+        { key: 'live_g',   label: 'V réelles',   cls: '' },
+        { key: 'pace',     label: 'Rythme / Proj', cls: '' },
+        { key: 'ecartPct', label: 'Pace %',      cls: 'hide-mobile' },
+        { key: 'ecart',    label: 'Écart',       cls: '' },
+        { key: 'statut',   label: 'Statut',      cls: 'hide-mobile' },
       ];
 
   thead.innerHTML = `<tr>${cols.map(c => {
@@ -526,9 +529,18 @@ function switchTab(tab, btn) {
   if (btn) btn.classList.add('active');
   const posFilter = document.getElementById('posFilter');
   if (posFilter) posFilter.style.display = tab === 'skaters' ? '' : 'none';
-  sortCol = 'ecart'; sortDir = 'desc';
+  // Keep sort preference; default to ecart on first load only (set in init)
   renderThead();
   renderTable();
+}
+
+function copyPlayerLink(name) {
+  const url = `${location.origin}/suivi/?public=1&joueur=${encodeURIComponent(name)}`;
+  navigator.clipboard.writeText(url).then(() => {
+    const toast = document.getElementById('copyToast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  });
 }
 
 function applyFilters() {
@@ -618,6 +630,19 @@ async function init() {
 
   renderThead();
   renderTable();
+
+  // ── URL PARAMS (?joueur=McDavid, ?public=1) ──────────────────
+  const params = new URLSearchParams(location.search);
+  const joueurParam = params.get('joueur');
+  if (joueurParam) {
+    const input = document.getElementById('searchInput');
+    if (input) { input.value = joueurParam; searchQ = joueurParam; renderTable(); }
+    // Scroll to first matching row after render
+    setTimeout(() => {
+      const row = document.querySelector(`#suiviTbody tr[data-name*='${joueurParam.toLowerCase()}']`);
+      if (row) row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  }
 }
 
 init();
