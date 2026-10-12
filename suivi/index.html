@@ -100,14 +100,11 @@ td.dim { color: #94a3b8; }
 .statut-warn { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
 .statut-cold { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
 
-/* ── PROGRESS BAR — desktop only, compact ── */
-.progress-wrap { display: flex; align-items: center; gap: 6px; }
-.progress-track { flex: 1; height: 5px; background: #f1f5f9; border-radius: 99px; overflow: hidden; min-width: 48px; }
-.progress-fill { height: 100%; border-radius: 99px; }
-.progress-fill.over { background: linear-gradient(90deg, #2d8a3e, #4ade80); }
-.progress-fill.under { background: linear-gradient(90deg, #ef4444, #fca5a5); }
-.progress-fill.on { background: linear-gradient(90deg, #3b82f6, #93c5fd); }
-.progress-lbl { font-size: 0.72em; font-weight: 700; color: #94a3b8; white-space: nowrap; min-width: 28px; text-align: right; }
+/* ── PACE PCT BADGE ── */
+.pace-pct { font-size: 0.72em; font-weight: 700; padding: 1px 5px; border-radius: 4px; margin-left: 4px; }
+.pace-pct.over { background: #dcfce7; color: #15803d; }
+.pace-pct.under { background: #fee2e2; color: #dc2626; }
+.pace-pct.on { background: #eff6ff; color: #1d4ed8; }
 
 /* ── TABS ── */
 .tabs { display: flex; gap: 4px; background: white; border-radius: 12px; border: 1px solid #e2e8f0; padding: 4px; margin-bottom: 16px; width: fit-content; }
@@ -434,8 +431,12 @@ function renderTable() {
       const ecartSign = p.ecart > 0 ? '+' : '';
       const mjLabel = p.live_gp != null ? `${p.live_gp} MJ` : '';
       const noData = p.live_gp === 0 || p.live_gp == null;
+      const pctVal = p.ecartPct != null ? Math.round(p.ecartPct) : null;
+      const pctSign = pctVal > 0 ? '+' : '';
+      const pctCls = p.ecartPct >= 10 ? 'over' : p.ecartPct <= -10 ? 'under' : 'on';
+      const pctBadge = pctVal != null && !noData ? `<span class='pace-pct ${pctCls}'>${pctSign}${pctVal}%</span>` : '';
       const ptsCell = noData ? '—' : `${p.live_pts ?? '—'}<span style='font-size:0.78em;color:#94a3b8'> (${p.live_g ?? '—'}G ${p.live_a ?? '—'}A)</span>`;
-      const rythmeCell = noData ? `<span style='color:#94a3b8'>—</span><span style='color:#cbd5e1;font-weight:500'> / ${p.proj_pts}</span>` : `<span style='font-weight:800;color:#0f172a'>${p.pace ?? '—'}</span><span style='color:#94a3b8;font-weight:500'> / ${p.proj_pts}</span>`;
+      const rythmeCell = noData ? `<span style='color:#94a3b8'>—</span><span style='color:#cbd5e1;font-weight:500'> / ${p.proj_pts}</span>` : `<span style='font-weight:800;color:#0f172a'>${p.pace ?? '—'}</span><span style='color:#94a3b8;font-weight:500'> / ${p.proj_pts}</span>${pctBadge}`;
       return `<tr data-name='${p.name.toLowerCase()}'>
         <td style='width:28px;color:#94a3b8;font-size:0.78em;font-weight:700'>${i+1}</td>
         <td>
@@ -448,8 +449,8 @@ function renderTable() {
           </div>
         </td>
         <td class='num'>${ptsCell}</td>
-        <td class='num hide-mobile'>${rythmeCell}</td>
-        <td><span class='ecart ${ecartClass(p.ecart)}'>${p.ecart != null ? ecartSign + p.ecart + ' pts' : '—'}</span></td>
+        <td class='num'>${rythmeCell}</td>
+        <td class='hide-mobile'><span class='ecart ${ecartClass(p.ecart)}'>${p.ecart != null ? ecartSign + p.ecart + ' pts' : '—'}</span></td>
         <td><span class='statut ${statutClass(p.statut)}'>${statutLabel(p.statut)}</span></td>
       </tr>`;
     }).join('');
@@ -460,9 +461,13 @@ function renderTable() {
       const ecartSign = p.ecart > 0 ? '+' : '';
       const mjLabel = p.live_gp != null ? `${p.live_gp} MJ` : '';
       const noData = p.live_gp === 0 || p.live_gp == null;
+      const pctVal = p.ecartPct != null ? Math.round(p.ecartPct) : null;
+      const pctSign = pctVal > 0 ? '+' : '';
+      const pctCls = p.ecartPct >= 10 ? 'over' : p.ecartPct <= -10 ? 'under' : 'on';
+      const pctBadge = pctVal != null && !noData ? `<span class='pace-pct ${pctCls}'>${pctSign}${pctVal}%</span>` : '';
       const svpFmt = p.live_svp != null ? `.${String(Math.round(p.live_svp*1000)).padStart(3,'0')}` : '—';
       const vCell = noData ? '—' : `${p.live_g ?? '—'}V<span style='font-size:0.78em;color:#94a3b8'> · ${p.live_gaa ?? '—'} GAA · ${svpFmt} SV%</span>`;
-      const rythmeCell = noData ? `<span style='color:#94a3b8'>—</span><span style='color:#cbd5e1;font-weight:500'> / ${p.proj_g}V</span>` : `<span style='font-weight:800;color:#0f172a'>${p.pace ?? '—'}V</span><span style='color:#94a3b8;font-weight:500'> / ${p.proj_g}V</span>`;
+      const rythmeCell = noData ? `<span style='color:#94a3b8'>—</span><span style='color:#cbd5e1;font-weight:500'> / ${p.proj_g}V</span>` : `<span style='font-weight:800;color:#0f172a'>${p.pace ?? '—'}V</span><span style='color:#94a3b8;font-weight:500'> / ${p.proj_g}V</span>${pctBadge}`;
       return `<tr data-name='${p.name.toLowerCase()}'>
         <td style='width:28px;color:#94a3b8;font-size:0.78em;font-weight:700'>${i+1}</td>
         <td>
@@ -475,8 +480,8 @@ function renderTable() {
           </div>
         </td>
         <td class='num'>${vCell}</td>
-        <td class='num hide-mobile'>${rythmeCell}</td>
-        <td><span class='ecart ${ecartClass(p.ecart)}'>${p.ecart != null ? ecartSign + p.ecart + 'V' : '—'}</span></td>
+        <td class='num'>${rythmeCell}</td>
+        <td class='hide-mobile'><span class='ecart ${ecartClass(p.ecart)}'>${p.ecart != null ? ecartSign + p.ecart + 'V' : '—'}</span></td>
         <td><span class='statut ${statutClass(p.statut)}'>${statutLabel(p.statut)}</span></td>
       </tr>`;
     }).join('');
@@ -490,16 +495,16 @@ function renderThead() {
         { key: null,       label: '#',             cls: '' },
         { key: 'name',     label: 'Joueur',        cls: '' },
         { key: 'live_pts', label: 'PTS réels',     cls: '' },
-        { key: 'pace',     label: 'Rythme / Proj', cls: 'hide-mobile' },
-        { key: 'ecart',    label: 'Écart',         cls: '' },
+        { key: 'pace',     label: 'Rythme / Proj', cls: '' },
+        { key: 'ecart',    label: 'Écart',         cls: 'hide-mobile' },
         { key: 'statut',   label: 'Statut',        cls: '' },
       ]
     : [
         { key: null,       label: '#',             cls: '' },
         { key: 'name',     label: 'Gardien',       cls: '' },
         { key: 'live_g',   label: 'V réelles',     cls: '' },
-        { key: 'pace',     label: 'Rythme / Proj', cls: 'hide-mobile' },
-        { key: 'ecart',    label: 'Écart',         cls: '' },
+        { key: 'pace',     label: 'Rythme / Proj', cls: '' },
+        { key: 'ecart',    label: 'Écart',         cls: 'hide-mobile' },
         { key: 'statut',   label: 'Statut',        cls: '' },
       ];
 
