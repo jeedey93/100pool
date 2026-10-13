@@ -530,18 +530,18 @@ function renderThead() {
     ? [
         { key: null,       label: '#',             cls: '' },
         { key: 'name',     label: 'Joueur',        cls: '' },
-        { key: 'live_pts', label: '<span class="th-desktop">PTS réels</span><span class="th-mobile">PTS</span>', cls: '' },
+        { key: 'live_pts', label: '<span class="th-desktop">PTS réels</span>', cls: '' },
         { key: 'pace',     label: 'Rythme / Proj', cls: '' },
         { key: 'ecart',    label: 'Écart',         cls: 'hide-mobile' },
-        { key: 'statut',   label: '<span class="th-desktop">Statut</span><span class="th-mobile">État</span>', cls: '' },
+        { key: 'statut',   label: '<span class="th-desktop">Statut</span><span class="th-mobile">—</span>', cls: '' },
       ]
     : [
         { key: null,       label: '#',             cls: '' },
         { key: 'name',     label: 'Gardien',       cls: '' },
-        { key: 'live_g',   label: '<span class="th-desktop">V réelles</span><span class="th-mobile">V</span>', cls: '' },
+        { key: 'live_g',   label: '<span class="th-desktop">V réelles</span>', cls: '' },
         { key: 'pace',     label: 'Rythme / Proj', cls: '' },
         { key: 'ecart',    label: 'Écart',         cls: 'hide-mobile' },
-        { key: 'statut',   label: '<span class="th-desktop">Statut</span><span class="th-mobile">État</span>', cls: '' },
+        { key: 'statut',   label: '<span class="th-desktop">Statut</span><span class="th-mobile">—</span>', cls: '' },
       ];
 
   thead.innerHTML = `<tr>${cols.map(c => {
