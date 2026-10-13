@@ -140,15 +140,22 @@ tr:hover .copy-link { display: inline-block; }
 
 /* ── MOBILE ── */
 @media (max-width: 768px) {
-  .page-wrap { padding: 16px 12px 80px; }
+  .page-wrap { padding: 16px 10px 80px; }
   .summary-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .suivi-table { font-size: 0.78em; }
-  .suivi-table td, .suivi-table th { padding: 8px 8px; }
-  .player-photo { width: 28px; height: 28px; }
+  .suivi-table { font-size: 0.8em; table-layout: fixed; width: 100%; }
+  .suivi-table td, .suivi-table th { padding: 9px 5px; }
+  .suivi-table td:first-child, .suivi-table th:first-child { width: 24px; padding-left: 6px; padding-right: 2px; }
+  /* Joueur col takes remaining space, clipped */
+  .player-cell { gap: 7px; }
+  .player-photo { width: 28px; height: 28px; flex-shrink: 0; }
+  .player-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
+  .tier-badge { display: none; }
   td.hide-mobile { display: none; }
   th.hide-mobile { display: none; }
   .controls { gap: 6px; }
-  .search-wrap { min-width: 140px; }
+  .search-wrap { min-width: 130px; }
+  .statut { font-size: 0.78em; padding: 3px 6px; }
+  .table-wrap { overflow-x: hidden; }
 }
 </style>
 </head>
@@ -463,7 +470,7 @@ function renderTable() {
           </div>
         </td>
         <td class='num'>${ptsCell}</td>
-        <td class='num'>${rythmeCell}</td>
+        <td class='num hide-mobile'>${rythmeCell}</td>
         <td class='hide-mobile'><span class='ecart ${ecartClass(p.ecart)}'>${p.ecart != null ? ecartSign + p.ecart + ' pts' : '—'}</span></td>
         <td><span class='statut ${statutClass(p.statut)}'>${statutLabel(p.statut)}</span></td>
       </tr>`;
@@ -494,7 +501,7 @@ function renderTable() {
           </div>
         </td>
         <td class='num'>${vCell}</td>
-        <td class='num'>${rythmeCell}</td>
+        <td class='num hide-mobile'>${rythmeCell}</td>
         <td class='hide-mobile'><span class='ecart ${ecartClass(p.ecart)}'>${p.ecart != null ? ecartSign + p.ecart + 'V' : '—'}</span></td>
         <td><span class='statut ${statutClass(p.statut)}'>${statutLabel(p.statut)}</span></td>
       </tr>`;
