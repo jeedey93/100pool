@@ -137,6 +137,9 @@ tr:hover .copy-link { display: inline-block; }
 .countdown-item { background: rgba(255,255,255,0.12); border-radius: 10px; padding: 12px 8px; }
 .countdown-val { font-size: 1.6em; font-weight: 900; }
 .countdown-lbl { font-size: 0.65em; font-weight: 700; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; }
+/* Labels desktop par défaut */
+.th-mobile { display: none; }
+.th-desktop { display: inline; }
 
 /* ── MOBILE ── */
 @media (max-width: 768px) {
@@ -146,7 +149,8 @@ tr:hover .copy-link { display: inline-block; }
   .suivi-table { font-size: 0.82em; table-layout: fixed; width: 100%; }
   .suivi-table td, .suivi-table th { padding: 10px 5px; }
   .suivi-table td:nth-child(1), .suivi-table th:nth-child(1) { width: 22px; padding-left: 6px; padding-right: 2px; }
-  .suivi-table td:nth-child(3), .suivi-table th:nth-child(3) { width: 85px; }
+  .suivi-table td:nth-child(3), .suivi-table th:nth-child(3) { width: 52px; text-align: right; }
+  .suivi-table td:nth-child(6), .suivi-table th:nth-child(6) { width: 34px; text-align: center; padding-right: 4px; }
   /* Cacher td/th hide-mobile ET spans hide-mobile */
   td.hide-mobile, th.hide-mobile, .hide-mobile { display: none; }
   /* Cellule joueur */
@@ -158,6 +162,9 @@ tr:hover .copy-link { display: inline-block; }
   .team-tag, .pos-tag { display: none; }
   /* Statut badge */
   .statut { font-size: 0.75em; padding: 4px 7px; white-space: nowrap; }
+  /* Labels desktop/mobile dans les headers */
+  .th-mobile { display: inline; }
+  .th-desktop { display: none; }
   /* Contrôles */
   .controls { gap: 6px; }
   .search-wrap { min-width: 130px; }
@@ -362,7 +369,9 @@ function getStatut(pct) {
 }
 
 function statutLabel(s) {
-  return { fire: '🔥 En feu', ok: '✅ On track', warn: '⚠️ Attention', cold: '❄️ Décevant' }[s] || '—';
+  const m = { fire: ['🔥', 'En feu'], ok: ['✅', 'On track'], warn: ['⚠️', 'Attention'], cold: ['❄️', 'Décevant'] };
+  if (!m[s]) return '—';
+  return `<span class="th-desktop">${m[s][0]} ${m[s][1]}</span><span class="th-mobile">${m[s][0]}</span>`;
 }
 
 function statutClass(s) {
@@ -521,18 +530,18 @@ function renderThead() {
     ? [
         { key: null,       label: '#',             cls: '' },
         { key: 'name',     label: 'Joueur',        cls: '' },
-        { key: 'live_pts', label: 'PTS réels',     cls: '' },
+        { key: 'live_pts', label: '<span class="th-desktop">PTS réels</span><span class="th-mobile">PTS</span>', cls: '' },
         { key: 'pace',     label: 'Rythme / Proj', cls: '' },
         { key: 'ecart',    label: 'Écart',         cls: 'hide-mobile' },
-        { key: 'statut',   label: 'Statut',        cls: '' },
+        { key: 'statut',   label: '<span class="th-desktop">Statut</span><span class="th-mobile">État</span>', cls: '' },
       ]
     : [
         { key: null,       label: '#',             cls: '' },
         { key: 'name',     label: 'Gardien',       cls: '' },
-        { key: 'live_g',   label: 'V réelles',     cls: '' },
+        { key: 'live_g',   label: '<span class="th-desktop">V réelles</span><span class="th-mobile">V</span>', cls: '' },
         { key: 'pace',     label: 'Rythme / Proj', cls: '' },
         { key: 'ecart',    label: 'Écart',         cls: 'hide-mobile' },
-        { key: 'statut',   label: 'Statut',        cls: '' },
+        { key: 'statut',   label: '<span class="th-desktop">Statut</span><span class="th-mobile">État</span>', cls: '' },
       ];
 
   thead.innerHTML = `<tr>${cols.map(c => {
