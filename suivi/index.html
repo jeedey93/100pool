@@ -142,23 +142,25 @@ tr:hover .copy-link { display: inline-block; }
 @media (max-width: 768px) {
   .page-wrap { padding: 16px 10px 80px; }
   .summary-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .suivi-table { font-size: 0.8em; table-layout: fixed; width: 100%; }
-  .suivi-table td, .suivi-table th { padding: 9px 5px; }
-  /* Colonnes fixes : # | Joueur (flex) | PTS | Statut */
+  /* Table: 3 colonnes seulement — #, Joueur, Statut */
+  .suivi-table { font-size: 0.82em; table-layout: fixed; width: 100%; }
+  .suivi-table td, .suivi-table th { padding: 10px 5px; }
   .suivi-table td:nth-child(1), .suivi-table th:nth-child(1) { width: 22px; padding-left: 6px; padding-right: 2px; }
-  .suivi-table td:nth-child(3), .suivi-table th:nth-child(3) { width: 38px; text-align: right; }
-  .suivi-table td:nth-child(4), .suivi-table th:nth-child(4) { width: 80px; }
-  .player-cell { gap: 7px; overflow: hidden; }
-  .player-photo { width: 28px; height: 28px; flex-shrink: 0; }
-  .player-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+  .suivi-table td:nth-child(3), .suivi-table th:nth-child(3) { width: 85px; }
+  /* Cacher td/th hide-mobile ET spans hide-mobile */
+  td.hide-mobile, th.hide-mobile, .hide-mobile { display: none; }
+  /* Cellule joueur */
+  .player-cell { gap: 8px; overflow: hidden; }
+  .player-photo { width: 32px; height: 32px; flex-shrink: 0; }
+  .player-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; font-size: 0.95em; }
+  .player-meta { font-size: 0.75em; }
   .tier-badge { display: none; }
   .team-tag, .pos-tag { display: none; }
-  .player-meta .mj-label { display: inline; }
-  td.hide-mobile { display: none; }
-  th.hide-mobile { display: none; }
+  /* Statut badge */
+  .statut { font-size: 0.75em; padding: 4px 7px; white-space: nowrap; }
+  /* Contrôles */
   .controls { gap: 6px; }
   .search-wrap { min-width: 130px; }
-  .statut { font-size: 0.72em; padding: 3px 5px; white-space: nowrap; }
   .table-wrap { overflow-x: hidden; }
 }
 </style>
