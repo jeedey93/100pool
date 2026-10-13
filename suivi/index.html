@@ -149,7 +149,8 @@ tr:hover .copy-link { display: inline-block; }
   .player-cell { gap: 7px; }
   .player-photo { width: 28px; height: 28px; flex-shrink: 0; }
   .player-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
-  .tier-badge { display: none; }
+  .team-tag, .pos-tag { display: none; }
+  .player-meta .mj-label { display: inline; }
   td.hide-mobile { display: none; }
   th.hide-mobile { display: none; }
   .controls { gap: 6px; }
@@ -456,7 +457,7 @@ function renderTable() {
       const pctSign = pctVal > 0 ? '+' : '';
       const pctCls = p.ecartPct >= 10 ? 'over' : p.ecartPct <= -10 ? 'under' : 'on';
       const pctBadge = pctVal != null && !noData ? `<span class='pace-pct ${pctCls}'>${pctSign}${pctVal}%</span>` : '';
-      const ptsCell = noData ? '—' : `${p.live_pts ?? '—'}<span style='font-size:0.78em;color:#94a3b8'> (${p.live_g ?? '—'}G ${p.live_a ?? '—'}A)</span>`;
+      const ptsCell = noData ? '—' : `${p.live_pts ?? '—'}<span class='hide-mobile' style='font-size:0.78em;color:#94a3b8'> (${p.live_g ?? '—'}G ${p.live_a ?? '—'}A)</span>`;
       const rythmeCell = noData ? `<span style='color:#94a3b8'>—</span><span style='color:#cbd5e1;font-weight:500'> / ${p.proj_pts}</span>` : `<span style='font-weight:800;color:#0f172a'>${p.pace ?? '—'}</span><span style='color:#94a3b8;font-weight:500'> / ${p.proj_pts}</span>${pctBadge}`;
       return `<tr data-name='${p.name.toLowerCase()}'>
         <td style='width:28px;color:#94a3b8;font-size:0.78em;font-weight:700'>${i+1}</td>
@@ -465,7 +466,7 @@ function renderTable() {
             <img class='player-photo' src='https://assets.nhle.com/mugs/nhl/20262027/${p.team}/${p.nhl_id}.png' alt='${p.name}' onerror="this.style.display='none'">
             <div>
               <div class='player-name'>${p.name} <button class='copy-link' onclick='copyPlayerLink("${p.name.replace(/"/g,"&quot;")}")' title='Copier le lien'>🔗</button></div>
-              <div class='player-meta'><span class='team-tag'>${p.team}</span> <span class='pos-tag pos-${p.pos}'>${p.pos}</span>${mjLabel ? ` <span style='color:#94a3b8;font-size:0.78em;font-weight:600'>${mjLabel}</span>` : ''} ${tierBadge(p.tier)}</div>
+              <div class='player-meta'><span class='team-tag'>${p.team}</span> <span class='pos-tag pos-${p.pos}'>${p.pos}</span>${mjLabel ? ` <span class='mj-label' style='color:#94a3b8;font-size:0.78em;font-weight:600'>${mjLabel}</span>` : ''} ${tierBadge(p.tier)}</div>
             </div>
           </div>
         </td>
@@ -487,7 +488,7 @@ function renderTable() {
       const pctCls = p.ecartPct >= 10 ? 'over' : p.ecartPct <= -10 ? 'under' : 'on';
       const pctBadge = pctVal != null && !noData ? `<span class='pace-pct ${pctCls}'>${pctSign}${pctVal}%</span>` : '';
       const svpFmt = p.live_svp != null ? `.${String(Math.round(p.live_svp*1000)).padStart(3,'0')}` : '—';
-      const vCell = noData ? '—' : `${p.live_g ?? '—'}V<span style='font-size:0.78em;color:#94a3b8'> · ${p.live_gaa ?? '—'} GAA · ${svpFmt} SV%</span>`;
+      const vCell = noData ? '—' : `${p.live_g ?? '—'}V<span class='hide-mobile' style='font-size:0.78em;color:#94a3b8'> · ${p.live_gaa ?? '—'} GAA · ${svpFmt} SV%</span>`;
       const rythmeCell = noData ? `<span style='color:#94a3b8'>—</span><span style='color:#cbd5e1;font-weight:500'> / ${p.proj_g}V</span>` : `<span style='font-weight:800;color:#0f172a'>${p.pace ?? '—'}V</span><span style='color:#94a3b8;font-weight:500'> / ${p.proj_g}V</span>${pctBadge}`;
       return `<tr data-name='${p.name.toLowerCase()}'>
         <td style='width:28px;color:#94a3b8;font-size:0.78em;font-weight:700'>${i+1}</td>
@@ -496,7 +497,7 @@ function renderTable() {
             <img class='player-photo' src='https://assets.nhle.com/mugs/nhl/20262027/${p.team}/${p.nhl_id}.png' alt='${p.name}' onerror="this.style.display='none'">
             <div>
               <div class='player-name'>${p.name} <button class='copy-link' onclick='copyPlayerLink("${p.name.replace(/"/g,"&quot;")}")' title='Copier le lien'>🔗</button></div>
-              <div class='player-meta'><span class='team-tag'>${p.team}</span> <span class='pos-tag pos-G'>G</span>${mjLabel ? ` <span style='color:#94a3b8;font-size:0.78em;font-weight:600'>${mjLabel}</span>` : ''} ${tierBadge(p.tier)}</div>
+              <div class='player-meta'><span class='team-tag'>${p.team}</span> <span class='pos-tag pos-G'>G</span>${mjLabel ? ` <span class='mj-label' style='color:#94a3b8;font-size:0.78em;font-weight:600'>${mjLabel}</span>` : ''} ${tierBadge(p.tier)}</div>
             </div>
           </div>
         </td>
