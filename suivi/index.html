@@ -360,12 +360,14 @@ function calcEcartPct(pace, proj) {
   return (pace - proj) / proj * 100;
 }
 
-function getStatut(pct) {
+function getStatut(pct, ecart, proj) {
   if (pct == null) return null;
-  if (pct >= 20) return 'fire';
+  const thresh = proj ? proj * 0.25 : 6;
+  if (pct >= 20 && ecart >= thresh) return 'fire';
   if (pct >= -15) return 'ok';
+  if (pct >= -20 && ecart >= -thresh) return 'ok';
   if (pct >= -20) return 'warn';
-  return 'cold';
+  return ecart <= -thresh ? 'cold' : 'warn';
 }
 
 function statutLabel(s) {
@@ -397,14 +399,14 @@ function enrichSkater(p) {
   const pace = calcPace(p.live_pts, p.live_gp, p.proj_gp);
   const ecart = calcEcart(pace, p.proj_pts);
   const ecartPct = calcEcartPct(pace, p.proj_pts);
-  return { ...p, pace, ecart, ecartPct, statut: getStatut(ecartPct) };
+  return { ...p, pace, ecart, ecartPct, statut: getStatut(ecartPct, ecart, p.proj_pts) };
 }
 
 function enrichGoalie(p) {
   const pace = calcPace(p.live_g, p.live_gp, p.proj_gp);
   const ecart = calcEcart(pace, p.proj_g);
   const ecartPct = calcEcartPct(pace, p.proj_g);
-  return { ...p, pace, ecart, ecartPct, statut: getStatut(ecartPct) };
+  return { ...p, pace, ecart, ecartPct, statut: getStatut(ecartPct, ecart, p.proj_g) };
 }
 
 // ── RENDER ────────────────────────────────────────────────────
