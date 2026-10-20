@@ -202,19 +202,19 @@ tr:hover .copy-link { display: inline-block; }
   <div class='summary-grid' id='summaryGrid'>
     <div class='summary-card green' onclick='toggleCardFilter("fire")' id='card-fire'>
       <div class='summary-val' id='sum-fire'>—</div>
-      <div class='summary-lbl'>🔥 En feu (+15%)</div>
+      <div class='summary-lbl'>🔥 En feu (+20%)</div>
     </div>
     <div class='summary-card blue' onclick='toggleCardFilter("ok")' id='card-ok'>
       <div class='summary-val' id='sum-ok'>—</div>
-      <div class='summary-lbl'>✅ On track (±10%)</div>
+      <div class='summary-lbl'>✅ On track (±15%)</div>
     </div>
     <div class='summary-card orange' onclick='toggleCardFilter("warn")' id='card-warn'>
       <div class='summary-val' id='sum-warn'>—</div>
-      <div class='summary-lbl'>⚠️ Attention (−10%)</div>
+      <div class='summary-lbl'>⚠️ Attention (−15%)</div>
     </div>
     <div class='summary-card red' onclick='toggleCardFilter("cold")' id='card-cold'>
       <div class='summary-val' id='sum-cold'>—</div>
-      <div class='summary-lbl'>❄️ Décevant (−15%)</div>
+      <div class='summary-lbl'>❄️ Décevant (−20%)</div>
     </div>
   </div>
 
@@ -362,9 +362,9 @@ function calcEcartPct(pace, proj) {
 
 function getStatut(pct) {
   if (pct == null) return null;
-  if (pct >= 15) return 'fire';
-  if (pct >= -10) return 'ok';
-  if (pct >= -15) return 'warn';
+  if (pct >= 20) return 'fire';
+  if (pct >= -15) return 'ok';
+  if (pct >= -20) return 'warn';
   return 'cold';
 }
 

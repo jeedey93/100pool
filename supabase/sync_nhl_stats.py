@@ -63,7 +63,7 @@ def fetch_nhl_stats(nhl_id, pos):
             return None
         data = r.json()
         for s in data.get("seasonTotals", []):
-            if s.get("season") == SEASON and s.get("gameTypeId") == GAME_TYPE:
+            if s.get("season") == SEASON and s.get("gameTypeId") == GAME_TYPE and s.get("leagueAbbrev") == "NHL":
                 if pos == "G":
                     return {
                         "nhl_id": str(nhl_id),
