@@ -3031,44 +3031,68 @@ async function loadNhlHistory(nhlId, pos, projRow) {
     } catch {}
   }
 
+  // Pace & statut (same logic as suivi page)
+  let pace = null, ecartPct = null, statut = null;
+  if (cur) {
+    const liveVal = isG ? cur.w : cur.pts;
+    const projVal = isG ? projRow.proj_g : projRow.proj_pts;
+    const projGp   = projRow.proj_gp || 82;
+    if (cur.gp && projVal) {
+      pace = Math.round(liveVal / cur.gp * projGp);
+      ecartPct = (pace - projVal) / projVal * 100;
+      const ecart = pace - projVal;
+      const thresh = projVal * 0.25;
+      if (ecartPct >= 20 && ecart >= thresh)         statut = 'fire';
+      else if (ecartPct >= -15)                       statut = 'ok';
+      else if (ecartPct >= -20 && ecart >= -thresh)   statut = 'ok';
+      else if (ecartPct >= -20)                       statut = 'warn';
+      else statut = ecart <= -thresh ? 'cold' : 'warn';
+    }
+  }
+
   const curRow = cur
     ? (isG
         ? `<tr class='cur-row'><td>2026-27 réel</td><td>${projRow.team}</td><td>${cur.gp}</td><td>${cur.w}</td><td>${cur.gaa??'—'}</td><td>${cur.svp??'—'}</td><td>${cur.so}</td></tr>`
         : `<tr class='cur-row'><td>2026-27 réel</td><td>${projRow.team}</td><td>${cur.gp}</td><td>${cur.g}</td><td>${cur.a}</td><td>${cur.pts}</td><td>${cur.ppg}</td></tr>`)
     : '';
 
+  let tableHtml;
   if (!history || !history.length) {
     if (isG) {
-      return `<table class='modal-history-table'>
+      tableHtml = `<table class='modal-history-table'>
         <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>V</th><th>GAA</th><th>SV%</th><th>SO</th></tr>
         ${curRow}
         <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>—</td><td>—</td><td>—</td></tr>
       </table>`;
+    } else {
+      tableHtml = `<table class='modal-history-table'>
+        <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>B</th><th>A</th><th>PTS</th><th>PPG</th></tr>
+        ${curRow}
+        <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>${projRow.proj_a??'—'}</td><td>${projRow.proj_pts??'—'}</td><td>${ppg(projRow.proj_pts,projRow.proj_gp)}</td></tr>
+      </table>`;
     }
-    return `<table class='modal-history-table'>
-      <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>B</th><th>A</th><th>PTS</th><th>PPG</th></tr>
-      ${curRow}
-      <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>${projRow.proj_a??'—'}</td><td>${projRow.proj_pts??'—'}</td><td>${ppg(projRow.proj_pts,projRow.proj_gp)}</td></tr>
-    </table>`;
+  } else {
+    // Skaters stored newest-first, goalies oldest-first — normalize to oldest-first for display
+    const sorted = isG ? [...history] : [...history].reverse();
+    if (isG) {
+      const histRows = sorted.map(s => `<tr><td>${s.season}</td><td>${s.team??'—'}</td><td>${s.gp??'—'}</td><td>${s.w??'—'}</td><td>${s.gaa??'—'}</td><td>${s.svp??'—'}</td><td>${s.so??'—'}</td></tr>`).join('');
+      tableHtml = `<table class='modal-history-table'>
+        <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>V</th><th>GAA</th><th>SV%</th><th>SO</th></tr>
+        ${histRows}
+        ${curRow}
+        <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>—</td><td>—</td><td>—</td></tr>
+      </table>`;
+    } else {
+      tableHtml = `<table class='modal-history-table'>
+        <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>B</th><th>A</th><th>PTS</th><th>PPG</th></tr>
+        ${sorted.map(s => `<tr><td>${s.season}</td><td>${s.team}</td><td>${s.gp??'—'}</td><td>${s.g??'—'}</td><td>${s.a??'—'}</td><td>${s.pts??'—'}</td><td>${s.ppg??'—'}</td></tr>`).join('')}
+        ${curRow}
+        <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>${projRow.proj_a??'—'}</td><td>${projRow.proj_pts??'—'}</td><td>${ppg(projRow.proj_pts,projRow.proj_gp)}</td></tr>
+      </table>`;
+    }
   }
 
-  // Skaters stored newest-first, goalies oldest-first — normalize to oldest-first for display
-  const sorted = isG ? [...history] : [...history].reverse();
-  if (isG) {
-    const histRows = sorted.map(s => `<tr><td>${s.season}</td><td>${s.team??'—'}</td><td>${s.gp??'—'}</td><td>${s.w??'—'}</td><td>${s.gaa??'—'}</td><td>${s.svp??'—'}</td><td>${s.so??'—'}</td></tr>`).join('');
-    return `<table class='modal-history-table'>
-      <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>V</th><th>GAA</th><th>SV%</th><th>SO</th></tr>
-      ${histRows}
-      ${curRow}
-      <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>—</td><td>—</td><td>—</td></tr>
-    </table>`;
-  }
-  return `<table class='modal-history-table'>
-    <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>B</th><th>A</th><th>PTS</th><th>PPG</th></tr>
-    ${sorted.map(s => `<tr><td>${s.season}</td><td>${s.team}</td><td>${s.gp??'—'}</td><td>${s.g??'—'}</td><td>${s.a??'—'}</td><td>${s.pts??'—'}</td><td>${s.ppg??'—'}</td></tr>`).join('')}
-    ${curRow}
-    <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>${projRow.proj_a??'—'}</td><td>${projRow.proj_pts??'—'}</td><td>${ppg(projRow.proj_pts,projRow.proj_gp)}</td></tr>
-  </table>`;
+  return { html: tableHtml, statut, pace, ecartPct };
 }
 
 function openModal(id) {
@@ -3149,6 +3173,7 @@ function openModal(id) {
 
   // History placeholder
   document.getElementById('modalHistory').innerHTML = '<div class="modal-history-loading">Chargement…</div>';
+  document.getElementById('modalStatutBadge')?.remove();
 
   // Stats rapides
   const isG = p.pos === 'G';
@@ -3284,8 +3309,25 @@ function openModal(id) {
   }
 
   const nhlId = p.nhl_id;
-  loadNhlHistory(nhlId, p.pos, p).then(html => {
+  loadNhlHistory(nhlId, p.pos, p).then(({ html, statut, pace, ecartPct }) => {
     document.getElementById('modalHistory').innerHTML = html;
+    if (statut) {
+      const statutMeta = {
+        fire: { emoji: '🔥', label: 'En feu',   bg: '#fef9c3', color: '#b45309', border: '#fde68a' },
+        ok:   { emoji: '✅', label: 'On track',  bg: '#f0fdf4', color: '#15803d', border: '#86efac' },
+        warn: { emoji: '⚠️', label: 'Attention', bg: '#fff7ed', color: '#c2410c', border: '#fed7aa' },
+        cold: { emoji: '❄️', label: 'Décevant',  bg: '#eff6ff', color: '#1d4ed8', border: '#bfdbfe' },
+      }[statut];
+      const pctSign = ecartPct > 0 ? '+' : '';
+      const pctStr  = `${pctSign}${Math.round(ecartPct)}%`;
+      const paceStr = pace != null ? ` · rythme ${pace} pts/82` : '';
+      const badge = `<div style='display:inline-flex;align-items:center;gap:7px;background:${statutMeta.bg};border:1.5px solid ${statutMeta.border};border-radius:10px;padding:8px 14px;margin-top:10px;font-size:0.85em;font-weight:700;color:${statutMeta.color}'>
+        <span style='font-size:1.15em'>${statutMeta.emoji}</span>
+        <span>${statutMeta.label}</span>
+        <span style='font-weight:500;opacity:0.8'>${pctStr}${paceStr}</span>
+      </div>`;
+      document.getElementById('modalHistory').insertAdjacentHTML('afterend', `<div id='modalStatutBadge'>${badge}</div>`);
+    }
   });
 
   // Projection changes history
