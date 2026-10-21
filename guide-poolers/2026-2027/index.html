@@ -412,6 +412,9 @@ tr.drafted { background: #f8f9fa !important; }
 .modal-history-table tr.cur-row td { background: #eff6ff; color: #1d4ed8; font-weight: 700; }
 .modal-history-table tr.cur-row td:first-child { border-radius: 6px 0 0 6px; color: #1d4ed8; }
 .modal-history-table tr.cur-row td:last-child { border-radius: 0 6px 6px 0; }
+.modal-history-table tr.pace-row td { background: #f5f3ff; color: #6d28d9; font-weight: 700; font-style: italic; }
+.modal-history-table tr.pace-row td:first-child { border-radius: 6px 0 0 6px; }
+.modal-history-table tr.pace-row td:last-child { border-radius: 0 6px 6px 0; }
 .modal-history-loading { text-align: center; color: #94a3b8; font-size: 0.82em; padding: 16px; }
 .proj-change-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
 .proj-change-row:last-child { border-bottom: none; }
@@ -3047,18 +3050,32 @@ async function loadNhlHistory(nhlId, pos, projRow) {
         : `<tr class='cur-row'><td>2026-27 réel</td><td>${projRow.team}</td><td>${cur.gp}</td><td>${cur.g}</td><td>${cur.a}</td><td>${cur.pts}</td><td>${cur.ppg}</td></tr>`)
     : '';
 
+  const paceGp = 84;
+  const paceRow = (cur && pace != null)
+    ? (isG
+        ? `<tr class='pace-row'><td>Pace ${paceGp} PJ</td><td>${projRow.team}</td><td>${paceGp}</td><td>${pace}</td><td>—</td><td>—</td><td>—</td></tr>`
+        : (() => {
+            const paceG = cur.gp > 0 ? Math.round(cur.g / cur.gp * paceGp) : '—';
+            const paceA = cur.gp > 0 ? Math.round(cur.a / cur.gp * paceGp) : '—';
+            const pacePpg = cur.gp > 0 ? (pace / paceGp).toFixed(2) : '—';
+            return `<tr class='pace-row'><td>Pace ${paceGp} PJ</td><td>${projRow.team}</td><td>${paceGp}</td><td>${paceG}</td><td>${paceA}</td><td>${pace}</td><td>${pacePpg}</td></tr>`;
+          })())
+    : '';
+
   let tableHtml;
   if (!history || !history.length) {
     if (isG) {
       tableHtml = `<table class='modal-history-table'>
         <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>V</th><th>GAA</th><th>SV%</th><th>SO</th></tr>
         ${curRow}
+        ${paceRow}
         <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>—</td><td>—</td><td>—</td></tr>
       </table>`;
     } else {
       tableHtml = `<table class='modal-history-table'>
         <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>B</th><th>A</th><th>PTS</th><th>PPG</th></tr>
         ${curRow}
+        ${paceRow}
         <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>${projRow.proj_a??'—'}</td><td>${projRow.proj_pts??'—'}</td><td>${ppg(projRow.proj_pts,projRow.proj_gp)}</td></tr>
       </table>`;
     }
@@ -3071,6 +3088,7 @@ async function loadNhlHistory(nhlId, pos, projRow) {
         <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>V</th><th>GAA</th><th>SV%</th><th>SO</th></tr>
         ${histRows}
         ${curRow}
+        ${paceRow}
         <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>—</td><td>—</td><td>—</td></tr>
       </table>`;
     } else {
@@ -3078,6 +3096,7 @@ async function loadNhlHistory(nhlId, pos, projRow) {
         <tr><th>Saison</th><th>Équipe</th><th>PJ</th><th>B</th><th>A</th><th>PTS</th><th>PPG</th></tr>
         ${sorted.map(s => `<tr><td>${s.season}</td><td>${s.team}</td><td>${s.gp??'—'}</td><td>${s.g??'—'}</td><td>${s.a??'—'}</td><td>${s.pts??'—'}</td><td>${s.ppg??'—'}</td></tr>`).join('')}
         ${curRow}
+        ${paceRow}
         <tr class='proj-row'><td>2026-27 proj</td><td>${projRow.team}</td><td>${projRow.proj_gp??'—'}</td><td>${projRow.proj_g??'—'}</td><td>${projRow.proj_a??'—'}</td><td>${projRow.proj_pts??'—'}</td><td>${ppg(projRow.proj_pts,projRow.proj_gp)}</td></tr>
       </table>`;
     }
@@ -3137,7 +3156,7 @@ function openModal(id) {
     : (p.bandaid ? `<span class='bust' style='background:#fff7ed;color:#c2410c;border-color:#fed7aa'>🩹 Blessure</span>` : '');
   const badges = [
     `<span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span>`,
-    p.risk ? `<span class='risk risk-${p.risk}'>${p.risk === 'Low' ? '🟢 Faible' : p.risk === 'Medium' ? '🟡 Moyen' : '🔴 Élevé'}</span>` : '',
+    p.risk ? `<span class='risk risk-${p.risk}'>${p.risk === 'Low' ? '🟢 Risque faible' : p.risk === 'Medium' ? '🟡 Risque moyen' : '🔴 Risque élevé'}</span>` : '',
     injBadge,
     p.bust_alert ? `<span class='bust'>💣 Déception</span>` : '',
   ].filter(Boolean).join('');
@@ -3170,7 +3189,7 @@ function openModal(id) {
   const isG = p.pos === 'G';
   const trend = getTrend(p);
   const trendDiff = p.proj_pts - (p.last_pts ?? p.proj_pts);
-  const trendLabel = trend === 'up' ? `↑ +${trendDiff}` : trend === 'down' ? `↓ ${trendDiff}` : `→ ${trendDiff}`;
+  const trendLabel = trend === 'up' ? `↑ +${trendDiff} pts` : trend === 'down' ? `↓ ${trendDiff} pts` : `→ ${trendDiff} pts`;
   const trendClass = `trend trend-${trend}`;
   const pv = getPV(p);
   const grade = calcGrade(p);
@@ -3179,10 +3198,10 @@ function openModal(id) {
     const projVal = p.proj_pts ?? '—';
     const upsideVal = p.upside ?? null;
     const projCard = upsideVal
-      ? `<div class='modal-stat-card accent'><div class='sc-val'>${projVal}<span style='font-size:0.55em;color:#7c3aed;font-weight:700;margin-left:6px'>↑${upsideVal}</span></div><div class='sc-lbl'>PTS Proj / Plafond</div></div>`
+      ? `<div class='modal-stat-card accent'><div class='sc-val' style='display:flex;align-items:baseline;gap:6px'>${projVal}<span style='color:#7c3aed;font-weight:700'>/ ${upsideVal}</span></div><div class='sc-lbl'>Proj / Plafond</div></div>`
       : `<div class='modal-stat-card accent'><div class='sc-val'>${projVal}</div><div class='sc-lbl'>PTS Proj</div></div>`;
     cards.push(projCard);
-    cards.push(`<div class='modal-stat-card'><div class='sc-val'><span class='${trendClass}' style='font-size:0.85em'>${trendLabel}</span></div><div class='sc-lbl'>Tendance</div></div>`);
+    cards.push(`<div class='modal-stat-card'><div class='sc-val'><span class='${trendClass}' style='font-size:0.85em'>${trendLabel}</span></div><div class='sc-lbl'>vs 2025-26</div></div>`);
   } else {
     const gs = getGoalieStats(p);
     cards.push(`<div class='modal-stat-card accent'><div class='sc-val'>${p.proj_g??'—'}</div><div class='sc-lbl'>V Proj</div></div>`);
@@ -3190,7 +3209,7 @@ function openModal(id) {
     if (gs.svp) cards.push(`<div class='modal-stat-card'><div class='sc-val'>${gs.svp.toFixed(3)}</div><div class='sc-lbl'>SV%</div></div>`);
   }
   if (p.upside && isG) cards.push(`<div class='modal-stat-card purple'><div class='sc-val'>${p.upside}</div><div class='sc-lbl'>Plafond</div></div>`);
-  cards.push(`<div class='modal-stat-card purple'><div class='sc-val'>${calcPoolPts(p)}</div><div class='sc-lbl'>Pts Pool</div></div>`);
+  cards.push(`<div class='modal-stat-card purple'><div class='sc-val'>${calcPoolPts(p)}</div><div class='sc-lbl'>Pts Pool proj</div></div>`);
   if (grade)    cards.push(`<div class='modal-stat-card'><div class='sc-val'><span class='grade-badge ${gradeClass(grade)}' style='font-size:1.1em;padding:3px 10px'>${grade}</span></div><div class='sc-lbl'>Valeur</div></div>`);
   if (p.pp_pct != null) cards.push(`<div class='modal-stat-card'><div class='sc-val'>${p.pp_pct}%</div><div class='sc-lbl'>PP%</div></div>`);
   if (p.aav)    cards.push(`<div class='modal-stat-card'><div class='sc-val'>${p.aav}M$</div><div class='sc-lbl'>AAV</div></div>`);
