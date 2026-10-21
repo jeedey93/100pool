@@ -2790,28 +2790,29 @@ async function renderBlesses() {
   if (!grid) return;
   grid.innerHTML = `<div class='empty-state' style='grid-column:1/-1'><div class='icon' style='font-size:2em'>⏳</div>Chargement des blessures en cours…</div>`;
 
-  let injuries = [];
+  const normalize = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z]/g, '');
+
   try {
     const r = await fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/injuries');
     if (!r.ok) throw new Error('ESPN API error');
     const data = await r.json();
+
+    // Build ESPN injury map
+    _espnInjuryMap = {};
     for (const team of (data.injuries || [])) {
       for (const inj of (team.injuries || [])) {
         const athlete = inj.athlete || {};
         const t = athlete.team || {};
-        injuries.push({
-          name: athlete.displayName || '',
-          firstName: athlete.firstName || '',
-          lastName: athlete.lastName || '',
+        const name = athlete.displayName || '';
+        if (name) _espnInjuryMap[normalize(name)] = {
+          name,
           pos: (athlete.position || {}).abbreviation || '',
           team: t.abbreviation || '',
-          teamName: t.displayName || '',
           headshot: (athlete.headshot || {}).href || '',
-          teamLogo: ((t.logos || [])[0] || {}).href || '',
           status: inj.status || '',
           detail: (inj.details || {}).type || '',
           comment: inj.shortComment || '',
-        });
+        };
       }
     }
   } catch (e) {
@@ -2819,28 +2820,25 @@ async function renderBlesses() {
     return;
   }
 
-  // Sort: IR first, then Day-To-Day, then others
+  // Keep only players from our guide who are in the ESPN injury map
+  const injured = allPlayers
+    .filter(p => _espnInjuryMap[normalize(p.name)])
+    .map(p => ({ player: p, inj: _espnInjuryMap[normalize(p.name)] }));
+
+  // Sort: IR first, then Out, then Day-To-Day, then by proj_pts desc
   const statusOrder = { 'Injured Reserve': 0, 'IR': 0, 'Out': 1, 'Day-To-Day': 2 };
-  injuries.sort((a, b) => {
-    const ao = statusOrder[a.status] ?? 3;
-    const bo = statusOrder[b.status] ?? 3;
+  injured.sort((a, b) => {
+    const ao = statusOrder[a.inj.status] ?? 3;
+    const bo = statusOrder[b.inj.status] ?? 3;
     if (ao !== bo) return ao - bo;
-    return a.name.localeCompare(b.name);
+    return (b.player.proj_pts ?? 0) - (a.player.proj_pts ?? 0);
   });
 
-  // Build lookup map from allPlayers (normalize name for matching)
-  const normalize = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z]/g, '');
-  const playerMap = {};
-  for (const p of allPlayers) playerMap[normalize(p.name)] = p;
+  const btn = document.getElementById('tabBtnBlesses');
+  if (btn) btn.textContent = `🩹 Blessés (${injured.length})`;
 
-  // Store in global ESPN injury map for modal use
-  _espnInjuryMap = {};
-  for (const inj of injuries) {
-    _espnInjuryMap[normalize(inj.name)] = inj;
-  }
-
-  if (!injuries.length) {
-    grid.innerHTML = `<div class='empty-state' style='grid-column:1/-1'><div class='icon'>✅</div>Aucun joueur blessé répertorié pour l'instant.</div>`;
+  if (!injured.length) {
+    grid.innerHTML = `<div class='empty-state' style='grid-column:1/-1'><div class='icon'>✅</div>Aucun joueur du guide blessé pour l'instant.</div>`;
     return;
   }
 
@@ -2856,32 +2854,25 @@ async function renderBlesses() {
     return s;
   };
 
-  const btn = document.getElementById('tabBtnBlesses');
-  if (btn) btn.textContent = `🩹 Blessés (${injuries.length})`;
-
-  grid.innerHTML = injuries.map(inj => {
+  grid.innerHTML = injured.map(({ player: p, inj }) => {
     const color = statusColor(inj.status);
     const label = statusLabel(inj.status);
-    const matched = playerMap[normalize(inj.name)];
-    const clickAttr = matched ? `onclick='openModal(${matched.id})' style='cursor:pointer'` : '';
-    const projBadge = matched
-      ? `<div style='margin-top:6px;display:flex;gap:8px;flex-wrap:wrap'>
-          ${matched.proj_pts != null ? `<span style='font-size:0.78em;background:#f0fdf4;color:#15803d;border:1px solid #86efac;border-radius:6px;padding:2px 7px;font-weight:700'>${matched.proj_pts} PTS proj.</span>` : ''}
-          ${matched.tier ? `<span style='font-size:0.78em;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:6px;padding:2px 7px;font-weight:700'>${matched.tier}</span>` : ''}
-        </div>`
-      : '';
+    const photo = p.headshot_url || inj.headshot || '';
     const comment = inj.comment ? `<div style='font-size:0.78em;color:#64748b;margin-top:5px;line-height:1.45;font-style:italic'>${inj.comment.replace(/</g,'&lt;')}</div>` : '';
-    return `<div class='sleeper-card' style='border-color:${color}' ${clickAttr}>
+    return `<div class='sleeper-card' style='border-color:${color};cursor:pointer' onclick='openModal(${p.id})'>
       <div style='display:flex;align-items:flex-start;gap:10px;margin-bottom:6px'>
-        ${inj.headshot ? `<img style='width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #f1f5f9;flex-shrink:0' src='${inj.headshot}' alt='${inj.name}' onerror="this.style.display='none'">` : `<div style='width:44px;height:44px;border-radius:50%;background:#f1f5f9;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3em'>🩹</div>`}
+        ${photo ? `<img style='width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #f1f5f9;flex-shrink:0' src='${photo}' alt='${p.name}' onerror="this.style.display='none'">` : `<div style='width:44px;height:44px;border-radius:50%;background:#f1f5f9;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3em'>🩹</div>`}
         <div style='min-width:0;flex:1'>
-          <div style='font-weight:800;font-size:0.95em;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>${inj.name}${matched ? ` <span style='font-size:0.75em;color:#94a3b8'>↗</span>` : ''}</div>
-          <div style='font-size:0.78em;color:#64748b;margin-top:1px'>${[inj.team, inj.pos, inj.detail].filter(Boolean).join(' · ')}</div>
+          <div style='font-weight:800;font-size:0.95em;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>${p.name}</div>
+          <div style='font-size:0.78em;color:#64748b;margin-top:1px'>${[p.team, p.pos, inj.detail].filter(Boolean).join(' · ')}</div>
         </div>
         <span style='font-size:0.72em;font-weight:800;color:${color};background:${color}18;border:1px solid ${color}44;border-radius:6px;padding:2px 7px;white-space:nowrap;flex-shrink:0'>${label}</span>
       </div>
       ${comment}
-      ${projBadge}
+      <div style='margin-top:6px;display:flex;gap:8px;flex-wrap:wrap'>
+        ${p.proj_pts != null ? `<span style='font-size:0.78em;background:#f0fdf4;color:#15803d;border:1px solid #86efac;border-radius:6px;padding:2px 7px;font-weight:700'>${p.proj_pts} PTS proj.</span>` : ''}
+        ${p.tier ? `<span style='font-size:0.78em;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:6px;padding:2px 7px;font-weight:700'>${p.tier}</span>` : ''}
+      </div>
     </div>`;
   }).join('');
 }
