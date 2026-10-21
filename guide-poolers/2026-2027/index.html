@@ -1136,6 +1136,7 @@ let allPlayers = [];
 let sortCol = 'proj_pts';
 let draftedIds = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]'));
 let _espnInjuryMap = {};
+let _liveStats = {}; // nhl_id -> {gp, g, a, pts, gaa, svp}
 let draftMode = false;
 let hideDrafted = false;
 
@@ -1838,6 +1839,16 @@ async function init() {
     document.body.style.paddingBottom = '60px';
   }
   allPlayers = players;
+
+  // Load live stats once at startup (no per-modal API call needed)
+  try {
+    const liveRes = await fetch(`${SUPABASE_URL}/rest/v1/nhl_stats_live?select=nhl_id,gp,g,a,pts,gaa,svp`, { headers: SB_HEADERS });
+    if (liveRes.ok) {
+      const liveData = await liveRes.json();
+      _liveStats = Object.fromEntries(liveData.map(r => [String(r.nhl_id), r]));
+    }
+  } catch {}
+
   document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString('fr-CA');
   // Build team popover with logos + search
   const teams = [...new Set(allPlayers.map(p => p.team).filter(Boolean))].sort();
@@ -2997,38 +3008,18 @@ async function loadNhlHistory(nhlId, pos, projRow) {
     : [];
   const isG = pos === 'G';
 
-  // Fetch current 2026-27 stats from NHL API
+  // Use pre-loaded stats from nhl_stats_live table
   let cur = null;
   if (nhlId) {
-    try {
-      const r = await fetch(`https://api-web.nhle.com/v1/player/${nhlId}/game-log/20262027/2`, { signal: AbortSignal.timeout(6000) });
-      if (r.ok) {
-        const data = await r.json();
-        const games = data.gameLog || [];
-        if (games.length) {
-          const gp = games.length;
-          if (isG) {
-            const wins = games.filter(g => g.decision === 'W').length;
-            const totalGA = games.reduce((s, g) => s + (g.goalsAgainst ?? 0), 0);
-            const totalSaves = games.reduce((s, g) => s + (g.saves ?? 0), 0);
-            const totalShots = games.reduce((s, g) => s + (g.shotsAgainst ?? 0), 0);
-            const totalToi = games.reduce((s, g) => {
-              const [m, sec] = (g.toi || '0:00').split(':').map(Number);
-              return s + m * 60 + (sec || 0);
-            }, 0);
-            const gaa = totalToi > 0 ? ((totalGA / totalToi) * 3600).toFixed(2) : null;
-            const svp = totalShots > 0 ? (totalSaves / totalShots).toFixed(3) : null;
-            const so = games.filter(g => (g.shotsAgainst ?? 0) > 0 && (g.goalsAgainst ?? 0) === 0 && g.decision).length;
-            cur = { gp, w: wins, gaa, svp, so };
-          } else {
-            const g = games.reduce((s, x) => s + (x.goals ?? 0), 0);
-            const a = games.reduce((s, x) => s + (x.assists ?? 0), 0);
-            const pts = g + a;
-            cur = { gp, g, a, pts, ppg: gp > 0 ? (pts / gp).toFixed(2) : '—' };
-          }
-        }
+    const live = _liveStats[String(nhlId)];
+    if (live && live.gp > 0) {
+      if (isG) {
+        cur = { gp: live.gp, w: live.g, gaa: live.gaa, svp: live.svp, so: 0 };
+      } else {
+        const pts = (live.pts != null ? live.pts : (live.g || 0) + (live.a || 0));
+        cur = { gp: live.gp, g: live.g || 0, a: live.a || 0, pts, ppg: live.gp > 0 ? (pts / live.gp).toFixed(2) : '—' };
       }
-    } catch {}
+    }
   }
 
   // Pace & statut (same logic as suivi page)
