@@ -902,6 +902,7 @@ td.star-cell { padding: 0; width: 36px; }
     <button class='tab-btn' onclick='switchTab("sleeper", this)'>😴 Sleeper</button>
     <button class='tab-btn' onclick='switchTab("breakout", this)'>🚀 Breakout</button>
     <button class='tab-btn' onclick='switchTab("aeviter", this)'>⚠️ À Éviter</button>
+    <button class='tab-btn' id='tabBtnBlesses' onclick='switchTab("blesses", this)'>🩹 Blessés</button>
     <button class='tab-btn' onclick='switchTab("scarcity", this)'>📊 Rareté</button>
   </div>
 
@@ -1065,6 +1066,14 @@ td.star-cell { padding: 0; width: 36px; }
     <div id='aeviterGrid' class='sleepers-grid'></div>
   </div>
 
+  <!-- TAB: BLESSÉS -->
+  <div id='tab-blesses' class='tab-pane'>
+    <div style='background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.83em;color:#c2410c;line-height:1.6'>
+      <strong>🩹 Blessés</strong> — Joueurs actuellement blessés ou à surveiller. Ces joueurs peuvent être disponibles à rabais au repêchage, mais comportent un risque de disponibilité.
+    </div>
+    <div id='blessesGrid' class='sleepers-grid'></div>
+  </div>
+
   <!-- TAB: SCARCITY -->
   <div id='tab-scarcity' class='tab-pane'>    <div id='scarcityChart'></div>
   </div>
@@ -1123,11 +1132,13 @@ document.addEventListener('click', function(e) {
 let allPlayers = [];
 let sortCol = 'proj_pts';
 let draftedIds = new Set(JSON.parse(localStorage.getItem('pool_drafted') || '[]'));
+let _espnInjuryMap = {};
 let draftMode = false;
 let hideDrafted = false;
 
 // ── CHANGELOG ────────────────────────────────────────────────
 const CHANGELOG = [
+  { date: '2026-10-21', text: 'Onglet Blessés — liste en temps réel des joueurs blessés NHL via ESPN, avec statut (IR, DTD) et description dans chaque fiche joueur' },
   { date: '2026-09-22', text: 'Mises à jour des projections — 17 joueurs ajustés ou ajoutés suite à la pré-saison', link: '/changements/' },
   { date: '2026-09-15', text: 'Filtre AAV min/max — trouver des joueurs dans une tranche salariale précise' },
   { date: '2026-09-15', text: 'Alternatives similaires dans le modal joueur — même position, points et salaire comparables' },
@@ -1895,6 +1906,7 @@ async function init() {
   renderCategory('SLEEPER',  'sleeperGrid',  '😴', '#34d399');
   renderCategory('BREAKOUT', 'breakoutGrid', '🚀', '#60a5fa');
   renderCategory('À ÉVITER', 'aeviterGrid',  '⚠️', '#fda4af');
+  renderBlesses();
   renderScarcity();
   applyColVis();
   updatePoolSettingsBtn();
@@ -2772,6 +2784,109 @@ function renderCategory(category, gridId, icon, color) {
 }
 
 
+// ── BLESSÉS (ESPN live) ────────────────────────────────────
+async function renderBlesses() {
+  const grid = document.getElementById('blessesGrid');
+  if (!grid) return;
+  grid.innerHTML = `<div class='empty-state' style='grid-column:1/-1'><div class='icon' style='font-size:2em'>⏳</div>Chargement des blessures en cours…</div>`;
+
+  let injuries = [];
+  try {
+    const r = await fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/injuries');
+    if (!r.ok) throw new Error('ESPN API error');
+    const data = await r.json();
+    for (const team of (data.injuries || [])) {
+      for (const inj of (team.injuries || [])) {
+        const athlete = inj.athlete || {};
+        const t = athlete.team || {};
+        injuries.push({
+          name: athlete.displayName || '',
+          firstName: athlete.firstName || '',
+          lastName: athlete.lastName || '',
+          pos: (athlete.position || {}).abbreviation || '',
+          team: t.abbreviation || '',
+          teamName: t.displayName || '',
+          headshot: (athlete.headshot || {}).href || '',
+          teamLogo: ((t.logos || [])[0] || {}).href || '',
+          status: inj.status || '',
+          detail: (inj.details || {}).type || '',
+          comment: inj.shortComment || '',
+        });
+      }
+    }
+  } catch (e) {
+    grid.innerHTML = `<div class='empty-state' style='grid-column:1/-1'><div class='icon'>❌</div>Impossible de charger les blessures ESPN.<br>Réessaie plus tard.</div>`;
+    return;
+  }
+
+  // Sort: IR first, then Day-To-Day, then others
+  const statusOrder = { 'Injured Reserve': 0, 'IR': 0, 'Out': 1, 'Day-To-Day': 2 };
+  injuries.sort((a, b) => {
+    const ao = statusOrder[a.status] ?? 3;
+    const bo = statusOrder[b.status] ?? 3;
+    if (ao !== bo) return ao - bo;
+    return a.name.localeCompare(b.name);
+  });
+
+  // Build lookup map from allPlayers (normalize name for matching)
+  const normalize = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z]/g, '');
+  const playerMap = {};
+  for (const p of allPlayers) playerMap[normalize(p.name)] = p;
+
+  // Store in global ESPN injury map for modal use
+  _espnInjuryMap = {};
+  for (const inj of injuries) {
+    _espnInjuryMap[normalize(inj.name)] = inj;
+  }
+
+  if (!injuries.length) {
+    grid.innerHTML = `<div class='empty-state' style='grid-column:1/-1'><div class='icon'>✅</div>Aucun joueur blessé répertorié pour l'instant.</div>`;
+    return;
+  }
+
+  const statusColor = s => {
+    if (s === 'Injured Reserve' || s === 'IR') return '#dc2626';
+    if (s === 'Out') return '#c2410c';
+    if (s === 'Day-To-Day') return '#d97706';
+    return '#64748b';
+  };
+  const statusLabel = s => {
+    if (s === 'Injured Reserve') return 'IR';
+    if (s === 'Day-To-Day') return 'DTD';
+    return s;
+  };
+
+  const btn = document.getElementById('tabBtnBlesses');
+  if (btn) btn.textContent = `🩹 Blessés (${injuries.length})`;
+
+  grid.innerHTML = injuries.map(inj => {
+    const color = statusColor(inj.status);
+    const label = statusLabel(inj.status);
+    const matched = playerMap[normalize(inj.name)];
+    const clickAttr = matched ? `onclick='openModal(${matched.id})' style='cursor:pointer'` : '';
+    const projBadge = matched
+      ? `<div style='margin-top:6px;display:flex;gap:8px;flex-wrap:wrap'>
+          ${matched.proj_pts != null ? `<span style='font-size:0.78em;background:#f0fdf4;color:#15803d;border:1px solid #86efac;border-radius:6px;padding:2px 7px;font-weight:700'>${matched.proj_pts} PTS proj.</span>` : ''}
+          ${matched.tier ? `<span style='font-size:0.78em;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:6px;padding:2px 7px;font-weight:700'>${matched.tier}</span>` : ''}
+        </div>`
+      : '';
+    const comment = inj.comment ? `<div style='font-size:0.78em;color:#64748b;margin-top:5px;line-height:1.45;font-style:italic'>${inj.comment.replace(/</g,'&lt;')}</div>` : '';
+    return `<div class='sleeper-card' style='border-color:${color}' ${clickAttr}>
+      <div style='display:flex;align-items:flex-start;gap:10px;margin-bottom:6px'>
+        ${inj.headshot ? `<img style='width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #f1f5f9;flex-shrink:0' src='${inj.headshot}' alt='${inj.name}' onerror="this.style.display='none'">` : `<div style='width:44px;height:44px;border-radius:50%;background:#f1f5f9;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3em'>🩹</div>`}
+        <div style='min-width:0;flex:1'>
+          <div style='font-weight:800;font-size:0.95em;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>${inj.name}${matched ? ` <span style='font-size:0.75em;color:#94a3b8'>↗</span>` : ''}</div>
+          <div style='font-size:0.78em;color:#64748b;margin-top:1px'>${[inj.team, inj.pos, inj.detail].filter(Boolean).join(' · ')}</div>
+        </div>
+        <span style='font-size:0.72em;font-weight:800;color:${color};background:${color}18;border:1px solid ${color}44;border-radius:6px;padding:2px 7px;white-space:nowrap;flex-shrink:0'>${label}</span>
+      </div>
+      ${comment}
+      ${projBadge}
+    </div>`;
+  }).join('');
+}
+
+
 function renderScarcity() {
   const POSITIONS = ['C', 'LW', 'RW', 'D', 'G'];
   const POS_LABEL = { C: 'Centre', LW: 'Ailier gauche', RW: 'Ailier droit', D: 'Défenseur', G: 'Gardien', FWD: 'Attaquants' };
@@ -2953,10 +3068,24 @@ function openModal(id) {
   }
 
   // Badges
+  const _normName = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z]/g, '');
+  const espnInj = _espnInjuryMap[_normName(p.name)];
+  const injBadge = espnInj
+    ? (() => {
+        const color = espnInj.status === 'Injured Reserve' || espnInj.status === 'IR' ? '#dc2626'
+          : espnInj.status === 'Out' ? '#c2410c'
+          : espnInj.status === 'Day-To-Day' ? '#d97706' : '#64748b';
+        const label = espnInj.status === 'Injured Reserve' ? '🩹 IR'
+          : espnInj.status === 'Day-To-Day' ? '🩹 DTD'
+          : `🩹 ${espnInj.status}`;
+        const detail = espnInj.detail ? ` · ${espnInj.detail}` : '';
+        return `<span class='bust' style='background:${color}18;color:${color};border-color:${color}44'>${label}${detail}</span>`;
+      })()
+    : (p.bandaid ? `<span class='bust' style='background:#fff7ed;color:#c2410c;border-color:#fed7aa'>🩹 Blessure</span>` : '');
   const badges = [
     `<span class='tier ${tierClass(p.tier)}'>${p.tier ?? '—'}</span>`,
     p.risk ? `<span class='risk risk-${p.risk}'>${p.risk === 'Low' ? '🟢 Faible' : p.risk === 'Medium' ? '🟡 Moyen' : '🔴 Élevé'}</span>` : '',
-    p.bandaid ? `<span class='bust' style='background:#fff7ed;color:#c2410c;border-color:#fed7aa'>🩹 Blessure</span>` : '',
+    injBadge,
     p.bust_alert ? `<span class='bust'>💣 Déception</span>` : '',
   ].filter(Boolean).join('');
   document.getElementById('modalBadges').innerHTML = badges;
@@ -3029,6 +3158,13 @@ function openModal(id) {
 
   // Body — notes, comparable, risks
   let body = '';
+  if (espnInj) {
+    const injColor = espnInj.status === 'Injured Reserve' || espnInj.status === 'IR' ? '#dc2626'
+      : espnInj.status === 'Out' ? '#c2410c'
+      : espnInj.status === 'Day-To-Day' ? '#d97706' : '#64748b';
+    const injDetail = [espnInj.status, espnInj.detail].filter(Boolean).join(' · ');
+    body += `<div><div class='modal-section-title'>État de santé (ESPN)</div><div style='background:${injColor}10;border:1px solid ${injColor}33;border-radius:8px;padding:10px 14px;font-size:0.85em;color:${injColor};font-weight:700'>${injDetail}${espnInj.comment ? `<div style='margin-top:4px;font-weight:400;color:#374151;font-style:italic;line-height:1.5'>${espnInj.comment}</div>` : ''}</div></div>`;
+  }
   if (p.notes) body += `<div><div class='modal-section-title'>Notes de dépistage</div><div class='modal-scouting'>${p.notes}</div></div>`;
   if (p.comp_player) body += `<div><div class='modal-section-title'>Joueur comparable</div><div class='modal-comp'>🏒 ${p.comp_player}</div></div>`;
   if (p.key_risks) {
