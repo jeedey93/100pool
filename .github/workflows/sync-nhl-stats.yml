@@ -2,7 +2,7 @@ name: Sync NHL Stats
 
 on:
   schedule:
-    - cron: '30 7 * * *'  # 3:30am EDT (UTC-4) every day
+    - cron: '0 2 * * *' # targets ~8am Montreal after typical 6h GH Actions queue delay
   workflow_dispatch:       # allow manual trigger from GitHub UI
 
 jobs:
